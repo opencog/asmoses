@@ -337,11 +337,10 @@ optimization process as construction of proofs of fitness.
 The axioms should capture the inherent uncertainties of these
 heuristics, and PLN inference properly propagate these
 uncertainties. Fitness evaluation may also be seen as a form of
-reasoning, resulting, in general but not always, in higher levels of
-certainty of fitness. There are cases however where fitness evaluation
-should not produce high certainty. Consider for instance the case of
-curve fitting with a few noisy observations, the resulting fitness
-evaluations should rightfully be uncertain.
+reasoning usually resulting in higher levels of certainty of
+fitness. However it might sometimes be preferable if fitness
+evaluation did not produce high certainty results, such as for
+instance the case of curve fitting with a noisy observations.
 
 This, seeing optimization as reasoning, also allows to integrate
 background knowledge seamlessly. Of course that doesn't tell us how to
@@ -355,6 +354,8 @@ performances.
 Let's take one of the simplest optimization algorithm, Hillclimbing,
 and see how it can be axiomatized to be implemented as a reasoning
 process.
+
+##### Hillclimbing Recall
 
 Let's first recall how hillclimbing works, in particular the flavor
 implemented in MOSES.
@@ -374,3 +375,69 @@ Algorithm:
 2. If a better candidate has been discovered, assign it to C,
    otherwise increment D.
 3. If a termination criterion has been met stops, otherwise go to 1.
+
+##### Hillclimbing Axiomatization
+
+Let us now attempt to capture the assumptions that make this algorithm
+worth using. We have introduced some arbitrary truth values to convey
+how uncertainty can be represented as well.
+
+* Candidates tend to be unfit
+  ```
+  Implication (stv 0.01 0.01)
+    Predicate "candidate"
+    Predicate "fitness"
+  ```
+  where predicate `candidate` is a boolean predicate that indicate if
+  an atom is a program candidate, the second predicate `fitness`
+  measures its fitness.
+
+* Syntactically similar candidates tend to be loosely semantically
+  similar
+  ```
+  Implication (stv 0.1 0.01)
+    Predicate "similar-syntax"
+    Predicate "similar-semantics"
+  ```
+  where predicate `similar-syntax` is a binary predicate that
+  evaluates how syntactically similar 2 candidates are. Predicate
+  `similar-semantics` is a binary Predicate that evaluates how
+  semantically similar 2 candidates are.
+
+* Semantically similar candidates tend to have similar fitnesses
+  ```
+  Implication (stv 0.6 0.1)
+    Predicate "similar-semantics"
+    Predicate "similar-fitness"
+  ```
+  where predicate `similar-fitness` is a binary predicate that
+  evaluates how similar the fitnesses of 2 candidates are.
+
+* Candidates with similar knob settings tend to be syntactically
+  similar
+  ```
+  Implication (stv 0.8 0.2)
+    Predicate "similar-knob-settings"
+    Predicate "similar-syntax"
+```
+  where predicate `similar-knob-settings` is a binary predicate that
+  evaluates how similar the knob settings of 2 candidates are.
+
+* If candidate P1 and P2 have similar fitnesses, and P1 has fitness
+  f1, then P2 has a fitness close to f1
+  ```
+  ImplicationScope (stv 1 1)
+    $P1, $P2
+    And
+      Evaluation
+        Predicate "similar-fitness"
+        List
+          $P1
+          $P2
+      Evaluation
+        Predicate "fitness"
+        $P1
+    Evaluation
+      Predicate "fitness"
+      $P2
+   ```
