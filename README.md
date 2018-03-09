@@ -395,7 +395,7 @@ how uncertainty can be represented as well.
 * Syntactically similar candidates tend to be loosely semantically
   similar
   ```
-  Implication (stv 0.1 0.01)
+  Implication (stv 0.2 0.01)
     Predicate "similar-syntax"
     Predicate "similar-semantics"
   ```
@@ -419,7 +419,7 @@ how uncertainty can be represented as well.
   Implication (stv 0.8 0.2)
     Predicate "similar-knob-settings"
     Predicate "similar-syntax"
-```
+  ```
   where predicate `similar-knob-settings` is a binary predicate that
   evaluates how similar the knob settings of 2 candidates are.
 
