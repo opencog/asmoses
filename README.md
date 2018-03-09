@@ -344,8 +344,33 @@ curve fitting with a few noisy observations, the resulting fitness
 evaluations should rightfully be uncertain.
 
 This, seeing optimization as reasoning, also allows to integrate
-background knowledge. Of course that doesn't tell us how to
+background knowledge seamlessly. Of course that doesn't tell us how to
 efficiently control it (such integration would likely result in
-greater levels of combinatorial explosion at first) but the hope is
-that this can be learned overtime, and eventually could surpass the
-initial efficiencies.
+greater levels of combinatorial explosion) but the hope is that this
+can be learned overtime, and eventually it could surpass the initial
+performances.
+
+#### Example of Axiomatization
+
+Let's take one of the simplest optimization algorithm, Hillclimbing,
+and see how it can be axiomatized to be implemented as a reasoning
+process.
+
+Let's first recall how hillclimbing works, in particular the flavor
+implemented in MOSES.
+
+Initialization:
+
+* Let be a discrete multidimensional space of programs, defined by a
+  representation (knobs place on the exemplar).
+* Let C be point of that space, set to the exemplar.
+* Let D be the distance from C, set to 1.
+* Let N be the maximum number of candidates to evaluate during a given
+  iteration.
+
+Algorithm:
+
+1. Sample and evaluation N candidates at distance D from C.
+2. If a better candidate has been discovered, assign it to C,
+   otherwise increment D.
+3. If a termination criterion has been met stops, otherwise go to 1.
