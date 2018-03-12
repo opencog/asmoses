@@ -525,6 +525,11 @@ then the URE will want to attempt to instantiate that later with less
 similar knob settings as the center, following again the behavior of
 the variation of Hillclimbing described here.
 
+So we've seen that axiomatizing Hillclimbing and turning it into a
+reasoning process is not particularly complicated. It is expected that
+axiomatizing an EDA algorithm would be even more natural, due to the
+fact that the URE supports well uncertain reasoning.
+
 ### Custom Policy
 
 Although it's been shown that in principle a learning can be managed
