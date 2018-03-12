@@ -18,7 +18,7 @@ to
 4. Ultimately, given a sufficiently modular implementation of
    AS-MOSES, experiment with various hybridizations. If AS-MOSES can,
    eventually, be wrapped in a manner as being an Atomese program,
-   such a program can be suject to self-improvements.
+   such a program can be subject to self-improvements.
 
 ## MOSES Recall
 
@@ -46,7 +46,7 @@ Optimization is the process of exploring a deme to find fit programs.
 
 MOSES offers different optimization algorithms, such as Estimation of
 Distribution Algorithm (EDA), Simulation Annealing, Stochastic
-Hillclimding and Crossover.
+Hillclimbing and Crossover.
 
 ### Exemplar
 
@@ -162,7 +162,7 @@ probably do not need special attention for the port.
 
 ### PLOP
 
-the original author of MOSES, Moshe Looks, has developped a LISP
+the original author of MOSES, Moshe Looks, has developed a LISP
 version of MOSES, called PLOP
 
 https://code.google.com/archive/p/plop/
@@ -265,8 +265,8 @@ f(x) = 1*x + 0
 ### Program Reduction
 
 The URE should be able to handle reduction. There are different ways
-to go about that, the current wat (currently in the work by Yidne) is
-to explicitely construct the normalization relationship between
+to go about that, the current way (currently in the work by Yidne) is
+to explicitly construct the normalization relationship between
 programs, such as
 
 ```scheme
@@ -309,7 +309,7 @@ Deciding how to build a representation such as
 f(x) = [1, -1]*x + [0, 0.5, 1]
 ```
 
-is not trivial at all. We want to avoid hardwiring anything. Ideally
+is not trivial at all. We want to avoid hard-wiring anything. Ideally
 it should be handled as a form of reasoning, surely with some initial
 restrictions or hand-crafted control rules, to avoid utter
 inefficiency, but eventually should be let free. That is because the
@@ -357,7 +357,7 @@ process.
 
 ##### Hillclimbing Recall
 
-Let's first recall how hillclimbing works, in particular the flavor
+Let's first recall how Hillclimbing works, in particular the flavor
 implemented in MOSES.
 
 Initialization:
@@ -382,20 +382,20 @@ Let us now attempt to capture the assumptions that make this algorithm
 worth using. We have introduced some arbitrary truth values to convey
 how uncertainty can be represented as well.
 
-* Candidates tend to be unfit
+* (1) Candidates tend to be unfit
   ```
   Implication (stv 0.01 0.01)
     Predicate "candidate"
     Predicate "fitness"
   ```
-  where predicate `candidate` is a boolean predicate that indicate if
+  where predicate `candidate` is a Boolean predicate that indicate if
   an atom is a program candidate, the second predicate `fitness`
   measures its fitness.
 
-* Syntactically similar candidates tend to be loosely semantically
+* (2) Syntactically similar candidates tend to be loosely semantically
   similar
   ```
-  Implication (stv 0.2 0.01)
+  Implication (stv 0.4 0.01)
     Predicate "similar-syntax"
     Predicate "similar-semantics"
   ```
@@ -404,7 +404,7 @@ how uncertainty can be represented as well.
   `similar-semantics` is a binary Predicate that evaluates how
   semantically similar 2 candidates are.
 
-* Semantically similar candidates tend to have similar fitnesses
+* (3) Semantically similar candidates tend to have similar fitnesses
   ```
   Implication (stv 0.6 0.1)
     Predicate "similar-semantics"
@@ -413,7 +413,7 @@ how uncertainty can be represented as well.
   where predicate `similar-fitness` is a binary predicate that
   evaluates how similar the fitnesses of 2 candidates are.
 
-* Candidates with similar knob settings tend to be syntactically
+* (4) Candidates with similar knob settings tend to be syntactically
   similar
   ```
   Implication (stv 0.8 0.2)
@@ -423,7 +423,7 @@ how uncertainty can be represented as well.
   where predicate `similar-knob-settings` is a binary predicate that
   evaluates how similar the knob settings of 2 candidates are.
 
-* If candidate P1 and P2 have similar fitnesses, and P1 has fitness
+* (5) If candidate P1 and P2 have similar fitnesses, and P1 has fitness
   f1, then P2 has a fitness close to f1
   ```
   ImplicationScope (stv 1 1)
@@ -440,4 +440,112 @@ how uncertainty can be represented as well.
     Evaluation
       Predicate "fitness"
       $P2
-   ```
+  ```
+
+#### Possible Emulation of Hillclimbing with Reasoning
+
+Given these axioms, one may hand the following query to the URE with
+the objective to maximize the TV strength and confidence of the
+following
+
+```
+Evaluation
+  Predicate "fitness"
+  $X
+```
+
+thus finding instances of `$X`, program candidates with high
+fitnesses.
+
+Here's an example of reasoning that might results from these axioms.
+
+1. Assume we have a initial candidate to begin with
+
+```
+Evaluation TV
+  Predicate "fitness"
+  <initial-candidate>
+```
+
+if the TV is lower than 0.01 (the average fitness as determined by
+axioms (1)), then the URE will have an incentive to use axiom (1) to
+produce a random candidate, since we have nothing better to do at that
+point. At some point it will have generated a candidate above the
+expected average fitness that can be used as initial candidate.
+
+Using axiom (5) and partial conditional instantiation may produce
+
+```
+ImplicationScope
+  $P2
+  And
+    Evaluation
+      Predicate "similar-fitness"
+      List
+        <initial-candidate>
+        $P2
+    Evaluation
+      Predicate "fitness"
+      <initial-candidate>
+  Evaluation
+    Predicate "fitness"
+    $P2
+```
+
+Applying the fuzzy conjunction rule on the implicant will lead to the
+sub-target
+
+```
+Evaluation
+  Predicate "similar-fitness"
+  List
+    <initial-candidate>
+    $P2
+```
+
+At this point the URE can chain axioms (4), (2) and (3), in that
+order, using the deduction rule to produce the knowledge that a
+candidate with similar knob settings (that is local neighbors) will
+likely produce candidates with similar fitnesses
+
+```
+Implication
+  Predicate "similar-knob-settings"
+  Predicate "similar-fitness"
+```
+
+Combined with conditional instantiation rule will likely result in
+estimating that a nearby candidate has a similar fitness the initial
+candidate, which is higher than average, thus worthwhile evaluating.
+
+As soon as a better candidate than the initial one is evaluated, the
+same reasoning will happen on the better candidate, now the new center
+in the Hillclimbing algorithm. If no better candidate has been found,
+then the URE will want to attempt to instantiate that later with less
+similar knob settings as the center, following again the behavior of
+the variation of Hillclimbing described here.
+
+### Custom Policy
+
+Although it's been shown that in principle a learning can be managed
+as a form of reasoning, it's not clear at all that it would be
+effective in practice. There are at least 2 ways we can counter that
+
+1. Designing control rules to guide the URE (see TODO: add reference
+   to documentation about inference control in the URE once available)
+2. Craft an algorithm by gluing together more elementary calls from
+   the URE (like unifying and applying rules), to control exactly how
+   and in which order rules are being chained and executed. This would
+   allow to maintain the same sort of freedom conventional programming
+   offers, while still making transparent the reasoning part. This
+   requires to expose URE primitives to Scheme, which shouldn't be
+   difficult.
+
+The first option (designing control rules) is preferable in order to
+seamlessly integrate background knowledge and teach how to control
+AS-MOSES. The second option could be a good middle ground to move
+AS-MOSES closer to reasoning while still retaining its original
+efficiency. Interestingly both allow self-improvements to take
+place. In the first case inference control rules can be learned. In
+the second one AS-MOSES would be an Atomese program anyway, so could
+be improved by AS-MOSES itself.
