@@ -196,6 +196,16 @@ ELSE (COGUTIL_FOUND)
 	MESSAGE(FATAL_ERROR "CogUtil missing: it is needed to build this package!")
 ENDIF (COGUTIL_FOUND)
 
+# AtomSpace
+FIND_PACKAGE(AtomSpace 5.0.3 REQUIRED)
+IF (ATOMSPACE_FOUND)
+	MESSAGE(STATUS "AtomSpace found.")
+	ADD_DEFINITIONS(-DHAVE_ATOMSPACE)
+	SET(HAVE_ATOMSPACE 1)
+ELSE (ATOMSPACE_FOUND)
+	MESSAGE(FATAL_ERROR "AtomSpace missing: it is needed to build this package!")
+ENDIF (ATOMSPACE_FOUND)
+
 # MPI is needed for MOSES on compute clusters.
 FIND_PACKAGE(MPI)
 
