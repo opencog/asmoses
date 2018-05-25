@@ -25,113 +25,91 @@
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 #include <moses/comboreduct/combo/vertex.h>
+#include "combo_atomese.h"
 
 
-namespace opencog{namespace combo{
+namespace opencog { namespace combo {
 
 using namespace std;
 using namespace boost;
 
-Type atomese_argument(Handle &h, const argument &a,
-                      const id::procidure_types& parent_procidure_type)
+Handle atomese_argument(const argument &a,
+                      const id::procedure_type &parent_procedure_type)
 {
-    switch (parent_procidure_type){
-    case id::predicate:{
-        Handle tmp = createNode(PREDICATE_NODE,
-                                to_string(a.is_negated()? -a.idx : a.idx));
-        if(a.is_negated()){
-            HandleSeq handle_seq;
-            handle_seq.push_back(tmp);
-            h = createLink(handle_seq, NOT_LINK);
-        } else{
-            h = tmp;
-        }
-        return -1;
-    }
-    case id::schema:{
-        Handle tmp = createNode(SCHEMA_NODE, to_string(a.is_negated()? -a.idx : a.idx));
-        if(a.is_negated()){
-            HandleSeq handle_seq;
-            handle_seq.push_back(tmp);
-            handle_seq.push_back(createNode(NUMBER_NODE, "-1"));
-            h = createLink(handle_seq, TIMES_LINK);
-        } else{
-            h = tmp;
-        }
-        return -1;
-    }
-    default:{
-        OC_ASSERT(false, "unsupported procedure type");
-    }
-    }
-    return -1;
+	Handle h;
+	switch (parent_procedure_type) {
+		case id::predicate: {
+			Handle tmp = createNode(PREDICATE_NODE,
+			                        to_string(a.is_negated() ? -a.idx : a.idx));
+			if (a.is_negated()) {
+				HandleSeq handle_seq;
+				handle_seq.push_back(tmp);
+				h = createLink(handle_seq, NOT_LINK);
+			} else {
+				h = tmp;
+			}
+			break;
+		}
+		case id::schema: {
+			Handle tmp = createNode(SCHEMA_NODE, to_string(a.is_negated() ? -a.idx : a.idx));
+			if (a.is_negated()) {
+				HandleSeq handle_seq;
+				handle_seq.push_back(tmp);
+				handle_seq.push_back(createNode(NUMBER_NODE, "-1"));
+				h = createLink(handle_seq, TIMES_LINK);
+			} else {
+				h = tmp;
+			}
+			break;
+		}
+		default: {
+			OC_ASSERT(false, "unsupported procedure type");
+		}
+	}
+	return h;
 }
 
-Type atomese_builtin(const builtin& b, id::procidure_types& procidure_type)
+Type atomese_builtin(const builtin &b, id::procedure_type &procedure_type)
 {
-    switch (b){
-    case id::logical_and:{
-        procidure_type = id::predicate;
-        return AND_LINK;
-    }
-    case id::logical_or:{
-        procidure_type = id::predicate;
-        return OR_LINK;
-    }
-    case id::logical_not:{
-        procidure_type = id::predicate;
-        return NOT_LINK;
-    }
-    case id::plus:{
-        procidure_type = id::schema;
-        return PLUS_LINK;
-    }
-    default:{
-        OC_ASSERT(false, "unsupported");
-        return -1;
-    }
-    }
+	switch (b) {
+		case id::logical_and:
+			procedure_type = id::predicate;
+			return AND_LINK;
+		case id::logical_or:
+			procedure_type = id::predicate;
+			return OR_LINK;
+		case id::logical_not:
+			procedure_type = id::predicate;
+			return NOT_LINK;
+		case id::plus:
+			procedure_type = id::schema;
+			return PLUS_LINK;
+		default:
+			OC_ASSERT(false, "unsupported");
+			return -1;
+	}
 }
 
-Type atomese_vertex(Handle &h, const vertex &v,
-                    id::procidure_types& parent_procidure_type)
+std::pair<Type, Handle> atomese_vertex(const vertex &v,
+                    id::procedure_type &parent_procedure_type)
 {
-    if(const argument* a = get<argument>(&v)){
-        return atomese_argument(h, *a, parent_procidure_type);
-    }
-    else if(const builtin* b = get<builtin>(&v)){
-        return atomese_builtin(*b, parent_procidure_type);
-    }
-    return -1;
+	Handle handle;
+	Type type = -1;
+	if (const argument *a = get<argument>(&v)) {
+		handle = atomese_argument(*a, parent_procedure_type);
+	} else if (const builtin *b = get<builtin>(&v)) {
+		type = atomese_builtin(*b, parent_procedure_type);
+	}
+	return std::make_pair(type, handle);
 }
 
-template<typename Iter>
-opencog::Handle atomese_combo_it(Iter it,
-                                 id::procidure_types& parent_procidure_type)
+Handle atomese_combo(const combo_tree &ct)
 {
-
-    id::procidure_types procidure_type = parent_procidure_type;
-    combo_tree::iterator head = it;
-    Handle handle;
-    Type link_type = atomese_vertex(handle, *head, procidure_type);
-
-    if(link_type!=(unsigned short)-1){
-        HandleSeq handle_seq;
-        for(auto sib=head.begin(); sib!=head.end(); ++sib){
-            handle_seq.push_back(atomese_combo_it(sib, procidure_type));
-        }
-        handle = createLink(handle_seq, link_type);
-    }
-    return handle;
-}
-
-Handle atomese_combo(const combo_tree& ct)
-{
-    Handle handle;
-    combo_tree::iterator it=ct.begin();
-    id::procidure_types ptype = id::procidure_types::unknown;
-    handle = atomese_combo_it(it, ptype);
-    return handle;
+	Handle handle;
+	combo_tree::iterator it = ct.begin();
+	id::procedure_type ptype = id::procedure_type::unknown;
+	handle = atomese_combo_it(it, ptype);
+	return handle;
 }
 
 }}  // ~namespaces combo opencog
