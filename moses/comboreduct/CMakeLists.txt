@@ -7,6 +7,7 @@ ADD_SUBDIRECTORY(ant_combo_vocabulary)
 ADD_SUBDIRECTORY(main)
 ADD_SUBDIRECTORY(man)
 ADD_SUBDIRECTORY(crutil)
+ADD_SUBDIRECTORY(converter)
 
 ADD_LIBRARY(comboreduct SHARED
 	crutil/exception
@@ -59,6 +60,8 @@ ADD_LIBRARY(comboreduct SHARED
 	reduct/perception_reduction
 	reduct/perception_rules
 	reduct/reduct
+
+	converter/combo_atomese
 )
 
 TARGET_LINK_LIBRARIES (comboreduct

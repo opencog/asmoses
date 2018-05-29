@@ -105,6 +105,13 @@ enum __attribute__ ((packed)) builtin
     builtin_count // to get the number of builtin
 };
 
+//    Atomese procedure types
+enum __attribute__((packed)) procidure_types{
+    unknown=0,
+    predicate,
+    schema
+};
+
 }
 
 
