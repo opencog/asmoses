@@ -796,6 +796,16 @@ inline bool may_have_side_effects(combo_tree::iterator /*it*/)
 }
 
 } // ~namespace combo
+
+/** Printing utility
+ * Used only during GDB debugging
+ *
+ * @param  combo_tree the combo tree to be printed
+ *
+ * @return string representation of the combo_tree
+ */
+std::string oc_to_string(combo::combo_tree&);
+
 } // ~namespace opencog
 
 // this is to be able to use std::unordered_map and such
