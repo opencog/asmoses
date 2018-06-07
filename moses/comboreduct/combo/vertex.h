@@ -806,6 +806,15 @@ inline bool may_have_side_effects(combo_tree::iterator /*it*/)
  */
 std::string oc_to_string(combo::combo_tree&);
 
+/** Printing utility
+ * Used only during GDB debugging
+ *
+ * @param  vertex the vertex to be printed
+ *
+ * @return string representation of the vertex
+ */
+std::string oc_to_string(combo::vertex&);
+
 } // ~namespace opencog
 
 // this is to be able to use std::unordered_map and such

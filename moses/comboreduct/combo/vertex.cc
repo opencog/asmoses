@@ -280,4 +280,13 @@ std::string oc_to_string(combo::combo_tree &ct)
 	return str;
 }
 
+std::string oc_to_string(combo::vertex &v)
+{
+	std::ostringstream os;
+	combo::ostream_vertex(os, v, {});
+	std::string str = os.str();
+
+	return str;
+}
+
 } // ~namespaces combo opencog
