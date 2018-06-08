@@ -907,7 +907,7 @@ istream& istreamTable_ignore_indices(istream& in, Table& tab,
 
 // ==================================================================
 
-static istream&
+istream&
 inferTableAttributes(istream& in, const string& target_feature,
                      const string& timestamp_feature,
                      const vector<string>& ignore_features,
