@@ -47,4 +47,12 @@ public:
         TS_ASSERT_DIFFERS(hv_bd, hv_do);
         TS_ASSERT_DIFFERS(hv_bl, hv_do);
     }
+    void test_oc_to_string()
+    {
+	    combo_tree tr = str2combo_tree("and(or($1 $2) not($3))", {});
+	    TS_ASSERT_EQUALS("and(or($1 $2) not($3)) ", opencog::oc_to_string(tr));
+
+	    vertex v1 = *tr.begin();
+	    TS_ASSERT_EQUALS("and", opencog::oc_to_string(v1));
+    }
 };

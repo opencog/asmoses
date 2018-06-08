@@ -269,4 +269,24 @@ void copy_without_null_vertices(combo_tree::iterator src,
             copy_without_null_vertices(sib, dst_tr, dst_tr.append_child(dst));
 }
 
-}} // ~namespaces combo opencog
+}
+
+std::string oc_to_string(combo::combo_tree &ct)
+{
+	std::ostringstream os;
+	combo::ostream_combo_tree(os, ct);
+	std::string str = os.str();
+
+	return str;
+}
+
+std::string oc_to_string(combo::vertex &v)
+{
+	std::ostringstream os;
+	combo::ostream_vertex(os, v);
+	std::string str = os.str();
+
+	return str;
+}
+
+} // ~namespaces combo opencog
