@@ -1,0 +1,62 @@
+#include <opencog/guile/SchemeEval.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/atoms/execution/Instantiator.h>
+#include <opencog/util/Logger.h>
+#include "moses/comboreduct/atomese_representation/atomese_representation.h"
+
+using namespace opencog;
+using namespace std;
+const string atomese_reprUTest_dir =
+	string(PROJECT_SOURCE_DIR) + "/tests/comboreduct/atomese_representation/";
+
+class atomese_reprUTest : public CxxTest::TestSuite
+{
+private:
+    AtomSpace *as;
+    SchemeEval* eval;
+
+public:
+    atomese_reprUTest(void)
+    {
+        logger().set_level(Logger::DEBUG);
+        logger().set_print_to_stdout_flag(true);
+
+        as = new AtomSpace();
+        eval = new SchemeEval(as);
+        eval->eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
+        eval->eval("(use-modules (opencog exec))");
+    }
+
+    ~atomese_reprUTest()
+    {
+        delete eval;
+        delete as;
+        // Erase the log file if no assertions failed.
+        if (!CxxTest::TestTracker::tracker().suiteFailed())
+            std::remove(logger().get_filename().c_str());
+    }
+
+    void test_real_data_representation()
+    {
+        eval->eval(
+            "(load-from-path \"tests/comboreduct/atomese_representation/real_data_result.scm\")");
+        Handle expected = eval->eval_h("(cog-execute! real_data_repr)");
+
+        Handle result = atomese::load_atomese(
+            atomese_reprUTest_dir + "real_data_test.csv");
+
+        TS_ASSERT(content_eq(expected, result));
+    }
+
+    void test_boolean_data_representation()
+    {
+        eval->eval(
+            "(load-from-path \"tests/comboreduct/atomese_representation/boolean_data_result.scm\")");
+        Handle expected = eval->eval_h("(cog-execute! boolean_data_repr)");
+
+        Handle result = atomese::load_atomese(
+            atomese_reprUTest_dir + "boolean_data_test.csv");
+
+        TS_ASSERT(content_eq(expected, result));
+    }
+};

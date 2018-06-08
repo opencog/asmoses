@@ -7,6 +7,7 @@ ADD_SUBDIRECTORY(ant_combo_vocabulary)
 ADD_SUBDIRECTORY(main)
 ADD_SUBDIRECTORY(man)
 ADD_SUBDIRECTORY(crutil)
+ADD_SUBDIRECTORY(atomese_representation)
 
 ADD_LIBRARY(comboreduct SHARED
 	crutil/exception
@@ -59,6 +60,8 @@ ADD_LIBRARY(comboreduct SHARED
 	reduct/perception_reduction
 	reduct/perception_rules
 	reduct/reduct
+
+	atomese_representation/atomese_representation
 )
 
 TARGET_LINK_LIBRARIES (comboreduct
@@ -66,6 +69,7 @@ TARGET_LINK_LIBRARIES (comboreduct
 	${Boost_DATE_TIME_LIBRARY}
 	${Boost_THREAD_LIBRARY}
 	${Boost_REGEX_LIBRARY}
+	${ATOMSPACE_atombase_LIBRARY}
 )
 
 ADD_LIBRARY(comboant SHARED
@@ -80,7 +84,6 @@ TARGET_LINK_LIBRARIES (comboant
 	comboreduct
 	${COGUTIL_LIBRARY}
 )
-
 
 #install library
 IF (WIN32)

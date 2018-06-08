@@ -185,6 +185,21 @@ ELSE (CXXTEST_FOUND)
 	MESSAGE(STATUS "CxxTest missing: needed for unit tests.")
 ENDIF (CXXTEST_FOUND)
 
+# This is required for Guile
+FIND_LIBRARY(GMP_LIBRARY gmp)
+FIND_PATH(GMP_INCLUDE_DIR gmp.h)
+
+# Gnu Guile scheme interpreter
+# Version 2.0.9 is needed for mrs io ports, compilation, etc.
+FIND_PACKAGE(Guile 2.0.9)
+IF (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
+	ADD_DEFINITIONS(-DHAVE_GUILE)
+	SET(HAVE_GUILE 1)
+	INCLUDE_DIRECTORIES(${GUILE_INCLUDE_DIR})
+ELSE (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
+	SET(GUILE_DIR_MESSAGE "Guile was not found; the scheme shell will not be built.\nTo over-ride, make sure GUILE_LIBRARIES and GUILE_INCLUDE_DIRS are set.")
+	MESSAGE(STATUS "${GUILE_DIR_MESSAGE}")
+ENDIF (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 
 # Look for Opencog Utils.
 FIND_PACKAGE(CogUtil)
@@ -458,11 +473,13 @@ FIND_PACKAGE(Doxygen)
 ADD_SUBDIRECTORY(doc EXCLUDE_FROM_ALL)
 
 # Show a summary of what we got
+SUMMARY_ADD("AtomSpace" "A weighted and typed hypergraph database" HAVE_ATOMSPACE)
 SUMMARY_ADD("ComboReduct" "Library for reduction of combo program trees" HAVE_COMBOREDUCT)
 SUMMARY_ADD("Doxygen" "Code documentation" DOXYGEN_FOUND)
 SUMMARY_ADD("Feature selection" "MOSES based feature selection tool" HAVE_FEATURE_SELECTION)
 SUMMARY_ADD("MOSES" "Meta-Optimizing Semantic Evolutionary Search" HAVE_MOSES)
 SUMMARY_ADD("Python bindings" "Python (cython) bindings" HAVE_CYTHON)
 SUMMARY_ADD("Python tests" "Python bindings nose tests" HAVE_NOSETESTS)
+SUMMARY_ADD("Scheme bindings" "Scheme bindings and shell" HAVE_GUILE)
 SUMMARY_ADD("Unit tests" "Unit tests" CXXTEST_FOUND AND COGUTIL_FOUND)
 SUMMARY_SHOW()

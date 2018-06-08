@@ -27,6 +27,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 #include <moses/moses/scoring/scoring_base.h>
+#include <opencog/atoms/base/Handle.h>
 #include "problem-params.h"
 
 namespace opencog { namespace moses {
@@ -42,6 +43,7 @@ struct table_problem_params : public option_base
     std::string timestamp_feature;
     std::string weighting_feature;
     std::vector<std::string> ignore_features_str;
+    bool use_atomese;
 };
 
 
@@ -57,10 +59,13 @@ protected:
 
     void common_setup(problem_params&);
     void common_type_setup(problem_params&, type_node = id::unknown_type);
+    void read_combo_table(problem_params&);
+    void read_atomese_table(problem_params&);
 
     // Input data for table-based problems.
     std::vector<Table> _tables;
     std::vector<CTable> _ctables;
+    HandleSeq _handles;
     Table table;
     CTable ctable;
     std::vector<std::string> ilabels;     // labels of the input table (table.itable)

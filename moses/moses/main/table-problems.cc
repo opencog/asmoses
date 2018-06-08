@@ -26,9 +26,9 @@
 
 #include <opencog/util/Logger.h>
 #include <moses/comboreduct/table/table_io.h>
+#include <moses/comboreduct/atomese_representation/atomese_representation.h>
 
 #include "../moses/partial.h"
-#include "../scoring/bscores.h"
 #include "../scoring/discriminating_bscore.h"
 #include "../scoring/select_bscore.h"
 
@@ -93,6 +93,10 @@ void table_problem_params::add_options(boost::program_options::options_descripti
          "Ignore feature from the datasets. Can be used several times "
          "to ignore several features.\n")
 
+        ("use-atomese",
+         po::value<bool>(&use_atomese)->default_value(false),
+         "Use Atomese for MOSES learning.\n")
+
     ;  // end of desc add options
 }
 
@@ -106,62 +110,92 @@ void table_problem_base::common_setup(problem_params& pms)
         log_output_error_exit(ss.str());
     }
 
-    // Read input data files
-    _tables.clear();
-    _ctables.clear();
-    size_t num_rows = 0;
-    for (const string& idf : _tpp.input_data_files) {
-        logger().info("Read data file %s", idf.c_str());
-        Table table = loadTable(idf, _tpp.target_feature,
-                                _tpp.timestamp_feature,
-                                _tpp.ignore_features_str);
-        num_rows += table.size();
+	// Read input data files
+    if(_tpp.use_atomese)
+		read_atomese_table(pms);
+    else
+        read_combo_table(pms);
+}
 
-        // Possibly subsample the table
-        if (pms.nsamples > 0)
-            subsampleTable(pms.nsamples/(float)table.size(), table);
+void table_problem_base::read_atomese_table(problem_params& pms){
 
-        // Compressed table
-        _ctables.push_back(table.compressed(_tpp.weighting_feature));
+	logger().set_print_to_stdout_flag(true);
 
-        // The compressed table removes the weighting feature, too.
-        if (not _tpp.weighting_feature.empty())
-            table.itable.delete_column(_tpp.weighting_feature);
-        _tables.push_back(table);
+	_handles.clear();
 
-        // Possibly balance the ctable
-        if (pms.balance)
-            _ctables.back().balance();
-    }
-    logger().info("Number of rows in tables = %d", num_rows);
+	for (const string& idf : _tpp.input_data_files) {
+		logger().info("Read data file %s", idf.c_str());
+		Handle handle = atomese::load_atomese(idf);
+		_handles.push_back(handle);
+		logger().info("Atomese Representation: %s \n", handle->to_short_string().c_str());
+	}
 
-    // XXX FIXME -- the multiple tables should be merged into one.
-    ctable = _ctables.front();
-    table = _tables.front();
+	logger().info("This is all we have in atomese :)");
+	exit(1);
+}
 
-    // Get the labels contained in the data file.
-    ilabels.clear();
-    if (pms.output_with_labels)
-        ilabels = table.itable.get_labels();
+void table_problem_base::read_combo_table(problem_params& pms){
 
-    arity = table.get_arity();
+	_tables.clear();
+	_ctables.clear();
+	size_t num_rows = 0;
+	for (const string& idf : _tpp.input_data_files) {
+		logger().info("Read data file %s", idf.c_str());
+		Table table = loadTable(idf, _tpp.target_feature,
+		                        _tpp.timestamp_feature,
+		                        _tpp.ignore_features_str);
+		num_rows += table.size();
 
-    // Check that all input data files have the same arity
-    // XXX FIXME .. check that they all have the same signature.
-    if (_tables.size() > 1) {
-        for (size_t i = 1; i < _tables.size(); ++i) {
-            combo::arity_t test_arity = _tables[i].get_arity();
-            if (test_arity != arity) {
-                stringstream ss;
-                ss << "File " << _tpp.input_data_files[0] << " has arity " << arity
-                   << " while file " << _tpp.input_data_files[i] << " has arity " << test_arity;
-                log_output_error_exit(ss.str());
-            }
-        }
-    }
-    logger().info("Inferred arity = %d", arity);
+		// Possibly subsample the table
+		if (pms.nsamples > 0)
+			subsampleTable(pms.nsamples / (float) table.size(), table);
 
-    pms.mmr_pa.ilabels = ilabels;
+		// Compressed table
+		_ctables.push_back(table.compressed(_tpp.weighting_feature));
+
+		// The compressed table removes the weighting feature, too.
+		if (not _tpp.weighting_feature.empty())
+			table.itable.delete_column(_tpp.weighting_feature);
+		_tables.push_back(table);
+
+		// Possibly balance the ctable
+		if (pms.balance)
+			_ctables.back().balance();
+	}
+	logger().info("Number of rows in tables = %d", num_rows);
+
+	// XXX FIXME -- the multiple tables should be merged into one.
+	ctable = _ctables.front();
+	table = _tables.front();
+
+	// Get the labels contained in the data file.
+	ilabels.clear();
+	if (pms.output_with_labels)
+		ilabels = table.itable.get_labels();
+
+	arity = table.get_arity();
+
+	// Check that all input data files have the same arity
+	// XXX FIXME .. check that they all have the same signature.
+	if (_tables.size() > 1)
+	{
+		for (size_t i = 1; i < _tables.size(); ++i)
+		{
+			combo::arity_t test_arity = _tables[i].get_arity();
+			if (test_arity != arity)
+			{
+				stringstream ss;
+				ss << "File " << _tpp.input_data_files[0] << " has arity "
+				   << arity
+				   << " while file " << _tpp.input_data_files[i]
+				   << " has arity " << test_arity;
+				log_output_error_exit(ss.str());
+			}
+		}
+	}
+	logger().info("Inferred arity = %d", arity);
+
+	pms.mmr_pa.ilabels = ilabels;
 }
 
 /**
