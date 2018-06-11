@@ -1,0 +1,68 @@
+/** combo_atomeseUTest.cxxtest ---
+ *
+ * Copyright (C) 2018 OpenCog Foundation
+ *
+ * Author: Kasim Ebrahim
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <moses/comboreduct/converter/combo_atomese.h>
+#include <moses/comboreduct/combo/combo.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/atom_types.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/base/Node.h>
+
+
+using namespace std;
+using namespace opencog;
+
+
+class combo_atomeseUTest : public CxxTest::TestSuite{
+
+public:
+    void test_atomese_combo_predicate(void){
+        combo::combo_tree tr = combo::str2combo_tree("and(or($1 $2) not($3))", {});
+
+        Handle h = combo::atomese_combo(tr);
+
+        HandleSeq list_or = {createNode(PREDICATE_NODE, "1"), createNode(PREDICATE_NODE, "2")};
+        Handle or_link = createLink(list_or, OR_LINK);
+
+        HandleSeq list_not = {createNode(PREDICATE_NODE, "3")};
+        Handle not_link = createLink(list_not, NOT_LINK);
+
+        HandleSeq list_and = {or_link, not_link};
+        Handle and_link = createLink(list_and, AND_LINK);
+
+        TS_ASSERT(content_eq(h, and_link));
+
+    }
+
+    void test_atomese_combo_schema(void){
+        combo::combo_tree tr = combo::str2combo_tree("+($1 $2)", {});
+
+        Handle h = combo::atomese_combo(tr);
+
+        HandleSeq list_plus = {createNode(SCHEMA_NODE, "1"), createNode(SCHEMA_NODE, "2")};
+        Handle plus_link = createLink(list_plus, PLUS_LINK);
+
+        TS_ASSERT(content_eq(h, plus_link));
+
+    }
+};
