@@ -6,37 +6,40 @@ called *demes*, each representing a subregion of the program
 space. Optimizing a deme consists of searching that subregion for
 programs that maximize a given fitness function. Optimizing multiple
 demes is embarrassingly parallel, i.e. each deme can be created and
-optimized in isolation w.r.t. the other demes.
+optimized almost in isolation w.r.t. the other demes (assuming they do
+explore relatively disjoint subregions).
 
 Once a deme has been optimized (searched till some criteria are met)
 its most promising candidates are sent to the *meta-population*. The
 meta-population is a population of programs that can be used to spawn
-more demes. For that the selected program is turned into a template,
+more demes. For that a selected program is turned into a template,
 called an exemplar, where some parts of it can be mutated. The set of
-all possible mutations of that exemplar defines the program subregion
-of the deme.
+all possible mutations of that exemplar defines the program region of
+the deme.
 
 With MOSES being ported to the AtomSpace, programs will soon be
-represented as atoms. Each deme thus far explored will be stored in an
-AtomSpace and the meta-population will be an AtomSpace too.
+represented as atoms. Each deme thus far explored will be stored in
+its own AtomSpace and the meta-population will be an AtomSpace too.
 
-On top of the programs candidate the fitness function (including for
+On top of the program candidates, the fitness function (including for
 instance associated data, in the case of data fitting) will have to be
 copied to each deme so MOSES can evaluate each candidate.
 
-So we would have a centralized architecture with a central master
+So we would start with a centralized architecture with a master
 AtomSpace containing the meta-population, and peripheral slave
-AtomSpaces containing demes being optimized. That is not necessarily
-ideal but it's a start.
+AtomSpaces containing demes being optimized. Then eventually move
+towards a more hierarchical architecture to avoid a bottleneck on the
+master.
 
 MOSES actually already supports such centralized distributed
 architecture built around MPI. However no AtomSpace is currently used,
 not yet. Program candidates are coded in MOSES' home-brewed language
 called Combo, and are being exchanged back and forth between master
-and slaves by being concerted into strings. This only happens at the
+and slaves as strings. These exchanges though only happen at the
 creation and destruction of a deme. At the creation the examplar is
-communicated to the slave, and at destruction promising candidates are
-communicated back to the master.
+sent to a slave, and at destruction promising candidates are sent back
+to the master. Communications happening during deme optimization could
+be useful in principle but can probably be ignored for the time being.
 
 Input Data
 ----------
@@ -65,10 +68,12 @@ some examples of programs
 ```
 
 where `p1`, `p2` and `p3` and boolean features and `f1` and `f2` are
-numerical features of some dataset. Obviously the average program size
-will be much larger than what is presented here. In addition, though
-the exact form remains to be determined, programs will be explicitely
-marked as members of a deme, such that
+numerical features of some dataset, and usual operators are high level
+overloads (for instance `f1 + f2` means the sum of function `f1` and
+`f2`). Obviously the average program size will be much larger than
+what is presented here. In addition, though the exact form remains to
+be determined, programs will be explicitely marked as members of a
+deme, such that
 
 ```scheme
 ;; [f1 + f2] is a member of deme1
@@ -96,9 +101,9 @@ marked as members of a deme, such that
   (Concept "deme1"))
 ```
 
-The whole fitness function will have to be duplicated in the AtomSpace
-of each deme. The format of the fitness function is to be determined,
-but it might look like
+Finally, the whole fitness function will have to be duplicated in each
+deme AtomSpace. The format of the fitness function is to be
+determined, but it might look like
 
 ```scheme
 Lambda
@@ -173,10 +178,12 @@ atoms, because candidates share most of their atoms. Given that an
 atom takes in average about 1.5K of RAM a million atoms would take
 about 1.5GB of RAM.
 
-There can be extra RAM needed if fitness evaluation memoization is
-used, but that's another problem.
-
 The requirements for the meta-population are probably similar.
+
+There can be extra RAM needed if fitness evaluation memoization is
+used, but that's another problem. It is expected that the fitness
+function (including data) will be negligible compared to the deme
+population and meta-population.
 
 Actual Databases and Test Scripts
 ---------------------------------
