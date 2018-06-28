@@ -78,27 +78,27 @@ deme, such that
 ```scheme
 ;; [f1 + f2] is a member of deme1
 (Member
+  (Concept "deme1")
   (Plus
     (Schema "f1")
-    (Schema "f2"))
-  (Concept "deme1"))
+    (Schema "f2")))
 
 ;; [(p1 and p2) or p3] is a member of deme1
 (Member
+  (Concept "deme1")
   (Or
     (Predicate "p3")
     (And
       (Predicate "p1")
-      (Predicate "p2")))
-  (Concept "deme1"))
+      (Predicate "p2"))))
 
 ;; [if p1 then f1 else f2] is a member of deme1
 (Member
+  (Concept "deme1")
   (IfThenElse
     (Predicate "p1")
     (Schema "f1")
-    (Schema "f2"))
-  (Concept "deme1"))
+    (Schema "f2")))
 ```
 
 Finally, the whole fitness function will have to be duplicated in each
@@ -120,11 +120,11 @@ candidates to the meta-population, which will look like
 ```scheme
 ;; [if p1 then f1 else f2] is a member of deme1
 (Member
+  (Concept "meta-population")
   (IfThenElse
     (Predicate "p1")
     (Schema "f1")
-    (Schema "f2"))
-  (Concept "meta-population"))
+    (Schema "f2")))
 ```
 
 AtomSpace Queries/Searches
@@ -138,8 +138,8 @@ promising candidates
 (Get
   (And
     (Member
-      (Variable "$P")
-      (Concept "deme1"))
+      (Concept "deme1")
+      (Variable "$P"))
     (Evaluation
       (GroundedPredicate "is-promising")
       (Variable "$P"))))
