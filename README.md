@@ -73,6 +73,16 @@ few exceptions, most Linux distributions will provide these packages.
 > It uses exactly the same build procedure as this package. Be sure
   to `sudo make install` at the end.
 
+###### atomspace
+> OpenCog Atomspace database and reasoning engine
+> http://github.com/opencog/atomspace
+> It uses exactly the same build procedure as this package. Be sure
+  to `sudo make install` at the end.
+
+###### guile
+> Embedded scheme REPL (version 2.2.2 or newer is required).
+> http://www.gnu.org/software/guile/guile.html
+
 Optional Prerequisites
 ----------------------
 The following packages are optional. If they are not installed, some
