@@ -32,6 +32,7 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/oc_assert.h>
+#include <opencog/util/empty_string.h>
 
 #include <moses/comboreduct/combo/action.h>
 #include <moses/comboreduct/combo/action_symbol.h>
@@ -801,19 +802,23 @@ inline bool may_have_side_effects(combo_tree::iterator /*it*/)
  * Used only during GDB debugging
  *
  * @param  combo_tree the combo tree to be printed
+ * @param  indent indentation string preprending each line
  *
  * @return string representation of the combo_tree
  */
-std::string oc_to_string(combo::combo_tree&);
+std::string oc_to_string(combo::combo_tree&,
+                         const std::string& indent=empty_string);
 
 /** Printing utility
  * Used only during GDB debugging
  *
  * @param  vertex the vertex to be printed
+ * @param  indent indentation string preprending each line
  *
  * @return string representation of the vertex
  */
-std::string oc_to_string(combo::vertex&);
+std::string oc_to_string(combo::vertex&,
+                         const std::string& indent=empty_string);
 
 } // ~namespace opencog
 

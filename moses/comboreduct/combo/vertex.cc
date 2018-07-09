@@ -271,7 +271,7 @@ void copy_without_null_vertices(combo_tree::iterator src,
 
 }
 
-std::string oc_to_string(combo::combo_tree &ct)
+std::string oc_to_string(combo::combo_tree &ct, const std::string& /*indent*/)
 {
 	std::ostringstream os;
 	combo::ostream_combo_tree(os, ct);
@@ -280,7 +280,7 @@ std::string oc_to_string(combo::combo_tree &ct)
 	return str;
 }
 
-std::string oc_to_string(combo::vertex &v)
+std::string oc_to_string(combo::vertex &v, const std::string& /*indent*/)
 {
 	std::ostringstream os;
 	combo::ostream_vertex(os, v);
