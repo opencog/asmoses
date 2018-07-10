@@ -56,7 +56,7 @@ Handle parse_header(const vector<string>& labels)
  * @param row_num row number
  * @return
  */
-Handle mk_row_number_cell(const int& row_num)
+Handle mk_row_number_cell(const int row_num)
 {
 	return createNode(NODE, "r" + to_string(row_num));
 }
@@ -67,7 +67,7 @@ Handle mk_row_number_cell(const int& row_num)
  * @param contin contin value of a cell
  * @return
  */
-Handle mk_real_cell(const contin_t& contin)
+Handle mk_real_cell(const contin_t contin)
 {
 	return createNumberNode(contin)->get_handle();
 }
@@ -81,8 +81,8 @@ Handle mk_real_cell(const contin_t& contin)
  * @param label label of the feature
  * @return
  */
-Handle mk_real_cell_exec(const contin_t& contin,
-                         const int& row_num, const string& label)
+Handle mk_real_cell_exec(const contin_t contin,
+                         const int row_num, const string& label)
 {
 	return createLink(EXECUTION_LINK,
 	                  createNode(SCHEMA_NODE, label),
@@ -96,7 +96,7 @@ Handle mk_real_cell_exec(const contin_t& contin,
  * @param b builtin value
  * @return
  */
-Handle mk_boolean_cell(const builtin& b)
+Handle mk_boolean_cell(const builtin b)
 {
 	return createLink(builtin_to_bool(b) ? TRUE_LINK : FALSE_LINK);
 }
@@ -110,8 +110,8 @@ Handle mk_boolean_cell(const builtin& b)
  * @param label label of the feature
  * @return
  */
-Handle mk_boolean_cell_eval(const builtin& b,
-                            const int& row_num, const string& label)
+Handle mk_boolean_cell_eval(const builtin b,
+                            const int row_num, const string& label)
 {
 	Handle h = createLink(EVALUATION_LINK,
 	                      createNode(PREDICATE_NODE, label),
@@ -130,14 +130,31 @@ Handle mk_boolean_cell_eval(const builtin& b,
  * @param label label of the feature
  * @return
  */
-Handle mk_boolean_cell_exec(const builtin& b,
-                            const int& row_num, const string& label)
+Handle mk_boolean_cell_exec(const builtin b,
+                            const int row_num, const string& label)
 {
 	return createLink(EXECUTION_LINK,
 	                  createNode(SCHEMA_NODE, label),
 	                  mk_row_number_cell(row_num),
 	                  mk_boolean_cell(b));
 }
+
+struct mk_cell_visitor : public boost::static_visitor<Handle>
+{
+	Handle operator()(const builtin b) const
+	{
+		return mk_boolean_cell(b);
+	}
+
+	Handle operator()(const contin_t contin) const
+	{
+		return mk_real_cell(contin);
+	}
+
+	template<typename T>
+	Handle operator()(const T& t) const
+	{}
+};
 
 /**
  * Represent a row as a list of cells.
@@ -157,7 +174,7 @@ Handle mk_row(const HandleSeq& cells)
  * @param row_num row number
  * @return
  */
-Handle mk_numbered_row(const HandleSeq& cells, const int& row_num)
+Handle mk_numbered_row(const HandleSeq& cells, const int row_num)
 {
 	return createLink(LIST_LINK,
 	                  mk_row_number_cell(row_num),
@@ -172,30 +189,16 @@ Handle mk_numbered_row(const HandleSeq& cells, const int& row_num)
  */
 Handle mk_output_table(const OTable& oTable)
 {
-	const type_node& type = oTable.get_type();
 	const string& label = oTable.get_label();
 	HandleSeq rows;
-	int row_num = 1;
+	int row_num = 0;
 
-	if (type == id::boolean_type)
+	for (const vertex& v : oTable)
 	{
-		for (const vertex& v : oTable)
-		{
-			Handle h = createLink(LIST_LINK,
-			                      mk_row_number_cell(row_num++),
-			                      mk_boolean_cell(boost::get<builtin>(v)));
-			rows.push_back(h);
-		}
-	}
-	else if (type == id::contin_type)
-	{
-		for (const vertex& v : oTable)
-		{
-			Handle h = createLink(LIST_LINK,
-			                      mk_row_number_cell(row_num++),
-			                      mk_real_cell(boost::get<contin_t>(v)));
-			rows.push_back(h);
-		}
+		Handle h = createLink(LIST_LINK,
+		                      mk_row_number_cell(++row_num),
+		                      boost::apply_visitor(mk_cell_visitor(), v));
+		rows.push_back(h);
 	}
 
 	return createLink(SIMILARITY_LINK,
@@ -212,11 +215,11 @@ Handle mk_output_table(const OTable& oTable)
  * 		 all features have similar type with the output feature.
  * @return
  */
-Handle mk_input_table(const ITable& iTable, const type_node& type)
+Handle mk_input_table(const ITable& iTable, const type_node type)
 {
 	const vector<string> labels = iTable.get_labels();
 	HandleSeq rows;
-	int row_num = 1;
+	int row_num = 0;
 
 	if (type == id::boolean_type)
 	{
@@ -228,10 +231,9 @@ Handle mk_input_table(const ITable& iTable, const type_node& type)
 				cells.push_back(mk_boolean_cell(cell_value));
 
 			Handle h = createLink(LIST_LINK,
-			                      mk_row_number_cell(row_num),
+			                      mk_row_number_cell(++row_num),
 			                      createLink(cells, LIST_LINK));
 			rows.push_back(h);
-			row_num++;
 		}
 	}
 	else if (type == id::contin_type)
@@ -244,10 +246,9 @@ Handle mk_input_table(const ITable& iTable, const type_node& type)
 				cells.push_back(mk_real_cell(cell_value));
 
 			Handle h = createLink(LIST_LINK,
-			                      mk_row_number_cell(row_num),
+			                      mk_row_number_cell(++row_num),
 			                      createLink(cells, LIST_LINK));
 			rows.push_back(h);
-			row_num++;
 		}
 	}
 
@@ -264,9 +265,9 @@ Handle mk_input_table(const ITable& iTable, const type_node& type)
  */
 HandleSeq mk_full_table(const Table& table, const bool similarity=false)
 {
-	const type_node& type = table.otable.get_type();
+	const type_node type = table.otable.get_type();
 	HandleSeq rows;
-	int row_num = 1;
+	int row_num = 0;
 
 	if (type == id::boolean_type)
 	{
@@ -275,13 +276,14 @@ HandleSeq mk_full_table(const Table& table, const bool similarity=false)
 			HandleSeq cells;
 
 			cells.push_back(mk_boolean_cell(
-				boost::get<builtin>(table.otable[row_num - 1])));
+				boost::get<builtin>(table.otable[row_num])));
 
 			for (builtin cell_value : m.get_seq<builtin>())
 				cells.push_back(mk_boolean_cell(cell_value));
 
 			rows.push_back(
-				similarity ? mk_numbered_row(cells, row_num) : mk_row(cells));
+				similarity ? mk_numbered_row(cells, row_num + 1)
+				           : mk_row(cells));
 			row_num++;
 		}
 	}
@@ -292,13 +294,14 @@ HandleSeq mk_full_table(const Table& table, const bool similarity=false)
 			HandleSeq cells;
 
 			cells.push_back(mk_real_cell(
-				boost::get<contin_t>(table.otable[row_num - 1])));
+				boost::get<contin_t>(table.otable[row_num])));
 
 			for (contin_t cell_value : m.get_seq<contin_t>())
 				cells.push_back(mk_real_cell(cell_value));
 
 			rows.push_back(
-				similarity ? mk_numbered_row(cells, row_num) : mk_row(cells));
+				similarity ? mk_numbered_row(cells, row_num + 1)
+				           : mk_row(cells));
 			row_num++;
 		}
 	}
@@ -316,8 +319,8 @@ HandleSeq mk_full_table(const Table& table, const bool similarity=false)
 Handle mk_unfolded_table(const Table& table, const bool use_eval)
 {
 	HandleSeq rows;
-	int row_num = 1;
-	const type_node& type = table.otable.get_type();
+	int row_num = 0;
+	const type_node type = table.otable.get_type();
 	const vector<string>& labels = table.itable.get_labels();
 
 	if (type == id::boolean_type)
@@ -330,13 +333,14 @@ Handle mk_unfolded_table(const Table& table, const bool use_eval)
 				int cell_number = 0;
 
 				cells.push_back(mk_boolean_cell_eval(
-					boost::get<builtin>(table.otable[row_num - 1]),
-					row_num,
+					boost::get<builtin>(table.otable[row_num]),
+					row_num + 1,
 					table.otable.get_label()));
 
 				for (builtin cell_value : m.get_seq<builtin>())
-					cells.push_back(mk_boolean_cell_eval(cell_value, row_num,
-					                                     labels[cell_number++]));
+					cells.push_back(
+						mk_boolean_cell_eval(cell_value, row_num + 1,
+						                     labels[cell_number++]));
 
 				rows.push_back(mk_row(cells));
 				row_num++;
@@ -350,13 +354,14 @@ Handle mk_unfolded_table(const Table& table, const bool use_eval)
 				int cell_number = 0;
 
 				cells.push_back(mk_boolean_cell_exec(
-					boost::get<builtin>(table.otable[row_num - 1]),
-					row_num,
+					boost::get<builtin>(table.otable[row_num]),
+					row_num + 1,
 					table.otable.get_label()));
 
 				for (builtin cell_value : m.get_seq<builtin>())
-					cells.push_back(mk_boolean_cell_exec(cell_value, row_num,
-					                                     labels[cell_number++]));
+					cells.push_back(
+						mk_boolean_cell_exec(cell_value, row_num + 1,
+						                     labels[cell_number++]));
 
 				rows.push_back(mk_row(cells));
 				row_num++;
@@ -371,12 +376,12 @@ Handle mk_unfolded_table(const Table& table, const bool use_eval)
 			int cell_number = 0;
 
 			cells.push_back(mk_real_cell_exec(
-				boost::get<contin_t>(table.otable[row_num - 1]),
-				row_num,
+				boost::get<contin_t>(table.otable[row_num]),
+				row_num + 1,
 				table.otable.get_label()));
 
 			for (contin_t cell_value : m.get_seq<contin_t>())
-				cells.push_back(mk_real_cell_exec(cell_value, row_num,
+				cells.push_back(mk_real_cell_exec(cell_value, row_num + 1,
 				                                  labels[cell_number++]));
 
 			rows.push_back(mk_row(cells));
