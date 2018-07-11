@@ -271,7 +271,7 @@ Handle mk_output_table(const OTable& oTable)
 	for (const vertex& v : oTable)
 	{
 		Handle h = createLink(LIST_LINK,
-		                      mk_row_number_cell(++row_num),
+		                      mk_row_number_cell(row_num++),
 		                      boost::apply_visitor(mk_cell_visitor(), v));
 		rows.push_back(h);
 	}
@@ -301,7 +301,7 @@ Handle mk_input_table(const ITable& iTable)
 		                                       m.get_variant());
 
 		Handle h = createLink(LIST_LINK,
-		                      mk_row_number_cell(++row_num),
+		                      mk_row_number_cell(row_num++),
 		                      createLink(cells, LIST_LINK));
 		rows.push_back(h);
 	}
@@ -332,7 +332,7 @@ HandleSeq mk_full_table(const Table& table, const bool similarity=false)
 		                                  table.otable[row_num]));
 
 		rows.push_back(
-			similarity ? mk_numbered_row(cells, row_num + 1)
+			similarity ? mk_numbered_row(cells, row_num)
 			           : mk_row(cells));
 		row_num++;
 	}
@@ -359,12 +359,12 @@ Handle mk_unfolded_boolean_table_eval(const Table& table)
 
 		cells.push_back(mk_boolean_cell_eval(
 			boost::get<builtin>(table.otable[row_num]),
-			row_num + 1,
+			row_num,
 			table.otable.get_label()));
 
 		for (builtin cell_value : m.get_seq<builtin>())
 			cells.push_back(
-				mk_boolean_cell_eval(cell_value, row_num + 1,
+				mk_boolean_cell_eval(cell_value, row_num,
 				                     labels[cell_number++]));
 
 		rows.push_back(mk_row(cells));
@@ -389,12 +389,12 @@ Handle mk_unfolded_table(const Table& table)
 	for (const multi_type_seq& m : table.itable)
 	{
 		mk_exec_cell_seq_visitor cseqv;
-		cseqv.row_num = row_num + 1;
+		cseqv.row_num = row_num;
 		cseqv.labels = labels;
 		HandleSeq cells = boost::apply_visitor(cseqv, m.get_variant());
 
 		mk_exec_cell_visitor cv;
-		cv.row_num = row_num + 1;
+		cv.row_num = row_num;
 		cv.label = table.otable.get_label();
 		cells.insert(cells.begin(),
 		             boost::apply_visitor(cv, table.otable[row_num]));

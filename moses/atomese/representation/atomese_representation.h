@@ -57,14 +57,14 @@ namespace atomese {
  *  (Similarity (stv 1 1)
  *   (Schema "o")
  *   (Set
- *    (List (Node "r1") (True))
- *    (List (Node "r2") (False))))
+ *    (List (Node "r0") (True))
+ *    (List (Node "r1") (False))))
  *
  *  (Similarity (stv 1 1)
  *   (List (Schema "i1") (Schema "i2"))
  *   (Set
- *    (List (Node "r1") (List (False) (False)))
- *    (List (Node "r2") (List (True) (False)))
+ *    (List (Node "r0") (List (False) (False)))
+ *    (List (Node "r1") (List (True) (False)))
  *   ))
  * )
  *
@@ -74,14 +74,14 @@ namespace atomese {
  * (Similarity (stv 1 1)
  *  (Schema "o")
  *  (Set
- *   (List (Node "r1") (Number 1))
- *   (List (Node "r2") (Number 0))))
+ *   (List (Node "r0") (Number 1))
+ *   (List (Node "r1") (Number 0))))
  *
  * (Similarity (stv 1 1)
  *  (List (Schema "i1") (Schema "i2"))
  *  (Set
- *   (List (Node "r1") (List (Number 0) (Number 0)))
- *   (List (Node "r2") (List (Number 1) (Number 0)))))
+ *   (List (Node "r0") (List (Number 0) (Number 0)))
+ *   (List (Node "r1") (List (Number 1) (Number 0)))))
  * )
  *
  * @param file_name
@@ -155,8 +155,8 @@ Handle load_atomese_compact(
  * (Similarity (stv 1 1)
  *  (List (Schema "o") (Schema "i1") (Schema "i2"))
  *  (Set
- *   (List (Node "r1") (List (True) (False) (False)))
- *   (List (Node "r2") (List (False) (True) (False)))
+ *   (List (Node "r0") (List (True) (False) (False)))
+ *   (List (Node "r1") (List (False) (True) (False)))
  *  ))
  *
  * On real domain,
@@ -164,8 +164,8 @@ Handle load_atomese_compact(
  * (Similarity (stv 1 1)
  *  (List (Schema "o") (Schema "i1") (Schema "i2"))
  *  (Set
- *   (List (Node "r1") (List (Number 1) (Number 0) (Number 0)))
- *   (List (Node "r2") (List (Number 0) (Number 1) (Number 0)))
+ *   (List (Node "r0") (List (Number 1) (Number 0) (Number 0)))
+ *   (List (Node "r1") (List (Number 0) (Number 1) (Number 0)))
  *  ))
  *
  * @param file_name
@@ -193,28 +193,28 @@ Handle load_atomese_similarity(
  *
  * (Set
  *  (List
- *   (Execution (Schema "o") (Node "r1") (True))
- *   (Execution (Schema "i1") (Node "r1") (False))
- *   (Execution (Schema "i2") (Node "r1") (False)))
+ *   (Execution (Schema "o") (Node "r0") (True))
+ *   (Execution (Schema "i1") (Node "r0") (False))
+ *   (Execution (Schema "i2") (Node "r0") (False)))
  *
  *  (List
- *   (Execution (Schema "o") (Node "r2") (False))
- *   (Execution (Schema "i1") (Node "r2") (True))
- *   (Execution (Schema "i2") (Node "r2") (False)))
+ *   (Execution (Schema "o") (Node "r1") (False))
+ *   (Execution (Schema "i1") (Node "r1") (True))
+ *   (Execution (Schema "i2") (Node "r1") (False)))
  * )
  *
  * On real domain,
  *
  * (Set
  *  (List
- *   (Execution (Schema "o") (Node "r1") (Number 1))
- *   (Execution (Schema "i1") (Node "r1") (Number 0))
- *   (Execution (Schema "i2") (Node "r1") (Number 0)))
+ *   (Execution (Schema "o") (Node "r0") (Number 1))
+ *   (Execution (Schema "i1") (Node "r0") (Number 0))
+ *   (Execution (Schema "i2") (Node "r0") (Number 0)))
  *
  *  (List
- *   (Execution (Schema "o") (Node "r2") (Number 0))
- *   (Execution (Schema "i1") (Node "r2") (Number 1))
- *   (Execution (Schema "i2") (Node "r2") (Number 0)))
+ *   (Execution (Schema "o") (Node "r1") (Number 0))
+ *   (Execution (Schema "i1") (Node "r1") (Number 1))
+ *   (Execution (Schema "i2") (Node "r1") (Number 0)))
  * )
  *
  *
