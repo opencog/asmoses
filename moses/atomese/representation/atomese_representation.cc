@@ -156,6 +156,81 @@ struct mk_cell_visitor : public boost::static_visitor<Handle>
 	{}
 };
 
+struct mk_exec_cell_visitor : public boost::static_visitor<Handle>
+{
+	Handle operator()(const builtin b) const
+	{
+		return mk_boolean_cell_exec(b, row_num, label);
+	}
+
+	Handle operator()(const contin_t contin) const
+	{
+		return mk_real_cell_exec(contin, row_num, label);
+	}
+
+	template<typename T>
+	Handle operator()(const T& t) const
+	{}
+
+	int row_num;
+	string label;
+};
+
+struct mk_cell_seq_visitor : public boost::static_visitor<HandleSeq>
+{
+	HandleSeq operator()(const builtin_seq& b) const
+	{
+		HandleSeq cellSeq;
+		for (builtin cell_value : b)
+			cellSeq.push_back(mk_boolean_cell(cell_value));
+
+		return cellSeq;
+	}
+
+	HandleSeq operator()(const contin_seq& c) const
+	{
+		HandleSeq cellSeq;
+		for (contin_t cell_value : c)
+			cellSeq.push_back(mk_real_cell(cell_value));
+
+		return cellSeq;
+	}
+
+	template<typename T>
+	HandleSeq operator()(const T& t) const
+	{}
+};
+
+struct mk_exec_cell_seq_visitor : public boost::static_visitor<HandleSeq>
+{
+	HandleSeq operator()(const builtin_seq& b)
+	{
+		for (builtin cell_value : b)
+			cellSeq.push_back(mk_boolean_cell_exec(cell_value, row_num,
+			                                       labels[cell_number++]));
+
+		return cellSeq;
+	}
+
+	HandleSeq operator()(const contin_seq& c)
+	{
+		for (contin_t cell_value : c)
+			cellSeq.push_back(mk_real_cell_exec(cell_value, row_num,
+			                                    labels[cell_number++]));
+
+		return cellSeq;
+	}
+
+	template<typename T>
+	HandleSeq operator()(const T& t) const
+	{}
+
+	int cell_number = 0;
+	HandleSeq cellSeq;
+	int row_num;
+	vector<string> labels;
+};
+
 /**
  * Represent a row as a list of cells.
  *
@@ -210,46 +285,25 @@ Handle mk_output_table(const OTable& oTable)
  * Create a table of independent (input) data.
  *
  * @param iTable input table
- * @param type type of the output
  * @todo this method doesn't support a table of mixed types. It assumes that
  * 		 all features have similar type with the output feature.
  * @return
  */
-Handle mk_input_table(const ITable& iTable, const type_node type)
+Handle mk_input_table(const ITable& iTable)
 {
 	const vector<string> labels = iTable.get_labels();
 	HandleSeq rows;
 	int row_num = 0;
 
-	if (type == id::boolean_type)
+	for (const multi_type_seq& m : iTable)
 	{
-		for (const multi_type_seq& m : iTable)
-		{
-			HandleSeq cells;
+		HandleSeq cells = boost::apply_visitor(mk_cell_seq_visitor(),
+		                                       m.get_variant());
 
-			for (builtin cell_value : m.get_seq<builtin>())
-				cells.push_back(mk_boolean_cell(cell_value));
-
-			Handle h = createLink(LIST_LINK,
-			                      mk_row_number_cell(++row_num),
-			                      createLink(cells, LIST_LINK));
-			rows.push_back(h);
-		}
-	}
-	else if (type == id::contin_type)
-	{
-		for (const multi_type_seq& m : iTable)
-		{
-			HandleSeq cells;
-
-			for (contin_t cell_value : m.get_seq<contin_t>())
-				cells.push_back(mk_real_cell(cell_value));
-
-			Handle h = createLink(LIST_LINK,
-			                      mk_row_number_cell(++row_num),
-			                      createLink(cells, LIST_LINK));
-			rows.push_back(h);
-		}
+		Handle h = createLink(LIST_LINK,
+		                      mk_row_number_cell(++row_num),
+		                      createLink(cells, LIST_LINK));
+		rows.push_back(h);
 	}
 
 	return createLink(SIMILARITY_LINK, parse_header(labels),
@@ -265,131 +319,92 @@ Handle mk_input_table(const ITable& iTable, const type_node type)
  */
 HandleSeq mk_full_table(const Table& table, const bool similarity=false)
 {
-	const type_node type = table.otable.get_type();
 	HandleSeq rows;
 	int row_num = 0;
 
-	if (type == id::boolean_type)
+	for (const multi_type_seq& m : table.itable)
 	{
-		for (const multi_type_seq& m : table.itable)
-		{
-			HandleSeq cells;
+		HandleSeq cells = boost::apply_visitor(mk_cell_seq_visitor(),
+		                                       m.get_variant());
 
-			cells.push_back(mk_boolean_cell(
-				boost::get<builtin>(table.otable[row_num])));
+		cells.insert(cells.begin(),
+		             boost::apply_visitor(mk_cell_visitor(),
+		                                  table.otable[row_num]));
 
-			for (builtin cell_value : m.get_seq<builtin>())
-				cells.push_back(mk_boolean_cell(cell_value));
-
-			rows.push_back(
-				similarity ? mk_numbered_row(cells, row_num + 1)
-				           : mk_row(cells));
-			row_num++;
-		}
-	}
-	else if (type == id::contin_type)
-	{
-		for (const multi_type_seq& m : table.itable)
-		{
-			HandleSeq cells;
-
-			cells.push_back(mk_real_cell(
-				boost::get<contin_t>(table.otable[row_num])));
-
-			for (contin_t cell_value : m.get_seq<contin_t>())
-				cells.push_back(mk_real_cell(cell_value));
-
-			rows.push_back(
-				similarity ? mk_numbered_row(cells, row_num + 1)
-				           : mk_row(cells));
-			row_num++;
-		}
+		rows.push_back(
+			similarity ? mk_numbered_row(cells, row_num + 1)
+			           : mk_row(cells));
+		row_num++;
 	}
 
 	return rows;
 }
 
 /**
- * Represent a table without using any compression.
+ * Represent a boolean table using EvaluationLink.
  *
  * @param table
- * @param use_eval use EvaluationLink for boolean table representation.
  * @return
  */
-Handle mk_unfolded_table(const Table& table, const bool use_eval)
+Handle mk_unfolded_boolean_table_eval(const Table& table)
 {
 	HandleSeq rows;
 	int row_num = 0;
-	const type_node type = table.otable.get_type();
 	const vector<string>& labels = table.itable.get_labels();
 
-	if (type == id::boolean_type)
+	for (const multi_type_seq& m : table.itable)
 	{
-		if (use_eval)
-		{
-			for (const multi_type_seq& m : table.itable)
-			{
-				HandleSeq cells;
-				int cell_number = 0;
+		HandleSeq cells;
+		int cell_number = 0;
 
-				cells.push_back(mk_boolean_cell_eval(
-					boost::get<builtin>(table.otable[row_num]),
-					row_num + 1,
-					table.otable.get_label()));
+		cells.push_back(mk_boolean_cell_eval(
+			boost::get<builtin>(table.otable[row_num]),
+			row_num + 1,
+			table.otable.get_label()));
 
-				for (builtin cell_value : m.get_seq<builtin>())
-					cells.push_back(
-						mk_boolean_cell_eval(cell_value, row_num + 1,
-						                     labels[cell_number++]));
+		for (builtin cell_value : m.get_seq<builtin>())
+			cells.push_back(
+				mk_boolean_cell_eval(cell_value, row_num + 1,
+				                     labels[cell_number++]));
 
-				rows.push_back(mk_row(cells));
-				row_num++;
-			}
-		}
-		else
-		{
-			for (const multi_type_seq& m : table.itable)
-			{
-				HandleSeq cells;
-				int cell_number = 0;
-
-				cells.push_back(mk_boolean_cell_exec(
-					boost::get<builtin>(table.otable[row_num]),
-					row_num + 1,
-					table.otable.get_label()));
-
-				for (builtin cell_value : m.get_seq<builtin>())
-					cells.push_back(
-						mk_boolean_cell_exec(cell_value, row_num + 1,
-						                     labels[cell_number++]));
-
-				rows.push_back(mk_row(cells));
-				row_num++;
-			}
-		}
-	}
-	else if (type == id::contin_type)
-	{
-		for (const multi_type_seq& m : table.itable)
-		{
-			HandleSeq cells;
-			int cell_number = 0;
-
-			cells.push_back(mk_real_cell_exec(
-				boost::get<contin_t>(table.otable[row_num]),
-				row_num + 1,
-				table.otable.get_label()));
-
-			for (contin_t cell_value : m.get_seq<contin_t>())
-				cells.push_back(mk_real_cell_exec(cell_value, row_num + 1,
-				                                  labels[cell_number++]));
-
-			rows.push_back(mk_row(cells));
-			row_num++;
-		}
+		rows.push_back(mk_row(cells));
+		row_num++;
 	}
 
 	return createLink(rows, SET_LINK);
+}
+
+/**
+ * Represent a table without using any compression.
+ *
+ * @param table
+ * @return
+ */
+Handle mk_unfolded_table(const Table& table)
+{
+	HandleSeq rows;
+	int row_num = 0;
+	const vector<string>& labels = table.itable.get_labels();
+
+	for (const multi_type_seq& m : table.itable)
+	{
+		mk_exec_cell_seq_visitor cseqv;
+		cseqv.row_num = row_num + 1;
+		cseqv.labels = labels;
+		HandleSeq cells = boost::apply_visitor(cseqv, m.get_variant());
+
+		mk_exec_cell_visitor cv;
+		cv.row_num = row_num + 1;
+		cv.label = table.otable.get_label();
+		cells.insert(cells.begin(),
+		             boost::apply_visitor(cv, table.otable[row_num]));
+
+		rows.push_back(mk_row(cells));
+		row_num++;
+	}
+
+	return createLink(rows, SET_LINK);
+
 }
 
 Handle load_atomese_io(const string& file_name,
@@ -402,7 +417,7 @@ Handle load_atomese_io(const string& file_name,
 
 	return createLink(LIST_LINK,
 	                  mk_output_table(t.otable),
-	                  mk_input_table(t.itable, t.otable.get_type()));
+	                  mk_input_table(t.itable));
 }
 
 Handle load_atomese_compact(const string& file_name,
@@ -443,7 +458,10 @@ Handle load_atomese_unfolded(const string& file_name,
 	const Table& t = loadTable(file_name, target_feature,
 	                           timestamp_feature, ignore_features);
 
-	return mk_unfolded_table(t, use_eval);
+	if (t.otable.get_type() == id::boolean_type && use_eval)
+		return mk_unfolded_boolean_table_eval(t);
+	else
+		return mk_unfolded_table(t);
 }
 }
 }
