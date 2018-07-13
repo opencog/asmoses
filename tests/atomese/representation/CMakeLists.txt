@@ -1,6 +1,6 @@
 IF (HAVE_GUILE)
-    ADD_CXXTEST(atomese_reprUTest)
-    TARGET_LINK_LIBRARIES(atomese_reprUTest
+    ADD_CXXTEST(load_tableUTest)
+    TARGET_LINK_LIBRARIES(load_tableUTest
             atomese
             ${ATOMSPACE_LIBRARIES}
             ${GUILE_LIBRARIES}

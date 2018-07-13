@@ -1,4 +1,4 @@
-/** atomese_representation.h ---
+/** load_table.h ---
  *
  * Copyright (C) 2018 OpenCog Foundation
  *
@@ -20,8 +20,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _OPENCOG_ATOMESE_REPRESENTATION_H
-#define _OPENCOG_ATOMESE_REPRESENTATION_H
+#ifndef _OPENCOG_LOAD_TABLE_H
+#define _OPENCOG_LOAD_TABLE_H
 
 namespace opencog {
 namespace atomese {
@@ -235,4 +235,4 @@ Handle load_atomese_unfolded(
 }
 }
 
-#endif //_OPENCOG_ATOMESE_REPRESENTATION_H
+#endif //_OPENCOG_LOAD_TABLE_H

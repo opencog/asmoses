@@ -2,16 +2,16 @@
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/execution/Instantiator.h>
 #include <opencog/util/Logger.h>
-#include "moses/atomese/representation/atomese_representation.h"
+#include "moses/atomese/representation/load_table.h"
 
 using namespace opencog;
 using namespace std;
 
-class atomese_reprUTest : public CxxTest::TestSuite {
+class load_tableUTest : public CxxTest::TestSuite {
 private:
 	AtomSpace *as;
 	SchemeEval *eval;
-	const string atomese_reprUTest_dir =
+	const string load_tableUTest_dir =
 		string(PROJECT_SOURCE_DIR) + "/tests/atomese/representation/";
 	const string tableUTest_dir =
 		string(PROJECT_SOURCE_DIR) + "/tests/comboreduct/table/";
@@ -19,9 +19,9 @@ private:
 	string load_from_path(const string& filename);
 
 public:
-	atomese_reprUTest();
+	load_tableUTest();
 
-	~atomese_reprUTest();
+	~load_tableUTest();
 
 	void test_real_data_io_representation();
 
@@ -49,13 +49,13 @@ public:
 
 };
 
-string atomese_reprUTest::load_from_path(const string& filename)
+string load_tableUTest::load_from_path(const string& filename)
 {
 	return eval->eval(
 		(string("(load-from-path \"") + filename + "\")").c_str());
 }
 
-atomese_reprUTest::atomese_reprUTest()
+load_tableUTest::load_tableUTest()
 {
 	logger().set_level(Logger::DEBUG);
 	logger().set_print_to_stdout_flag(true);
@@ -64,11 +64,11 @@ atomese_reprUTest::atomese_reprUTest()
 	eval = new SchemeEval(as);
 	eval->eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
 	eval->eval("(use-modules (opencog exec))");
-	load_from_path(atomese_reprUTest_dir + "real_data_result.scm");
-	load_from_path(atomese_reprUTest_dir + "boolean_data_result.scm");
+	load_from_path(load_tableUTest_dir + "real_data_result.scm");
+	load_from_path(load_tableUTest_dir + "boolean_data_result.scm");
 }
 
-atomese_reprUTest::~atomese_reprUTest()
+load_tableUTest::~load_tableUTest()
 {
 	delete eval;
 	delete as;
@@ -78,109 +78,109 @@ atomese_reprUTest::~atomese_reprUTest()
 }
 
 // test separate input and output representation of a real data.
-void atomese_reprUTest::test_real_data_io_representation()
+void load_tableUTest::test_real_data_io_representation()
 {
 	Handle expected = eval->eval_h("real_data_repr_io");
 
 	Handle result = atomese::load_atomese_io(
-		atomese_reprUTest_dir + "real_data_test.csv");
+		load_tableUTest_dir + "real_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test compact representation of a real data.
-void atomese_reprUTest::test_real_data_compact_representation()
+void load_tableUTest::test_real_data_compact_representation()
 {
 	Handle expected = eval->eval_h("real_data_repr_compact");
 
 	Handle result = atomese::load_atomese_compact(
-		atomese_reprUTest_dir + "real_data_test.csv");
+		load_tableUTest_dir + "real_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test representation of a real data using similarity link.
-void atomese_reprUTest::test_real_data_similarity_representation()
+void load_tableUTest::test_real_data_similarity_representation()
 {
 	Handle expected = eval->eval_h("real_data_repr_similarity");
 
 	Handle result = atomese::load_atomese_similarity(
-		atomese_reprUTest_dir + "real_data_test.csv");
+		load_tableUTest_dir + "real_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test unfolded representation of a real data.
-void atomese_reprUTest::test_real_data_unfolded_representation()
+void load_tableUTest::test_real_data_unfolded_representation()
 {
 	Handle expected = eval->eval_h("real_data_repr_unfolded");
 
 	Handle result = atomese::load_atomese_unfolded(
-		atomese_reprUTest_dir + "real_data_test.csv");
+		load_tableUTest_dir + "real_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test separate input & output representation of a boolean data.
-void atomese_reprUTest::test_boolean_data_io_representation()
+void load_tableUTest::test_boolean_data_io_representation()
 {
 	Handle expected = eval->eval_h("boolean_data_repr_io");
 
 	Handle result = atomese::load_atomese_io(
-		atomese_reprUTest_dir + "boolean_data_test.csv");
+		load_tableUTest_dir + "boolean_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test compact representation of a boolean data.
-void atomese_reprUTest::test_boolean_data_compact_representation()
+void load_tableUTest::test_boolean_data_compact_representation()
 {
 	Handle expected = eval->eval_h("boolean_data_repr_compact");
 
 	Handle result = atomese::load_atomese_compact(
-		atomese_reprUTest_dir + "boolean_data_test.csv");
+		load_tableUTest_dir + "boolean_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test representation of a boolean data using similarity link.
-void atomese_reprUTest::test_boolean_data_similarity_representation()
+void load_tableUTest::test_boolean_data_similarity_representation()
 {
 	Handle expected = eval->eval_h("boolean_data_repr_similarity");
 
 	Handle result = atomese::load_atomese_similarity(
-		atomese_reprUTest_dir + "boolean_data_test.csv");
+		load_tableUTest_dir + "boolean_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test unfolded representation of a boolean data.
-void atomese_reprUTest::test_boolean_data_unfolded_representation()
+void load_tableUTest::test_boolean_data_unfolded_representation()
 {
 	Handle expected = eval->eval_h("boolean_data_repr_unfolded");
 
 	Handle result = atomese::load_atomese_unfolded(
-		atomese_reprUTest_dir + "boolean_data_test.csv");
+		load_tableUTest_dir + "boolean_data_test.csv");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test unfolded representation of a boolean data done using EvaluationLink.
-void atomese_reprUTest::test_boolean_data_unfolded_representation_using_eval()
+void load_tableUTest::test_boolean_data_unfolded_representation_using_eval()
 {
 	Handle expected = eval->eval_h("boolean_data_repr_unfolded_eval");
 
 	Handle result = atomese::load_atomese_unfolded(
-		atomese_reprUTest_dir + "boolean_data_test.csv", string(),
+		load_tableUTest_dir + "boolean_data_test.csv", string(),
 		string(), {}, true);
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test compact representation of a commented real dataset.
-void atomese_reprUTest::test_commented_dataset()
+void load_tableUTest::test_commented_dataset()
 {
-	load_from_path(atomese_reprUTest_dir + "commented_dataset_result.scm");
+	load_from_path(load_tableUTest_dir + "commented_dataset_result.scm");
 
 	Handle expected = eval->eval_h("commented_dataset_result");
 
@@ -191,27 +191,27 @@ void atomese_reprUTest::test_commented_dataset()
 }
 
 // test target feature on a compact representation of a real dataset.
-void atomese_reprUTest::test_target_feature()
+void load_tableUTest::test_target_feature()
 {
-	load_from_path(atomese_reprUTest_dir + "real_data_result2.scm");
+	load_from_path(load_tableUTest_dir + "real_data_result2.scm");
 
 	Handle expected = eval->eval_h("target_feature_res");
 
 	Handle result = atomese::load_atomese_compact(
-		atomese_reprUTest_dir + "real_data_test2.csv", "target");
+		load_tableUTest_dir + "real_data_test2.csv", "target");
 
 	TS_ASSERT(content_eq(expected, result));
 }
 
 // test ignore features on a compact representation of a real dataset.
-void atomese_reprUTest::test_ignore_features()
+void load_tableUTest::test_ignore_features()
 {
-	load_from_path(atomese_reprUTest_dir + "real_data_result2.scm");
+	load_from_path(load_tableUTest_dir + "real_data_result2.scm");
 
 	Handle expected = eval->eval_h("ignore_features_res");
 
 	Handle result = atomese::load_atomese_compact(
-		atomese_reprUTest_dir + "real_data_test2.csv", "target", string(),
+		load_tableUTest_dir + "real_data_test2.csv", "target", string(),
 		{"input0"});
 
 	TS_ASSERT(content_eq(expected, result));

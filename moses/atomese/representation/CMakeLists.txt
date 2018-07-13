@@ -1,7 +1,7 @@
 #install header files
 INSTALL(FILES
 
-        atomese_representation.h
+        load_table.h
 
         DESTINATION
 

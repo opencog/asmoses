@@ -1,4 +1,4 @@
-/** atomese_representation.cc ---
+/** load_table.cc ---
  *
  * Copyright (C) 2018 OpenCog Foundation
  *
@@ -26,7 +26,7 @@
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/truthvalue/SimpleTruthValue.h>
-#include "atomese_representation.h"
+#include "load_table.h"
 
 namespace opencog {
 namespace atomese {
@@ -158,6 +158,10 @@ struct mk_cell_visitor : public boost::static_visitor<Handle>
 
 struct mk_exec_cell_visitor : public boost::static_visitor<Handle>
 {
+	mk_exec_cell_visitor(const int row_num, const string& label)
+		: row_num(row_num), label(label)
+	{}
+
 	Handle operator()(const builtin b) const
 	{
 		return mk_boolean_cell_exec(b, row_num, label);
@@ -172,8 +176,8 @@ struct mk_exec_cell_visitor : public boost::static_visitor<Handle>
 	Handle operator()(const T& t) const
 	{}
 
-	int row_num;
-	string label;
+	const int row_num;
+	const string& label;
 };
 
 struct mk_cell_seq_visitor : public boost::static_visitor<HandleSeq>
@@ -203,8 +207,15 @@ struct mk_cell_seq_visitor : public boost::static_visitor<HandleSeq>
 
 struct mk_exec_cell_seq_visitor : public boost::static_visitor<HandleSeq>
 {
+	mk_exec_cell_seq_visitor(const int row_num,
+	                         const vector<string>& labels)
+		: row_num(row_num), labels(labels)
+	{}
+
 	HandleSeq operator()(const builtin_seq& b)
 	{
+		int cell_number = 0;
+		HandleSeq cellSeq;
 		for (builtin cell_value : b)
 			cellSeq.push_back(mk_boolean_cell_exec(cell_value, row_num,
 			                                       labels[cell_number++]));
@@ -214,6 +225,8 @@ struct mk_exec_cell_seq_visitor : public boost::static_visitor<HandleSeq>
 
 	HandleSeq operator()(const contin_seq& c)
 	{
+		int cell_number = 0;
+		HandleSeq cellSeq;
 		for (contin_t cell_value : c)
 			cellSeq.push_back(mk_real_cell_exec(cell_value, row_num,
 			                                    labels[cell_number++]));
@@ -225,10 +238,8 @@ struct mk_exec_cell_seq_visitor : public boost::static_visitor<HandleSeq>
 	HandleSeq operator()(const T& t) const
 	{}
 
-	int cell_number = 0;
-	HandleSeq cellSeq;
-	int row_num;
-	vector<string> labels;
+	const int row_num;
+	const vector<string>& labels;
 };
 
 /**
@@ -388,14 +399,10 @@ Handle mk_unfolded_table(const Table& table)
 
 	for (const multi_type_seq& m : table.itable)
 	{
-		mk_exec_cell_seq_visitor cseqv;
-		cseqv.row_num = row_num;
-		cseqv.labels = labels;
+		mk_exec_cell_seq_visitor cseqv{row_num, labels};
 		HandleSeq cells = boost::apply_visitor(cseqv, m.get_variant());
 
-		mk_exec_cell_visitor cv;
-		cv.row_num = row_num;
-		cv.label = table.otable.get_label();
+		mk_exec_cell_visitor cv{row_num, table.otable.get_label()};
 		cells.insert(cells.begin(),
 		             boost::apply_visitor(cv, table.otable[row_num]));
 

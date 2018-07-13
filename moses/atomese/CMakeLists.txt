@@ -1,7 +1,7 @@
 ADD_SUBDIRECTORY(representation)
 
 ADD_LIBRARY(atomese SHARED
-		representation/atomese_representation
+		representation/load_table
 )
 
 TARGET_LINK_LIBRARIES (atomese
