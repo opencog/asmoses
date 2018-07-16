@@ -153,11 +153,14 @@ struct mk_cell_visitor : public boost::static_visitor<Handle>
 
 	template<typename T>
 	Handle operator()(const T& t) const
-	{}
+	{
+		return Handle::UNDEFINED;
+	}
 };
 
 struct mk_exec_cell_visitor : public boost::static_visitor<Handle>
 {
+	// TODO: this constructor isn't needed in C++17.
 	mk_exec_cell_visitor(const int row_num, const string& label)
 		: row_num(row_num), label(label)
 	{}
@@ -174,7 +177,9 @@ struct mk_exec_cell_visitor : public boost::static_visitor<Handle>
 
 	template<typename T>
 	Handle operator()(const T& t) const
-	{}
+	{
+		return Handle::UNDEFINED;
+	}
 
 	const int row_num;
 	const string& label;
@@ -202,11 +207,14 @@ struct mk_cell_seq_visitor : public boost::static_visitor<HandleSeq>
 
 	template<typename T>
 	HandleSeq operator()(const T& t) const
-	{}
+	{
+		return {};
+	}
 };
 
 struct mk_exec_cell_seq_visitor : public boost::static_visitor<HandleSeq>
 {
+	// TODO: this constructor isn't needed in C++17.
 	mk_exec_cell_seq_visitor(const int row_num,
 	                         const vector<string>& labels)
 		: row_num(row_num), labels(labels)
@@ -236,7 +244,9 @@ struct mk_exec_cell_seq_visitor : public boost::static_visitor<HandleSeq>
 
 	template<typename T>
 	HandleSeq operator()(const T& t) const
-	{}
+	{
+		return {};
+	}
 
 	const int row_num;
 	const vector<string>& labels;
