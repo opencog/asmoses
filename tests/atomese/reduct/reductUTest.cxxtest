@@ -1,0 +1,55 @@
+#include <opencog/util/Logger.h>
+#include <moses/comboreduct/combo/combo.h>
+#include <moses/comboreduct/converter/combo_atomese.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/base/Node.h>
+#include "moses/atomese/reduct/reduct.h"
+
+using namespace opencog;
+using namespace std;
+
+#define cl createLink
+#define cn createNode
+
+class reductUTest : public CxxTest::TestSuite
+{
+public:
+	reductUTest();
+
+	~reductUTest();
+
+	void test_full_reduce();
+};
+
+reductUTest::reductUTest()
+{
+	logger().set_level(Logger::DEBUG);
+	logger().set_print_to_stdout_flag(true);
+}
+
+reductUTest::~reductUTest()
+{
+	// Erase the log file if no assertions failed.
+	if (!CxxTest::TestTracker::tracker().suiteFailed())
+		std::remove(logger().get_filename().c_str());
+}
+
+// test atomese full_reduction.
+void reductUTest::test_full_reduce()
+{
+	Handle X = cn(PREDICATE_NODE, "1"),
+		Y = cn(PREDICATE_NODE, "2");
+
+	// TODO: this should be passed to atomese::full_reduce instead of a combo_tree.
+	//	Handle to_reduce = cl(OR_LINK,
+	//	                      cl(AND_LINK, X, X),
+	//	                      Y);
+
+	combo::combo_tree tr = combo::str2combo_tree("or(and($1 $1) $2)", {});
+
+	Handle result = atomese::full_reduce(tr);
+
+	Handle expected = cl(OR_LINK, X, Y);
+
+	TS_ASSERT(content_eq(expected, result));
+}
