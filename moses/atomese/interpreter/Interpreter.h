@@ -40,14 +40,26 @@ namespace atomese
 
 class Interpreter
 {
-private:
-	opencog::Handle *_input_table;
+
+	opencog::Handle _problem_data;
+	std::vector<double >::size_type _problem_data_size;
 
 public:
 	Interpreter(opencog::Handle &input_table);
 
-	opencog::Handle interpret(opencog::Handle& program);
+/**
+ * executes/evaluates a program over a problem data.
+ *
+ * @param Handle&       handle ref, stores the atomese program
+ * @return               return ProtoAtomPtr containing the output
+ *                       of the program executed/evaluated on the problem data.
+ */
+	opencog::ProtoAtomPtr interpret(opencog::Handle& program);
 
+private:
+	ProtoAtomPtr unwrap_node(Handle& handle);
+
+	ProtoAtomPtr execute(Type t, ProtomSeq &params);
 };
 
 }

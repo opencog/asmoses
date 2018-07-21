@@ -22,6 +22,9 @@
 
 
 #include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/proto/ProtoAtom.h>
+#include <opencog/atoms/base/Atom.h>
+#include <opencog/atoms/core/NumberNode.h>
 
 #include "Interpreter.h"
 
@@ -29,11 +32,63 @@ using namespace opencog;
 using namespace atomese;
 
 Interpreter::Interpreter(opencog::Handle &input_table)
+		: _problem_data(input_table)
 {
-
+	// TODO: we need a better way of getting the size of the data set
+	HandleSet keys = input_table->getKeys();
+	Handle f_key = *keys.begin();
+	_problem_data_size = FloatValueCast(input_table->getValue(f_key))->value().size();
 }
 
-opencog::Handle Interpreter::interpret(opencog::Handle &program)
+opencog::ProtoAtomPtr Interpreter::interpret(opencog::Handle &program)
 {
-	return Handle();
+
+	std::string s = " ";
+	ProtomSeq params;
+	HandleSeq _child_atoms = program->getOutgoingSet();
+
+	for(Handle h : _child_atoms){
+		if(nameserver().isA(h->get_type(), NODE)){
+			params.push_back(unwrap_node(h));
+		}
+		else {
+			params.push_back(interpret(h));
+		}
+	}
+
+	ProtoAtomPtr result = execute(program->get_type(), params);
+	return result;
+}
+
+ProtoAtomPtr Interpreter::unwrap_node(Handle& handle)
+{
+	if(SCHEMA_NODE == handle->get_type()){
+		return _problem_data->getValue(handle);
+	}
+	if(NUMBER_NODE == handle->get_type()){
+		std::vector<double> constant_value(_problem_data_size, NumberNodeCast(handle)->get_value());
+		ProtoAtomPtr constant(new FloatValue(constant_value));
+		return constant;
+	}
+}
+
+ProtoAtomPtr Interpreter::execute(Type t, ProtomSeq& params){
+	if(t == PLUS_LINK){
+		std::vector<double> _result(_problem_data_size, 0.0);
+		ProtoAtomPtr result(new FloatValue(_result));
+
+		for(ProtoAtomPtr & p : params){
+			result = plus(FloatValueCast(result), FloatValueCast(p));
+		}
+		return result;
+	}
+	if(t == TIMES_LINK){
+		std::vector<double> _result(FloatValueCast(params[0])->value().size(), 1.0);
+		ProtoAtomPtr result(new FloatValue(_result));
+
+		for(ProtoAtomPtr & p : params){
+			result = times(FloatValueCast(result), FloatValueCast(p));
+		}
+		return result;
+	}
 }
