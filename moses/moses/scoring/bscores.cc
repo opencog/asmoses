@@ -78,6 +78,20 @@ behavioral_score logical_bscore::operator()(const combo_tree& tr) const
     return bs;
 }
 
+behavioral_score logical_bscore::operator()(const Handle& h) const
+{
+    combo::complete_truth_table tt(h, _arity);
+    behavioral_score bs(_size);
+
+    // Compare the predictions of the atomese program to that of the desired
+    // result. A correct prdiction gets a score of 0, an incorrect
+    // prediction gets a score of -1.
+    boost::transform(tt, _target, bs.begin(), [](bool b1, bool b2) {
+            return -score_t(b1 != b2); });
+
+    return bs;
+}
+
 /// Boolean ensemble scorer.  Assumes that the ensemble signature outputs
 /// a boolean value.  All of the trees in the ensmble get a weighted vote,
 /// that vote is totalled to get the prediction of the ensemble, and then

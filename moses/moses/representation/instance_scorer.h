@@ -29,6 +29,7 @@
 #include "field_set.h"
 #include "representation.h"
 #include "../scoring/behave_cscore.h"
+#include <moses/comboreduct/converter/combo_atomese.h>
 
 namespace opencog { namespace moses {
 
@@ -67,9 +68,9 @@ protected:
     const instance& target_inst;
 };
 
-struct complexity_based_scorer : public iscorer_base
+struct combo_based_scorer : public iscorer_base
 {
-    complexity_based_scorer(behave_cscore& cs,
+    combo_based_scorer(behave_cscore& cs,
                             representation& rep, bool reduce)
         : _cscorer(cs), _rep(rep), _reduce(reduce) {}
 
@@ -105,6 +106,47 @@ protected:
                   // also a cache; the reduced form will have more cache
                   // hits.
 };
+
+struct atomese_based_scorer : public iscorer_base
+{
+    atomese_based_scorer(behave_cscore& cs,
+                            representation& rep, bool reduce)
+        : _cscorer(cs), _rep(rep), _reduce(reduce) {}
+
+    composite_score operator()(const instance& inst) const
+    {
+        if (logger().is_fine_enabled()) {
+            logger().fine() << "complexity_based_scorer - Evaluate instance: "
+                            << _rep.fields().to_string(inst);
+        }
+
+        try {
+            combo_tree tr = _rep.get_candidate(inst, _reduce);
+            Handle h = combo::atomese_combo(tr);
+            return _cscorer.get_cscore(h);
+        } catch (...) {
+// XXX FIXME, calling score_tree above does not throw the exception; this should be done
+// differntly, maybe call bscorer directly, then ascorer...
+// ??? Huh? why couldn't we evaluate a tree anyway?  why would we want an exception here?
+            combo_tree raw_tr = _rep.get_candidate(inst, false);
+            combo_tree red_tr = _rep.get_candidate(inst, true);
+            logger().warn() << "The following instance could not be evaluated: "
+                            << _rep.fields().to_string(inst)
+                            << "\nUnreduced tree: " << raw_tr
+                            << "\nreduced tree: "<< red_tr;
+        }
+        return worst_composite_score;
+    }
+
+protected:
+    behave_cscore& _cscorer;
+    representation& _rep;
+    bool _reduce; // whether the exemplar should be reduced before being
+                  // evaluated.  This is advantagous when _cscorer is
+                  // also a cache; the reduced form will have more cache
+                  // hits.
+};
+
 
 } //~namespace moses
 } //~namespace opencog

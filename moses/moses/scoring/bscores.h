@@ -64,8 +64,15 @@ struct logical_bscore : public bscore_base
         _size = _target.size();
         reset_weights();
     }
+    logical_bscore(const Handle& h, int a)
+            : _target(h, a), _arity(a)
+    {
+        _size = _target.size();
+        reset_weights();
+    }
 
     behavioral_score operator()(const combo_tree&) const;
+    behavioral_score operator()(const Handle&) const;
     behavioral_score operator()(const scored_combo_tree_set&) const;
 
     behavioral_score best_possible_bscore() const;

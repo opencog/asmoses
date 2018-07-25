@@ -29,6 +29,7 @@
 #include "../moses/types.h"
 #include <moses/comboreduct/combo/vertex.h>
 #include <moses/comboreduct/table/table.h>
+#include <opencog/atoms/base/Handle.h>
 
 namespace opencog { namespace moses {
 
@@ -61,6 +62,12 @@ struct bscore_base : public std::unary_function<combo_tree, behavioral_score>
 
     /// Return the behavioral score for the combo_tree
     virtual behavioral_score operator()(const combo_tree&) const = 0;
+
+    /// Return the behavioral score for the atomese
+    virtual behavioral_score operator()(const Handle&) const = 0{
+        OC_ASSERT(false, "Not implemented");
+    }
+
 
     /// Return the behavioral score for the ensemble
     virtual behavioral_score operator()(const scored_combo_tree_set&) const;

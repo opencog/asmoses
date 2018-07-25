@@ -29,6 +29,7 @@
 #include <opencog/util/lru_cache.h>
 
 #include "scoring_base.h"
+#include <opencog/atoms/base/Handle.h>
 
 namespace opencog { namespace moses {
 
@@ -55,6 +56,7 @@ public:
     behavioral_score get_bscore(const combo_tree&) const;
     behavioral_score get_bscore(const scored_combo_tree_set&) const;
     composite_score get_cscore(const combo_tree&);
+    composite_score get_cscore(const Handle&);
     composite_score get_cscore(const scored_combo_tree_set&);
 
     /// Returns the best score reachable for this problem. Used as

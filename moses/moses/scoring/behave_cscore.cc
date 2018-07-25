@@ -43,6 +43,11 @@ behavioral_score behave_cscore::get_bscore(const combo_tree& tr) const
     return _bscorer(tr);
 }
 
+behavioral_score behave_cscore::get_bscore(const Handle& h) const
+{
+    return _bscorer(h);
+}
+
 behavioral_score behave_cscore::get_bscore(const scored_combo_tree_set& ensemble) const
 {
     return _bscorer(ensemble);
@@ -54,7 +59,12 @@ composite_score behave_cscore::get_cscore(const combo_tree& tr)
     if (_have_cache) return _cscore_cache(tr);
     return get_cscore_nocache(tr);
 }
-
+composite_score behave_cscore::get_cscore(const Handle& h)
+{
+    // Use the cache, if it is enabled.
+    if (_have_cache) return _cscore_cache(h);
+    return get_cscore_nocache(h);
+}
 composite_score behave_cscore::wrapper::operator()(const combo_tree& tr) const
 {
     return self->get_cscore_nocache(tr);
@@ -96,6 +106,44 @@ composite_score behave_cscore::get_cscore_nocache(const combo_tree& tr)
 
     return composite_score(res, cpxy, cpxy * cpxy_coef, 0.0);
 }
+
+composite_score behave_cscore::get_cscore_nocache(const Handle& h)
+{
+    behavioral_score bs;
+    try {
+        bs = get_bscore(h);
+    }
+    catch (combo::EvalException& ee)
+    {
+        // Exceptions are raised when operands are out of their
+        // valid domain (negative input log or division by zero),
+        // or outputs a value which is not representable (too
+        // large exp or log). The error is logged as level fine
+        // because this happens very often when learning continuous
+        // functions, and it clogs up the log when logged at a
+        // higher level.
+        if (logger().is_fine_enabled()) {
+            logger().fine()
+               << "The following candidate: " << tr << "\n"
+               << "has failed to be evaluated, "
+               << "raising the following exception: "
+               << ee.get_message() << " " << ee.get_vertex();
+        }
+        return worst_composite_score;
+    }
+    score_t res = _bscorer.sum_bscore(bs);
+
+    complexity_t cpxy = _bscorer.get_complexity(tr);
+    score_t cpxy_coef = _bscorer.get_complexity_coef();
+    if (logger().is_fine_enabled()) {
+        logger().fine() << "behave_cscore: " << res
+                        << " complexity: " << cpxy
+                        << " cpxy_coeff: " << cpxy_coef;
+    }
+
+    return composite_score(res, cpxy, cpxy * cpxy_coef, 0.0);
+}
+
 
 composite_score behave_cscore::get_cscore(const scored_combo_tree_set& ensemble)
 {
