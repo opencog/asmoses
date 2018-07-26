@@ -25,6 +25,7 @@
 #include <opencog/atoms/proto/ProtoAtom.h>
 #include <opencog/atoms/base/Atom.h>
 #include <opencog/atoms/core/NumberNode.h>
+#include <opencog/atoms/base/Link.h>
 
 #include "Interpreter.h"
 
@@ -37,13 +38,11 @@ Interpreter::Interpreter(opencog::Handle &input_table)
 	// TODO: we need a better way of getting the size of the data set
 	HandleSet keys = input_table->getKeys();
 	Handle f_key = *keys.begin();
-	_problem_data_size = FloatValueCast(input_table->getValue(f_key))->value().size();
+	_problem_data_size = LinkValueCast(input_table->getValue(f_key))->value().size();
 }
 
 opencog::ProtoAtomPtr Interpreter::interpret(opencog::Handle &program)
 {
-
-	std::string s = " ";
 	ProtomSeq params;
 	HandleSeq _child_atoms = program->getOutgoingSet();
 
@@ -62,11 +61,12 @@ opencog::ProtoAtomPtr Interpreter::interpret(opencog::Handle &program)
 
 ProtoAtomPtr Interpreter::unwrap_node(Handle& handle)
 {
-	if(SCHEMA_NODE == handle->get_type()){
+	if(SCHEMA_NODE == handle->get_type() || PREDICATE_NODE == handle->get_type()){
 		return _problem_data->getValue(handle);
 	}
 	if(NUMBER_NODE == handle->get_type()){
-		std::vector<double> constant_value(_problem_data_size, NumberNodeCast(handle)->get_value());
+		std::vector<double> constant_value(_problem_data_size,
+		                                   NumberNodeCast(handle)->get_value());
 		ProtoAtomPtr constant(new FloatValue(constant_value));
 		return constant;
 	}
@@ -90,5 +90,14 @@ ProtoAtomPtr Interpreter::execute(Type t, ProtomSeq& params){
 			result = times(FloatValueCast(result), FloatValueCast(p));
 		}
 		return result;
+	}
+	if(t == AND_LINK){
+		std::vector<ProtoAtomPtr> _result(_problem_data_size, ProtoAtomPtr(createLink(TRUE_LINK)));
+		LinkValuePtr result(new LinkValue(_result));
+
+		for(ProtoAtomPtr &p : params){
+			result = logical_and(result, LinkValueCast(p));
+		}
+		return ProtoAtomPtr(result);
 	}
 }

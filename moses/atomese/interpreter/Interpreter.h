@@ -25,6 +25,8 @@
 #define MOSES_INTERPRETER_H
 
 #include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/proto/LinkValue.h>
+#include <boost/iterator/zip_iterator.hpp>
 
 /**
  * class Interpreter -- create an unfolded program from compressed program
@@ -62,6 +64,41 @@ private:
 	ProtoAtomPtr execute(Type t, ProtomSeq &params);
 };
 
+struct zip_adder :
+		public std::unary_function<const boost::tuple
+				<const ProtoAtomPtr&, const ProtoAtomPtr&>&, void>
+{
+	std::vector<ProtoAtomPtr> _result;
+
+	void operator()(const boost::tuple<const ProtoAtomPtr&, const ProtoAtomPtr&>& t)
+	{
+		if(HandleCast(t.get<0>())->get_type() == TRUE_LINK
+		   && HandleCast(t.get<1>())->get_type() == TRUE_LINK){
+			_result.push_back(ProtoAtomPtr(createLink(TRUE_LINK)));
+		}
+		else{
+			_result.push_back(ProtoAtomPtr(createLink(FALSE_LINK)));
+		}
+	}
+};
+
+LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2){
+	std::vector<ProtoAtomPtr> p1_value = p1->value();
+	std::vector<ProtoAtomPtr> p2_value = p2->value();
+
+	zip_adder adder = std::for_each(
+			boost::make_zip_iterator(
+					boost::make_tuple(p1_value.begin(), p2_value.begin())
+			),
+			boost::make_zip_iterator(
+					boost::make_tuple(p1_value.end(), p2_value.end())
+			),
+			zip_adder()
+	);
+
+	std::vector<ProtoAtomPtr> _result = adder._result;
+	return LinkValuePtr(new LinkValue(_result));
+}
 }
 }
 
