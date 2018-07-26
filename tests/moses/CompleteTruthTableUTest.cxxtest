@@ -1,0 +1,63 @@
+/** CompleteTruthTableUTest.cxxtest ---
+ *
+ * Copyright (C) 2018 OpenCog Foundation
+ *
+ * Author: Bitseat Tadesse
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/base/Node.h>
+#include <moses/scoring/bscore.h>
+#include <opencog/atoms/core/NumberNode.h>
+
+#include <moses/comboreduct/converter/combo_atomese.h>
+#include <moses/comboreduct/table/table.h>
+
+
+using namespace std;
+using namespace opencog;
+
+class completeTruthTableUTest : public CxxTest::TestSuite
+{
+public:
+	void truthTableUTest(void) {
+        combo::combo_tree tr = combo::str2combo_tree("and($1 $2 or($3 $4))", {});
+	    _arity = arity(tr);
+        const Handle program = combo::atomese_combo(tr);
+
+        complete_truth_table tt(program, _arity);
+	    //expected value for dataset logical-data.csv and program "and($1 $2 or($3 $4))"
+	    std::vector<bool> expected_tt = {True,True,False,False,False,False,False,False};
+
+        TS_ASSERT_EQUALS(tt, expected_tt);
+    }
+
+	void truthTableUTest2(void) {
+        combo::combo_tree tr2 = combo::str2combo_tree("and(or($1 $2) not($3))", {});
+	    _arity2 = arity(tr2);
+        const Handle program2 = combo::atomese_combo(tr2);
+
+        complete_truth_table tt2(program2, _arity2);
+	    //expected value for dataset logical-data2.csv and program "and(or($1 $2) not($3))"
+	    std::vector<bool> expected_tt2 = {False,True,False,True,False,True,False,False};
+
+        TS_ASSERT_EQUALS(tt2, expected_tt2);
+    }
+};

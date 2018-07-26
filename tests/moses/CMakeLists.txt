@@ -9,6 +9,13 @@ TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
 	${COGUTIL_LIBRARY}
 )
 
+ADD_CXXTEST(CompleteTruthTableUTest.cxxtest)
+TARGET_LINK_LIBRARIES(CompleteTruthTableUTest
+	moses
+	comboreduct
+	${COGUTIL_LIBRARY}
+)
+
 ADD_CXXTEST(KnobTurningUTest)
 TARGET_LINK_LIBRARIES(KnobTurningUTest
 	moses
