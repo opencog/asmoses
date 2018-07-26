@@ -64,10 +64,12 @@ struct bscore_base : public std::unary_function<combo_tree, behavioral_score>
     virtual behavioral_score operator()(const combo_tree&) const = 0;
 
     /// Return the behavioral score for the atomese
-    virtual behavioral_score operator()(const Handle&) const{
-        OC_ASSERT(false, "Not implemented");
+    virtual behavioral_score operator()(const Handle&) const
+    {
+        OC_ASSERT(false, "atomese scoring not implemented for bscorer %s",
+                  typeid(*this).name());
+        return behavioral_score();
     }
-
 
     /// Return the behavioral score for the ensemble
     virtual behavioral_score operator()(const scored_combo_tree_set&) const;

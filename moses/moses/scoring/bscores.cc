@@ -80,6 +80,9 @@ behavioral_score logical_bscore::operator()(const combo_tree& tr) const
 
 behavioral_score logical_bscore::operator()(const Handle& h) const
 {
+    // What we do here is check if the atomese program is fit enough.
+    //
+    // TODO: replace the first handle with dataset represented in protoatom format.
     combo::complete_truth_table tt(h, _arity);
     behavioral_score bs(_size);
 

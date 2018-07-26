@@ -62,7 +62,7 @@ composite_score behave_cscore::get_cscore(const combo_tree& tr)
 composite_score behave_cscore::get_cscore(const Handle& h)
 {
     // Use the cache, if it is enabled.
-    if (_have_cache) return _cscore_cache(h);
+//    if (_have_cache) return _cscore_cache(h);
     return get_cscore_nocache(h);
 }
 composite_score behave_cscore::wrapper::operator()(const combo_tree& tr) const
@@ -124,16 +124,17 @@ composite_score behave_cscore::get_cscore_nocache(const Handle& h)
         // higher level.
         if (logger().is_fine_enabled()) {
             logger().fine()
-               << "The following candidate: " << tr << "\n"
+               << "The following candidate: " << h << "\n"
                << "has failed to be evaluated, "
                << "raising the following exception: "
                << ee.get_message() << " " << ee.get_vertex();
         }
         return worst_composite_score;
     }
+    //TODO: inaddition to the bscore, calculate the other scores too.
     score_t res = _bscorer.sum_bscore(bs);
 
-    complexity_t cpxy = _bscorer.get_complexity(tr);
+    complexity_t cpxy ; // = _bscorer.get_complexity(tr);
     score_t cpxy_coef = _bscorer.get_complexity_coef();
     if (logger().is_fine_enabled()) {
         logger().fine() << "behave_cscore: " << res

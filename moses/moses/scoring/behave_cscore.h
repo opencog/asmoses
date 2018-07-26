@@ -55,6 +55,7 @@ public:
 
     behavioral_score get_bscore(const combo_tree&) const;
     behavioral_score get_bscore(const scored_combo_tree_set&) const;
+    behavioral_score get_bscore(const Handle& h) const;
     composite_score get_cscore(const combo_tree&);
     composite_score get_cscore(const Handle&);
     composite_score get_cscore(const scored_combo_tree_set&);
@@ -122,6 +123,7 @@ private:
     wrapper _wrapper;
     prr_cache_threaded<wrapper> _cscore_cache;
     composite_score get_cscore_nocache(const combo_tree&);
+    composite_score get_cscore_nocache(const Handle& h);
 
 public:
     // weird hack for subsample scoring...

@@ -41,6 +41,11 @@
 #include <opencog/util/dorepeat.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/KLD.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/proto/ProtoAtom.h>
+#include <opencog/atoms/proto/LinkValue.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/base/Link.h>
 
 #include "../type_checker/type_tree.h"
 #include "../interpreter/eval.h"
@@ -576,7 +581,7 @@ public:
     /// sum of all the row weights.
     count_t uncompressed_size() const;
 
-    /// Create a new table from this one, which contains only those 
+    /// Create a new table from this one, which contains only those
     /// columns specified by the filter.  The filter is assumed to be
     /// either a set or a vector (or an iterable, in general) that
     /// holds the index numbers of the columns to be kept.
@@ -1453,6 +1458,31 @@ public:
         this->resize(pow2(_arity));
         populate(tr);
     }
+
+	complete_truth_table(const Handle& program, arity_t arity)
+		: super(pow2(arity)), _arity(arity)
+	{
+		Handle dataset = createNode(SCHEMA_NODE, "dataset");
+
+		for (int i = 0; i < _arity; ++i)
+		{
+			Handle h = createNode(SCHEMA_NODE, "f" + i);
+			std::vector<ProtoAtomPtr> values = {};
+			iterator it = begin();
+			for (int j = 0; it != end(); ++j, ++it)
+			{
+				values.push_back(createLink(((j >> i) % 2) ? // i'th bit of j
+				                            TRUE_LINK : FALSE_LINK));
+			}
+			ProtoAtomPtr proto_atom(new LinkValue(values));
+			dataset->setValue(h, proto_atom);
+		}
+
+		// get the result from the interpreter and push it to the complete_truth_table.
+		ProtoAtomPtr _result = atomese::Interpreter(dataset)(program);
+		std::vector<bool> result = BoolValueCast(_result)->value();
+		this->insert(begin(), result.begin(), result.end());
+	}
 
     template<typename Func>
     complete_truth_table(const Func& f, arity_t arity)
