@@ -100,4 +100,13 @@ ProtoAtomPtr Interpreter::execute(Type t, ProtomSeq& params){
 		}
 		return ProtoAtomPtr(result);
 	}
+	if(t == OR_LINK){
+		std::vector<ProtoAtomPtr> _result(_problem_data_size, ProtoAtomPtr(createLink(TRUE_LINK)));
+		LinkValuePtr result(new LinkValue(_result));
+
+		for(ProtoAtomPtr &p : params){
+			result = logical_or(result, LinkValueCast(p));
+		}
+		return ProtoAtomPtr(result);
+	}
 }

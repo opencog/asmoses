@@ -2,6 +2,7 @@
 INSTALL(FILES
 
 		Interpreter.h
+		logical_interpreter.h
 
 		DESTINATION
 
