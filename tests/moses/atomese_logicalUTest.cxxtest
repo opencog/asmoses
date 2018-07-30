@@ -1,0 +1,50 @@
+/** completeTruthTableUTest.cxxtest ---
+ *
+ * Copyright (C) 2018 OpenCog Foundation
+ *
+ * Author: Bitseat Tadesse
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/base/atom_types.h>
+#include <moses/moses/scoring/bscores.h>
+#include <moses/moses/scoring/behave_cscore.h>
+#include <opencog/atoms/core/NumberNode.h>
+#include <moses/comboreduct/combo/combo.h>
+#include <moses/moses/moses/types.h>
+#include <moses/comboreduct/table/table.h>
+#include <moses/comboreduct/table/table_io.h>
+
+using namespace std;
+using namespace opencog;
+using namespace moses;
+
+class atomese_logicUTest : public CxxTest::TestSuite
+{
+public:
+	void test_atomese_logicUTest(void) {
+        combo::combo_tree tr = combo::str2combo_tree("and($1 $2 or($3 $4))", {});
+        //behavioral_score operator()(tr) const
+        behavioral_score t=logical_bscore(tr);
+        std::cout<<t;
+        TS_ASSERT_EQUALS(1,1);
+
+};

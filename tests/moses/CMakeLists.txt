@@ -9,11 +9,24 @@ TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
 	${COGUTIL_LIBRARY}
 )
 
-ADD_CXXTEST(CompleteTruthTableUTest.cxxtest)
-TARGET_LINK_LIBRARIES(CompleteTruthTableUTest
+ADD_CXXTEST(completeTruthTableUTest)
+TARGET_LINK_LIBRARIES(completeTruthTableUTest
+	atomese
 	moses
 	comboreduct
+    comboant
 	${COGUTIL_LIBRARY}
+	${ATOMSPACE_LIBRARIES}
+)
+
+ADD_CXXTEST(atomese_logicalUTest)
+TARGET_LINK_LIBRARIES(atomese_logicalUTest
+	atomese
+	moses
+	comboreduct
+    comboant
+	${COGUTIL_LIBRARY}
+	${ATOMSPACE_LIBRARIES}
 )
 
 ADD_CXXTEST(KnobTurningUTest)

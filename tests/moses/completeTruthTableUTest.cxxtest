@@ -1,4 +1,4 @@
-/** CompleteTruthTableUTest.cxxtest ---
+/** completeTruthTableUTest.cxxtest ---
  *
  * Copyright (C) 2018 OpenCog Foundation
  *
@@ -29,6 +29,7 @@
 
 #include <moses/comboreduct/converter/combo_atomese.h>
 #include <moses/comboreduct/table/table.h>
+#include <moses/comboreduct/table/table_io.h>
 
 
 using namespace std;
@@ -37,26 +38,26 @@ using namespace opencog;
 class completeTruthTableUTest : public CxxTest::TestSuite
 {
 public:
-	void truthTableUTest(void) {
+	void test_truthTableUTest() {
         combo::combo_tree tr = combo::str2combo_tree("and($1 $2 or($3 $4))", {});
-	    _arity = arity(tr);
+        arity_t _arity = arity(tr);
         const Handle program = combo::atomese_combo(tr);
 
         complete_truth_table tt(program, _arity);
-	    //expected value for dataset logical-data.csv and program "and($1 $2 or($3 $4))"
-	    std::vector<bool> expected_tt = {True,True,False,False,False,False,False,False};
+	    //expected truth table output result for the program "and($1 $2 or($3 $4))"
+	    std::vector<bool> expected_tt = {true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
         TS_ASSERT_EQUALS(tt, expected_tt);
     }
 
-	void truthTableUTest2(void) {
+	void test_truthTableUTest2() {
         combo::combo_tree tr2 = combo::str2combo_tree("and(or($1 $2) not($3))", {});
-	    _arity2 = arity(tr2);
+        arity_t _arity = arity(tr2);
         const Handle program2 = combo::atomese_combo(tr2);
 
-        complete_truth_table tt2(program2, _arity2);
-	    //expected value for dataset logical-data2.csv and program "and(or($1 $2) not($3))"
-	    std::vector<bool> expected_tt2 = {False,True,False,True,False,True,False,False};
+        complete_truth_table tt2(program2, _arity);
+	    //expected truth table output result for the program "and(or($1 $2) not($3))"
+	    std::vector<bool> expected_tt2 = {false, true, false, true, false, true, false, false};
 
         TS_ASSERT_EQUALS(tt2, expected_tt2);
     }

@@ -1479,9 +1479,9 @@ public:
 		}
 
 		// get the result from the interpreter and push it to the complete_truth_table.
-		ProtoAtomPtr _result = atomese::Interpreter(dataset)(program);
-		std::vector<bool> result = BoolValueCast(_result)->value();
-		this->insert(begin(), result.begin(), result.end());
+		//ProtoAtomPtr _result = atomese::Interpreter(dataset)(program);
+		//std::vector<bool> result = BoolValueCast(_result)->value();
+		//this->insert(begin(), result.begin(), result.end());
 	}
 
     template<typename Func>
