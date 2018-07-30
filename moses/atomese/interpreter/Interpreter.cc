@@ -26,22 +26,22 @@
 #include <opencog/atoms/base/Atom.h>
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/base/Link.h>
+#include <moses/atomese/interpreter/logical_interpreter.h>
 
 #include "Interpreter.h"
 
 using namespace opencog;
 using namespace atomese;
 
-Interpreter::Interpreter(opencog::Handle &input_table)
+Interpreter::Interpreter(const opencog::Handle &input_table)
 		: _problem_data(input_table)
 {
 	// TODO: we need a better way of getting the size of the data set
-	HandleSet keys = input_table->getKeys();
-	Handle f_key = *keys.begin();
-	_problem_data_size = LinkValueCast(input_table->getValue(f_key))->value().size();
+	Handle f_key = createNode(NODE, "*-AS-MOSES:dataSize-*");
+	_problem_data_size = FloatValueCast(input_table->getValue(f_key))->value()[0];
 }
 
-opencog::ProtoAtomPtr Interpreter::interpret(opencog::Handle &program)
+opencog::ProtoAtomPtr Interpreter::interpret(const opencog::Handle &program)
 {
 	ProtomSeq params;
 	HandleSeq _child_atoms = program->getOutgoingSet();
@@ -59,7 +59,7 @@ opencog::ProtoAtomPtr Interpreter::interpret(opencog::Handle &program)
 	return result;
 }
 
-ProtoAtomPtr Interpreter::unwrap_node(Handle& handle)
+ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle)
 {
 	if(SCHEMA_NODE == handle->get_type() || PREDICATE_NODE == handle->get_type()){
 		return _problem_data->getValue(handle);
@@ -72,12 +72,12 @@ ProtoAtomPtr Interpreter::unwrap_node(Handle& handle)
 	}
 }
 
-ProtoAtomPtr Interpreter::execute(Type t, ProtomSeq& params){
+ProtoAtomPtr Interpreter::execute(const Type t, const ProtomSeq& params){
 	if(t == PLUS_LINK){
 		std::vector<double> _result(_problem_data_size, 0.0);
 		ProtoAtomPtr result(new FloatValue(_result));
 
-		for(ProtoAtomPtr & p : params){
+		for(const ProtoAtomPtr & p : params){
 			result = plus(FloatValueCast(result), FloatValueCast(p));
 		}
 		return result;
@@ -86,7 +86,7 @@ ProtoAtomPtr Interpreter::execute(Type t, ProtomSeq& params){
 		std::vector<double> _result(FloatValueCast(params[0])->value().size(), 1.0);
 		ProtoAtomPtr result(new FloatValue(_result));
 
-		for(ProtoAtomPtr & p : params){
+		for(const ProtoAtomPtr & p : params){
 			result = times(FloatValueCast(result), FloatValueCast(p));
 		}
 		return result;
@@ -95,16 +95,16 @@ ProtoAtomPtr Interpreter::execute(Type t, ProtomSeq& params){
 		std::vector<ProtoAtomPtr> _result(_problem_data_size, ProtoAtomPtr(createLink(TRUE_LINK)));
 		LinkValuePtr result(new LinkValue(_result));
 
-		for(ProtoAtomPtr &p : params){
+		for(const ProtoAtomPtr &p : params){
 			result = logical_and(result, LinkValueCast(p));
 		}
 		return ProtoAtomPtr(result);
 	}
 	if(t == OR_LINK){
-		std::vector<ProtoAtomPtr> _result(_problem_data_size, ProtoAtomPtr(createLink(TRUE_LINK)));
+		std::vector<ProtoAtomPtr> _result(_problem_data_size, ProtoAtomPtr(createLink(FALSE_LINK)));
 		LinkValuePtr result(new LinkValue(_result));
 
-		for(ProtoAtomPtr &p : params){
+		for(const ProtoAtomPtr &p : params){
 			result = logical_or(result, LinkValueCast(p));
 		}
 		return ProtoAtomPtr(result);

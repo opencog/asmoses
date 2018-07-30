@@ -25,9 +25,6 @@
 #define MOSES_INTERPRETER_H
 
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/proto/LinkValue.h>
-#include <boost/iterator/zip_iterator.hpp>
-#include <moses/atomese/interpreter/logical_interpreter.h>
 
 /**
  * class Interpreter -- create an unfolded program from compressed program
@@ -48,7 +45,7 @@ class Interpreter
 	std::vector<double >::size_type _problem_data_size;
 
 public:
-	Interpreter(opencog::Handle &input_table);
+	Interpreter(const opencog::Handle &input_table);
 
 /**
  * executes/evaluates a program over a problem data.
@@ -57,49 +54,13 @@ public:
  * @return               return ProtoAtomPtr containing the output
  *                       of the program executed/evaluated on the problem data.
  */
-	opencog::ProtoAtomPtr interpret(opencog::Handle& program);
+	opencog::ProtoAtomPtr interpret(const opencog::Handle& program);
 
 private:
-	ProtoAtomPtr unwrap_node(Handle& handle);
+	ProtoAtomPtr unwrap_node(const Handle& handle);
 
-	ProtoAtomPtr execute(Type t, ProtomSeq &params);
+	ProtoAtomPtr execute(const Type t, const ProtomSeq &params);
 };
-
-LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2){
-	std::vector<ProtoAtomPtr> p1_value = p1->value();
-	std::vector<ProtoAtomPtr> p2_value = p2->value();
-
-	zip_and _and = std::for_each(
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.begin(), p2_value.begin())
-			),
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.end(), p2_value.end())
-			),
-			zip_and()
-	);
-
-	std::vector<ProtoAtomPtr> _result = _and._result;
-	return LinkValuePtr(new LinkValue(_result));
-}
-
-LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2){
-	std::vector<ProtoAtomPtr> p1_value = p1->value();
-	std::vector<ProtoAtomPtr> p2_value = p2->value();
-
-	zip_or _or = std::for_each(
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.begin(), p2_value.begin())
-			),
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.end(), p2_value.end())
-			),
-			zip_or()
-	);
-
-	std::vector<ProtoAtomPtr> _result = _or._result;
-	return LinkValuePtr(new LinkValue(_result));
-}
 
 }
 }
