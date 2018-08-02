@@ -147,7 +147,6 @@ protected:
                   // hits.
 };
 
-
 } //~namespace moses
 } //~namespace opencog
 
