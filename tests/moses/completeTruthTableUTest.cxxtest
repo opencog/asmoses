@@ -24,7 +24,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>
-#include <moses/scoring/bscore.h>
+#include <moses/moses/scoring/bscores.h>
 #include <opencog/atoms/core/NumberNode.h>
 
 #include <moses/comboreduct/converter/combo_atomese.h>
@@ -34,19 +34,20 @@
 
 using namespace std;
 using namespace opencog;
+using namespace combo;
 
 class completeTruthTableUTest : public CxxTest::TestSuite
 {
 public:
 	void test_truthTableUTest() {
         combo::combo_tree tr = combo::str2combo_tree("and($1 $2 or($3 $4))", {});
-        arity_t _arity = arity(tr);
+        combo::arity_t _arity = arity(tr);
         const Handle program = combo::atomese_combo(tr);
 
         complete_truth_table tt(program, _arity);
 	    //expected truth table output result for the program "and($1 $2 or($3 $4))"
 	    std::vector<bool> expected_tt = {true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false};
-
+        //std::cout<<tt;
         TS_ASSERT_EQUALS(tt, expected_tt);
     }
 
@@ -58,7 +59,7 @@ public:
         complete_truth_table tt2(program2, _arity);
 	    //expected truth table output result for the program "and(or($1 $2) not($3))"
 	    std::vector<bool> expected_tt2 = {false, true, false, true, false, true, false, false};
-
+        //std::cout<<tt2;
         TS_ASSERT_EQUALS(tt2, expected_tt2);
     }
 };
