@@ -46,8 +46,8 @@ opencog::ProtoAtomPtr Interpreter::interpret(const opencog::Handle &program)
 	ProtomSeq params;
 	HandleSeq _child_atoms = program->getOutgoingSet();
 
-	for(Handle h : _child_atoms){
-		if(nameserver().isA(h->get_type(), NODE)){
+	for (Handle h : _child_atoms){
+		if (nameserver().isA(h->get_type(), NODE)){
 			params.push_back(unwrap_node(h));
 		}
 		else {
@@ -61,10 +61,10 @@ opencog::ProtoAtomPtr Interpreter::interpret(const opencog::Handle &program)
 
 ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle)
 {
-	if(SCHEMA_NODE == handle->get_type() || PREDICATE_NODE == handle->get_type()){
+	if (SCHEMA_NODE == handle->get_type() || PREDICATE_NODE == handle->get_type()){
 		return _problem_data->getValue(handle);
 	}
-	if(NUMBER_NODE == handle->get_type()){
+	if (NUMBER_NODE == handle->get_type()){
 		std::vector<double> constant_value(_problem_data_size,
 		                                   NumberNodeCast(handle)->get_value());
 		ProtoAtomPtr constant(new FloatValue(constant_value));
@@ -73,38 +73,38 @@ ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle)
 }
 
 ProtoAtomPtr Interpreter::execute(const Type t, const ProtomSeq& params){
-	if(t == PLUS_LINK){
+	if (t == PLUS_LINK){
 		std::vector<double> _result(_problem_data_size, 0.0);
 		ProtoAtomPtr result(new FloatValue(_result));
 
-		for(const ProtoAtomPtr & p : params){
+		for (const ProtoAtomPtr & p : params){
 			result = plus(FloatValueCast(result), FloatValueCast(p));
 		}
 		return result;
 	}
-	if(t == TIMES_LINK){
+	if (t == TIMES_LINK){
 		std::vector<double> _result(FloatValueCast(params[0])->value().size(), 1.0);
 		ProtoAtomPtr result(new FloatValue(_result));
 
-		for(const ProtoAtomPtr & p : params){
+		for (const ProtoAtomPtr & p : params){
 			result = times(FloatValueCast(result), FloatValueCast(p));
 		}
 		return result;
 	}
-	if(t == AND_LINK){
+	if (t == AND_LINK){
 		std::vector<ProtoAtomPtr> _result(_problem_data_size, ProtoAtomPtr(createLink(TRUE_LINK)));
 		LinkValuePtr result(new LinkValue(_result));
 
-		for(const ProtoAtomPtr &p : params){
+		for (const ProtoAtomPtr &p : params){
 			result = logical_and(result, LinkValueCast(p));
 		}
 		return ProtoAtomPtr(result);
 	}
-	if(t == OR_LINK){
+	if (t == OR_LINK){
 		std::vector<ProtoAtomPtr> _result(_problem_data_size, ProtoAtomPtr(createLink(FALSE_LINK)));
 		LinkValuePtr result(new LinkValue(_result));
 
-		for(const ProtoAtomPtr &p : params){
+		for (const ProtoAtomPtr &p : params){
 			result = logical_or(result, LinkValueCast(p));
 		}
 		return ProtoAtomPtr(result);
