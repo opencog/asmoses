@@ -24,7 +24,7 @@
 #include <moses/comboreduct/converter/combo_atomese.h>
 #include <moses/comboreduct/combo/combo.h>
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/base/atom_types.h>
+#include <opencog/atoms/proto/atom_types.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>
 
