@@ -54,13 +54,16 @@ score_t contin_complexity_coef(unsigned alphabet_size, double stdev);
 
 /// Abstract base class for behavioral scoring.
 /// A behavioral score is a vector of scores, one per sample of a dataset.
-struct bscore_base : public std::unary_function<combo_tree, behavioral_score>
+struct bscore_base
 {
     bscore_base() : _return_weighted_score(false), _complexity_coef(0.0), _size(0) {};
     virtual ~bscore_base() {};
 
     /// Return the behavioral score for the combo_tree
     virtual behavioral_score operator()(const combo_tree&) const = 0;
+
+    /// Return the behavioral score for the Handle
+	virtual behavioral_score operator()(const Handle&) const;
 
     /// Return the behavioral score for the ensemble
     virtual behavioral_score operator()(const scored_combo_tree_set&) const;
@@ -203,6 +206,10 @@ struct bscore_base : public std::unary_function<combo_tree, behavioral_score>
     }
     virtual complexity_t get_complexity(const scored_combo_tree_set&) const;
 
+	virtual complexity_t get_complexity(const Handle &handle)const
+	{
+		return atomese_complexity(handle);
+	}
     /// Return the complexity coefficient.  This is used to obtain the
     /// complexity penalty for the score, which is meant to be computed
     /// as penalty = get_complexity_coef() * get_complexity(tree);

@@ -33,7 +33,8 @@ namespace opencog { namespace moses {
 behave_cscore::behave_cscore(bscore_base& b, size_t initial_cache_size)
     : _bscorer(b),
     _have_cache(0<initial_cache_size),
-    _cscore_cache(initial_cache_size, _wrapper, "composite scores")
+    _cscore_cache(initial_cache_size, _wrapper, "composite scores"),
+	_atomese_cscore_cache(initial_cache_size, _atomese_wrapper, "compositescore")
 {
     _wrapper.self = this;
 }
@@ -46,6 +47,11 @@ behavioral_score behave_cscore::get_bscore(const combo_tree& tr) const
 behavioral_score behave_cscore::get_bscore(const scored_combo_tree_set& ensemble) const
 {
     return _bscorer(ensemble);
+}
+
+behavioral_score behave_cscore::get_bscore(const Handle &handle) const
+{
+	return _bscorer(handle);
 }
 
 composite_score behave_cscore::get_cscore(const combo_tree& tr)
@@ -118,6 +124,40 @@ composite_score behave_cscore::get_cscore(const scored_combo_tree_set& ensemble)
     }
 
     return composite_score(res, cpxy, cpxy * cpxy_coef, 0.0);
+}
+
+composite_score behave_cscore::get_cscore(const Handle &handle)
+{
+	if (_have_cache) return _atomese_cscore_cache(handle);
+	return get_cscore_nocache(handle);
+}
+
+composite_score behave_cscore::atomese_wrapper::operator()(const Handle &handle) const
+{
+	return self->get_cscore_nocache(handle);
+}
+
+composite_score behave_cscore::get_cscore_nocache(const Handle &handle)
+{
+	behavioral_score bs;
+	try {
+		bs = get_bscore(handle);
+	}
+	catch (...)
+	{
+		return worst_composite_score;
+	}
+	score_t res = _bscorer.sum_bscore(bs);
+
+	complexity_t cpxy = _bscorer.get_complexity(handle);
+	score_t cpxy_coef = _bscorer.get_complexity_coef();
+	if (logger().is_fine_enabled()) {
+		logger().fine() << "behave_cscore: " << res
+		                << " complexity: " << cpxy
+		                << " cpxy_coeff: " << cpxy_coef;
+	}
+
+	return composite_score(res, cpxy, cpxy * cpxy_coef, 0.0);
 }
 
 score_t behave_cscore::best_possible_score() const

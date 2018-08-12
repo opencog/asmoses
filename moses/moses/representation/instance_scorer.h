@@ -29,6 +29,7 @@
 #include "field_set.h"
 #include "representation.h"
 #include "../scoring/behave_cscore.h"
+#include "moses/comboreduct/converter/combo_atomese.h"
 
 namespace opencog { namespace moses {
 
@@ -104,6 +105,34 @@ protected:
                   // evaluated.  This is advantagous when _cscorer is
                   // also a cache; the reduced form will have more cache
                   // hits.
+};
+
+struct atomese_based_scorer : public iscorer_base
+{
+    atomese_based_scorer(behave_cscore &cs,
+                         representation &rep, bool reduce)
+            : _cscorer(cs), _rep(rep), _reduce(reduce)
+    {}
+
+    composite_score operator()(const instance &inst) const
+    {
+        if (logger().is_fine_enabled()) {
+            logger().fine() << "atomese_based_scorer - Evaluate instance: "
+                            << _rep.fields().to_string(inst);
+        }
+
+        combo_tree tr = _rep.get_candidate(inst, _reduce);
+        Handle handle = atomese_combo(tr);
+        return _cscorer.get_cscore(handle);
+    }
+
+protected:
+    behave_cscore &_cscorer;
+    representation &_rep;
+    bool _reduce; // whether the exemplar should be reduced before being
+    // evaluated.  This is advantagous when _cscorer is
+    // also a cache; the reduced form will have more cache
+    // hits.
 };
 
 } //~namespace moses

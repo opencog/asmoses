@@ -27,6 +27,7 @@
 #define _MOSES_BEHAVE_CSCORE_H
 
 #include <opencog/util/lru_cache.h>
+#include <opencog/atoms/base/Handle.h>
 
 #include "scoring_base.h"
 
@@ -54,8 +55,10 @@ public:
 
     behavioral_score get_bscore(const combo_tree&) const;
     behavioral_score get_bscore(const scored_combo_tree_set&) const;
+	behavioral_score get_bscore(const Handle&) const;
     composite_score get_cscore(const combo_tree&);
     composite_score get_cscore(const scored_combo_tree_set&);
+	composite_score get_cscore(const Handle&);
 
     /// Returns the best score reachable for this problem. Used as
     /// termination condition.
@@ -116,10 +119,19 @@ private:
         behave_cscore* self;
     };
 
+	struct atomese_wrapper : public std::unary_function<Handle, composite_score>
+	{
+		composite_score operator()(const Handle&) const;
+		behave_cscore* self;
+	};
+
     bool _have_cache;
     wrapper _wrapper;
+	atomese_wrapper _atomese_wrapper;
     prr_cache_threaded<wrapper> _cscore_cache;
+	prr_cache_threaded<atomese_wrapper> _atomese_cscore_cache;
     composite_score get_cscore_nocache(const combo_tree&);
+	composite_score get_cscore_nocache(const Handle&);
 
 public:
     // weird hack for subsample scoring...

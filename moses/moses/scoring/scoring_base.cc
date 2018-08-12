@@ -31,6 +31,7 @@
 
 #include <moses/comboreduct/table/table_io.h>
 #include <opencog/util/oc_assert.h>
+#include <opencog/atoms/base/Handle.h>
 #include "scoring_base.h"
 
 namespace opencog { namespace moses {
@@ -67,6 +68,13 @@ void bscore_base::set_complexity_coef(score_t complexity_ratio)
         _complexity_coef = 1.0 / complexity_ratio;
 
     logger().info() << "BScore complexity ratio = " << 1.0/_complexity_coef;
+}
+
+behavioral_score bscore_base::operator()(const Handle &) const
+{
+	OC_ASSERT(false, "Ensemble scoring not implemented for bscorer %s",
+	          typeid(*this).name());
+	return behavioral_score();
 }
 
 behavioral_score

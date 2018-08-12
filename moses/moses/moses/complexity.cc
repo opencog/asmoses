@@ -119,5 +119,11 @@ complexity_t tree_complexity(const combo_tree& tr,
     return tree_complexity(tr.begin(), stopper);
 }
 
+complexity_t atomese_complexity(const Handle &)
+{
+	OC_ASSERT(false, "Atomese Complexity not implemented yet");
+	return 0;
+}
+
 } // ~namespace moses
 } // ~namespace opencog
