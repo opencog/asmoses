@@ -133,6 +133,22 @@ score_t logical_bscore::get_error(const behavioral_score& bs) const
     return - sum_bscore(bs) / ((score_t) _size);
 }
 
+behavioral_score logical_bscore::operator()(const Handle &handle) const
+{
+	combo::complete_truth_table tt(handle, _arity);
+	behavioral_score bs(_size);
+
+	// Compare the predictions of the tree to that of the desired
+	// result. A correct prdiction gets a score of 0, an incorrect
+	// prediction gets a score of -1.
+	boost::transform(tt, _target, bs.begin(), [](bool b1, bool b2)
+	{
+		return -score_t(b1 != b2);
+	});
+
+    return bs;
+}
+
 ///////////////////
 // contin_bscore //
 ///////////////////

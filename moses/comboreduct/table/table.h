@@ -41,6 +41,7 @@
 #include <opencog/util/dorepeat.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/KLD.h>
+#include <opencog/atoms/base/Handle.h>
 
 #include "../type_checker/type_tree.h"
 #include "../interpreter/eval.h"
@@ -1453,6 +1454,16 @@ public:
         this->resize(pow2(_arity));
         populate(tr);
     }
+
+	complete_truth_table(const Handle&)
+	{
+		OC_ASSERT(false, "Truth table from Handle not implemented yet");
+	}
+
+	complete_truth_table(const Handle&, arity_t arity)
+	{
+		OC_ASSERT(false, "Truth table from Handle not implemented yet");
+	}
 
     template<typename Func>
     complete_truth_table(const Func& f, arity_t arity)

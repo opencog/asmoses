@@ -68,6 +68,8 @@ struct logical_bscore : public bscore_base
     behavioral_score operator()(const combo_tree&) const;
     behavioral_score operator()(const scored_combo_tree_set&) const;
 
+	behavioral_score operator()(const Handle&) const;
+
     behavioral_score best_possible_bscore() const;
     behavioral_score worst_possible_bscore() const;
     score_t get_error(const behavioral_score&) const;
