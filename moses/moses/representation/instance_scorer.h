@@ -67,16 +67,16 @@ protected:
     const instance& target_inst;
 };
 
-struct complexity_based_scorer : public iscorer_base
+struct combo_based_scorer : public iscorer_base
 {
-    complexity_based_scorer(behave_cscore& cs,
+    combo_based_scorer(behave_cscore& cs,
                             representation& rep, bool reduce)
         : _cscorer(cs), _rep(rep), _reduce(reduce) {}
 
     composite_score operator()(const instance& inst) const
     {
         if (logger().is_fine_enabled()) {
-            logger().fine() << "complexity_based_scorer - Evaluate instance: "
+            logger().fine() << "combo_based_scorer - Evaluate instance: "
                             << _rep.fields().to_string(inst);
         }
 
