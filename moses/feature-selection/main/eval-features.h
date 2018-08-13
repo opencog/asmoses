@@ -32,7 +32,7 @@
 #include <opencog/util/numeric.h>
 
 #include <moses/comboreduct/combo/combo.h>
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 
 #include "../scorers/mutual_info.h"
 

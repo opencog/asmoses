@@ -1,14 +1,16 @@
 ADD_SUBDIRECTORY(representation)
+#ADD_SUBDIRECTORY(interpreter)
 
 ADD_LIBRARY(atomese SHARED
 		representation/load_table
-)
+#		interpreter/Interpreter
+		)
 
 TARGET_LINK_LIBRARIES (atomese
-	comboreduct
-	${COGUTIL_LIBRARY}
-	${ATOMSPACE_LIBRARIES}
-)
+		comboreduct
+		${COGUTIL_LIBRARY}
+		${ATOMSPACE_LIBRARIES}
+		)
 
 #install library
 IF (WIN32)

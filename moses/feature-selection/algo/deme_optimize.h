@@ -30,7 +30,7 @@
 #include <moses/moses/optimization/optimization.h>
 #include <moses/moses/representation/field_set.h>
 #include <moses/moses/representation/instance_set.h>
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 
 #include "../main/feature-selection.h" // needed for feature_selection_params
 

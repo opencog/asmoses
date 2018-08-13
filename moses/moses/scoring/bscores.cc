@@ -43,7 +43,7 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/KLD.h>
 #include <opencog/util/MannWhitneyU.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 
 #include "bscores.h"
 

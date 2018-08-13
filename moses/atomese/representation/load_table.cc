@@ -20,7 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 #include <opencog/util/comprehension.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>

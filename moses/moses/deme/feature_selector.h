@@ -25,7 +25,7 @@
 #ifndef _OPENCOG_FEATURE_SELECTOR_H
 #define _OPENCOG_FEATURE_SELECTOR_H
 
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 #include <moses/comboreduct/combo/vertex.h>
 #include <moses/feature-selection/main/feature-selection.h>
 

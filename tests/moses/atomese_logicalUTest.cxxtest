@@ -30,8 +30,8 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <moses/comboreduct/combo/combo.h>
 #include <moses/moses/moses/types.h>
-#include <moses/comboreduct/table/table.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 
 using namespace std;
 using namespace opencog;

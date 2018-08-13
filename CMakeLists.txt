@@ -293,6 +293,7 @@ IF(Boost_FOUND AND COGUTIL_FOUND)
 	SET(HAVE_COMBOREDUCT 1)
 	SET(HAVE_MOSES 1)
 	SET(HAVE_FEATURE_SELECTION 1)
+	SET(HAVE_DATA 1)
 ENDIF(Boost_FOUND AND COGUTIL_FOUND)
 
 # ===================================================================
@@ -477,6 +478,7 @@ SUMMARY_ADD("ComboReduct" "Library for reduction of combo program trees" HAVE_CO
 SUMMARY_ADD("Doxygen" "Code documentation" DOXYGEN_FOUND)
 SUMMARY_ADD("Feature selection" "MOSES based feature selection tool" HAVE_FEATURE_SELECTION)
 SUMMARY_ADD("MOSES" "Meta-Optimizing Semantic Evolutionary Search" HAVE_MOSES)
+SUMMARY_ADD("DATA" "Table data" HAVE_DATA)
 SUMMARY_ADD("Python bindings" "Python (cython) bindings" HAVE_CYTHON)
 SUMMARY_ADD("Python tests" "Python bindings nose tests" HAVE_NOSETESTS)
 SUMMARY_ADD("Unit tests" "Unit tests" CXXTEST_FOUND AND COGUTIL_FOUND)

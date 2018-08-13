@@ -14,7 +14,7 @@ private:
 	const string load_tableUTest_dir =
 		string(PROJECT_SOURCE_DIR) + "/tests/atomese/representation/";
 	const string tableUTest_dir =
-		string(PROJECT_SOURCE_DIR) + "/tests/comboreduct/table/";
+		string(PROJECT_SOURCE_DIR) + "/tests/data/table/";
 
 	string load_from_path(const string& filename);
 

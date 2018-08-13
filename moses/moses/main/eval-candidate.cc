@@ -38,7 +38,7 @@
 #include <opencog/util/oc_omp.h>
 
 #include <moses/comboreduct/combo/iostream_combo.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 #include <moses/moses/moses/types.h>
 #include <moses/moses/moses/complexity.h>
 

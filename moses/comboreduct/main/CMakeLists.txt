@@ -2,6 +2,7 @@ ADD_EXECUTABLE (action-reductor action-reductor.cc)
 TARGET_LINK_LIBRARIES(action-reductor
 	comboreduct
 	comboant
+	data
 	${COGUTIL_LIBRARY}
 )
 

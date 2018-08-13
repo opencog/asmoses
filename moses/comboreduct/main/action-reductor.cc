@@ -27,8 +27,8 @@
 
 #include "../combo/vertex.h"
 #include "../reduct/reduct.h"
-#include "../table/table.h"
-#include "../table/table_io.h"
+#include "../../data/table/table.h"
+#include "../../data/table/table_io.h"
 #include "../type_checker/type_tree.h"
 #include "../ant_combo_vocabulary/ant_combo_vocabulary.h"
 

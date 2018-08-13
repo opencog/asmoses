@@ -28,7 +28,7 @@
 
 #include "../moses/types.h"
 #include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 #include <opencog/atoms/base/Handle.h>
 
 namespace opencog { namespace moses {

@@ -1,7 +1,6 @@
 ADD_SUBDIRECTORY(combo)
 ADD_SUBDIRECTORY(interpreter)
 ADD_SUBDIRECTORY(type_checker)
-ADD_SUBDIRECTORY(table)
 ADD_SUBDIRECTORY(reduct)
 ADD_SUBDIRECTORY(ant_combo_vocabulary)
 ADD_SUBDIRECTORY(main)
@@ -30,9 +29,6 @@ ADD_LIBRARY(comboreduct SHARED
 	combo/similarity
 	combo/simple_nn
 	combo/vertex
-
-	table/table
-	table/table_io
 
 	interpreter/interpreter
     interpreter/eval

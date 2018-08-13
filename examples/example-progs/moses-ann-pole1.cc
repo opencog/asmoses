@@ -112,4 +112,6 @@ int main(int argc, char** argv)
 
     //for parameter sweep
     cout << metapop_pole.best_score() << endl;
+    std::vector<bool> nn;
+
 }
