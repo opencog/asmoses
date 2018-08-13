@@ -29,6 +29,7 @@
 
 #include <moses/comboreduct/combo/vertex.h>
 #include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Atom.h>
 
 namespace opencog { namespace moses {
 
@@ -45,7 +46,8 @@ namespace opencog { namespace moses {
     complexity_t tree_complexity(const combo::combo_tree&,
                         bool (*)(const combo::combo_tree::iterator&) = NULL);
 
-	complexity_t atomese_complexity(const Handle&);
+	complexity_t atomese_complexity(const Handle&,
+	                                bool (*)(const Handle&) = NULL);
 
 } //~namespace moses
 } //~namespace opencog
