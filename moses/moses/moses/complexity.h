@@ -47,7 +47,7 @@ namespace opencog { namespace moses {
                         bool (*)(const combo::combo_tree::iterator&) = NULL);
 
 	complexity_t atomese_complexity(const Handle&,
-	                                bool (*)(const Handle&) = NULL);
+	                                bool (*)(const Handle&) = nullptr);
 
 } //~namespace moses
 } //~namespace opencog
