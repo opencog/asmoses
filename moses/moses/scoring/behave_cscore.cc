@@ -37,6 +37,7 @@ behave_cscore::behave_cscore(bscore_base& b, size_t initial_cache_size)
 	_atomese_cscore_cache(initial_cache_size, _atomese_wrapper, "compositescore")
 {
     _wrapper.self = this;
+	_atomese_wrapper.self = this;
 }
 
 behavioral_score behave_cscore::get_bscore(const combo_tree& tr) const
