@@ -36,12 +36,10 @@ using namespace opencog;
 
 class InterpreterUTest : public CxxTest::TestSuite{
 private:
-	Handle dataset;
-	Handle dataset_boolean;
+	Handle key;
 	Handle f1;
 	Handle f2;
 	Handle f3;
-	Handle _size;
 	Handle f1_tv;
 	Handle f2_tv;
 	Handle f3_tv;
@@ -50,39 +48,31 @@ private:
 
 public:
 	InterpreterUTest(){
-		// initialization of problem_data [schema]
-		dataset = createNode(SCHEMA_NODE, "problem-data");
+		// initialization of program [schema]
+		key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
 
-		f1 = createNode(SCHEMA_NODE, "*-AS-MOSES:featureOneKey-*");
-		f2 = createNode(SCHEMA_NODE, "*-AS-MOSES:featureTwoKey-*");
-		f3 = createNode(SCHEMA_NODE, "*-AS-MOSES:featureThreeKey-*");
-		_size = createNode(NODE, "*-AS-MOSES:dataSize-*");
+		f1 = createNode(NODE, "f1");
+		f2 = createNode(NODE, "f2");
+		f3 = createNode(NODE, "f3");
 
 		std::vector<double> _f1_values = {1.0, 0.0, 0.0};
 		std::vector<double> _f2_values = {0.0, 1.0, 0.0};
 		std::vector<double> _f3_values = {0.0, 0.0, 0.0};
 		std::vector<double> _size_value = {3};
 
-		ProtoAtomPtr _size_proto_atom(new FloatValue(_size_value));
-		dataset->setValue(_size, _size_proto_atom);
-
 		ProtoAtomPtr f1_proto_atom(new FloatValue(_f1_values));
-		dataset->setValue(f1, f1_proto_atom);
+		f1->setValue(key, f1_proto_atom);
 
 		ProtoAtomPtr f2_proto_atom(new FloatValue(_f2_values));
-		dataset->setValue(f2, f2_proto_atom);
+		f2->setValue(key, f2_proto_atom);
 
 		ProtoAtomPtr f3_proto_atom(new FloatValue(_f3_values));
-		dataset->setValue(f3, f3_proto_atom);
+		f3->setValue(key, f3_proto_atom);
 
-		// initialization of problem_data [predicate]
-		dataset_boolean = createNode(PREDICATE_NODE, "problem-data");
-
-		dataset_boolean->setValue(_size, _size_proto_atom);
-
-		f1_tv = createNode(PREDICATE_NODE, "*-AS-MOSES:featureOneKey-*");
-		f2_tv = createNode(PREDICATE_NODE, "*-AS-MOSES:featureTwoKey-*");
-		f3_tv = createNode(PREDICATE_NODE, "*-AS-MOSES:featureThreeKey-*");
+		// initialization of program [Boolean]
+		f1_tv = createNode(NODE, "f1_tv");
+		f2_tv = createNode(NODE, "f2_tv");
+		f3_tv = createNode(NODE, "f3_tv");
 
 		t_link = ProtoAtomPtr(createLink(TRUE_LINK));
 		f_link = ProtoAtomPtr(createLink(FALSE_LINK));
@@ -92,13 +82,13 @@ public:
 		std::vector<ProtoAtomPtr> _f3_tv = {f_link, f_link, t_link};
 
 		ProtoAtomPtr f1_tv_proto_atom(new LinkValue(_f1_tv));
-		dataset_boolean->setValue(f1_tv, f1_tv_proto_atom);
+		f1_tv->setValue(key, f1_tv_proto_atom);
 
 		ProtoAtomPtr f2_tv_proto_atom(new LinkValue(_f2_tv));
-		dataset_boolean->setValue(f2_tv, f2_tv_proto_atom);
+		f2_tv->setValue(key, f2_tv_proto_atom);
 
 		ProtoAtomPtr f3_tv_proto_atom(new LinkValue(_f3_tv));
-		dataset_boolean->setValue(f3_tv, f3_tv_proto_atom);
+		f3_tv->setValue(key, f3_tv_proto_atom);
 	}
 
 	void test_interpret(void)
@@ -111,7 +101,7 @@ public:
 		std::vector<double> exp_value = {1.0, 1.0, 0.0};
 
 		// interpret
-		atomese::Interpreter interpreter(dataset);
+		atomese::Interpreter interpreter(key);
 		ProtoAtomPtr _result = interpreter.interpret(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -129,7 +119,7 @@ public:
 		std::vector<double> exp_value = {6.0, 6.0, 5.0};
 
 		// interpret
-		atomese::Interpreter interpreter(dataset);
+		atomese::Interpreter interpreter(key);
 		ProtoAtomPtr _result = interpreter.interpret(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -149,7 +139,7 @@ public:
 		std::vector<double> exp_value = {5.0, 5.0, 0.0};
 
 		// interpret
-		atomese::Interpreter interpreter(dataset);
+		atomese::Interpreter interpreter(key);
 		ProtoAtomPtr _result = interpreter.interpret(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -169,7 +159,7 @@ public:
 		ProtoAtomPtr expected(new LinkValue(exp_value));
 
 		// interpret
-		atomese::Interpreter interpreter(dataset_boolean);
+		atomese::Interpreter interpreter(key);
 		ProtoAtomPtr result = interpreter.interpret(program);
 
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
