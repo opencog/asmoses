@@ -25,6 +25,7 @@
 #define MOSES_INTERPRETER_H
 
 #include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/proto/LinkValue.h>
 
 /**
  * class Interpreter -- create an unfolded program from compressed program
@@ -38,28 +39,76 @@ namespace opencog
 namespace atomese
 {
 
+typedef std::vector<double >::size_type value_size;
+
 class Interpreter
 {
 
-	opencog::Handle _problem_data;
-	std::vector<double >::size_type _problem_data_size;
+	opencog::Handle _key;
 
 public:
 	Interpreter(const opencog::Handle &input_table);
 
-/**
- * executes/evaluates a program over a problem data.
- *
- * @param Handle&       handle ref, stores the atomese program
- * @return               return ProtoAtomPtr containing the output
- *                       of the program executed/evaluated on the problem data.
- */
+	/**
+	 * executes/evaluates a program over a problem data.
+	 *
+	 * @param Handle&       handle ref, stores the atomese program
+	 * @return               return ProtoAtomPtr containing the output
+	 *                       of the program executed/evaluated on the problem data.
+	 */
 	opencog::ProtoAtomPtr interpret(const opencog::Handle& program);
 
 private:
-	ProtoAtomPtr unwrap_node(const Handle& handle);
+	/**
+	 * extract a protoAtomPtr containing the the values of the handle
+	 *
+	 * @param Handle&       handle ref, containing values with _key.
+	 * @param value_size    size of the values stored in the handle.
+	 * @return              protoAtomPtr containing values.
+	 */
+	ProtoAtomPtr unwrap_node(const Handle& handle, value_size);
 
-	ProtoAtomPtr execute(const Type t, const ProtomSeq &params);
+	/**
+	 * returns the execution/evaluation of type t with the given parameters
+	 *
+	 * @param Type          type of the atomese scheme to execute or evaluate.
+	 * @param ProtomSeq     sequence containing parameters of the execution/evaluation.
+	 * @param value_size    size of the output.
+	 * @return              protoAtomPtr containing the result.
+	 */
+	ProtoAtomPtr execute(const Type t, const ProtomSeq &params, value_size);
+
+	/**
+	 * retrive the size of the output after the program is interpreted. The size is
+	 * equal to the input size of the features[#of observations].
+	 *
+	 * @param Handle&       handle ref, the program
+	 * @param Handle&       handle ref, the key for which the values of the features
+	 *                      or the sub-programs is stored.
+	 * @return value_size   return the size of the output
+	 */
+	static value_size extract_output_size(const Handle &program, const Handle &key)
+	{
+		// Look for a value stored with "key" and return it's size.
+		// if this program or any sub-program inside this program
+		// has been interpreted before, it will contain a value of
+		// the same size as the output of the interpretation of this
+		// program.
+		if (program->getValue(key)){
+			auto f_value = FloatValueCast(program->getValue(key));
+			if (f_value){
+				return f_value->value().size();
+			}
+			return LinkValueCast(program->getValue(key))->value().size();
+		}
+		if (nameserver().isA(program->get_type(), LINK)){
+			for (Handle child : program->getOutgoingSet()){
+				auto s = extract_output_size(child, key);
+				if (s) return s;
+			}
+		}
+		return 0;
+	}
 };
 
 }
