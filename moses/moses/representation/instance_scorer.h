@@ -50,18 +50,7 @@ struct distance_based_scorer : public iscorer_base
                           const instance& _target_inst)
         : fs(_fs), target_inst(_target_inst) {}
 
-    composite_score operator()(const instance& inst) const
-    {
-        score_t sc = -fs.hamming_distance(target_inst, inst);
-        // Logger
-        if (logger().is_fine_enabled()) {
-            logger().fine() << "distance_based_scorer - Evaluate instance: "
-                            << fs.to_string(inst) << "\n"
-                            << "Score = " << sc << std::endl;
-        }
-        // ~Logger
-        return composite_score(sc, 0, 0, 0);
-    }
+    composite_score operator()(const instance& inst) const;
 
 protected:
     const field_set& fs;
@@ -74,29 +63,7 @@ struct combo_based_scorer : public iscorer_base
                             representation& rep, bool reduce)
         : _cscorer(cs), _rep(rep), _reduce(reduce) {}
 
-    composite_score operator()(const instance& inst) const
-    {
-        if (logger().is_fine_enabled()) {
-            logger().fine() << "combo_based_scorer - Evaluate instance: "
-                            << _rep.fields().to_string(inst);
-        }
-
-        try {
-            combo_tree tr = _rep.get_candidate(inst, _reduce);
-            return _cscorer.get_cscore(tr);
-        } catch (...) {
-// XXX FIXME, calling score_tree above does not throw the exception; this should be done
-// differntly, maybe call bscorer directly, then ascorer...
-// ??? Huh? why couldn't we evaluate a tree anyway?  why would we want an exception here?
-            combo_tree raw_tr = _rep.get_candidate(inst, false);
-            combo_tree red_tr = _rep.get_candidate(inst, true);
-            logger().warn() << "The following instance could not be evaluated: "
-                            << _rep.fields().to_string(inst)
-                            << "\nUnreduced tree: " << raw_tr
-                            << "\nreduced tree: "<< red_tr;
-        }
-        return worst_composite_score;
-    }
+    composite_score operator()(const instance& inst) const;
 
 protected:
     behave_cscore& _cscorer;
@@ -114,17 +81,7 @@ struct atomese_based_scorer : public iscorer_base
             : _cscorer(cs), _rep(rep), _reduce(reduce)
     {}
 
-    composite_score operator()(const instance &inst) const
-    {
-        if (logger().is_fine_enabled()) {
-            logger().fine() << "atomese_based_scorer - Evaluate instance: "
-                            << _rep.fields().to_string(inst);
-        }
-
-        combo_tree tr = _rep.get_candidate(inst, _reduce);
-        Handle handle = atomese_combo(tr);
-        return _cscorer.get_cscore(handle);
-    }
+    composite_score operator()(const instance &inst) const;
 
 protected:
     behave_cscore &_cscorer;
