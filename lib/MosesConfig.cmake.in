@@ -1,12 +1,12 @@
 @PACKAGE_INIT@
 
-include("@CMAKE_INSTALL_PREFIX@/lib/cmake/Moses/MosesTargets.cmake")
+include("@CMAKE_INSTALL_PREFIX@/lib/cmake/ASMoses/ASMosesTargets.cmake")
 
-set(MOSES_LIBRARY moses)
-set(MOSES_EXEC_LIBRARY moses_exec)
-set(COMBOANT_LIBRARY comboant)
-set(COMBOREDUCT_LIBRARY comboreduct)
-set(FEATURE_SELECTION_LIBRARY feature_selection)
+set(MOSES_LIBRARY asmoses)
+set(MOSES_EXEC_LIBRARY asmoses_exec)
+set(COMBOANT_LIBRARY ascomboant)
+set(COMBOREDUCT_LIBRARY ascomboreduct)
+set(FEATURE_SELECTION_LIBRARY asfeature_selection)
 
 # Copy the results to the output variables.
 IF (MOSES_LIBRARY)
