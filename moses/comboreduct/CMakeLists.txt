@@ -9,7 +9,7 @@ ADD_SUBDIRECTORY(man)
 ADD_SUBDIRECTORY(crutil)
 ADD_SUBDIRECTORY(converter)
 
-ADD_LIBRARY(comboreduct SHARED
+ADD_LIBRARY(ascomboreduct SHARED
 	crutil/exception
 
 	combo/action
@@ -64,7 +64,7 @@ ADD_LIBRARY(comboreduct SHARED
 	converter/combo_atomese
 )
 
-TARGET_LINK_LIBRARIES (comboreduct
+TARGET_LINK_LIBRARIES (ascomboreduct
 	${COGUTIL_LIBRARY}
 	${Boost_DATE_TIME_LIBRARY}
 	${Boost_THREAD_LIBRARY}
@@ -72,7 +72,7 @@ TARGET_LINK_LIBRARIES (comboreduct
 	${ATOMSPACE_atombase_LIBRARY}
 )
 
-ADD_LIBRARY(comboant SHARED
+ADD_LIBRARY(ascomboant SHARED
 	ant_combo_vocabulary/ant_builtin_action
 	ant_combo_vocabulary/ant_perception
 	ant_combo_vocabulary/ant_action_symbol
@@ -80,19 +80,19 @@ ADD_LIBRARY(comboant SHARED
 	ant_combo_vocabulary/ant_combo_vocabulary
 )
 
-TARGET_LINK_LIBRARIES (comboant
-	comboreduct
+TARGET_LINK_LIBRARIES (ascomboant
+	ascomboreduct
 	${COGUTIL_LIBRARY}
 )
 
 
 #install library
 IF (WIN32)
-	INSTALL(TARGETS comboreduct comboant
+	INSTALL(TARGETS ascomboreduct ascomboant
 	        EXPORT MosesTargets
 	        DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
 ELSE (WIN32)
-	INSTALL(TARGETS comboreduct comboant
+	INSTALL(TARGETS ascomboreduct ascomboant
 	        EXPORT MosesTargets
            LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}"   # lib*.so files
            ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}")  # lib*.a files

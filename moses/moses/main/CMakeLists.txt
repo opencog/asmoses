@@ -13,14 +13,14 @@ ADD_EXECUTABLE (moses-exec moses-exec)
 TARGET_LINK_LIBRARIES (moses-exec
 	moses_exec
 	moses
-	comboant
+	ascomboant
 )
-SET_TARGET_PROPERTIES(moses-exec PROPERTIES OUTPUT_NAME "moses")
+SET_TARGET_PROPERTIES(moses-exec PROPERTIES OUTPUT_NAME "asmoses")
 
 ADD_EXECUTABLE (eval-diversity eval-diversity)
 TARGET_LINK_LIBRARIES (eval-diversity
 	moses
-	comboant
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
@@ -28,7 +28,7 @@ TARGET_LINK_LIBRARIES (eval-diversity
 ADD_EXECUTABLE (eval-candidate eval-candidate)
 TARGET_LINK_LIBRARIES (eval-candidate
 	moses
-	comboant
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
@@ -36,7 +36,7 @@ TARGET_LINK_LIBRARIES (eval-candidate
 ADD_EXECUTABLE (eval-candidate-likelihood eval-candidate-likelihood)
 TARGET_LINK_LIBRARIES (eval-candidate-likelihood
 	moses
-	comboant
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )

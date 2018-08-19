@@ -67,13 +67,15 @@ ADD_LIBRARY (moses SHARED
 )
 
 TARGET_LINK_LIBRARIES (moses
-	feature_selection
-	comboreduct
-	comboant
+	asfeature_selection
+	ascomboreduct
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 	${Boost_REGEX_LIBRARY}
 )
+
+set_target_properties(moses PROPERTIES OUTPUT_NAME "asmoses")
 
 IF (HAVE_MPI)
 	TARGET_LINK_LIBRARIES (moses
