@@ -5,32 +5,32 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/lib/moses-test.conf
     ${PROJECT_BINARY_DIR}/lib/moses-test.conf)
 
 export(EXPORT MosesTargets
-          FILE "${CMAKE_CURRENT_BINARY_DIR}/Moses/MosesTargets.cmake"
+          FILE "${CMAKE_CURRENT_BINARY_DIR}/ASMoses/ASMosesTargets.cmake"
       )
 
-set(ConfigPackageLocation lib/cmake/Moses)
+set(ConfigPackageLocation lib/cmake/ASMoses)
 
 install(EXPORT MosesTargets
   FILE
-    MosesTargets.cmake
+    ASMosesTargets.cmake
   DESTINATION
     ${ConfigPackageLocation}
 )
 
 include(CMakePackageConfigHelpers)
-configure_package_config_file(MosesConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/MOSESConfig.cmake
-                              INSTALL_DESTINATION lib/Moses/cmake
+configure_package_config_file(ASMosesConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/ASMOSESConfig.cmake
+                              INSTALL_DESTINATION lib/ASMoses/cmake
                               PATH_VARS CMAKE_INSTALL_PREFIX)
 
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/MOSESConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ASMOSESConfigVersion.cmake"
   VERSION ${MOSES_VERSION}
   COMPATIBILITY SameMajorVersion
 )
 
 INSTALL(FILES
-       ${CMAKE_CURRENT_BINARY_DIR}/MOSESConfigVersion.cmake
-       ${CMAKE_CURRENT_BINARY_DIR}/MOSESConfig.cmake
+       ${CMAKE_CURRENT_BINARY_DIR}/ASMOSESConfigVersion.cmake
+       ${CMAKE_CURRENT_BINARY_DIR}/ASMOSESConfig.cmake
        DESTINATION
        ${ConfigPackageLocation})

@@ -8,7 +8,6 @@
 # -- configure various config files.
 # -- print pretty summary
 #
-
 # MOSES' version, must be updated manually
 SET (MOSES_VERSION_MAJOR 3)
 SET (MOSES_VERSION_MINOR 6)
@@ -27,7 +26,7 @@ IF (COMMAND CMAKE_POLICY)
 	CMAKE_POLICY(SET CMP0005 OLD)
 ENDIF (COMMAND CMAKE_POLICY)
 
-PROJECT(moses)
+PROJECT(asmoses)
 
 # Cogutil
 FIND_PACKAGE(CogUtil CONFIG)
