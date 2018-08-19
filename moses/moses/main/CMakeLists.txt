@@ -1,6 +1,6 @@
 
 # We need to put this in a library, so that MOSESUTest can link to it.
-ADD_LIBRARY (moses_exec SHARED
+ADD_LIBRARY (asmoses_exec SHARED
     demo-problems
     problem
     problem-params
@@ -9,13 +9,13 @@ ADD_LIBRARY (moses_exec SHARED
     table-problems
 )
 
-ADD_EXECUTABLE (moses-exec moses-exec)
-TARGET_LINK_LIBRARIES (moses-exec
+ADD_EXECUTABLE (asmoses-exec moses-exec)
+TARGET_LINK_LIBRARIES (asmoses-exec
 	moses_exec
 	moses
 	ascomboant
 )
-SET_TARGET_PROPERTIES(moses-exec PROPERTIES OUTPUT_NAME "asmoses")
+SET_TARGET_PROPERTIES(asmoses-exec PROPERTIES OUTPUT_NAME "asmoses")
 
 ADD_EXECUTABLE (eval-diversity eval-diversity)
 TARGET_LINK_LIBRARIES (eval-diversity
@@ -41,8 +41,8 @@ TARGET_LINK_LIBRARIES (eval-candidate-likelihood
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
-# install moses-exec
-INSTALL(TARGETS moses-exec eval-diversity eval-candidate eval-candidate-likelihood
+# install asmoses-exec
+INSTALL(TARGETS asmoses-exec eval-diversity eval-candidate eval-candidate-likelihood
         EXPORT MosesTargets
         RUNTIME DESTINATION bin)
 
@@ -52,7 +52,7 @@ IF (WIN32)
 	        EXPORT MosesTargets
 	        DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
 ELSE (WIN32)
-	INSTALL(TARGETS moses_exec
+	INSTALL(TARGETS asmoses_exec
 	        EXPORT MosesTargets
 	        LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}"    # lib*.so files
 	        ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}")   # lib*.a files
