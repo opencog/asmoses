@@ -11,7 +11,7 @@ ADD_LIBRARY (asmoses_exec SHARED
 
 ADD_EXECUTABLE (asmoses-exec moses-exec)
 TARGET_LINK_LIBRARIES (asmoses-exec
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboant
 )

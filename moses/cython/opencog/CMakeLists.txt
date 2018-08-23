@@ -51,7 +51,7 @@ IF (HAVE_MOSES)
 	# undefined symbol: _ZNK5boost15program_options22error_with_option_name4whatEv
 	# XXX Why???
 	TARGET_LINK_LIBRARIES(moses_cython
-		moses_exec
+		asmoses_exec
 		moses
 	)
 

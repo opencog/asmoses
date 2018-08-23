@@ -64,7 +64,7 @@ TARGET_LINK_LIBRARIES(optimizationUTest
 
 ADD_CXXTEST(MOSESUTest)
 TARGET_LINK_LIBRARIES(MOSESUTest
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}
@@ -72,7 +72,7 @@ TARGET_LINK_LIBRARIES(MOSESUTest
 
 ADD_CXXTEST(weightedUTest)
 TARGET_LINK_LIBRARIES(weightedUTest
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}
@@ -80,7 +80,7 @@ TARGET_LINK_LIBRARIES(weightedUTest
 
 ADD_CXXTEST(mixedUTest)
 TARGET_LINK_LIBRARIES(mixedUTest
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}
@@ -88,7 +88,7 @@ TARGET_LINK_LIBRARIES(mixedUTest
 
 ADD_CXXTEST(irisUTest)
 TARGET_LINK_LIBRARIES(irisUTest
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}
@@ -96,7 +96,7 @@ TARGET_LINK_LIBRARIES(irisUTest
 
 ADD_CXXTEST(selectionUTest)
 TARGET_LINK_LIBRARIES(selectionUTest
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}
@@ -104,7 +104,7 @@ TARGET_LINK_LIBRARIES(selectionUTest
 
 ADD_CXXTEST(dynFeatSelUTest)
 TARGET_LINK_LIBRARIES(dynFeatSelUTest
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}
@@ -113,7 +113,7 @@ TARGET_LINK_LIBRARIES(dynFeatSelUTest
 ADD_CXXTEST(AntUTest)
 TARGET_LINK_LIBRARIES(AntUTest
 	ant_scoring
-	moses_exec
+	asmoses_exec
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}

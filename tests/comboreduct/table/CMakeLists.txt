@@ -1,6 +1,6 @@
 ADD_CXXTEST(tableUTest)
 TARGET_LINK_LIBRARIES(tableUTest
-	comboreduct
-	comboant
+	ascomboreduct
+	ascomboant
 	${COGUTIL_LIBRARY}
 )
