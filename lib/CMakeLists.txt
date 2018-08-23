@@ -25,7 +25,7 @@ configure_package_config_file(ASMosesConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}
 
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/ASMOSESConfigVersion.cmake"
-  VERSION ${MOSES_VERSION}
+  VERSION ${ASMOSES_VERSION}
   COMPATIBILITY SameMajorVersion
 )
 
