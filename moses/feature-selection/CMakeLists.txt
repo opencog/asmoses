@@ -21,11 +21,11 @@ TARGET_LINK_LIBRARIES(asfeature_selection
 # Install library
 IF (WIN32)
 	INSTALL(TARGETS asfeature_selection
-	        EXPORT MosesTargets
+	        EXPORT ASMosesTargets
 	        DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
 ELSE (WIN32)
 	INSTALL(TARGETS asfeature_selection
-	        EXPORT MosesTargets
+	        EXPORT ASMosesTargets
 	        LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}"    # lib*.so files
 	        ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}")   # lib*.a files
 ENDIF (WIN32)

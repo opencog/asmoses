@@ -28,5 +28,5 @@ INSTALL(FILES
 
 # install feature-selection
 INSTALL(TARGETS fs-main eval-features 
-        EXPORT MosesTargets
+        EXPORT ASMosesTargets
         RUNTIME DESTINATION bin)

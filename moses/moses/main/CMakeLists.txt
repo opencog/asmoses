@@ -43,17 +43,17 @@ TARGET_LINK_LIBRARIES (eval-candidate-likelihood
 
 # install asmoses-exec
 INSTALL(TARGETS asmoses-exec eval-diversity eval-candidate eval-candidate-likelihood
-        EXPORT MosesTargets
+        EXPORT ASMosesTargets
         RUNTIME DESTINATION bin)
 
 # Install library
 IF (WIN32)
 	INSTALL(TARGETS moses
-	        EXPORT MosesTargets
+	        EXPORT ASMosesTargets
 	        DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
 ELSE (WIN32)
 	INSTALL(TARGETS asmoses_exec
-	        EXPORT MosesTargets
+	        EXPORT ASMosesTargets
 	        LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}"    # lib*.so files
 	        ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}")   # lib*.a files
 ENDIF (WIN32)

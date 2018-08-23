@@ -102,7 +102,7 @@ TARGET_LINK_LIBRARIES(combo-fmt-converter
 
 # install eval-table
 INSTALL(TARGETS eval-table gen-table gen-disj-conj combo-fmt-converter
-        EXPORT MosesTargets
+        EXPORT ASMosesTargets
         RUNTIME DESTINATION bin)
 
 INSTALL(FILES

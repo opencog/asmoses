@@ -4,13 +4,13 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/lib/moses.conf
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/lib/moses-test.conf
     ${PROJECT_BINARY_DIR}/lib/moses-test.conf)
 
-export(EXPORT MosesTargets
+export(EXPORT ASMosesTargets
           FILE "${CMAKE_CURRENT_BINARY_DIR}/ASMoses/ASMosesTargets.cmake"
       )
 
 set(ConfigPackageLocation lib/cmake/ASMoses)
 
-install(EXPORT MosesTargets
+install(EXPORT ASMosesTargets
   FILE
     ASMosesTargets.cmake
   DESTINATION
