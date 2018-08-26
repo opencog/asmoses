@@ -124,3 +124,26 @@ ProtoAtomPtr Interpreter::execute(const Type t, const ProtomSeq& params)
 	}
 	return ProtoAtomPtr();
 }
+
+value_size Interpreter::extract_output_size(const Handle &program, const Handle &key)
+{
+	// Look for a value stored with "key" and return it's size.
+	// if this program or any sub-program inside this program
+	// has been interpreted before, it will contain a value of
+	// the same size as the output of the interpretation of this
+	// program.
+	if (program->getValue(key)) {
+		auto f_value = FloatValueCast(program->getValue(key));
+		if (f_value) {
+			return f_value->value().size();
+		}
+		return LinkValueCast(program->getValue(key))->value().size();
+	}
+	if (nameserver().isA(program->get_type(), LINK)) {
+		for (Handle child : program->getOutgoingSet()) {
+			auto s = extract_output_size(child, key);
+			if (s) return s;
+		}
+	}
+	return 0;
+}
