@@ -44,7 +44,7 @@ struct zip_and :
 	void operator()(const boost::tuple<const ProtoAtomPtr&, const ProtoAtomPtr&>& t)
 	{
 		if (HandleCast(t.get<0>())->get_type() == TRUE_LINK
-		   && HandleCast(t.get<1>())->get_type() == TRUE_LINK){
+		   && HandleCast(t.get<1>())->get_type() == TRUE_LINK) {
 			_result.push_back(ProtoAtomPtr(createLink(TRUE_LINK)));
 		}
 		else {
@@ -67,7 +67,7 @@ struct zip_or :
 	void operator()(const boost::tuple<const ProtoAtomPtr&, const ProtoAtomPtr&>& t)
 	{
 		if ((HandleCast(t.get<0>())->get_type() == TRUE_LINK)
-		   || (HandleCast(t.get<1>())->get_type() == TRUE_LINK)){
+		   || (HandleCast(t.get<1>())->get_type() == TRUE_LINK)) {
 			_result.push_back(ProtoAtomPtr(createLink(TRUE_LINK)));
 		}
 		else {
