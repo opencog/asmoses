@@ -102,7 +102,7 @@ public:
 
 		// interpret
 		atomese::Interpreter interpreter(key);
-		ProtoAtomPtr _result = interpreter.interpret(program);
+		ProtoAtomPtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
@@ -120,7 +120,7 @@ public:
 
 		// interpret
 		atomese::Interpreter interpreter(key);
-		ProtoAtomPtr _result = interpreter.interpret(program);
+		ProtoAtomPtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
@@ -140,7 +140,7 @@ public:
 
 		// interpret
 		atomese::Interpreter interpreter(key);
-		ProtoAtomPtr _result = interpreter.interpret(program);
+		ProtoAtomPtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
@@ -160,7 +160,7 @@ public:
 
 		// interpret
 		atomese::Interpreter interpreter(key);
-		ProtoAtomPtr result = interpreter.interpret(program);
+		ProtoAtomPtr result = interpreter(program);
 
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
 	}

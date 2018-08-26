@@ -37,35 +37,35 @@ Interpreter::Interpreter(const opencog::Handle &key)
 		: _key(key), _problem_data_size(0)
 {}
 
-opencog::ProtoAtomPtr Interpreter::interpret(const opencog::Handle &program)
+opencog::ProtoAtomPtr Interpreter::operator()(const opencog::Handle &program)
 {
 	// if this program or any sub-program of this program is previously
 	// interpreted it will contain the result values with '_key',
 	// return the values with out re-interpreting.
-	if (program->getValue(_key))
-		return program->getValue(_key);
+	if (ProtoAtomPtr v = program->getValue(_key))
+		return v;
 
 	// this assumes one Interpreter object per data-set
 	// if the size of the data-set changes for every interpretation
 	// this line must be replaced with
 	// _problem_data_size = extract_output_size(program, _key);
-	_problem_data_size = _problem_data_size? _problem_data_size : extract_output_size(program, _key);
+	if (not _problem_data_size)
+		_problem_data_size = extract_output_size(program, _key);
+
+	if (nameserver().isA(program->get_type(), NODE)) {
+		return unwrap_node(program);
+	}
 
 	ProtomSeq params;
-	HandleSeq _child_atoms = program->getOutgoingSet();
-
-	for (const Handle& h : _child_atoms) {
-		if (nameserver().isA(h->get_type(), NODE)) {
-			params.push_back(unwrap_node(h));
-		}
-		else {
-			params.push_back(interpret(h));
-		}
+	for (const Handle& h : program->getOutgoingSet()) {
+		params.push_back((*this)(h));
 	}
 
 	ProtoAtomPtr result = execute(program->get_type(), params);
+
 	// we store the result with '_key' to prevent re-interpretation for the future
 	program->setValue(_key, result);
+
 	return result;
 }
 
@@ -75,11 +75,11 @@ ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle)
 	// with size of '_problem_data_size'.
 	if (NUMBER_NODE == handle->get_type()) {
 		std::vector<double> constant_value(_problem_data_size,
-		                                   NumberNodeCast(handle)->get_value());
+			                                   NumberNodeCast(handle)->get_value());
 		ProtoAtomPtr constant(new FloatValue(constant_value));
 		return constant;
 	}
-	return handle->getValue(_key);
+	return (*this)(handle);
 }
 
 ProtoAtomPtr Interpreter::execute(const Type t, const ProtomSeq& params)
@@ -132,15 +132,15 @@ value_size Interpreter::extract_output_size(const Handle &program, const Handle 
 	// has been interpreted before, it will contain a value of
 	// the same size as the output of the interpretation of this
 	// program.
-	if (program->getValue(key)) {
-		auto f_value = FloatValueCast(program->getValue(key));
+	if (ProtoAtomPtr v = program->getValue(key)) {
+		auto f_value = FloatValueCast(v);
 		if (f_value) {
 			return f_value->value().size();
 		}
-		return LinkValueCast(program->getValue(key))->value().size();
+		return LinkValueCast(v)->value().size();
 	}
-	if (nameserver().isA(program->get_type(), LINK)) {
-		for (Handle child : program->getOutgoingSet()) {
+	if (program->is_link()) {
+		for (const Handle& child : program->getOutgoingSet()) {
 			auto s = extract_output_size(child, key);
 			if (s) return s;
 		}

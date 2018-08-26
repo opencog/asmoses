@@ -56,7 +56,7 @@ public:
 	 * @return               return ProtoAtomPtr containing the output
 	 *                       of the program executed/evaluated on the problem data.
 	 */
-	opencog::ProtoAtomPtr interpret(const opencog::Handle& program);
+	opencog::ProtoAtomPtr operator()(const opencog::Handle& program);
 
 private:
 	value_size _problem_data_size;
