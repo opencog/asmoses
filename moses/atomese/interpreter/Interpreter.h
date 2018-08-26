@@ -59,6 +59,7 @@ public:
 	opencog::ProtoAtomPtr interpret(const opencog::Handle& program);
 
 private:
+	value_size _problem_data_size;
 	/**
 	 * extract a protoAtomPtr containing the the values of the handle
 	 *
@@ -66,7 +67,7 @@ private:
 	 * @param value_size    size of the values stored in the handle.
 	 * @return              protoAtomPtr containing values.
 	 */
-	ProtoAtomPtr unwrap_node(const Handle& handle, value_size);
+	ProtoAtomPtr unwrap_node(const Handle& handle);
 
 	/**
 	 * returns the execution/evaluation of type t with the given parameters
@@ -76,7 +77,7 @@ private:
 	 * @param value_size    size of the output.
 	 * @return              protoAtomPtr containing the result.
 	 */
-	ProtoAtomPtr execute(const Type t, const ProtomSeq &params, value_size);
+	ProtoAtomPtr execute(const Type t, const ProtomSeq &params);
 
 	/**
 	 * retrive the size of the output after the program is interpreted. The size is

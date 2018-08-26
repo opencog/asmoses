@@ -34,7 +34,7 @@ using namespace opencog;
 using namespace atomese;
 
 Interpreter::Interpreter(const opencog::Handle &key)
-		: _key(key)
+		: _key(key), _problem_data_size(0)
 {}
 
 opencog::ProtoAtomPtr Interpreter::interpret(const opencog::Handle &program)
@@ -45,27 +45,31 @@ opencog::ProtoAtomPtr Interpreter::interpret(const opencog::Handle &program)
 	if (program->getValue(_key))
 		return program->getValue(_key);
 
-	value_size problem_data_size = extract_output_size(program, _key);
+	// this assumes one Interpreter object per data-set
+	// if the size of the data-set changes for every interpretation
+	// this line must be replaced with
+	// _problem_data_size = extract_output_size(program, _key);
+	_problem_data_size = _problem_data_size? _problem_data_size : extract_output_size(program, _key);
 
 	ProtomSeq params;
 	HandleSeq _child_atoms = program->getOutgoingSet();
 
 	for (const Handle& h : _child_atoms) {
 		if (nameserver().isA(h->get_type(), NODE)) {
-			params.push_back(unwrap_node(h, problem_data_size));
+			params.push_back(unwrap_node(h));
 		}
 		else {
 			params.push_back(interpret(h));
 		}
 	}
 
-	ProtoAtomPtr result = execute(program->get_type(), params, problem_data_size);
+	ProtoAtomPtr result = execute(program->get_type(), params);
 	// we store the result with '_key' to prevent re-interpretation for the future
 	program->setValue(_key, result);
 	return result;
 }
 
-ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle, value_size _problem_data_size)
+ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle)
 {
 	// if the handle is a constant, we need to build a protoatom from the constant
 	// with size of '_problem_data_size'.
@@ -78,8 +82,7 @@ ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle, value_size _problem_
 	return handle->getValue(_key);
 }
 
-ProtoAtomPtr Interpreter::execute(const Type t,
-                                  const ProtomSeq& params, value_size _problem_data_size)
+ProtoAtomPtr Interpreter::execute(const Type t, const ProtomSeq& params)
 {
 	if (t == PLUS_LINK) {
 		std::vector<double> _result(_problem_data_size, 0.0);
