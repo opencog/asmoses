@@ -40,9 +40,9 @@ private:
 	Handle f1;
 	Handle f2;
 	Handle f3;
-	Handle f1_tv;
-	Handle f2_tv;
-	Handle f3_tv;
+	Handle p1;
+	Handle p2;
+	Handle p3;
 	ProtoAtomPtr t_link;
 	ProtoAtomPtr f_link;
 
@@ -51,9 +51,9 @@ public:
 		// initialization of program [schema]
 		key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
 
-		f1 = createNode(NODE, "f1");
-		f2 = createNode(NODE, "f2");
-		f3 = createNode(NODE, "f3");
+		f1 = createNode(SCHEMA_NODE, "f1");
+		f2 = createNode(SCHEMA_NODE, "f2");
+		f3 = createNode(SCHEMA_NODE, "f3");
 
 		std::vector<double> _f1_values = {1.0, 0.0, 0.0};
 		std::vector<double> _f2_values = {0.0, 1.0, 0.0};
@@ -70,25 +70,25 @@ public:
 		f3->setValue(key, f3_proto_atom);
 
 		// initialization of program [Boolean]
-		f1_tv = createNode(NODE, "f1_tv");
-		f2_tv = createNode(NODE, "f2_tv");
-		f3_tv = createNode(NODE, "f3_tv");
+		p1 = createNode(PREDICATE_NODE, "p1");
+		p2 = createNode(PREDICATE_NODE, "p2");
+		p3 = createNode(PREDICATE_NODE, "p3");
 
 		t_link = ProtoAtomPtr(createLink(TRUE_LINK));
 		f_link = ProtoAtomPtr(createLink(FALSE_LINK));
 
-		std::vector<ProtoAtomPtr> _f1_tv = {t_link, t_link, f_link};
-		std::vector<ProtoAtomPtr> _f2_tv = {f_link, t_link, f_link};
-		std::vector<ProtoAtomPtr> _f3_tv = {f_link, f_link, t_link};
+		std::vector<ProtoAtomPtr> _p1 = {t_link, t_link, f_link};
+		std::vector<ProtoAtomPtr> _p2 = {f_link, t_link, f_link};
+		std::vector<ProtoAtomPtr> _p3 = {f_link, f_link, t_link};
 
-		ProtoAtomPtr f1_tv_proto_atom(new LinkValue(_f1_tv));
-		f1_tv->setValue(key, f1_tv_proto_atom);
+		ProtoAtomPtr p1_proto_atom(new LinkValue(_p1));
+		p1->setValue(key, p1_proto_atom);
 
-		ProtoAtomPtr f2_tv_proto_atom(new LinkValue(_f2_tv));
-		f2_tv->setValue(key, f2_tv_proto_atom);
+		ProtoAtomPtr p2_proto_atom(new LinkValue(_p2));
+		p2->setValue(key, p2_proto_atom);
 
-		ProtoAtomPtr f3_tv_proto_atom(new LinkValue(_f3_tv));
-		f3_tv->setValue(key, f3_tv_proto_atom);
+		ProtoAtomPtr p3_proto_atom(new LinkValue(_p3));
+		p3->setValue(key, p3_proto_atom);
 	}
 
 	void test_interpret(void)
@@ -149,9 +149,9 @@ public:
 	void test_interpret_logical(void)
 	{
 		// Atomese program to be evaluated over the problem_data
-		HandleSeq seq1 = {f1_tv, f2_tv};
+		HandleSeq seq1 = {p1, p2};
 		Handle sub_program = createLink(seq1, AND_LINK);
-		HandleSeq seq2 = {sub_program, f3_tv};
+		HandleSeq seq2 = {sub_program, p3};
 		Handle program = createLink(seq2, OR_LINK);
 
 		// expected out put vector
