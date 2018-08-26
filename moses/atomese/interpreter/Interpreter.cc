@@ -119,4 +119,5 @@ ProtoAtomPtr Interpreter::execute(const Type t,
 		}
 		return ProtoAtomPtr(result);
 	}
+	return ProtoAtomPtr();
 }
