@@ -17,24 +17,24 @@ TARGET_LINK_LIBRARIES (asmoses-exec
 )
 SET_TARGET_PROPERTIES(asmoses-exec PROPERTIES OUTPUT_NAME "asmoses")
 
-ADD_EXECUTABLE (eval-diversity eval-diversity)
-TARGET_LINK_LIBRARIES (eval-diversity
+ADD_EXECUTABLE (aseval-diversity eval-diversity)
+TARGET_LINK_LIBRARIES (aseval-diversity
 	moses
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
 
-ADD_EXECUTABLE (eval-candidate eval-candidate)
-TARGET_LINK_LIBRARIES (eval-candidate
+ADD_EXECUTABLE (aseval-candidate eval-candidate)
+TARGET_LINK_LIBRARIES (aseval-candidate
 	moses
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
-ADD_EXECUTABLE (eval-candidate-likelihood eval-candidate-likelihood)
-TARGET_LINK_LIBRARIES (eval-candidate-likelihood
+ADD_EXECUTABLE (aseval-candidate-likelihood eval-candidate-likelihood)
+TARGET_LINK_LIBRARIES (aseval-candidate-likelihood
 	moses
 	ascomboant
 	${COGUTIL_LIBRARY}
@@ -42,7 +42,7 @@ TARGET_LINK_LIBRARIES (eval-candidate-likelihood
 )
 
 # install asmoses-exec
-INSTALL(TARGETS asmoses-exec eval-diversity eval-candidate eval-candidate-likelihood
+INSTALL(TARGETS asmoses-exec aseval-diversity aseval-candidate aseval-candidate-likelihood
         EXPORT ASMosesTargets
         RUNTIME DESTINATION bin)
 

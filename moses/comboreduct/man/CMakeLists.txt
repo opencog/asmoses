@@ -1,7 +1,7 @@
 #
 # Create/install eval-table man page
 
-set(MANPAGES eval-table.1)
+set(MANPAGES aseval-table.1)
 
 # We need gzip to make this work.
 find_program(GZIP_EXECUTABLE NAMES gzip)

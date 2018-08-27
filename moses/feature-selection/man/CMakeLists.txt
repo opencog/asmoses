@@ -1,7 +1,7 @@
 #
 # Create/install man pages
 
-set(MANPAGES feature-selection.1)
+set(MANPAGES asfeature-selection.1)
 
 # We need gzip to make this work.
 find_program(GZIP_EXECUTABLE NAMES gzip)

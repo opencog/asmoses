@@ -68,32 +68,32 @@ TARGET_LINK_LIBRARIES(tree-sim
 	${COGUTIL_LIBRARY}
 )
 
-ADD_EXECUTABLE (eval-table eval-table.cc)
-TARGET_LINK_LIBRARIES(eval-table
+ADD_EXECUTABLE (aseval-table eval-table.cc)
+TARGET_LINK_LIBRARIES(aseval-table
 	ascomboreduct
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
 
-ADD_EXECUTABLE (gen-table gen-table.cc)
-TARGET_LINK_LIBRARIES(gen-table
+ADD_EXECUTABLE (asgen-table gen-table.cc)
+TARGET_LINK_LIBRARIES(asgen-table
 	ascomboreduct
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
 
-ADD_EXECUTABLE (gen-disj-conj gen-disj-conj.cc)
-TARGET_LINK_LIBRARIES(gen-disj-conj
+ADD_EXECUTABLE (asgen-disj-conj gen-disj-conj.cc)
+TARGET_LINK_LIBRARIES(asgen-disj-conj
 	ascomboreduct
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
 
-ADD_EXECUTABLE (combo-fmt-converter combo-fmt-converter.cc)
-TARGET_LINK_LIBRARIES(combo-fmt-converter
+ADD_EXECUTABLE (ascombo-fmt-converter combo-fmt-converter.cc)
+TARGET_LINK_LIBRARIES(ascombo-fmt-converter
 	ascomboreduct
 	ascomboant
 	${COGUTIL_LIBRARY}
@@ -101,7 +101,7 @@ TARGET_LINK_LIBRARIES(combo-fmt-converter
 )
 
 # install eval-table
-INSTALL(TARGETS eval-table gen-table gen-disj-conj combo-fmt-converter
+INSTALL(TARGETS aseval-table asgen-table asgen-disj-conj ascombo-fmt-converter
         EXPORT ASMosesTargets
         RUNTIME DESTINATION bin)
 
