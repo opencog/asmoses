@@ -1,7 +1,7 @@
 #
 # Create/install MOSES man page
 
-set(MANPAGES moses.1)
+set(MANPAGES asmoses.1)
 
 # We need gzip to make this work.
 find_program(GZIP_EXECUTABLE NAMES gzip)

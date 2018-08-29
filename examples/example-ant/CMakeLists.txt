@@ -15,14 +15,14 @@ ADD_EXECUTABLE (moses-ant-particleswarm
 
 TARGET_LINK_LIBRARIES (moses-ant-hillclimbing
 	moses
-	comboreduct
-	comboant
+	ascomboreduct
+	ascomboant
 	${COGUTIL_LIBRARY}
 )
 
 TARGET_LINK_LIBRARIES (moses-ant-particleswarm
 	moses
-	comboreduct
-	comboant
+	ascomboreduct
+	ascomboant
 	${COGUTIL_LIBRARY}
 )

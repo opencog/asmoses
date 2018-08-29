@@ -2,7 +2,7 @@ ADD_SUBDIRECTORY(scorers)
 ADD_SUBDIRECTORY(main)
 ADD_SUBDIRECTORY(man)
 
-ADD_LIBRARY(feature_selection SHARED
+ADD_LIBRARY(asfeature_selection SHARED
 	algo/deme_optimize
 	algo/incremental
 	algo/random
@@ -12,7 +12,7 @@ ADD_LIBRARY(feature_selection SHARED
 	main/feature-selection
 )
 
-TARGET_LINK_LIBRARIES(feature_selection
+TARGET_LINK_LIBRARIES(asfeature_selection
     INTERFACE moses
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
@@ -20,9 +20,12 @@ TARGET_LINK_LIBRARIES(feature_selection
 
 # Install library
 IF (WIN32)
-	INSTALL(TARGETS feature_selection DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
+	INSTALL(TARGETS asfeature_selection
+	        EXPORT ASMosesTargets
+	        DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
 ELSE (WIN32)
-	INSTALL(TARGETS feature_selection
+	INSTALL(TARGETS asfeature_selection
+	        EXPORT ASMosesTargets
 	        LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}"    # lib*.so files
 	        ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}")   # lib*.a files
 ENDIF (WIN32)

@@ -1,6 +1,6 @@
 
 # We need to put this in a library, so that MOSESUTest can link to it.
-ADD_LIBRARY (moses_exec SHARED
+ADD_LIBRARY (asmoses_exec SHARED
     demo-problems
     problem
     problem-params
@@ -9,46 +9,51 @@ ADD_LIBRARY (moses_exec SHARED
     table-problems
 )
 
-ADD_EXECUTABLE (moses-exec moses-exec)
-TARGET_LINK_LIBRARIES (moses-exec
-	moses_exec
+ADD_EXECUTABLE (asmoses-exec moses-exec)
+TARGET_LINK_LIBRARIES (asmoses-exec
+	asmoses_exec
 	moses
-	comboant
+	ascomboant
 )
-SET_TARGET_PROPERTIES(moses-exec PROPERTIES OUTPUT_NAME "moses")
+SET_TARGET_PROPERTIES(asmoses-exec PROPERTIES OUTPUT_NAME "asmoses")
 
-ADD_EXECUTABLE (eval-diversity eval-diversity)
-TARGET_LINK_LIBRARIES (eval-diversity
+ADD_EXECUTABLE (aseval-diversity eval-diversity)
+TARGET_LINK_LIBRARIES (aseval-diversity
 	moses
-	comboant
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
 
-ADD_EXECUTABLE (eval-candidate eval-candidate)
-TARGET_LINK_LIBRARIES (eval-candidate
+ADD_EXECUTABLE (aseval-candidate eval-candidate)
+TARGET_LINK_LIBRARIES (aseval-candidate
 	moses
-	comboant
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
-ADD_EXECUTABLE (eval-candidate-likelihood eval-candidate-likelihood)
-TARGET_LINK_LIBRARIES (eval-candidate-likelihood
+ADD_EXECUTABLE (aseval-candidate-likelihood eval-candidate-likelihood)
+TARGET_LINK_LIBRARIES (aseval-candidate-likelihood
 	moses
-	comboant
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
-# install moses-exec
-INSTALL(TARGETS moses-exec eval-diversity eval-candidate eval-candidate-likelihood RUNTIME DESTINATION bin)
+# install asmoses-exec
+INSTALL(TARGETS asmoses-exec aseval-diversity aseval-candidate aseval-candidate-likelihood
+        EXPORT ASMosesTargets
+        RUNTIME DESTINATION bin)
 
 # Install library
 IF (WIN32)
-	INSTALL(TARGETS moses DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
+	INSTALL(TARGETS moses
+	        EXPORT ASMosesTargets
+	        DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
 ELSE (WIN32)
-	INSTALL(TARGETS moses_exec
+	INSTALL(TARGETS asmoses_exec
+	        EXPORT ASMosesTargets
 	        LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}"    # lib*.so files
 	        ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}")   # lib*.a files
 ENDIF (WIN32)

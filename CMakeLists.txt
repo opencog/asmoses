@@ -8,7 +8,16 @@
 # -- configure various config files.
 # -- print pretty summary
 #
-include(lib/Summary.cmake)
+# MOSES' version, must be updated manually
+SET (ASMOSES_VERSION_MAJOR 3)
+SET (ASMOSES_VERSION_MINOR 6)
+SET (ASMOSES_VERSION_PATCH 10)
+
+ADD_DEFINITIONS(-DASMOSES_VERSION_MAJOR="${ASMOSES_VERSION_MAJOR}")
+ADD_DEFINITIONS(-DASMOSES_VERSION_MINOR="${ASMOSES_VERSION_MINOR}")
+ADD_DEFINITIONS(-DASMOSES_VERSION_PATCH="${ASMOSES_VERSION_PATCH}")
+
+SET (ASMOSES_VERSION "${ASMOSES_VERSION_MAJOR}.${ASMOSES_VERSION_MINOR}.${ASMOSES_VERSION_PATCH}")
 
 # Seems to work fine with cmake-2.6
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
@@ -17,7 +26,22 @@ IF (COMMAND CMAKE_POLICY)
 	CMAKE_POLICY(SET CMP0005 OLD)
 ENDIF (COMMAND CMAKE_POLICY)
 
-PROJECT(moses)
+PROJECT(asmoses)
+
+# Cogutil
+FIND_PACKAGE(CogUtil CONFIG)
+IF (COGUTIL_FOUND)
+        MESSAGE(STATUS "CogUtil found.")
+        ADD_DEFINITIONS(-DHAVE_COGUTIL)
+    SET(HAVE_COGUTIL 1)
+ELSE (COGUTIL_FOUND)
+        MESSAGE(FATAL_ERROR "CogUtil missing: it is needed for everything!")
+ENDIF (COGUTIL_FOUND)
+
+# add the 'cmake' directory from cogutil to search path
+list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
+
+include(${COGUTIL_DATA_DIR}/cmake/Summary.cmake)
 
 # To supress Cygwin warning "CMake no longer defines WIN32 on Cygwin!"
 # Remove when CMake >= 2.8.4 is required to build the project
@@ -47,9 +71,6 @@ MESSAGE(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 ADD_DEFINITIONS(-DPROJECT_SOURCE_DIR=\\"${CMAKE_SOURCE_DIR}\\"
                 -DPROJECT_BINARY_DIR=\\"${CMAKE_BINARY_DIR}\\")
-
-# add the 'lib' dir to cmake's module search path
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/lib/")
 
 # ===============================================================
 # Detect different compilers and OS'es, tweak flags as necessary.
@@ -201,18 +222,8 @@ ELSE (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 	MESSAGE(FATAL_ERROR "${GUILE_DIR_MESSAGE}")
 ENDIF (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 
-# Look for Opencog Utils.
-FIND_PACKAGE(CogUtil)
-IF (COGUTIL_FOUND)
-	MESSAGE(STATUS "CogUtil found.")
-	ADD_DEFINITIONS(-DHAVE_COGUTIL)
-	SET(HAVE_COGUTIL 1)
-ELSE (COGUTIL_FOUND)
-	MESSAGE(FATAL_ERROR "CogUtil missing: it is needed to build this package!")
-ENDIF (COGUTIL_FOUND)
-
 # AtomSpace
-FIND_PACKAGE(AtomSpace 5.0.3 REQUIRED)
+FIND_PACKAGE(AtomSpace 5.0.3 CONFIG REQUIRED)
 IF (ATOMSPACE_FOUND)
 	MESSAGE(STATUS "AtomSpace found.")
 	ADD_DEFINITIONS(-DHAVE_ATOMSPACE)
@@ -471,6 +482,7 @@ INCLUDE(CPack)
 # documentation
 FIND_PACKAGE(Doxygen)
 ADD_SUBDIRECTORY(doc EXCLUDE_FROM_ALL)
+ADD_SUBDIRECTORY(lib)
 
 # Show a summary of what we got
 SUMMARY_ADD("ComboReduct" "Library for reduction of combo program trees" HAVE_COMBOREDUCT)

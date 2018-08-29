@@ -5,7 +5,7 @@ ADD_LIBRARY(atomese SHARED
 )
 
 TARGET_LINK_LIBRARIES (atomese
-	comboreduct
+	ascomboreduct
 	${COGUTIL_LIBRARY}
 	${ATOMSPACE_LIBRARIES}
 )

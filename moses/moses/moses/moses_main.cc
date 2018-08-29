@@ -38,16 +38,16 @@ namespace opencog { namespace moses {
 
 #ifdef MOSES_GIT_DESCRIBE
 const char * version_string =
-    stringify(MOSES_VERSION_MAJOR) "."
-    stringify(MOSES_VERSION_MINOR) "."
-    stringify(MOSES_VERSION_PATCH) " (git-describe "
+    stringify(ASMOSES_VERSION_MAJOR) "."
+    stringify(ASMOSES_VERSION_MINOR) "."
+    stringify(ASMOSES_VERSION_PATCH) " (git-describe "
     stringify(MOSES_GIT_DESCRIBE) ")";
 
 #else
 const char * version_string =
-    stringify(MOSES_VERSION_MAJOR) "."
-    stringify(MOSES_VERSION_MINOR) "."
-    stringify(MOSES_VERSION_PATCH);
+    stringify(ASMOSES_VERSION_MAJOR) "."
+    stringify(ASMOSES_VERSION_MINOR) "."
+    stringify(ASMOSES_VERSION_PATCH);
 
 #endif
 

@@ -2,16 +2,16 @@
 
 ADD_EXECUTABLE (fs-main fs-main.cc)
 TARGET_LINK_LIBRARIES(fs-main
-	feature_selection
+	asfeature_selection
 	moses
 	${COGUTIL_LIBRARY}
 )
-SET_TARGET_PROPERTIES(fs-main PROPERTIES OUTPUT_NAME "feature-selection")
+SET_TARGET_PROPERTIES(fs-main PROPERTIES OUTPUT_NAME "asfeature-selection")
 
-ADD_EXECUTABLE (eval-features eval-features.cc)
-TARGET_LINK_LIBRARIES(eval-features
-	comboreduct
-	comboant
+ADD_EXECUTABLE (aseval-features eval-features.cc)
+TARGET_LINK_LIBRARIES(aseval-features
+	ascomboreduct
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
@@ -27,4 +27,6 @@ INSTALL(FILES
 )
 
 # install feature-selection
-INSTALL(TARGETS fs-main eval-features RUNTIME DESTINATION bin)
+INSTALL(TARGETS fs-main aseval-features 
+        EXPORT ASMosesTargets
+        RUNTIME DESTINATION bin)

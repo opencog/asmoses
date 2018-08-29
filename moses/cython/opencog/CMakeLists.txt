@@ -51,7 +51,7 @@ IF (HAVE_MOSES)
 	# undefined symbol: _ZNK5boost15program_options22error_with_option_name4whatEv
 	# XXX Why???
 	TARGET_LINK_LIBRARIES(moses_cython
-		moses_exec
+		asmoses_exec
 		moses
 	)
 
@@ -68,9 +68,10 @@ IF (HAVE_MOSES)
 		OUTPUT_NAME pymoses)
 
 	INSTALL (TARGETS moses_cython
-	DESTINATION "${DATADIR}/python/moses")
+	         EXPORT ASMosesTargets
+	DESTINATION "${DATADIR}/python/asmoses")
 ENDIF (HAVE_MOSES)
 
 INSTALL (FILES
 	__init__.py
-DESTINATION "${DATADIR}/python/moses")
+DESTINATION "${DATADIR}/python/asmoses")

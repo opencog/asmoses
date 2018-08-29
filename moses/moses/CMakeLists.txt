@@ -1,12 +1,3 @@
-# MOSES' version, must be updated manually
-SET (MOSES_VERSION_MAJOR 3)
-SET (MOSES_VERSION_MINOR 6)
-SET (MOSES_VERSION_PATCH 10)
-
-ADD_DEFINITIONS(-DMOSES_VERSION_MAJOR="${MOSES_VERSION_MAJOR}")
-ADD_DEFINITIONS(-DMOSES_VERSION_MINOR="${MOSES_VERSION_MINOR}")
-ADD_DEFINITIONS(-DMOSES_VERSION_PATCH="${MOSES_VERSION_PATCH}")
-
 # MOSES git describe, automatically updated
 EXECUTE_PROCESS(
 	COMMAND git describe
@@ -76,13 +67,15 @@ ADD_LIBRARY (moses SHARED
 )
 
 TARGET_LINK_LIBRARIES (moses
-	feature_selection
-	comboreduct
-	comboant
+	asfeature_selection
+	ascomboreduct
+	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 	${Boost_REGEX_LIBRARY}
 )
+
+set_target_properties(moses PROPERTIES OUTPUT_NAME "asmoses")
 
 IF (HAVE_MPI)
 	TARGET_LINK_LIBRARIES (moses
@@ -106,9 +99,12 @@ ENDIF (HAVE_MPI)
 
 # Install library
 IF (WIN32)
-	INSTALL(TARGETS moses DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
+	INSTALL(TARGETS moses
+                EXPORT ASMosesTargets
+                DESTINATION "lib${LIB_DIR_SUFFIX}/moses")
 ELSE (WIN32)
 	INSTALL(TARGETS moses
+	        EXPORT ASMosesTargets
 	        LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}"    # lib*.so files
 	        ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}")   # lib*.a files
 ENDIF (WIN32)

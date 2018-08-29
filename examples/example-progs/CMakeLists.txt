@@ -68,7 +68,7 @@ TARGET_LINK_LIBRARIES (trap-uni
 
 ADD_EXECUTABLE (moses-perf moses-perf)
 TARGET_LINK_LIBRARIES (moses-perf
-   moses_exec
+	asmoses_exec
 	moses
 	${COGUTIL_LIBRARY}
 )
