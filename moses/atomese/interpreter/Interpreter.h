@@ -67,7 +67,7 @@ private:
 	 * @param value_size    size of the values stored in the handle.
 	 * @return              protoAtomPtr containing values.
 	 */
-	ProtoAtomPtr unwrap_node(const Handle& handle);
+	ProtoAtomPtr unwrap_constant(const Handle &handle);
 
 	/**
 	 * returns the execution/evaluation of type t with the given parameters
@@ -89,6 +89,13 @@ private:
 	 * @return value_size   return the size of the output
 	 */
 	static value_size extract_output_size(const Handle &program, const Handle &key);
+
+	/**
+	 * return whether the type is a constant type [i:e NUMBER_NODE].
+	 * @param const Type     type of an atom.
+	 * @return bool          is_constant.
+	 */
+	bool is_constant(const Type);
 };
 
 }

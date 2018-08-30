@@ -52,8 +52,8 @@ opencog::ProtoAtomPtr Interpreter::operator()(const opencog::Handle &program)
 	if (not _problem_data_size)
 		_problem_data_size = extract_output_size(program, _key);
 
-	if (nameserver().isA(program->get_type(), NODE)) {
-		return unwrap_node(program);
+	if (is_constant(program->get_type())) {
+		return unwrap_constant(program);
 	}
 
 	ProtomSeq params;
@@ -69,17 +69,25 @@ opencog::ProtoAtomPtr Interpreter::operator()(const opencog::Handle &program)
 	return result;
 }
 
-ProtoAtomPtr Interpreter::unwrap_node(const Handle& handle)
+ProtoAtomPtr Interpreter::unwrap_constant(const Handle &handle)
 {
 	// if the handle is a constant, we need to build a protoatom from the constant
 	// with size of '_problem_data_size'.
-	if (NUMBER_NODE == handle->get_type()) {
+	Type t = handle->get_type();
+	if (NUMBER_NODE == t) {
 		std::vector<double> constant_value(_problem_data_size,
 			                                   NumberNodeCast(handle)->get_value());
 		ProtoAtomPtr constant(new FloatValue(constant_value));
 		return constant;
 	}
-	return (*this)(handle);
+	if (FALSE_LINK == t || TRUE_LINK == t) {
+		std::vector<ProtoAtomPtr> constant_value(_problem_data_size,
+		                                   ProtoAtomPtr(handle));
+		ProtoAtomPtr constant(new LinkValue(constant_value));
+		return constant;
+	}
+	OC_ASSERT(false, "Unsupported Constant Type");
+	return ProtoAtomPtr();
 }
 
 ProtoAtomPtr Interpreter::execute(const Type t, const ProtomSeq& params)
@@ -146,4 +154,13 @@ value_size Interpreter::extract_output_size(const Handle &program, const Handle 
 		}
 	}
 	return 0;
+}
+
+bool Interpreter::is_constant(const Type t)
+{
+	// We need to know if an atom is a constant rather than containing a vector of
+	// values for each observation[row]. Another way to handle this is introduce a new
+	// atom type [CONSTANT_ATOM], But we don't want to introduce a new type just for
+	// this purpose. If this use case is more ubiquitous we might want to consider it.
+	return t == NUMBER_NODE || t == TRUE_LINK || t == FALSE_LINK;
 }
