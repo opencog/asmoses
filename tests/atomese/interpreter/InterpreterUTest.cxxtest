@@ -151,11 +151,11 @@ public:
 		// Atomese program to be evaluated over the problem_data
 		HandleSeq seq1 = {p1, p2};
 		Handle sub_program = createLink(seq1, AND_LINK);
-		HandleSeq seq2 = {sub_program, p3};
+		HandleSeq seq2 = {sub_program, createLink(FALSE_LINK)};
 		Handle program = createLink(seq2, OR_LINK);
 
 		// expected out put vector
-		std::vector<ProtoAtomPtr> exp_value = {f_link, t_link, t_link};
+		std::vector<ProtoAtomPtr> exp_value = {f_link, t_link, f_link};
 		ProtoAtomPtr expected(new LinkValue(exp_value));
 
 		// interpret
