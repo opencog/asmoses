@@ -62,7 +62,7 @@ composite_score combo_based_scorer::operator()(const instance &inst) const
 		logger().warn() << "The following instance could not be evaluated: "
 		                << _rep.fields().to_string(inst)
 		                << "\nUnreduced tree: " << raw_tr
-		                << "\nreduced tree: "<< red_tr;
+		                << "\nreduced tree: " << red_tr;
 	}
 	return worst_composite_score;
 }

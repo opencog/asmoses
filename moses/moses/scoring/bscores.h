@@ -40,7 +40,10 @@
 #include "scoring_base.h"
 #include "../moses/types.h"
 
-namespace opencog { namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace combo;
 
@@ -51,36 +54,40 @@ using namespace combo;
  */
 struct logical_bscore : public bscore_base
 {
-    template<typename Func>
-    logical_bscore(const Func& func, int a)
-            : _target(func, a), _arity(a)
-    {
-        _size = _target.size();
-        reset_weights();
-    }
-    logical_bscore(const combo_tree& tr, int a)
-            : _target(tr, a), _arity(a)
-    {
-        _size = _target.size();
-        reset_weights();
-    }
+	template<typename Func>
+	logical_bscore(const Func &func, int a)
+			: _target(func, a), _arity(a)
+	{
+		_size = _target.size();
+		reset_weights();
+	}
 
-    behavioral_score operator()(const combo_tree&) const;
-    behavioral_score operator()(const scored_combo_tree_set&) const;
+	logical_bscore(const combo_tree &tr, int a)
+			: _target(tr, a), _arity(a)
+	{
+		_size = _target.size();
+		reset_weights();
+	}
 
-	behavioral_score operator()(const Handle&) const;
+	behavioral_score operator()(const combo_tree &) const;
 
-    behavioral_score best_possible_bscore() const;
-    behavioral_score worst_possible_bscore() const;
-    score_t get_error(const behavioral_score&) const;
+	behavioral_score operator()(const scored_combo_tree_set &) const;
 
-    score_t min_improv() const;
+	behavioral_score operator()(const Handle &) const;
+
+	behavioral_score best_possible_bscore() const;
+
+	behavioral_score worst_possible_bscore() const;
+
+	score_t get_error(const behavioral_score &) const;
+
+	score_t min_improv() const;
 
 protected:
-    complete_truth_table _target;
-    int _arity;
+	complete_truth_table _target;
+	int _arity;
 };
-        
+
 /**
  * Fitness function based on discretization of the output. If the
  * classes match the bscore element is 0, or -1 otherwise. If
@@ -92,46 +99,47 @@ protected:
  */
 struct discretize_contin_bscore : public bscore_base
 {
-    discretize_contin_bscore(const OTable& ot, const ITable& it,
-                             const std::vector<contin_t>& thres,
-                             bool weighted_average);
+	discretize_contin_bscore(const OTable &ot, const ITable &it,
+	                         const std::vector<contin_t> &thres,
+	                         bool weighted_average);
 
-    // @todo when switching to gcc 4.6 use constructor delagation to
-    // simplify that
-    // discretize_contin_bscore(const Table& table,
-    //                          const std::vector<contin_t>& thres,
-    //                          bool weighted_average,
-    //                          float alphabet_size, float p);
+	// @todo when switching to gcc 4.6 use constructor delagation to
+	// simplify that
+	// discretize_contin_bscore(const Table& table,
+	//                          const std::vector<contin_t>& thres,
+	//                          bool weighted_average,
+	//                          float alphabet_size, float p);
 
-    behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    // The best possible bscore is a vector of zeros. That's probably
-    // not quite true, because there could be duplicated inputs, but
-    // that's acceptable for now.
-    behavioral_score best_possible_bscore() const;
+	// The best possible bscore is a vector of zeros. That's probably
+	// not quite true, because there could be duplicated inputs, but
+	// that's acceptable for now.
+	behavioral_score best_possible_bscore() const;
 
-    score_t min_improv() const;
+	score_t min_improv() const;
 
 protected:
-    OTable target;
-    ITable cit;
-    std::vector<contin_t> thresholds;
-    bool weighted_accuracy;     // Whether the bscore is weighted to
-                                // deal with unbalanced data.
+	OTable target;
+	ITable cit;
+	std::vector<contin_t> thresholds;
+	bool weighted_accuracy;     // Whether the bscore is weighted to
+	// deal with unbalanced data.
 
-    // Return the index of the class of value v.
-    size_t class_idx(contin_t v) const;
-    // Like class_idx but assume that the value v is within the class
-    // [l_idx, u_idx)
-    size_t class_idx_within(contin_t v, size_t l_idx, size_t u_idx) const;
+	// Return the index of the class of value v.
+	size_t class_idx(contin_t v) const;
 
-    std::vector<size_t> classes;       // classes of the output, alligned with target
+	// Like class_idx but assume that the value v is within the class
+	// [l_idx, u_idx)
+	size_t class_idx_within(contin_t v, size_t l_idx, size_t u_idx) const;
 
-    // Weight of each class, so that each one weighs as much as the
-    // others, even in case of unbalance sampling. Specifically:
-    // weights[i] = s / (n * c_i) where s is the sample size, n the
-    // number of classes and c_i the number of samples for class i.
-    std::vector<score_t> weights;
+	std::vector<size_t> classes;       // classes of the output, alligned with target
+
+	// Weight of each class, so that each one weighs as much as the
+	// others, even in case of unbalance sampling. Specifically:
+	// weights[i] = s / (n * c_i) where s is the sample size, n the
+	// number of classes and c_i the number of samples for class i.
+	std::vector<score_t> weights;
 };
 
 /**
@@ -182,69 +190,71 @@ protected:
  */
 struct contin_bscore : public bscore_base
 {
-    enum err_function_type {
-        squared_error,
-        abs_error
-    };
+	enum err_function_type
+	{
+		squared_error,
+		abs_error
+	};
 
-    void init(err_function_type eft = squared_error)
-    {
-        switch (eft) {
-        case squared_error:
-            err_func = [](contin_t y1, contin_t y2) { return sq(y1 - y2); };
-            break;
-        case abs_error:
-            err_func = [](contin_t y1, contin_t y2) { return std::abs(y1 - y2); };
-            break;
-        default:
-            OC_ASSERT(false);
-        }
-    };
+	void init(err_function_type eft = squared_error)
+	{
+		switch (eft) {
+			case squared_error:
+				err_func = [](contin_t y1, contin_t y2) { return sq(y1 - y2); };
+				break;
+			case abs_error:
+				err_func = [](contin_t y1, contin_t y2) { return std::abs(y1 - y2); };
+				break;
+			default: OC_ASSERT(false);
+		}
+	};
 
-    template<typename Scoring>
-    contin_bscore(const Scoring& score, const ITable& r,
-                  err_function_type eft = squared_error)
-        : target(score, r), cti(r)
-    {
-        init(eft);
-        _size = r.size();
-    }
+	template<typename Scoring>
+	contin_bscore(const Scoring &score, const ITable &r,
+	              err_function_type eft = squared_error)
+			: target(score, r), cti(r)
+	{
+		init(eft);
+		_size = r.size();
+	}
 
-    contin_bscore(const OTable& t, const ITable& r,
-                  err_function_type eft = squared_error)
-        : target(t), cti(r)
-    {
-        init(eft);
-        _size = r.size();
-    }
+	contin_bscore(const OTable &t, const ITable &r,
+	              err_function_type eft = squared_error)
+			: target(t), cti(r)
+	{
+		init(eft);
+		_size = r.size();
+	}
 
-    contin_bscore(const Table& table,
-                  err_function_type eft = squared_error)
-        : target(table.otable), cti(table.itable) {
-        init(eft);
-        _size = table.size();
-    }
+	contin_bscore(const Table &table,
+	              err_function_type eft = squared_error)
+			: target(table.otable), cti(table.itable)
+	{
+		init(eft);
+		_size = table.size();
+	}
 
-    behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    // The best possible bscore is a vector of zeros. That's probably
-    // not quite true, because there could be duplicated inputs, but
-    // that's acceptable for now.
-    behavioral_score best_possible_bscore() const;
+	// The best possible bscore is a vector of zeros. That's probably
+	// not quite true, because there could be duplicated inputs, but
+	// that's acceptable for now.
+	behavioral_score best_possible_bscore() const;
 
-    score_t min_improv() const;
+	score_t min_improv() const;
 
-    virtual void set_complexity_coef(unsigned alphabet_size, float stddev);
-    using bscore_base::set_complexity_coef; // Avoid hiding/shadowing
+	virtual void set_complexity_coef(unsigned alphabet_size, float stddev);
+
+	using bscore_base::set_complexity_coef; // Avoid hiding/shadowing
 
 protected:
-    OTable target;
-    ITable cti;
+	OTable target;
+	ITable cti;
 
 private:
-    // for a given data point calculate the error of the target
-    // compared to the candidate output
-    std::function<score_t(contin_t, contin_t)> err_func;
+	// for a given data point calculate the error of the target
+	// compared to the candidate output
+	std::function<score_t(contin_t, contin_t)> err_func;
 };
 
 /**
@@ -361,27 +371,30 @@ private:
  */
 struct ctruth_table_bscore : public bscore_ctable_base
 {
-    ctruth_table_bscore(const CTable& ctt)
-        : bscore_ctable_base(ctt)
-    {
-        _size = _wrk_ctable.size();
-        reset_weights();
-        set_best_possible_bscore();
-    }
+	ctruth_table_bscore(const CTable &ctt)
+			: bscore_ctable_base(ctt)
+	{
+		_size = _wrk_ctable.size();
+		reset_weights();
+		set_best_possible_bscore();
+	}
 
-    behavioral_score operator()(const combo_tree& tr) const;
-    behavioral_score operator()(const scored_combo_tree_set&) const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    // Return the best possible bscore. Used as one of the
-    // termination conditions (when the best bscore is reached).
-    behavioral_score best_possible_bscore() const;
-    behavioral_score worst_possible_bscore() const;
+	behavioral_score operator()(const scored_combo_tree_set &) const;
 
-    score_t min_improv() const;
+	// Return the best possible bscore. Used as one of the
+	// termination conditions (when the best bscore is reached).
+	behavioral_score best_possible_bscore() const;
+
+	behavioral_score worst_possible_bscore() const;
+
+	score_t min_improv() const;
 
 protected:
-    mutable behavioral_score _best_possible_score;
-    void set_best_possible_bscore() const;
+	mutable behavioral_score _best_possible_score;
+
+	void set_best_possible_bscore() const;
 };
 
 /**
@@ -410,19 +423,19 @@ protected:
  */
 struct enum_table_bscore : public bscore_base
 {
-    enum_table_bscore(const CTable& ctt) : _ctable(ctt)
-    { _size = _ctable.size(); }
+	enum_table_bscore(const CTable &ctt) : _ctable(ctt)
+	{ _size = _ctable.size(); }
 
-    behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    // Return the best possible bscore. Used as one of the
-    // termination conditions (when the best bscore is reached).
-    behavioral_score best_possible_bscore() const;
+	// Return the best possible bscore. Used as one of the
+	// termination conditions (when the best bscore is reached).
+	behavioral_score best_possible_bscore() const;
 
-    virtual score_t min_improv() const;
+	virtual score_t min_improv() const;
 
 protected:
-    CTable _ctable;
+	CTable _ctable;
 };
 
 /**
@@ -447,13 +460,13 @@ protected:
  */
 struct enum_filter_bscore : public enum_table_bscore
 {
-    enum_filter_bscore(const CTable& ctt)
-        : enum_table_bscore(ctt), punish(1.0)
-    {}
+	enum_filter_bscore(const CTable &ctt)
+			: enum_table_bscore(ctt), punish(1.0)
+	{}
 
-    behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    score_t punish;
+	score_t punish;
 };
 
 /**
@@ -491,18 +504,19 @@ struct enum_filter_bscore : public enum_table_bscore
  */
 struct enum_graded_bscore : public enum_table_bscore
 {
-    enum_graded_bscore(const CTable& ctt)
-        : enum_table_bscore(ctt), grading(0.9)
-    {}
+	enum_graded_bscore(const CTable &ctt)
+			: enum_table_bscore(ctt), grading(0.9)
+	{}
 
-    behavioral_score operator()(const combo_tree&) const;
+	behavioral_score operator()(const combo_tree &) const;
 
-    virtual score_t min_improv() const;
-    virtual complexity_t get_complexity(const combo_tree&) const;
+	virtual score_t min_improv() const;
 
-    score_t grading;
+	virtual complexity_t get_complexity(const combo_tree &) const;
+
+	score_t grading;
 protected:
-    score_t graded_complexity(combo_tree::iterator) const;
+	score_t graded_complexity(combo_tree::iterator) const;
 };
 
 /** 
@@ -517,13 +531,14 @@ protected:
  */
 struct enum_effective_bscore : public enum_graded_bscore
 {
-    enum_effective_bscore(const CTable& ctt)
-        : enum_graded_bscore(ctt), _ctable_usize(ctt.uncompressed_size())
-    { _size = _ctable_usize; }
+	enum_effective_bscore(const CTable &ctt)
+			: enum_graded_bscore(ctt), _ctable_usize(ctt.uncompressed_size())
+	{ _size = _ctable_usize; }
 
-    behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const combo_tree &tr) const;
+
 protected:
-    size_t _ctable_usize;
+	size_t _ctable_usize;
 };
 
 // Bscore to find interesting predicates. 
@@ -554,78 +569,80 @@ protected:
 // predicate is false).
 struct interesting_predicate_bscore : public bscore_base
 {
-    typedef score_t weight_t;
-    typedef Counter<contin_t, contin_t> counter_t;
-    typedef Counter<contin_t, contin_t> pdf_t;
-    typedef boost::accumulators::accumulator_set<contin_t,
-                                                 boost::accumulators::stats<
-                      boost::accumulators::tag::weighted_skewness
-                                                     >, contin_t> accumulator_t;
+	typedef score_t weight_t;
+	typedef Counter<contin_t, contin_t> counter_t;
+	typedef Counter<contin_t, contin_t> pdf_t;
+	typedef boost::accumulators::accumulator_set<contin_t,
+			boost::accumulators::stats<
+					boost::accumulators::tag::weighted_skewness
+			>, contin_t> accumulator_t;
 
-    interesting_predicate_bscore(const CTable& ctable,
-                                 weight_t kld_weight = 1.0,
-                                 weight_t skewness_weight = 1.0,
-                                 weight_t stdU_weight = 1.0,
-                                 weight_t skew_U_weight = 1.0,
-                                 score_t min_activation = 0.0,
-                                 score_t max_activation = 1.0,
-                                 score_t penalty = 1.0,
-                                 bool positive = true,
-                                 bool abs_skewness = false,
-                                 bool decompose_kld = false);
-    behavioral_score operator()(const combo_tree& tr) const;
+	interesting_predicate_bscore(const CTable &ctable,
+	                             weight_t kld_weight = 1.0,
+	                             weight_t skewness_weight = 1.0,
+	                             weight_t stdU_weight = 1.0,
+	                             weight_t skew_U_weight = 1.0,
+	                             score_t min_activation = 0.0,
+	                             score_t max_activation = 1.0,
+	                             score_t penalty = 1.0,
+	                             bool positive = true,
+	                             bool abs_skewness = false,
+	                             bool decompose_kld = false);
 
-    // the KLD has no upper boundary so the best of possible score is
-    // the maximum value a behavioral_score can represent
-    behavioral_score best_possible_bscore() const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    score_t min_improv() const;
+	// the KLD has no upper boundary so the best of possible score is
+	// the maximum value a behavioral_score can represent
+	behavioral_score best_possible_bscore() const;
 
-    virtual void set_complexity_coef(unsigned alphabet_size, float p);
-    using bscore_base::set_complexity_coef; // Avoid hiding/shadowing
+	score_t min_improv() const;
+
+	virtual void set_complexity_coef(unsigned alphabet_size, float p);
+
+	using bscore_base::set_complexity_coef; // Avoid hiding/shadowing
 
 protected:
 
-    counter_t _counter; // counter of the unconditioned distribution
-    pdf_t _pdf;     // pdf of the unconditioned distribution
-    mutable KLDS<contin_t> _klds; /// @todo dangerous: not thread safe!!!
-    CTable _ctable;
-    contin_t _skewness;   // skewness of the unconditioned distribution
+	counter_t _counter; // counter of the unconditioned distribution
+	pdf_t _pdf;     // pdf of the unconditioned distribution
+	mutable KLDS<contin_t> _klds; /// @todo dangerous: not thread safe!!!
+	CTable _ctable;
+	contin_t _skewness;   // skewness of the unconditioned distribution
 
-    // weights of the various features
-    weight_t _kld_w;
-    weight_t _skewness_w;
-    bool _abs_skewness;
-    weight_t _stdU_w;
-    weight_t _skew_U_w;
-    score_t _min_activation, _max_activation;
-    score_t _penalty;
-    bool _positive;
-    // If true then each component of the computation of KLD
-    // corresponds to an element of the bscore. Otherwise the whole
-    // KLD occupies just one bscore element
-    bool _decompose_kld;
+	// weights of the various features
+	weight_t _kld_w;
+	weight_t _skewness_w;
+	bool _abs_skewness;
+	weight_t _stdU_w;
+	weight_t _skew_U_w;
+	score_t _min_activation, _max_activation;
+	score_t _penalty;
+	bool _positive;
+	// If true then each component of the computation of KLD
+	// corresponds to an element of the bscore. Otherwise the whole
+	// KLD occupies just one bscore element
+	bool _decompose_kld;
 
 private:
-    score_t get_activation_penalty(score_t activation) const;
+	score_t get_activation_penalty(score_t activation) const;
 };
 
 // ============================================================================    
 
 struct cluster_bscore : public bscore_base
 {
-    cluster_bscore(const ITable&);
+	cluster_bscore(const ITable &);
 
-    behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    // Return the best possible bscore. Used as one of the
-    // termination conditions (when the best bscore is reached).
-    behavioral_score best_possible_bscore() const;
+	// Return the best possible bscore. Used as one of the
+	// termination conditions (when the best bscore is reached).
+	behavioral_score best_possible_bscore() const;
 
-    score_t min_improv() const;
+	score_t min_improv() const;
 
 protected:
-    ITable _itable;
+	ITable _itable;
 };
 
 } //~namespace moses
