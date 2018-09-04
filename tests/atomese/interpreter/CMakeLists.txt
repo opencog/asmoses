@@ -1,0 +1,6 @@
+ADD_CXXTEST(InterpreterUTest)
+TARGET_LINK_LIBRARIES(InterpreterUTest
+		atomese
+		${COGUTIL_LIBRARY}
+		${ATOMSPACE_LIBRARIES}
+		)
