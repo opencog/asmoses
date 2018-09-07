@@ -59,6 +59,8 @@ score_t contin_complexity_coef(unsigned alphabet_size, double stdev);
 /// A behavioral score is a vector of scores, one per sample of a dataset.
 struct bscore_base
 {
+	typedef behavioral_score result_type;
+
 	bscore_base() : _return_weighted_score(false), _complexity_coef(0.0), _size(0) {};
 
 	virtual ~bscore_base()
