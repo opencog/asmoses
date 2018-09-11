@@ -27,6 +27,13 @@ jobs:
             mkdir -p /ws/cogutil/build
             cd /ws/cogutil/build && cmake .. && make -j2 && make -j2 install
             ldconfig
+      - run:
+          name: Install AtomSpace
+          command: |
+            git clone --depth 1 https://github.com/$ORG/atomspace /ws/atomspace
+            mkdir -p /ws/atomspace/build
+            cd /ws/atomspace/build && cmake .. && make -j2 && make -j2 install
+            ldconfig
       - checkout
       - run:
           name: CMake Configure
