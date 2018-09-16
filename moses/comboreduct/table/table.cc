@@ -37,6 +37,8 @@
 #include <opencog/util/dorepeat.h>
 #include <opencog/util/Logger.h>
 #include <opencog/util/lazy_random_selector.h>
+#include <opencog/atoms/base/Link.h>
+#include <moses/atomese/interpreter/Interpreter.h>
 
 #include "../combo/ann.h"
 #include "../combo/simple_nn.h"
@@ -869,6 +871,42 @@ bool complete_truth_table::same_complete_truth_table(const combo_tree &tr) const
 			return false;
 	}
 	return true;
+}
+
+void complete_truth_table::populate(const Handle &handle)
+{
+	// create a vector containing values for each feature or arity.
+	// this will contain the inputs of the truth table.
+	std::vector<ProtoAtomPtrVec> features(_arity);
+	populate_features(features);
+
+	// map the values of inputs to the program.
+	setup_features(handle, features.begin(), features.end());
+
+	atomese::Interpreter interpreter(key);
+	std::vector<ProtoAtomPtr> result = LinkValueCast(interpreter(handle))->value();
+
+	// convert Links in the result of the interpreter to bool,
+	// and store it to the truth table.
+	std::transform(result.begin(), result.end(), begin(), [](ProtoAtomPtr p){
+		return HandleCast(p)->get_type() == TRUE_LINK;
+	});
+}
+
+void complete_truth_table::populate_features(std::vector<ProtoAtomPtrVec> &features)
+{
+	auto it = begin();
+	for (int i = 0; it != end(); ++i, ++it) {
+		ProtoAtomPtrVec row;
+		for (int j = 0; j < _arity; ++j) {
+			ProtoAtomPtr v;
+			if ((i >> j) % 2)
+				v = ProtoAtomPtr(createLink(TRUE_LINK));
+			else v = ProtoAtomPtr(createLink(FALSE_LINK));
+			row.push_back(v);
+		}
+		features.push_back(row);
+	}
 }
 
 /////////////////////

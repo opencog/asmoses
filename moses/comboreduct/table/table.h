@@ -42,6 +42,9 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/util/KLD.h>
 #include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/proto/atom_types.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/proto/LinkValue.h>
 
 #include "../type_checker/type_tree.h"
 #include "../interpreter/eval.h"
@@ -1612,6 +1615,7 @@ void subsampleTable(ITable &it, unsigned nsamples);
  * +-----------------------+--+--+
  */
 typedef std::vector<bool> bool_seq;
+typedef std::vector<ProtoAtomPtr> ProtoAtomPtrVec;
 
 class complete_truth_table : public bool_seq
 {
@@ -1645,9 +1649,10 @@ public:
 		OC_ASSERT(false, "Truth table from Handle not implemented yet");
 	}
 
-	complete_truth_table(const Handle &, arity_t arity)
+	complete_truth_table(const Handle &handle, arity_t arity)
+			: super(pow2(arity)), _arity(arity)
 	{
-		OC_ASSERT(false, "Truth table from Handle not implemented yet");
+		populate(handle);
 	}
 
 	template<typename Func>
@@ -1701,8 +1706,41 @@ protected:
 		}
 	}
 
+	/**
+	 * Sets the values of each predicateNode[Variables] of the program in order to
+	 * get evaluated by the interpreter.
+	 *
+	 * @param handle       contains the program to get its variables populated.
+	 * @param It from      beginning iterator of the vector containing values of variables.
+	 * @param It to        end iterator of vector containing values of variables.
+	 */
+	template<typename It>
+	void setup_features(const Handle &handle, It from, It to)
+	{
+		if (from == to)
+			return;
+
+		if (PREDICATE_NODE == handle->get_type()) {
+			handle->setValue(createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*"),
+			                 ProtoAtomPtr(new LinkValue(*from)));
+			++from;
+			return;
+		}
+
+		if (handle->is_link()) {
+			for (Handle h : handle->getOutgoingSet()) {
+				setup_features(h, from, to);
+			}
+		}
+	}
+
+	void populate(const Handle &handle);
+
+	void populate_features(std::vector<ProtoAtomPtrVec> &features);
+
 	arity_t _arity;
 	mutable builtin_seq inputs;
+	const Handle key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
 };
 
 }
