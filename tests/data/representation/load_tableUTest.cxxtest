@@ -2,7 +2,7 @@
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/execution/Instantiator.h>
 #include <opencog/util/Logger.h>
-#include "moses/atomese/representation/load_table.h"
+#include "moses/data/representation/load_table.h"
 
 using namespace opencog;
 using namespace std;
@@ -12,7 +12,7 @@ private:
 	AtomSpace *as;
 	SchemeEval *eval;
 	const string load_tableUTest_dir =
-		string(PROJECT_SOURCE_DIR) + "/tests/atomese/representation/";
+		string(PROJECT_SOURCE_DIR) + "/tests/data/representation/";
 	const string tableUTest_dir =
 		string(PROJECT_SOURCE_DIR) + "/tests/comboreduct/table/";
 
