@@ -1715,15 +1715,14 @@ protected:
 	 * @param It to        end iterator of vector containing values of variables.
 	 */
 	template<typename It>
-	void setup_features(const Handle &handle, It from, It to)
+	void setup_features(const Handle &handle, It& from, It to)
 	{
 		if (from == to)
 			return;
 
 		if (PREDICATE_NODE == handle->get_type()) {
-			handle->setValue(createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*"),
-			                 ProtoAtomPtr(new LinkValue(*from)));
-			++from;
+			handle->setValue(key, ProtoAtomPtr(new LinkValue(*from)));
+			from++;
 			return;
 		}
 

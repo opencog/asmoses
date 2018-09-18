@@ -881,7 +881,8 @@ void complete_truth_table::populate(const Handle &handle)
 	populate_features(features);
 
 	// map the values of inputs to the program.
-	setup_features(handle, features.begin(), features.end());
+	auto bg = features.begin();
+	setup_features(handle, bg, features.end());
 
 	atomese::Interpreter interpreter(key);
 	std::vector<ProtoAtomPtr> result = LinkValueCast(interpreter(handle))->value();
@@ -897,15 +898,13 @@ void complete_truth_table::populate_features(std::vector<ProtoAtomPtrVec> &featu
 {
 	auto it = begin();
 	for (int i = 0; it != end(); ++i, ++it) {
-		ProtoAtomPtrVec row;
 		for (int j = 0; j < _arity; ++j) {
 			ProtoAtomPtr v;
 			if ((i >> j) % 2)
 				v = ProtoAtomPtr(createLink(TRUE_LINK));
 			else v = ProtoAtomPtr(createLink(FALSE_LINK));
-			row.push_back(v);
+			features[j].push_back(v);
 		}
-		features.push_back(row);
 	}
 }
 
