@@ -21,6 +21,7 @@
  */
 #include <moses/comboreduct/table/table.h>
 #include <moses/comboreduct/table/table_io.h>
+#include <opencog/atoms/base/Link.h>
 
 using namespace opencog;
 using namespace combo;
@@ -434,4 +435,16 @@ public:
                              "0,7,2012-03-23\n")
         }
     }
+	void test_complete_truth_table()
+	{
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "f1"), createNode(PREDICATE_NODE, "f2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "f3"), or_link};
+		Handle program = createLink(seq_2, AND_LINK);
+
+		combo::complete_truth_table ctable(program, 3);
+
+		bool_seq expected = {false, false, false, true, false, true, false, true};
+		TS_ASSERT(ctable == expected);
+	}
 };
