@@ -881,8 +881,7 @@ void complete_truth_table::populate(const Handle &handle)
 	populate_features(features);
 
 	// map the values of inputs to the program.
-	auto bg = features.begin();
-	setup_features(handle, bg, features.end());
+	setup_features(handle, features);
 
 	atomese::Interpreter interpreter(key);
 	std::vector<ProtoAtomPtr> result = LinkValueCast(interpreter(handle))->value();
@@ -904,6 +903,26 @@ void complete_truth_table::populate_features(std::vector<ProtoAtomPtrVec> &featu
 				v = ProtoAtomPtr(createLink(TRUE_LINK));
 			else v = ProtoAtomPtr(createLink(FALSE_LINK));
 			features[j].push_back(v);
+		}
+	}
+}
+
+void complete_truth_table::setup_features(const Handle &handle, const std::vector<ProtoAtomPtrVec> &features)
+{
+	if (PREDICATE_NODE == handle->get_type()) {
+		// We extract the index of the feature from the name of the Predicate Node.
+		// the assumption is the Predicate nodes have names in [$#] format. and this
+		// convention is adopted from the combo counterpart.
+		const std::string h_name = handle->get_name();
+		ProtoAtomPtrVec value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
+
+		handle->setValue(key, ProtoAtomPtr(new LinkValue(value)));
+		return;
+	}
+
+	if (handle->is_link()) {
+		for (Handle h : handle->getOutgoingSet()) {
+			setup_features(h, features);
 		}
 	}
 }

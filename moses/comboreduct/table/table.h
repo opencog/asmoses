@@ -1714,24 +1714,7 @@ protected:
 	 * @param It from      beginning iterator of the vector containing values of variables.
 	 * @param It to        end iterator of vector containing values of variables.
 	 */
-	template<typename It>
-	void setup_features(const Handle &handle, It& from, It to)
-	{
-		if (from == to)
-			return;
-
-		if (PREDICATE_NODE == handle->get_type()) {
-			handle->setValue(key, ProtoAtomPtr(new LinkValue(*from)));
-			from++;
-			return;
-		}
-
-		if (handle->is_link()) {
-			for (Handle h : handle->getOutgoingSet()) {
-				setup_features(h, from, to);
-			}
-		}
-	}
+	void setup_features(const Handle &handle, const std::vector<ProtoAtomPtrVec>& features);
 
 	void populate(const Handle &handle);
 

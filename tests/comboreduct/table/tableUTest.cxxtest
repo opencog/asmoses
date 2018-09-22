@@ -441,14 +441,31 @@ public:
 
 	void test_complete_truth_table()
 	{
-		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "f1"), createNode(PREDICATE_NODE, "f2")};
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
 		Handle or_link = createLink(seq_1, OR_LINK);
-		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "f3"), or_link};
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
 		Handle program = createLink(seq_2, AND_LINK);
 
 		combo::complete_truth_table ctable(program, 3);
 
-		bool_seq expected = {false, false, false, true, false, true, false, true};
-		TS_ASSERT(ctable == expected);
+		combo_tree c_program = combo::str2combo_tree("and(or($f1 $f2) $f3)", {"f1","f2","f3"});
+		complete_truth_table c_ctable(c_program, 3);
+
+		TS_ASSERT(ctable == c_ctable);
+	}
+
+	void test_complete_truth_table_2()
+	{
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$3"), createNode(PREDICATE_NODE, "$2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$1"), or_link};
+		Handle program = createLink(seq_2, AND_LINK);
+
+		combo::complete_truth_table ctable(program, 3);
+
+		combo_tree c_program = combo::str2combo_tree("and(or($f3 $f2) $f1)", {"f1","f2","f3"});
+		complete_truth_table c_ctable(c_program, 3);
+
+		TS_ASSERT(ctable == c_ctable);
 	}
 };
