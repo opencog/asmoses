@@ -23,10 +23,14 @@
  */
 #include <opencog/util/exceptions.h>
 #include <moses/comboreduct/combo/combo.h>
+#include <opencog/atoms/core/NumberNode.h>
 
 #include "complexity.h"
 
-namespace opencog { namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace opencog::combo;
 
@@ -54,69 +58,98 @@ using namespace opencog::combo;
 //
 // Note Bene: this function returns a POSITIVE number!
 complexity_t tree_complexity(combo_tree::iterator it,
-                             bool (*stopper)(const combo_tree::iterator&))
+                             bool (*stopper)(const combo_tree::iterator &))
 {
-    // base cases
-    // null_vertex marks the location of a logical knob.  Halt 
-    // recursion past logical knobs.
-    if (*it == id::logical_true
-        || *it == id::logical_false
-        || *it == id::null_vertex)
-        return 0;
+	// base cases
+	// null_vertex marks the location of a logical knob.  Halt
+	// recursion past logical knobs.
+	if (*it == id::logical_true
+	    || *it == id::logical_false
+	    || *it == id::null_vertex)
+		return 0;
 
-    // If the stopper function is defined, and it returns true, we halt
-    // recursion.  This is needed for knob-probing across boundaries
-    // between logical and contin expressions.
-    if (stopper && stopper(it)) return 0;
+	// If the stopper function is defined, and it returns true, we halt
+	// recursion.  This is needed for knob-probing across boundaries
+	// between logical and contin expressions.
+	if (stopper && stopper(it)) return 0;
 
-    // *(0 stuff) marks the location of a contin knob.  Halt recursion
-    // past contin knobs.  This is for knob-probing.
-    if ((*it==id::times) && is_contin(*it.begin()) && 
-        (0 == get_contin(*it.begin())))
-        return 0;
+	// *(0 stuff) marks the location of a contin knob.  Halt recursion
+	// past contin knobs.  This is for knob-probing.
+	if ((*it == id::times) && is_contin(*it.begin()) &&
+	    (0 == get_contin(*it.begin())))
+		return 0;
 
-    // Contins get a complexity of 1. But perhaps, contins should
-    // get a complexity of 2 or more, if they are very large, or 
-    // require many digits of precision.
-    if (is_argument(*it)
-        || is_contin(*it)
-        || is_builtin_action(*it)
-        || is_ann_type(*it)
-        || is_action_result(*it))
-        return 1;
+	// Contins get a complexity of 1. But perhaps, contins should
+	// get a complexity of 2 or more, if they are very large, or
+	// require many digits of precision.
+	if (is_argument(*it)
+	    || is_contin(*it)
+	    || is_builtin_action(*it)
+	    || is_ann_type(*it)
+	    || is_action_result(*it))
+		return 1;
 
-    // recursive cases
-    if (*it == id::logical_not)
-        return tree_complexity(it.begin(), stopper);
+	// recursive cases
+	if (*it == id::logical_not)
+		return tree_complexity(it.begin(), stopper);
 
-    // If an operator is not listed below, it has a complexity of zero.
-    // Note that logical_and, logical_or are not listed, these have a
-    // complexity of zero.
-    //
-    // div and trigonometric functions have complexity one.
-    // But greatere_than_zero, impulse, plus, times are all treated
-    // with complexity zero.  Why?  I dunno; maybe because impulse is
-    // like an unavoidable type conversion?  Kind of like id::not above ???
-    int c = int(*it==id::div
-                 || *it==id::exp
-                 || *it==id::log
-                 || *it==id::sin
-                 || *it==id::rand
-                 || *it==id::equ
-                 || *it==id::cond);
+	// If an operator is not listed below, it has a complexity of zero.
+	// Note that logical_and, logical_or are not listed, these have a
+	// complexity of zero.
+	//
+	// div and trigonometric functions have complexity one.
+	// But greatere_than_zero, impulse, plus, times are all treated
+	// with complexity zero.  Why?  I dunno; maybe because impulse is
+	// like an unavoidable type conversion?  Kind of like id::not above ???
+	int c = int(*it == id::div
+	            || *it == id::exp
+	            || *it == id::log
+	            || *it == id::sin
+	            || *it == id::rand
+	            || *it == id::equ
+	            || *it == id::cond);
 
-    for (combo_tree::sibling_iterator sib = it.begin(); sib != it.end(); ++sib)
-        c += tree_complexity(sib, stopper);
-    return c;
+	for (combo_tree::sibling_iterator sib = it.begin(); sib != it.end(); ++sib)
+		c += tree_complexity(sib, stopper);
+	return c;
 }
 
-complexity_t tree_complexity(const combo_tree& tr,
-                             bool (*stopper)(const combo_tree::iterator&))
+complexity_t tree_complexity(const combo_tree &tr,
+                             bool (*stopper)(const combo_tree::iterator &))
 {
-    combo_tree::iterator it = tr.begin();
-    if (it == tr.end()) return 0;
+	combo_tree::iterator it = tr.begin();
+	if (it == tr.end()) return 0;
 
-    return tree_complexity(tr.begin(), stopper);
+	return tree_complexity(tr.begin(), stopper);
+}
+
+complexity_t atomese_complexity(const Handle &handle,
+                                bool (*stopper)(const Handle &))
+{
+	if (stopper && stopper(handle))
+		return 0;
+
+	Type t = handle->get_type();
+
+	if (SCHEMA_NODE == t || PREDICATE_NODE == t || NUMBER_NODE == t)
+		return 1;
+
+	if (TIMES_LINK == t) {
+		for (Handle h : handle->getOutgoingSet()) {
+			if (h->get_type() == NUMBER_NODE && NumberNodeCast(h)->get_value() == 0)
+				return 0;
+		}
+	}
+	if (nameserver().isA(t, LINK)) {
+		int c = int(t == DIVIDE_LINK
+		            || t == RANDOM_CHOICE_LINK
+		            || t == RANDOM_NUMBER_LINK);
+		for (Handle h : handle->getOutgoingSet()) {
+			c += atomese_complexity(h, stopper);
+		}
+		return c;
+	}
+	return 0;
 }
 
 } // ~namespace moses

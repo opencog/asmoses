@@ -65,6 +65,7 @@ ADD_LIBRARY(ascomboreduct SHARED
 )
 
 TARGET_LINK_LIBRARIES (ascomboreduct
+	atomese
 	${COGUTIL_LIBRARY}
 	${Boost_DATE_TIME_LIBRARY}
 	${Boost_THREAD_LIBRARY}

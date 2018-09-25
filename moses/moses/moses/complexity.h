@@ -28,21 +28,29 @@
 // of particular combo programs.
 
 #include <moses/comboreduct/combo/vertex.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Atom.h>
 
-namespace opencog { namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
-    // Right now, the algorithmic complexity of any combo program
-    // is always an (unsigned) int.  I guess it could be made a float,
-    // if need be... there's no fundamental reason for an int here.
-    typedef unsigned complexity_t;
+// Right now, the algorithmic complexity of any combo program
+// is always an (unsigned) int.  I guess it could be made a float,
+// if need be... there's no fundamental reason for an int here.
+typedef unsigned complexity_t;
 
-    static const complexity_t least_complexity = 0;
+static const complexity_t least_complexity = 0;
 
-    complexity_t tree_complexity(combo::combo_tree::iterator, 
-                        bool (*)(const combo::combo_tree::iterator&) = NULL);
+complexity_t tree_complexity(combo::combo_tree::iterator,
+                             bool (*)(const combo::combo_tree::iterator &) = NULL);
 
-    complexity_t tree_complexity(const combo::combo_tree&,
-                        bool (*)(const combo::combo_tree::iterator&) = NULL);
+complexity_t tree_complexity(const combo::combo_tree &,
+                             bool (*)(const combo::combo_tree::iterator &) = NULL);
+
+complexity_t atomese_complexity(const Handle &,
+                                bool (*)(const Handle &) = nullptr);
 
 } //~namespace moses
 } //~namespace opencog
