@@ -1649,6 +1649,11 @@ public:
 		OC_ASSERT(false, "Truth table from Handle not implemented yet");
 	}
 
+	/**
+	 * This constructor assumes the program[handle] to have its features named
+	 * '$1' to $[arity]. This convention was required in [setup_features] in order
+	 * to map features with their respective values.
+	 * */
 	complete_truth_table(const Handle &handle, arity_t arity)
 			: super(pow2(arity)), _arity(arity)
 	{
