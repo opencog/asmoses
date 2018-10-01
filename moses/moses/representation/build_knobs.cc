@@ -34,8 +34,8 @@
 #include <opencog/util/random.h>
 
 #include <moses/comboreduct/combo/convert_ann_combo.h>
-#include <moses/comboreduct/reduct/meta_rules.h>
-#include <moses/comboreduct/reduct/general_rules.h>
+#include <moses/reduct/rules/meta_rules.h>
+#include <moses/reduct/rules/general_rules.h>
 
 #include "build_knobs.h"
 

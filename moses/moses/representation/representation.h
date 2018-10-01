@@ -25,7 +25,7 @@
 #ifndef _MOSES_REPRESENTATION_H
 #define _MOSES_REPRESENTATION_H
 
-#include <moses/comboreduct/reduct/reduct.h>
+#include <moses/reduct/reduct/reduct.h>
 #include <moses/comboreduct/type_checker/type_tree.h>
 
 #include "knob_mapper.h"

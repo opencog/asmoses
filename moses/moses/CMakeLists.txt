@@ -68,6 +68,7 @@ ADD_LIBRARY (moses SHARED
 )
 
 TARGET_LINK_LIBRARIES (moses
+	asreduct
 	asfeature_selection
 	ascomboreduct
 	ascomboant

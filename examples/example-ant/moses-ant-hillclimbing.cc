@@ -32,7 +32,7 @@
 
 #include <moses/comboreduct/combo/vertex.h>
 #include <moses/comboreduct/ant_combo_vocabulary/ant_combo_vocabulary.h>
-#include <moses/comboreduct/reduct/reduct.h>
+#include <moses/reduct/reduct/reduct.h>
 
 #include <moses/moses/deme/deme_expander.h>
 #include <moses/moses/metapopulation/metapopulation.h>

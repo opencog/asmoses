@@ -30,7 +30,7 @@
 #include <boost/program_options.hpp>
 
 #include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/reduct/reduct.h>
+#include <moses/reduct/reduct/reduct.h>
 #include <moses/comboreduct/table/table.h>
 #include <moses/moses/main/problem.h>
 #include <moses/moses/metapopulation/metapop_params.h>

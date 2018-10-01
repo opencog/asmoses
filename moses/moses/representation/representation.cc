@@ -31,10 +31,10 @@
 #include <opencog/util/lazy_random_selector.h>
 #include <opencog/util/oc_omp.h>
 
-#include <moses/comboreduct/reduct/reduct.h>
-#include <moses/comboreduct/reduct/meta_rules.h>
-#include <moses/comboreduct/reduct/logical_rules.h>
-#include <moses/comboreduct/reduct/general_rules.h>
+#include <moses/reduct/reduct/reduct.h>
+#include <moses/reduct/rules/meta_rules.h>
+#include <moses/reduct/rules/logical_rules.h>
+#include <moses/reduct/rules/general_rules.h>
 
 #include "representation.h"
 #include "build_knobs.h"

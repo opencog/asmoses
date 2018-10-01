@@ -29,7 +29,7 @@
 
 #include <moses/comboreduct/combo/vertex.h>
 #include <moses/comboreduct/combo/simple_nn.h>
-#include <moses/comboreduct/reduct/ann_rules.h>
+#include <moses/reduct/rules/ann_rules.h>
 
 
 using namespace opencog;

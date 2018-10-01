@@ -27,7 +27,7 @@
 #include <iostream>
 
 #include  <opencog/util/oc_assert.h>
-#include  <moses/comboreduct/reduct/reduct.h>
+#include  <moses/reduct/reduct/reduct.h>
 #include  <moses/moses/moses/complexity.h>
 #include "ensemble.h"
 

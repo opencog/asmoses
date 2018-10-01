@@ -26,7 +26,7 @@
 #include <sstream>
 #include <string>
 #include <opencog/util/mt19937ar.h>
-#include <moses/comboreduct/reduct/reduct.h>
+#include <moses/reduct/reduct/reduct.h>
 #include <moses/moses/representation/knobs.h>
 
 using namespace opencog;

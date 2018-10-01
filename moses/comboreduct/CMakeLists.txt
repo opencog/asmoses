@@ -2,7 +2,6 @@ ADD_SUBDIRECTORY(combo)
 ADD_SUBDIRECTORY(interpreter)
 ADD_SUBDIRECTORY(type_checker)
 ADD_SUBDIRECTORY(table)
-ADD_SUBDIRECTORY(reduct)
 ADD_SUBDIRECTORY(ant_combo_vocabulary)
 ADD_SUBDIRECTORY(main)
 ADD_SUBDIRECTORY(man)
@@ -39,27 +38,6 @@ ADD_LIBRARY(ascomboreduct SHARED
 
 	type_checker/type_tree_def
 	type_checker/type_tree
-
-	reduct/action_reduction
-	reduct/action_rules
-	reduct/branch_rules
-	reduct/clean_reduction
-	reduct/contin_reduction
-	reduct/contin_rules
-	reduct/flat_normal_form
-	reduct/full_reduction
-	reduct/general_rules
-	reduct/logical_reduction
-	reduct/ann_reduction
-	reduct/logical_rules
-	reduct/fold_reduction
-	reduct/fold_rules
-	reduct/meta_rules
-	reduct/mixed_reduction
-	reduct/mixed_rules
-	reduct/perception_reduction
-	reduct/perception_rules
-	reduct/reduct
 
 	converter/combo_atomese
 )
