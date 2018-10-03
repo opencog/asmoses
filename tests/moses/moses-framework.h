@@ -21,6 +21,7 @@
  */
 
 #include <unistd.h>
+#include <fstream>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/range/algorithm/find_if.hpp>
