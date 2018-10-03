@@ -33,7 +33,7 @@
 #include <opencog/util/oc_omp.h>
 #include <opencog/util/random.h>
 
-#include <moses/comboreduct/combo/convert_ann_combo.h>
+#include <moses/combo/combo/convert_ann_combo.h>
 #include <moses/reduct/rules/meta_rules.h>
 #include <moses/reduct/rules/general_rules.h>
 

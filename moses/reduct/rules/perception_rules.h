@@ -25,7 +25,7 @@
 #define _REDUCT_PERCEPTION_RULES_H
 
 #include "moses/reduct/reduct/reduct.h"
-#include <moses/comboreduct/type_checker/type_tree.h>
+#include <moses/combo/type_checker/type_tree.h>
 
 namespace opencog { namespace reduct {
   

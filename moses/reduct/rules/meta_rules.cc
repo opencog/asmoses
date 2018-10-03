@@ -23,7 +23,7 @@
  */
 #include "meta_rules.h"
 #include <opencog/util/dorepeat.h>
-#include <moses/comboreduct/combo/assumption.h>
+#include <moses/combo/combo/assumption.h>
 
 // uncomment if you want to have a trace of the rules
 // #define META_RULE_DEBUG

@@ -24,7 +24,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <moses/comboreduct/crutil/exception.h>
+#include <moses/combo/crutil/exception.h>
 
 #include "behave_cscore.h"
 

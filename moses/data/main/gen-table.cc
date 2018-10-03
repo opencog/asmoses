@@ -30,10 +30,10 @@
 #include <opencog/util/random.h>
 #include <opencog/util/log_prog_name.h>
 
-#include <moses/comboreduct/interpreter/eval.h>
+#include <moses/combo/interpreter/eval.h>
 #include <moses/data/table/table.h>
 #include <moses/data/table/table_io.h>
-#include <moses/comboreduct/type_checker/type_tree.h>
+#include <moses/combo/type_checker/type_tree.h>
 
 using namespace boost::program_options;
 using namespace opencog;

@@ -24,7 +24,7 @@
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/Logger.h>
 
-#include <moses/comboreduct/interpreter/eval.h>
+#include <moses/combo/interpreter/eval.h>
 
 #include <moses/moses/deme/deme_expander.h>
 #include <moses/moses/metapopulation/metapopulation.h>

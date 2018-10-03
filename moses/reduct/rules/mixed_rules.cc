@@ -22,7 +22,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include "mixed_rules.h"
-#include <moses/comboreduct/type_checker/type_tree.h>
+#include <moses/combo/type_checker/type_tree.h>
 #include <opencog/util/exceptions.h>
 #include <map>
 

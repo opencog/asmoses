@@ -24,7 +24,7 @@
  */
 #include <map>
 #include <opencog/util/exceptions.h>
-#include <moses/comboreduct/type_checker/type_tree.h>
+#include <moses/combo/type_checker/type_tree.h>
 #include "contin_rules.h"
 
 namespace opencog { namespace reduct {

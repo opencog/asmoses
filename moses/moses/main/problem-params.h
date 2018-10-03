@@ -29,7 +29,7 @@
 
 #include <boost/program_options.hpp>
 
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/combo/combo/vertex.h>
 #include <moses/reduct/reduct/reduct.h>
 #include <moses/data/table/table.h>
 #include <moses/moses/main/problem.h>

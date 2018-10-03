@@ -22,7 +22,7 @@ IF (CXXTEST_FOUND)
 
 	#ADD_SUBDIRECTORY (hillclimbing)
 
-	ADD_SUBDIRECTORY (comboreduct)
+	ADD_SUBDIRECTORY (combo)
 	ADD_SUBDIRECTORY (moses)
 	ADD_SUBDIRECTORY (feature-selection)
 	ADD_SUBDIRECTORY (atomese)

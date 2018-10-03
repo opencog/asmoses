@@ -26,7 +26,7 @@
 
 #include <string>
 #include <boost/program_options.hpp>
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/combo/combo/vertex.h>
 
 namespace opencog { namespace moses {
 

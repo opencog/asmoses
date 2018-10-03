@@ -33,7 +33,7 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/tree.h>
 
-#include <moses/comboreduct/combo/iostream_combo.h>
+#include <moses/combo/combo/iostream_combo.h>
 
 #include "../moses/complexity.h"
 #include "field_set.h"

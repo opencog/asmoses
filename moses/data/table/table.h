@@ -46,11 +46,11 @@
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/proto/LinkValue.h>
 
-#include <moses/comboreduct/type_checker/type_tree.h>
-#include <moses/comboreduct/interpreter/eval.h>
-#include <moses/comboreduct/interpreter/interpreter.h>
-#include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/combo/common_def.h>
+#include <moses/combo/type_checker/type_tree.h>
+#include <moses/combo/interpreter/eval.h>
+#include <moses/combo/interpreter/interpreter.h>
+#include <moses/combo/combo/vertex.h>
+#include <moses/combo/combo/common_def.h>
 
 #define COEF_SAMPLE_COUNT 20.0 // involved in the formula that counts
 // the number of trials needed to check

@@ -10,7 +10,7 @@ ADD_LIBRARY(data SHARED
 		)
 
 TARGET_LINK_LIBRARIES (data
-		ascomboreduct
+		ascombo
 		${COGUTIL_LIBRARY}
 		${ATOMSPACE_LIBRARIES}
 		)

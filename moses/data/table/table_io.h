@@ -38,7 +38,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "table.h"
-#include "moses/comboreduct/type_checker/type_tree.h"
+#include "moses/combo/type_checker/type_tree.h"
 
 namespace opencog { namespace combo {
 

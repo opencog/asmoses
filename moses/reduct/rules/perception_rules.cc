@@ -22,7 +22,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include "perception_rules.h"
-#include <moses/comboreduct/combo/assumption.h>
+#include <moses/combo/combo/assumption.h>
 #include <opencog/util/exceptions.h>
 
 namespace opencog { namespace reduct {

@@ -35,7 +35,7 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/tree.h>
 
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/combo/combo/vertex.h>
 
 namespace opencog { namespace reduct {
 typedef std::set<int, opencog::absolute_value_order<int> > clause;

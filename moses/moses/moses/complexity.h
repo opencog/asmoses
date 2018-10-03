@@ -27,7 +27,7 @@
 // Various routines dealing with computing the (algorithmic) complexity
 // of particular combo programs.
 
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/combo/combo/vertex.h>
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Atom.h>
 

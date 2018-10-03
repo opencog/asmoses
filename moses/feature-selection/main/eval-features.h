@@ -31,7 +31,7 @@
 #include <opencog/util/iostreamContainer.h>
 #include <opencog/util/numeric.h>
 
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/combo/combo/combo.h>
 #include <moses/data/table/table.h>
 
 #include "../scorers/mutual_info.h"

@@ -26,7 +26,7 @@
 
 #include <opencog/util/RandGen.h>
 
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/combo/combo/vertex.h>
 
 namespace opencog { namespace reduct {
 

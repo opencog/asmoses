@@ -27,8 +27,8 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/mt19937ar.h>
 
-#include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/combo/simple_nn.h>
+#include <moses/combo/combo/vertex.h>
+#include <moses/combo/combo/simple_nn.h>
 #include <moses/reduct/rules/ann_rules.h>
 
 

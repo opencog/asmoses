@@ -1,7 +1,7 @@
 ADD_EXECUTABLE (asgen-table gen-table.cc)
 TARGET_LINK_LIBRARIES(asgen-table
 		data
-		ascomboreduct
+		ascombo
 		ascomboant
 		${COGUTIL_LIBRARY}
 		${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -9,7 +9,7 @@ TARGET_LINK_LIBRARIES(asgen-table
 
 ADD_EXECUTABLE (aseval-table eval-table.cc)
 TARGET_LINK_LIBRARIES(aseval-table
-		ascomboreduct
+		ascombo
 		ascomboant
 		${COGUTIL_LIBRARY}
 		${Boost_PROGRAM_OPTIONS_LIBRARY}

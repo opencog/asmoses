@@ -29,7 +29,7 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/util/algorithm.h>
 #include <opencog/util/mt19937ar.h>
-#include <moses/comboreduct/combo/assumption.h>
+#include <moses/combo/combo/assumption.h>
 #include "logical_rules.h"
 #include <moses/data/table/table.h>
 

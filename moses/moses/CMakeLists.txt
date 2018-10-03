@@ -71,7 +71,7 @@ TARGET_LINK_LIBRARIES (moses
 	data
 	asreduct
 	asfeature_selection
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}

@@ -26,7 +26,7 @@
 
 #include <opencog/util/dorepeat.h>
 #include <opencog/util/numeric.h> // needed for pow2
-#include <moses/comboreduct/combo/vertex.h> // needed for contin_t
+#include <moses/combo/combo/vertex.h> // needed for contin_t
 
 namespace opencog { namespace moses {
 

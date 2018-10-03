@@ -31,7 +31,7 @@
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 
-#include <moses/comboreduct/combo/iostream_combo.h>
+#include <moses/combo/combo/iostream_combo.h>
 #include <opencog/util/oc_assert.h>
 #include <opencog/util/iostreamContainer.h>
 #include <moses/data/table/table_io.h>

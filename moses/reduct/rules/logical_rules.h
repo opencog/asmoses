@@ -28,7 +28,7 @@
 
 #include "moses/reduct/reduct/reduct.h"
 #include "moses/reduct/reduct/flat_normal_form.h"
-#include "moses/comboreduct/type_checker/type_tree.h"
+#include "moses/combo/type_checker/type_tree.h"
 
 namespace opencog { namespace reduct {
 

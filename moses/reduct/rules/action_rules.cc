@@ -24,7 +24,7 @@
 #include "action_rules.h"
 
 #include <opencog/util/exceptions.h>
-#include <moses/comboreduct/combo/descriptions.h>
+#include <moses/combo/combo/descriptions.h>
 
 namespace opencog { namespace reduct {
 

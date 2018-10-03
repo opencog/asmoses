@@ -1,13 +1,13 @@
 #ADD_CXXTEST(ActionReductUTest)
 #TARGET_LINK_LIBRARIES(ActionReductUTest
-#	comboreduct
+#	combo
 #   util
 #)
 
 ADD_CXXTEST(BooleanReductUTest)
 TARGET_LINK_LIBRARIES(BooleanReductUTest
 	asreduct
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 )
@@ -15,7 +15,7 @@ TARGET_LINK_LIBRARIES(BooleanReductUTest
 ADD_CXXTEST(BooleanFullUTest)
 TARGET_LINK_LIBRARIES(BooleanFullUTest
 	asreduct
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 )
@@ -23,7 +23,7 @@ TARGET_LINK_LIBRARIES(BooleanFullUTest
 ADD_CXXTEST(ContinReductUTest)
 TARGET_LINK_LIBRARIES(ContinReductUTest
 	asreduct
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 )
@@ -31,7 +31,7 @@ TARGET_LINK_LIBRARIES(ContinReductUTest
 ADD_CXXTEST(FullReductUTest)
 TARGET_LINK_LIBRARIES(FullReductUTest
 	asreduct
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 )
@@ -39,7 +39,7 @@ TARGET_LINK_LIBRARIES(FullReductUTest
 ADD_CXXTEST(MixedReductUTest)
 TARGET_LINK_LIBRARIES(MixedReductUTest
 	asreduct
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 )
@@ -53,7 +53,7 @@ TARGET_LINK_LIBRARIES(MixedReductUTest
 ADD_CXXTEST(ANNReductUTest)
 TARGET_LINK_LIBRARIES(ANNReductUTest
 	asreduct
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 )
@@ -61,7 +61,7 @@ TARGET_LINK_LIBRARIES(ANNReductUTest
 ADD_CXXTEST(FoldReductUTest)
 TARGET_LINK_LIBRARIES(FoldReductUTest
 	asreduct
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 )

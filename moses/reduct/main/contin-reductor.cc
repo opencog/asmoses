@@ -26,7 +26,7 @@
 #include <opencog/util/mt19937ar.h>
 #include <moses/reduct/reduct/reduct.h>
 
-#include "moses/comboreduct/interpreter/interpreter.h"
+#include "moses/combo/interpreter/interpreter.h"
 #include <moses/data/table/table.h>
 #include <moses/data/table/table_io.h>
 
