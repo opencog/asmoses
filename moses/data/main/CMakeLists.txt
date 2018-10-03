@@ -9,6 +9,7 @@ TARGET_LINK_LIBRARIES(asgen-table
 
 ADD_EXECUTABLE (aseval-table eval-table.cc)
 TARGET_LINK_LIBRARIES(aseval-table
+		data
 		ascombo
 		ascomboant
 		${COGUTIL_LIBRARY}
