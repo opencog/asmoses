@@ -31,7 +31,7 @@
 #include <opencog/util/mt19937ar.h>
 #include <moses/comboreduct/combo/assumption.h>
 #include "logical_rules.h"
-#include "moses/comboreduct/table/table.h"
+#include <moses/data/table/table.h>
 
 namespace opencog { namespace reduct {
 typedef combo_tree::sibling_iterator sib_it;

@@ -29,7 +29,7 @@
 #include <boost/format.hpp>
 
 #include <opencog/util/oc_assert.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 #include <moses/moses/moses/types.h>
 
 #include "eval-diversity.h"

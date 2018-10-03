@@ -40,9 +40,9 @@
 #include <opencog/atoms/base/Link.h>
 #include <moses/atomese/interpreter/Interpreter.h>
 
-#include "../combo/ann.h"
-#include "../combo/simple_nn.h"
-#include "../combo/convert_ann_combo.h"
+#include "moses/comboreduct/combo/ann.h"
+#include "moses/comboreduct/combo/simple_nn.h"
+#include "moses/comboreduct/combo/convert_ann_combo.h"
 
 #include "table.h"
 #include "table_io.h"

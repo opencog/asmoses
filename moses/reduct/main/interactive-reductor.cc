@@ -34,7 +34,7 @@
 #include <moses/reduct/rules/general_rules.h>
 #include <moses/reduct/rules/fold_rules.h>
 
-#include "moses/comboreduct/table/table.h"
+#include <moses/data/table/table.h>
 #include "moses/comboreduct/type_checker/type_tree.h"
 
 using namespace std;

@@ -26,7 +26,7 @@
 
 #include <opencog/util/numeric.h>
 
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 #include <moses/moses/scoring/precision_bscore.h>
 #include "fs_scorer_base.h"
 

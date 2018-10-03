@@ -26,7 +26,7 @@
 #ifndef _SELECT_BSCORE_H
 #define _SELECT_BSCORE_H
 
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 #include "scoring_base.h"
 
 namespace opencog { namespace moses {

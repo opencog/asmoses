@@ -35,7 +35,7 @@
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/weighted_skewness.hpp>
 
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 
 #include "scoring_base.h"
 #include "../moses/types.h"

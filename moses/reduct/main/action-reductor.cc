@@ -27,8 +27,8 @@
 #include <moses/reduct/reduct/reduct.h>
 
 #include "moses/comboreduct/combo/vertex.h"
-#include "moses/comboreduct/table/table.h"
-#include "moses/comboreduct/table/table_io.h"
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 #include "moses/comboreduct/type_checker/type_tree.h"
 #include "moses/comboreduct/ant_combo_vocabulary/ant_combo_vocabulary.h"
 

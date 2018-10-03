@@ -19,22 +19,6 @@ TARGET_LINK_LIBRARIES(tree-sim
 	${COGUTIL_LIBRARY}
 )
 
-ADD_EXECUTABLE (aseval-table eval-table.cc)
-TARGET_LINK_LIBRARIES(aseval-table
-	ascomboreduct
-	ascomboant
-	${COGUTIL_LIBRARY}
-	${Boost_PROGRAM_OPTIONS_LIBRARY} 
-)
-
-ADD_EXECUTABLE (asgen-table gen-table.cc)
-TARGET_LINK_LIBRARIES(asgen-table
-	ascomboreduct
-	ascomboant
-	${COGUTIL_LIBRARY}
-	${Boost_PROGRAM_OPTIONS_LIBRARY} 
-)
-
 ADD_EXECUTABLE (asgen-disj-conj gen-disj-conj.cc)
 TARGET_LINK_LIBRARIES(asgen-disj-conj
 	ascomboreduct
@@ -52,7 +36,7 @@ TARGET_LINK_LIBRARIES(ascombo-fmt-converter
 )
 
 # install eval-table
-INSTALL(TARGETS aseval-table asgen-table asgen-disj-conj ascombo-fmt-converter
+INSTALL(TARGETS asgen-disj-conj ascombo-fmt-converter
         EXPORT ASMosesTargets
         RUNTIME DESTINATION bin)
 

@@ -30,6 +30,5 @@
 #include <moses/comboreduct/combo/procedure_repository.h>
 #include <moses/comboreduct/combo/iostream_combo.h>
 #include <moses/comboreduct/interpreter/eval.h>
-#include <moses/comboreduct/table/table.h>
 
 #endif // _OPENCOG_COMBO_H

@@ -26,8 +26,8 @@
 #include <opencog/util/mt19937ar.h>
 
 #include "moses/reduct/reduct/reduct.h"
-#include "moses/comboreduct/table/table.h"
-#include "moses/comboreduct/table/table_io.h"
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 #include "moses/comboreduct/type_checker/type_tree.h"
 
 using namespace std;

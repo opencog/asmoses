@@ -21,7 +21,7 @@
  */
 
 #include <vector>
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 #include <moses/comboreduct/type_checker/type_tree.h>
 #include <moses/comboreduct/combo/vertex.h>
 #include <moses/reduct/reduct/reduct.h>

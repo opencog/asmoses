@@ -29,7 +29,7 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/RandGen.h>
 
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 
 #include "eval-features.h"
 

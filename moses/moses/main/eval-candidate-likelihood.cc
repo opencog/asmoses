@@ -34,7 +34,7 @@
 #include <moses/comboreduct/combo/iostream_combo.h>
 #include <opencog/util/oc_assert.h>
 #include <opencog/util/iostreamContainer.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 #include <moses/moses/moses/types.h>
 #include <moses/moses/moses/complexity.h>
 

@@ -27,8 +27,8 @@
 #include <moses/reduct/reduct/reduct.h>
 
 #include "moses/comboreduct/interpreter/interpreter.h"
-#include "moses/comboreduct/table/table.h"
-#include "moses/comboreduct/table/table_io.h"
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 
 using namespace std;
 using namespace opencog;
