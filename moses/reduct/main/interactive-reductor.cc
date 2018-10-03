@@ -35,7 +35,7 @@
 #include <moses/reduct/rules/fold_rules.h>
 
 #include <moses/data/table/table.h>
-#include "moses/combo/type_checker/type_tree.h"
+#include <moses/combo/type_checker/type_tree.h>
 
 using namespace std;
 using namespace opencog;

@@ -22,9 +22,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include "general_rules.h"
-#include "moses/combo/interpreter/eval.h"
+#include <moses/combo/interpreter/eval.h>
 #include <moses/combo/combo/assumption.h>
-#include "moses/combo/crutil/exception.h"
+#include <moses/combo/crutil/exception.h>
 
 namespace opencog { namespace reduct {
 typedef combo_tree::sibling_iterator sib_it;

@@ -25,10 +25,10 @@
 #define _REDUCT_LOGICAL_RULES_H
 
 #include <opencog/util/exceptions.h>
+#include <moses/combo/type_checker/type_tree.h>
 
 #include "moses/reduct/reduct/reduct.h"
 #include "moses/reduct/reduct/flat_normal_form.h"
-#include "moses/combo/type_checker/type_tree.h"
 
 namespace opencog { namespace reduct {
 

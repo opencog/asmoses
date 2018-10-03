@@ -27,8 +27,7 @@
 #include <moses/reduct/reduct/reduct.h>
 #include <moses/data/table/table.h>
 #include <moses/data/table/table_io.h>
-
-#include "moses/combo/type_checker/type_tree.h"
+#include <moses/combo/type_checker/type_tree.h>
 
 using namespace std;
 using namespace opencog;

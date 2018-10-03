@@ -33,7 +33,7 @@
 
 #include <opencog/util/functional.h>
 
-#include "moses/combo/type_checker/type_tree.h"
+#include <moses/combo/type_checker/type_tree.h>
 #include "moses/reduct/reduct/reduct.h"
 
 namespace opencog { namespace reduct {

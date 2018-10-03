@@ -28,9 +28,9 @@
 
 #include "moses/reduct/reduct/reduct.h"
 
-#include "moses/combo/combo/simple_nn.h"
-#include "moses/combo/combo/vertex.h"
-#include "moses/combo/combo/convert_ann_combo.h"
+#include <moses/combo/combo/simple_nn.h>
+#include <moses/combo/combo/vertex.h>
+#include <moses/combo/combo/convert_ann_combo.h>
 
 namespace opencog { namespace reduct {
 
