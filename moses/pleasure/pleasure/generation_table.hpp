@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <moses/comboreduct/reduct/reduct.h>
+#include <moses/reduct/reduct/reduct.h>
 
 #include "node_list.hpp"
 

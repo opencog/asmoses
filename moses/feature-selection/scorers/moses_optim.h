@@ -26,7 +26,7 @@
 
 #include <opencog/util/numeric.h>
 
-#include <moses/comboreduct/combo/common_def.h>
+#include <moses/combo/combo/common_def.h>
 #include <moses/moses/representation/field_set.h>
 #include <moses/moses/representation/instance_scorer.h>
 #include <moses/moses/moses/types.h>

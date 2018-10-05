@@ -487,8 +487,8 @@ void deme_expander::optimize_demes(int max_evals, time_t max_time)
             }
 
             // Optimize
-            complexity_based_scorer cpx_scorer =
-                complexity_based_scorer(_cscorer, _reps[i], _params.reduce_all);
+            combo_based_scorer cpx_scorer =
+                combo_based_scorer(_cscorer, _reps[i], _params.reduce_all);
             _optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
         }
 

@@ -5,7 +5,7 @@ include("@CMAKE_INSTALL_PREFIX@/lib/cmake/ASMoses/ASMosesTargets.cmake")
 set(MOSES_LIBRARY asmoses)
 set(MOSES_EXEC_LIBRARY asmoses_exec)
 set(COMBOANT_LIBRARY ascomboant)
-set(COMBOREDUCT_LIBRARY ascomboreduct)
+set(COMBOREDUCT_LIBRARY ascombo)
 set(FEATURE_SELECTION_LIBRARY asfeature_selection)
 
 # Copy the results to the output variables.

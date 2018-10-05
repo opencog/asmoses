@@ -54,6 +54,7 @@ ADD_LIBRARY (moses SHARED
 	representation/knob_mapper
 	representation/knobs
 	representation/representation
+	representation/instance_scorer
 
 	scoring/behave_cscore
 	scoring/bscores
@@ -67,8 +68,10 @@ ADD_LIBRARY (moses SHARED
 )
 
 TARGET_LINK_LIBRARIES (moses
+	data
+	asreduct
 	asfeature_selection
-	ascomboreduct
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}

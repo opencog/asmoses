@@ -31,7 +31,7 @@
 #include <set>
 
 #include <opencog/util/Logger.h>
-#include <moses/comboreduct/type_checker/type_tree.h>
+#include <moses/combo/type_checker/type_tree.h>
 
 #include "problem.h"
 

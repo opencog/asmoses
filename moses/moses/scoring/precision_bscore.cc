@@ -26,7 +26,7 @@
 #include <boost/range/irange.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 
 #include "precision_bscore.h"
 

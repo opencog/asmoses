@@ -21,10 +21,10 @@
  */
 
 #include <vector>
-#include <moses/comboreduct/table/table.h>
-#include <moses/comboreduct/type_checker/type_tree.h>
-#include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/reduct/reduct.h>
+#include <moses/data/table/table.h>
+#include <moses/combo/type_checker/type_tree.h>
+#include <moses/combo/combo/vertex.h>
+#include <moses/reduct/reduct/reduct.h>
 
 #include "../optimization/hill-climbing.h"
 #include "../metapopulation/metapopulation.h"

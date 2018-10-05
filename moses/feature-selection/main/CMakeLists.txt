@@ -10,7 +10,8 @@ SET_TARGET_PROPERTIES(fs-main PROPERTIES OUTPUT_NAME "asfeature-selection")
 
 ADD_EXECUTABLE (aseval-features eval-features.cc)
 TARGET_LINK_LIBRARIES(aseval-features
-	ascomboreduct
+	data
+	ascombo
 	ascomboant
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 

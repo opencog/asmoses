@@ -31,7 +31,7 @@
 #include <opencog/util/log_prog_name.h>
 #include <opencog/util/oc_omp.h>
 
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 #include <moses/moses/moses/moses_main.h> // for version string
 
 using namespace std;
