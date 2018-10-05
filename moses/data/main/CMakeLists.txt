@@ -20,12 +20,3 @@ TARGET_LINK_LIBRARIES(aseval-table
 INSTALL(TARGETS aseval-table asgen-table
 		EXPORT ASMosesTargets
 		RUNTIME DESTINATION bin)
-
-INSTALL(FILES
-
-		tree_generation.h
-
-		DESTINATION
-
-		"include/${PROJECT_NAME}/data/main"
-		)
