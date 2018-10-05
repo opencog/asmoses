@@ -24,7 +24,7 @@
 #ifndef _OPENCOG_BASE_SCORER_H
 #define _OPENCOG_BASE_SCORER_H
 
-#include <moses/comboreduct/table/table.h>
+#include <moses/data/table/table.h>
 
 namespace opencog {
 

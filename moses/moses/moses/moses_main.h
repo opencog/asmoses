@@ -28,7 +28,7 @@
 
 #include <opencog/util/Logger.h>
 
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/combo/combo/combo.h>
 
 #include "../deme/deme_expander.h"
 #include "../metapopulation/metapopulation.h"

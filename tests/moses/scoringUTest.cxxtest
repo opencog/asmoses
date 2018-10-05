@@ -24,8 +24,8 @@
 
 #include <moses/moses/scoring/precision_bscore.h>
 #include <moses/moses/scoring/bscores.h>
-#include <moses/comboreduct/table/table.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 
 using namespace opencog;
 using namespace combo;

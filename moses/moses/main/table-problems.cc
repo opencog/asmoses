@@ -25,7 +25,7 @@
  */
 
 #include <opencog/util/Logger.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 
 #include "../moses/partial.h"
 #include "../scoring/bscores.h"

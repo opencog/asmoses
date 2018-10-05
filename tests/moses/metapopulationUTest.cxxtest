@@ -24,7 +24,7 @@
 
 #include <opencog/util/mt19937ar.h>
 
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/combo/combo/vertex.h>
 #include <moses/moses/metapopulation/metapopulation.h>
 #include <moses/moses/scoring/behave_cscore.h>
 

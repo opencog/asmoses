@@ -1,11 +1,16 @@
-ADD_SUBDIRECTORY(representation)
+ADD_SUBDIRECTORY (representation)
+ADD_SUBDIRECTORY (table)
+ADD_SUBDIRECTORY (main)
 
 ADD_LIBRARY(data SHARED
 		representation/load_table
+
+		table/table
+		table/table_io
 		)
 
 TARGET_LINK_LIBRARIES (data
-		ascomboreduct
+		ascombo
 		${COGUTIL_LIBRARY}
 		${ATOMSPACE_LIBRARIES}
 		)

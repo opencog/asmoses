@@ -29,9 +29,9 @@
 #include <boost/utility.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
-#include <moses/comboreduct/type_checker/type_tree.h>
-#include <moses/comboreduct/combo/action.h>
-#include <moses/comboreduct/combo/perception.h>
+#include <moses/combo/type_checker/type_tree.h>
+#include <moses/combo/combo/action.h>
+#include <moses/combo/combo/perception.h>
 
 #include "field_set.h"
 #include "representation.h"
