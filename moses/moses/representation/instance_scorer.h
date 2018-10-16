@@ -30,6 +30,7 @@
 #include "representation.h"
 #include "../scoring/behave_cscore.h"
 #include "moses/comboreduct/converter/combo_atomese.h"
+#include <opencog/atomspace/AtomSpace.h>
 
 namespace opencog
 {
@@ -84,13 +85,14 @@ protected:
 struct atomese_based_scorer : public iscorer_base
 {
 	atomese_based_scorer(behave_cscore &cs,
-	                     representation &rep, bool reduce)
-			: _cscorer(cs), _rep(rep), _reduce(reduce)
+	                     representation &rep, bool reduce, AtomSpace &as)
+			: _cscorer(cs), _rep(rep), _reduce(reduce), _as(as)
 	{}
 
 	composite_score operator()(const instance &inst) const;
 
 protected:
+    AtomSpace &_as;
 	behave_cscore &_cscorer;
 	representation &_rep;
 	bool _reduce; // whether the exemplar should be reduced before being
