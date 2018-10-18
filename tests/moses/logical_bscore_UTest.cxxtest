@@ -1,0 +1,57 @@
+/** logical_bscore_UTest.cxxtest ---
+ *
+ * Copyright (C) 2011 OpenCog Foundation
+ *
+ * Author: Bitseat Tadesse
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+
+#include <moses/moses/scoring/precision_bscore.h>
+#include <moses/moses/scoring/bscores.h>
+#include <moses/comboreduct/table/table.h>
+#include <moses/comboreduct/table/table_io.h>
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+const string mosesUTest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/";
+const string target_feature = "target";
+
+class logical_bscore_UTest : public CxxTest::TestSuite
+{
+public:
+    logical_bscore_UTest() {
+        logger().set_print_to_stdout_flag(true);
+        logger().set_level(Logger::FINE);
+        randGen().seed(1);
+    }
+
+	void test_logical_bscore_atomese() {
+        int _arity = 3;
+        behavioral_score bsc(_arity);
+
+        behavioral_score expected_bsc = {0, 0, 0};
+        std::cout << "bsc = " << bsc << std::endl
+                  << "expected_bsc = " << expected_bsc << std::endl;
+        TS_ASSERT_EQUALS(bsc, expected_bsc);
+    }
+
+};
