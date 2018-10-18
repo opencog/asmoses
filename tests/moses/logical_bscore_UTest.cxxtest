@@ -44,11 +44,21 @@ public:
         randGen().seed(1);
     }
 
-	void test_logical_bscore_atomese() {
+	void test_logical_bscore_atomese3() {
         int _arity = 3;
         behavioral_score bsc(_arity);
 
         behavioral_score expected_bsc = {0, 0, 0};
+        std::cout << "bsc = " << bsc << std::endl
+                  << "expected_bsc = " << expected_bsc << std::endl;
+        TS_ASSERT_EQUALS(bsc, expected_bsc);
+    }
+
+	void test_logical_bscore_atomese4() {
+        int _arity = 4;
+        behavioral_score bsc(_arity);
+
+        behavioral_score expected_bsc = {0, 0, 0, 0};
         std::cout << "bsc = " << bsc << std::endl
                   << "expected_bsc = " << expected_bsc << std::endl;
         TS_ASSERT_EQUALS(bsc, expected_bsc);
