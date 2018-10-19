@@ -214,7 +214,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
          " divergence between the distribution of the outputs and"
          " that same distribution in the context of the pattern"
          " being true."
-         " Or the difference of skewnesses between the 2 distributions"
+         " Or the difference of skewnesses between  the 2 distributions"
          " and other things being experimented.\n\n"
          "ann-it, regression based on input table using ann\n\n"
          "cp, demo, regression based on combo program\n\n"
@@ -1124,6 +1124,15 @@ problem_params::add_options(boost::program_options::options_description& desc)
          po::value<bool>(&ss_contiguous_time)->default_value(1),
          "If subsample by time is enable then subsample contiguous "
          "(chronologically ordered) time segments.\n")
+
+        // Option to store population in Atomspace.
+
+        ("atomspace-store",
+         po::value<bool>(&atomspace_store)->default_value(0),
+         "If atomspace store is enable then deme populations will"
+         " be stored in Atomspace.")
+
+
 
         // ========== THE END of the options; note semicolon ===========
         ;
