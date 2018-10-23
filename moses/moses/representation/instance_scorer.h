@@ -92,7 +92,7 @@ struct atomese_based_scorer : public iscorer_base
 	composite_score operator()(const instance &inst) const;
 
 protected:
-    AtomSpace &_as;
+	AtomSpace &_as;
 	behave_cscore &_cscorer;
 	representation &_rep;
 	bool _reduce; // whether the exemplar should be reduced before being
