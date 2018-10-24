@@ -24,6 +24,7 @@
 #include <moses/moses/scoring/bscores.h>
 #include <examples/example-progs/scoring_iterators.h>
 #include <opencog/atoms/base/Link.h>
+#include <opencog/util/Logger.h>
 
 using namespace opencog;
 using namespace combo;
@@ -51,8 +52,6 @@ public:
         logical_bscore lbsc(func, _arity);
         behavioral_score bs = lbsc(and_link);
 
-        cout<<"the bs: "<< bs<<std::endl;
-
         behavioral_score expected_bs = {-0, -1, -1, -0};
         std::cout << "bs = " <<bs << std::endl
                   << "expected_bs = " << expected_bs << std::endl;
@@ -62,16 +61,61 @@ public:
 
 	void test_logical_bscore_pa() {
         cout << BOOST_CURRENT_FUNCTION << endl;
-        int _arity = 2;
-        HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
-        Handle or_link = createLink(seq_1, OR_LINK);
+        int _arity = 3;
+
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3")};
+		Handle not_link = createLink(seq_2, NOT_LINK);
+		HandleSeq seq_3 = {not_link, or_link};
+		Handle program = createLink(seq_3, AND_LINK);
+
         even_parity func;
         logical_bscore lbsc(func, _arity);
         behavioral_score bs = lbsc(or_link);
 
-        cout<<"the bs: "<< bs<<std::endl;
+        behavioral_score expected_bs = {-1, -1, -1, -0, -0, -0, -0, -1};
+        std::cout << "bs = " <<bs << std::endl
+                  << "expected_bs = " << expected_bs << std::endl;
+        TS_ASSERT_EQUALS(bs, expected_bs);
 
-        behavioral_score expected_bs = {-1, -1, -1, -0};
+    }
+
+	void test_logical_bscore_maj() {
+        cout << BOOST_CURRENT_FUNCTION << endl;
+        int _arity = 3;
+
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
+		Handle program = createLink(seq_2, AND_LINK);
+
+        majority func(_arity);
+        logical_bscore lbsc(func, _arity);
+        behavioral_score bs = lbsc(program);
+
+        behavioral_score expected_bs = {-0, -0, -0, -1, -0, -0, -0, -0};
+        std::cout << "bs = " <<bs << std::endl
+                  << "expected_bs = " << expected_bs << std::endl;
+        TS_ASSERT_EQUALS(bs, expected_bs);
+
+    }
+
+	void test_logical_bscore_mux() {
+        cout << BOOST_CURRENT_FUNCTION << endl;
+        int _arity = 3;
+
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
+		Handle program = createLink(seq_2, AND_LINK);
+
+
+        multiplex func(_arity);
+        logical_bscore lbsc(func, _arity);
+        behavioral_score bs = lbsc(program);
+
+        behavioral_score expected_bs = {-0, -0, -0, -0, -0, -1, -1, -1};
         std::cout << "bs = " <<bs << std::endl
                   << "expected_bs = " << expected_bs << std::endl;
         TS_ASSERT_EQUALS(bs, expected_bs);
