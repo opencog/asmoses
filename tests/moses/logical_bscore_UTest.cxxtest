@@ -63,12 +63,12 @@ public:
         cout << BOOST_CURRENT_FUNCTION << endl;
         int _arity = 3;
 
-		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
-		Handle or_link = createLink(seq_1, OR_LINK);
-		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3")};
-		Handle not_link = createLink(seq_2, NOT_LINK);
-		HandleSeq seq_3 = {not_link, or_link};
-		Handle program = createLink(seq_3, AND_LINK);
+        HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+        Handle or_link = createLink(seq_1, OR_LINK);
+        HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3")};
+        Handle not_link = createLink(seq_2, NOT_LINK);
+        HandleSeq seq_3 = {not_link, or_link};
+        Handle program = createLink(seq_3, AND_LINK);
 
         even_parity func;
         logical_bscore lbsc(func, _arity);
@@ -85,10 +85,10 @@ public:
         cout << BOOST_CURRENT_FUNCTION << endl;
         int _arity = 3;
 
-		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
-		Handle or_link = createLink(seq_1, OR_LINK);
-		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
-		Handle program = createLink(seq_2, AND_LINK);
+        HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+        Handle or_link = createLink(seq_1, OR_LINK);
+        HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
+        Handle program = createLink(seq_2, AND_LINK);
 
         majority func(_arity);
         logical_bscore lbsc(func, _arity);
@@ -105,10 +105,10 @@ public:
         cout << BOOST_CURRENT_FUNCTION << endl;
         int _arity = 3;
 
-		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
-		Handle or_link = createLink(seq_1, OR_LINK);
-		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
-		Handle program = createLink(seq_2, AND_LINK);
+        HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+        Handle or_link = createLink(seq_1, OR_LINK);
+        HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
+        Handle program = createLink(seq_2, AND_LINK);
 
 
         multiplex func(_arity);
