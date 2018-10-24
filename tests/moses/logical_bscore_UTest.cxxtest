@@ -21,11 +21,9 @@
  */
 
 #include <cxxtest/TestSuite.h>
-
-#include <moses/moses/scoring/precision_bscore.h>
 #include <moses/moses/scoring/bscores.h>
-#include <moses/comboreduct/table/table.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <examples/example-progs/scoring_iterators.h>
+#include <opencog/atoms/base/Link.h>
 
 using namespace opencog;
 using namespace combo;
@@ -44,24 +42,42 @@ public:
         randGen().seed(1);
     }
 
-	void test_logical_bscore_atomese3() {
-        int _arity = 3;
-        behavioral_score bsc(_arity);
+	void test_logical_bscore_and() {
+        cout << BOOST_CURRENT_FUNCTION << endl;
+        int _arity = 2;
+        HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+        Handle and_link = createLink(seq_1, AND_LINK);
+        disjunction func;
+        logical_bscore lbsc(func, _arity);
+        behavioral_score bs = lbsc(and_link);
 
-        behavioral_score expected_bsc = {0, 0, 0};
-        std::cout << "bsc = " << bsc << std::endl
-                  << "expected_bsc = " << expected_bsc << std::endl;
-        TS_ASSERT_EQUALS(bsc, expected_bsc);
+        cout<<"the bs: "<< bs<<std::endl;
+
+        behavioral_score expected_bs = {-0, -1, -1, -0};
+        std::cout << "bs = " <<bs << std::endl
+                  << "expected_bs = " << expected_bs << std::endl;
+        TS_ASSERT_EQUALS(bs, expected_bs);
+
     }
 
-	void test_logical_bscore_atomese4() {
-        int _arity = 4;
-        behavioral_score bsc(_arity);
+	void test_logical_bscore_pa() {
+        cout << BOOST_CURRENT_FUNCTION << endl;
+        int _arity = 2;
+        HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+        Handle or_link = createLink(seq_1, OR_LINK);
+        even_parity func;
+        logical_bscore lbsc(func, _arity);
+        behavioral_score bs = lbsc(or_link);
 
-        behavioral_score expected_bsc = {0, 0, 0, 0};
-        std::cout << "bsc = " << bsc << std::endl
-                  << "expected_bsc = " << expected_bsc << std::endl;
-        TS_ASSERT_EQUALS(bsc, expected_bsc);
+        cout<<"the bs: "<< bs<<std::endl;
+
+        behavioral_score expected_bs = {-1, -1, -1, -0};
+        std::cout << "bs = " <<bs << std::endl
+                  << "expected_bs = " << expected_bs << std::endl;
+        TS_ASSERT_EQUALS(bs, expected_bs);
+
     }
 
 };
+
+
