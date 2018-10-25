@@ -1127,10 +1127,16 @@ problem_params::add_options(boost::program_options::options_description& desc)
 
         // Option to store population in Atomspace.
 
-        ("atomspace-store",
+        (opt_desc_str(atomspace_store_opt).c_str(),
          po::value<bool>(&atomspace_store)->default_value(0),
          "If atomspace store is enable then deme populations will"
          " be stored in Atomspace.")
+
+        // option to run codes related to Atomspace
+         (opt_desc_str(atomspace_port_opt).c_str(),
+          po::value<bool>(&atomspace_port)->default_value(0),
+          "If atomspace port is enable then run codes related to"
+           " Atomspace.")
         // ========== THE END of the options; note semicolon ===========
         ;
 

@@ -202,6 +202,9 @@ struct problem_params : public option_base
     // store deme population in AtomSpace.
     bool atomspace_store;
 
+    // run code related to Atomspace
+    bool atomspace_port;
+
     // Subsample fitness params
     unsigned ss_n_subsample_fitnesses;
     float ss_low_dev_pressure;
