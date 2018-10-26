@@ -77,8 +77,8 @@ composite_score atomese_based_scorer::operator()(const instance &inst) const
 
 	combo_tree tr = _rep.get_candidate(inst, _reduce);
 	Handle handle = atomese_combo(tr);
-	if(&atomspace_store) {
-        _as.add_atom(handle);
+	if(_as != NULL) {
+        _as->add_atom(handle);
 	}
 	return _cscorer.get_cscore(handle);
 }
