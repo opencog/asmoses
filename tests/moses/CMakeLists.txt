@@ -2,6 +2,8 @@
 # Tests are listed and run in more-or-less dependency order:
 # Later tests assume earlier tests pass.
 #
+ADD_SUBDIRECTORY (scoring)
+
 ADD_CXXTEST(iostream_scored_combo_treeUTest)
 TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
 	moses
@@ -114,13 +116,6 @@ ADD_CXXTEST(AntUTest)
 TARGET_LINK_LIBRARIES(AntUTest
 	ant_scoring
 	asmoses_exec
-	moses
-	ascomboreduct
-	${COGUTIL_LIBRARY}
-)
-
-ADD_CXXTEST(logical_bscore_UTest)
-TARGET_LINK_LIBRARIES(logical_bscore_UTest
 	moses
 	ascomboreduct
 	${COGUTIL_LIBRARY}
