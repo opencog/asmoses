@@ -25,7 +25,7 @@
 
 using namespace opencog::moses;
 
-const string mixedUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/";
+const string mixedUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
 
 /**
  * Test learning of problems that require a mixture of boolean

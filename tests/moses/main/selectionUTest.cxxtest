@@ -30,7 +30,7 @@
 
 using namespace opencog::moses;
 
-const string test_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/";
+const string test_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
 
 /**
  * Test of the selection scorer
