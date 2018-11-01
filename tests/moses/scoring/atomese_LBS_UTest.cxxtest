@@ -1,0 +1,125 @@
+/** logical_bscore_UTest.cxxtest ---
+ *
+ * Copyright (C) 2011 OpenCog Foundation
+ *
+ * Author: Bitseat Tadesse
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+#include <moses/moses/scoring/bscores.h>
+#include <examples/example-progs/scoring_iterators.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/util/Logger.h>
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+const string mosesUTest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/";
+const string target_feature = "target";
+
+class logical_bscore_UTest : public CxxTest::TestSuite
+{
+public:
+	logical_bscore_UTest() {
+		logger().set_print_to_stdout_flag(true);
+		logger().set_level(Logger::FINE);
+		randGen().seed(1);
+	}
+
+	void test_logical_bscore_and() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		int _arity = 2;
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle and_link = createLink(seq_1, AND_LINK);
+		disjunction func;
+		logical_bscore lbsc(func, _arity);
+		behavioral_score bs = lbsc(and_link);
+
+		behavioral_score expected_bs = {-0, -1, -1, -0};
+		std::cout << "bs = " <<bs << std::endl
+				  << "expected_bs = " << expected_bs << std::endl;
+		TS_ASSERT_EQUALS(bs, expected_bs);
+
+	}
+
+	void test_logical_bscore_pa() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		int _arity = 3;
+
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3")};
+		Handle not_link = createLink(seq_2, NOT_LINK);
+		HandleSeq seq_3 = {not_link, or_link};
+		Handle program = createLink(seq_3, AND_LINK);
+
+		even_parity func;
+		logical_bscore lbsc(func, _arity);
+		behavioral_score bs = lbsc(or_link);
+
+		behavioral_score expected_bs = {-1, -1, -1, -0, -0, -0, -0, -1};
+		std::cout << "bs = " <<bs << std::endl
+				  << "expected_bs = " << expected_bs << std::endl;
+		TS_ASSERT_EQUALS(bs, expected_bs);
+
+	}
+
+	void test_logical_bscore_maj() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		int _arity = 3;
+
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
+		Handle program = createLink(seq_2, AND_LINK);
+
+		majority func(_arity);
+		logical_bscore lbsc(func, _arity);
+		behavioral_score bs = lbsc(program);
+
+		behavioral_score expected_bs = {-0, -0, -0, -1, -0, -0, -0, -0};
+		std::cout << "bs = " <<bs << std::endl
+				  << "expected_bs = " << expected_bs << std::endl;
+		TS_ASSERT_EQUALS(bs, expected_bs);
+
+	}
+
+	void test_logical_bscore_mux() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		int _arity = 3;
+
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle or_link = createLink(seq_1, OR_LINK);
+		HandleSeq seq_2 = {createNode(PREDICATE_NODE, "$3"), or_link};
+		Handle program = createLink(seq_2, AND_LINK);
+
+
+		multiplex func(_arity);
+		logical_bscore lbsc(func, _arity);
+		behavioral_score bs = lbsc(program);
+
+		behavioral_score expected_bs = {-0, -0, -0, -0, -0, -1, -1, -1};
+		std::cout << "bs = " <<bs << std::endl
+				  << "expected_bs = " << expected_bs << std::endl;
+		TS_ASSERT_EQUALS(bs, expected_bs);
+
+	}
+
+};
