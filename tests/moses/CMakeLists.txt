@@ -2,6 +2,8 @@
 # Tests are listed and run in more-or-less dependency order:
 # Later tests assume earlier tests pass.
 #
+ADD_SUBDIRECTORY (scoring)
+
 ADD_CXXTEST(iostream_scored_combo_treeUTest)
 TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
 	moses
