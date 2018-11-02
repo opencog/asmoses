@@ -28,7 +28,7 @@
 
 using namespace opencog::moses;
 
-const string MOSESUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/";
+const string MOSESUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
 
 /**
  * MOSES test on toy problems

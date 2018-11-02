@@ -23,11 +23,11 @@
 
 #include <cxxtest/TestSuite.h>
 #include <opencog/util/mt19937ar.h>
-#include "moses-framework.h"
+#include "tests/moses/main/moses-framework.h"
 
 using namespace opencog::moses;
 
-const string test_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/";
+const string test_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
 
 /**
  * Test operation of the dynamic feature selector.
