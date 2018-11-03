@@ -32,8 +32,8 @@
 
 #include <opencog/util/oc_omp.h>
 
-#include <moses/comboreduct/table/table.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 
 #include "moses_exec_def.h"
 #include "problem-params.h"

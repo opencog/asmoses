@@ -24,7 +24,7 @@
 
 #include "time_dispersion.h"
 
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 #include <opencog/util/numeric.h>
 
 namespace opencog { namespace moses {

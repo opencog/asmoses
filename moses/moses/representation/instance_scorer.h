@@ -29,8 +29,8 @@
 #include "field_set.h"
 #include "representation.h"
 #include "../scoring/behave_cscore.h"
-#include "moses/comboreduct/converter/combo_atomese.h"
 #include <opencog/atomspace/AtomSpace.h>
+#include "moses/combo/converter/combo_atomese.h"
 
 namespace opencog
 {

@@ -22,7 +22,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include <opencog/util/exceptions.h>
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/combo/combo/combo.h>
 #include <opencog/atoms/core/NumberNode.h>
 
 #include "complexity.h"

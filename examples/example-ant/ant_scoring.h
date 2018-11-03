@@ -27,8 +27,8 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/mt19937ar.h>
 
-#include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/ant_combo_vocabulary/ant_combo_vocabulary.h>
+#include <moses/combo/combo/vertex.h>
+#include <moses/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
 
 #include <moses/moses/scoring/scoring_base.h>
 

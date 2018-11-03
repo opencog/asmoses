@@ -1,5 +1,5 @@
-#include "moses/comboreduct/combo/procedure_repository.h"
-#include "moses/comboreduct/ant_combo_vocabulary/ant_combo_vocabulary.h"
+#include "moses/combo/combo/procedure_repository.h"
+#include "moses/combo/ant_combo_vocabulary/ant_combo_vocabulary.h"
 
 #include "../pleasure/population.hpp"
 #include "../pleasure/generation.hpp"

@@ -30,8 +30,8 @@
 
 #include <boost/range/algorithm/max_element.hpp>
 
-#include <moses/comboreduct/table/table.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 #include <opencog/util/oc_omp.h>
 #include <opencog/util/random.h>
 #include <opencog/util/lazy_random_selector.h>

@@ -41,7 +41,7 @@
 
 #include <opencog/util/boost_ext/accumulators/statistics/geometric_mean_mirror.h>
 
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/combo/combo/combo.h>
 #include "../optimization/optimization.h"
 #include "../scoring/behave_cscore.h"
 #include "metapop_params.h"

@@ -25,8 +25,8 @@
 #include <cxxtest/TestSuite.h>
 
 #include <opencog/util/oc_omp.h>
-#include <moses/comboreduct/table/table.h>
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 
 #include <moses/feature-selection/algo/incremental.h>
 #include <moses/feature-selection/main/feature-selection.h>

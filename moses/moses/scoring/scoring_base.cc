@@ -29,7 +29,7 @@
 #include <boost/range/algorithm_ext/push_back.hpp>
 #include <boost/range/irange.hpp>
 
-#include <moses/comboreduct/table/table_io.h>
+#include <moses/data/table/table_io.h>
 #include <opencog/util/oc_assert.h>
 #include <opencog/atoms/base/Handle.h>
 #include "scoring_base.h"
