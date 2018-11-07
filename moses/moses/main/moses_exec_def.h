@@ -84,6 +84,12 @@ static const pair<string, string> hc_single_step_opt("hc-single-step", "L");
 static const pair<string, string> hc_widen_search_opt("hc-widen-search", "T");
 static const pair<string, string> hc_crossover_opt("hc-crossover", "Z");
 
+// option for storing Atomese program in AtomSpace.
+static const pair<string, string> atomspace_store_opt("atomspace-store","I");
+
+// option for running codes related to Atomspace
+static const pair<string, string> atomspace_port_opt("atomspace-port", "O");
+
 // Returns a string interpretable by Boost.Program_options
 // "name,abbreviation"
 string opt_desc_str(const pair<string, string>& opt);
