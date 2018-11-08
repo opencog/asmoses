@@ -34,6 +34,7 @@
 
 #include "moses_exec_def.h"
 #include "table-problems.h"
+#include "populate_atomspace.h"
 
 namespace opencog { namespace moses {
 
@@ -160,6 +161,13 @@ void table_problem_base::common_setup(problem_params& pms)
         }
     }
     logger().info("Inferred arity = %d", arity);
+
+    // Check that work with atomspace if enabled, create Atomspace object
+    // and populate it with the input data
+    if (pms.atomspace_port) {
+        _as= new AtomSpace();
+        populate(_as, table.itable);
+    }
 
     pms.mmr_pa.ilabels = ilabels;
 }

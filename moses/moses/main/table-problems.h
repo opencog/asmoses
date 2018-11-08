@@ -27,6 +27,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 #include <moses/moses/scoring/scoring_base.h>
+#include <opencog/atomspace/AtomSpace.h>
 #include "problem-params.h"
 
 namespace opencog { namespace moses {
@@ -69,6 +70,8 @@ protected:
     type_tree table_type_signature;
     type_tree cand_type_signature;
     type_node output_type;
+
+	AtomSpace* _as;
 };
 
 // ==================================================================

@@ -85,8 +85,10 @@ protected:
 struct atomese_based_scorer : public iscorer_base
 {
 	atomese_based_scorer(behave_cscore &cs,
-	                     representation &rep, bool reduce, AtomSpace* as=nullptr)
-			: _cscorer(cs), _rep(rep), _reduce(reduce), _as(as)
+	                     representation &rep, bool reduce, AtomSpace* as=nullptr,
+	                     ComboToAtomeseConverter& comboToAtomeseConverter)
+			: _cscorer(cs), _rep(rep), _reduce(reduce), _as(as),
+			  _comboToAtomeseConverter(comboToAtomeseConverter)
 	{}
 
 	composite_score operator()(const instance &inst) const;
@@ -99,6 +101,7 @@ protected:
 	// evaluated.  This is advantagous when _cscorer is
 	// also a cache; the reduced form will have more cache
 	// hits.
+	ComboToAtomeseConverter &_comboToAtomeseConverter;
 };
 
 } //~namespace moses
