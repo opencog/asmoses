@@ -55,7 +55,7 @@ public:
 	Handle operator()(const combo_tree &tr);
 
 private:
-	const AtomSpace* _as;
+	AtomSpace* _as;
 
 protected:
 	/**

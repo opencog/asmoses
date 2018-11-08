@@ -25,6 +25,7 @@
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 #include <moses/combo/combo/vertex.h>
+#include <opencog/atomspace/AtomSpace.h>
 #include "combo_atomese.h"
 
 
@@ -70,7 +71,7 @@ Handle ComboToAtomeseConverter::atomese_argument(const argument &a,
 			OC_ASSERT(false, "unsupported procedure type");
 		}
 	}
-	return h;
+	return _as ? _as->add_atom(h) : h;
 }
 
 Type ComboToAtomeseConverter::atomese_builtin(const builtin &b, id::procedure_type &procedure_type)
