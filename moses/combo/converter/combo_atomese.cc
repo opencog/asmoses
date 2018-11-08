@@ -33,7 +33,11 @@ namespace opencog { namespace combo {
 using namespace std;
 using namespace boost;
 
-Handle atomese_argument(const argument &a,
+ComboToAtomeseConverter::ComboToAtomeseConverter(AtomSpace *as)
+		:_as(as)
+{}
+
+Handle ComboToAtomeseConverter::atomese_argument(const argument &a,
                       const id::procedure_type &parent_procedure_type)
 {
 	Handle h;
@@ -69,7 +73,7 @@ Handle atomese_argument(const argument &a,
 	return h;
 }
 
-Type atomese_builtin(const builtin &b, id::procedure_type &procedure_type)
+Type ComboToAtomeseConverter::atomese_builtin(const builtin &b, id::procedure_type &procedure_type)
 {
 	switch (b) {
 		case id::logical_and:
@@ -90,7 +94,7 @@ Type atomese_builtin(const builtin &b, id::procedure_type &procedure_type)
 	}
 }
 
-std::pair<Type, Handle> atomese_vertex(const vertex &v,
+std::pair<Type, Handle> ComboToAtomeseConverter::atomese_vertex(const vertex &v,
                     id::procedure_type &parent_procedure_type)
 {
 	Handle handle;
@@ -103,7 +107,7 @@ std::pair<Type, Handle> atomese_vertex(const vertex &v,
 	return std::make_pair(type, handle);
 }
 
-Handle atomese_combo(const combo_tree &ct)
+Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
 {
 	Handle handle;
 	combo_tree::iterator it = ct.begin();
