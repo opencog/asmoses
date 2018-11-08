@@ -84,9 +84,9 @@ protected:
 
 struct atomese_based_scorer : public iscorer_base
 {
-	atomese_based_scorer(behave_cscore &cs,
-	                     representation &rep, bool reduce, AtomSpace* as=nullptr,
-	                     ComboToAtomeseConverter& comboToAtomeseConverter)
+	atomese_based_scorer(behave_cscore &cs, representation &rep, bool reduce,
+	                     ComboToAtomeseConverter& comboToAtomeseConverter,
+	                     AtomSpace* as=nullptr)
 			: _cscorer(cs), _rep(rep), _reduce(reduce), _as(as),
 			  _comboToAtomeseConverter(comboToAtomeseConverter)
 	{}
