@@ -41,12 +41,13 @@ namespace opencog { namespace combo {
 
 enum class output_format {
     combo,
+    atomese,
     python,
     scheme,
     output_format_count                // to get the number of formats
 };
 
-// Take a string "combo", "python" or "scheme" and return the
+// Take a string "combo", "atomese", "python" or "scheme" and return the
 // corresponding format
 output_format parse_output_format(const std::string& fmt_str);
 

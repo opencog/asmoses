@@ -624,7 +624,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
 
         ("output-format",
          po::value<string>(&output_format_str)->default_value("combo"),
-         "Supported output formats are combo, python and scheme.\n")
+         "Supported output formats are combo, atomese, python and scheme.\n")
 
         (opt_desc_str(output_file_opt).c_str(),
          po::value<string>(&output_file)->default_value(""),
