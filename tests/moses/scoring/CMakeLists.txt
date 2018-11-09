@@ -12,8 +12,8 @@ TARGET_LINK_LIBRARIES(atomese_LBS_UTest
         ${COGUTIL_LIBRARY}
         )
 
-ADD_CXXTEST(ContinBScoreUTest)
-TARGET_LINK_LIBRARIES(ContinBScoreUTest
+ADD_CXXTEST(contin_bscoreUTest)
+TARGET_LINK_LIBRARIES(contin_bscoreUTest
 		moses
 		ascombo
 		atomese

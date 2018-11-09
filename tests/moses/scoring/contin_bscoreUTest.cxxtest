@@ -37,7 +37,7 @@ using namespace std;
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
 const string target_feature = "out";
 
-class ContinBScoreUTest : public CxxTest::TestSuite
+class contin_bscoreUTest : public CxxTest::TestSuite
 {
 public:
 	void test_contin_bscore(void)
