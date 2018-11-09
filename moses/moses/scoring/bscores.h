@@ -236,6 +236,8 @@ struct contin_bscore : public bscore_base
 
 	behavioral_score operator()(const combo_tree &tr) const;
 
+	behavioral_score operator()(const Handle &handle) const;
+
 	// The best possible bscore is a vector of zeros. That's probably
 	// not quite true, because there could be duplicated inputs, but
 	// that's acceptable for now.
