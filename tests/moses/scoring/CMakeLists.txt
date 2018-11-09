@@ -11,3 +11,11 @@ TARGET_LINK_LIBRARIES(atomese_LBS_UTest
         ascombo
         ${COGUTIL_LIBRARY}
         )
+
+ADD_CXXTEST(ContinBScoreUTest)
+TARGET_LINK_LIBRARIES(ContinBScoreUTest
+		moses
+		ascombo
+		atomese
+		${COGUTIL_LIBRARY}
+		)
