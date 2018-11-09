@@ -62,6 +62,7 @@ ENDIF (WIN32)
 INSTALL(FILES
 	moses_exec.h
 	moses_exec_def.h
+	populate_atomspace.h
 
 	DESTINATION
 

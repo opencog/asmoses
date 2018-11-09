@@ -39,7 +39,8 @@ public:
     void test_atomese_combo_predicate(void){
         combo::combo_tree tr = combo::str2combo_tree("and(or($1 $2) not($3))", {});
 
-        Handle h = combo::atomese_combo(tr);
+        combo::ComboToAtomeseConverter to_atomese;
+        Handle h = to_atomese(tr);
 
         HandleSeq list_or = {createNode(PREDICATE_NODE, "1"), createNode(PREDICATE_NODE, "2")};
         Handle or_link = createLink(list_or, OR_LINK);
@@ -57,7 +58,8 @@ public:
     void test_atomese_combo_schema(void){
         combo::combo_tree tr = combo::str2combo_tree("+($1 $2)", {});
 
-        Handle h = combo::atomese_combo(tr);
+        combo::ComboToAtomeseConverter to_atomese;
+        Handle h = to_atomese(tr);
 
         HandleSeq list_plus = {createNode(SCHEMA_NODE, "1"), createNode(SCHEMA_NODE, "2")};
         Handle plus_link = createLink(list_plus, PLUS_LINK);
