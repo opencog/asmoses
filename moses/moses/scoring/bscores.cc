@@ -183,7 +183,7 @@ behavioral_score contin_bscore::operator()(const combo_tree &tr) const
 behavioral_score contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	const Handle key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
+	static const Handle key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
 	atomese::Interpreter interpreter(key);
 
 	const ProtoAtomPtr result = interpreter(handle);
