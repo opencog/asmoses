@@ -44,7 +44,7 @@ enum __attribute__((packed)) procedure_type{
 class ComboToAtomeseConverter
 {
 public:
-	ComboToAtomeseConverter(AtomSpace* as= nullptr);
+	ComboToAtomeseConverter(AtomSpace* as=nullptr);
 
 	/**
 	 * Convert a combo_tree to atomese program.
@@ -84,7 +84,7 @@ protected:
 
 		id::procedure_type procedure_type = parent_procedure_type;
 		combo_tree::iterator head = it;
-		std::pair <Type, Handle> atomese= atomese_vertex(*head, procedure_type);
+		std::pair <Type, Handle> atomese = atomese_vertex(*head, procedure_type);
 		Type link_type = atomese.first;
 		Handle handle = atomese.second;
 
