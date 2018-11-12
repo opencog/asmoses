@@ -46,6 +46,7 @@
 #include <moses/data/table/table_io.h>
 #include <moses/atomese/interpreter/Interpreter.h>
 
+#include "moses/utils/value_key.h"
 #include "bscores.h"
 
 namespace opencog
@@ -183,8 +184,7 @@ behavioral_score contin_bscore::operator()(const combo_tree &tr) const
 behavioral_score contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	static const Handle key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
-	atomese::Interpreter interpreter(key);
+	atomese::Interpreter interpreter(moses::value_key);
 
 	const ProtoAtomPtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), target, back_inserter(bs),

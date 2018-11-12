@@ -1727,7 +1727,6 @@ protected:
 
 	arity_t _arity;
 	mutable builtin_seq inputs;
-	const Handle key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
 };
 
 }

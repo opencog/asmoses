@@ -27,6 +27,8 @@
 #include <moses/data/table/table.h>
 #include <moses/data/table/table_io.h>
 
+#include "moses/utils/value_key.h"
+
 using namespace opencog;
 using namespace combo;
 using namespace moses;
@@ -45,7 +47,6 @@ public:
 		Table table = loadTable(utest_dir + "contin_data.csv", target_feature);
 		contin_bscore c_bscore(table);
 
-		Handle key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
 		Handle f1 = createNode(SCHEMA_NODE, "f1");
 		Handle f2 = createNode(SCHEMA_NODE, "f2");
 		std::vector<double > _f1_values;
@@ -55,9 +56,9 @@ public:
 		boost::transform(table.itable.get_column_data(1), back_inserter(_f2_values), GET_CONTIN);
 
 		ProtoAtomPtr f1_proto_atom(new FloatValue(_f1_values));
-		f1->setValue(key, f1_proto_atom);
+		f1->setValue(moses::value_key, f1_proto_atom);
 		ProtoAtomPtr f2_proto_atom(new FloatValue(_f2_values));
-		f2->setValue(key, f2_proto_atom);
+		f2->setValue(moses::value_key, f2_proto_atom);
 
 		HandleSeq handleSeq = {f1, f2};
 		Handle program = createLink(handleSeq, PLUS_LINK);

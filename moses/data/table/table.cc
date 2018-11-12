@@ -43,6 +43,7 @@
 #include "moses/combo/combo/ann.h"
 #include "moses/combo/combo/simple_nn.h"
 #include "moses/combo/combo/convert_ann_combo.h"
+#include "moses/utils/value_key.h"
 
 #include "table.h"
 #include "table_io.h"
@@ -883,7 +884,7 @@ void complete_truth_table::populate(const Handle &handle)
 	// map the values of inputs to the program.
 	setup_features(handle, features);
 
-	atomese::Interpreter interpreter(key);
+	atomese::Interpreter interpreter(moses::value_key);
 	std::vector<ProtoAtomPtr> result = LinkValueCast(interpreter(handle))->value();
 
 	// convert Links in the result of the interpreter to bool,
@@ -916,7 +917,7 @@ void complete_truth_table::setup_features(const Handle &handle, const std::vecto
 		const std::string h_name = handle->get_name();
 		ProtoAtomPtrVec value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
 
-		handle->setValue(key, ProtoAtomPtr(new LinkValue(value)));
+		handle->setValue(moses::value_key, ProtoAtomPtr(new LinkValue(value)));
 		return;
 	}
 
