@@ -38,9 +38,12 @@ deme_expander::deme_expander(const type_tree& type_signature,
                              behave_cscore& sc,
                              optimizer_base& opt,
                              const deme_parameters& pa,
-                             const subsample_deme_filter_parameters& fp) :
+                             const subsample_deme_filter_parameters& fp,
+                             bool port,
+                             bool store):
     _optimize(opt), _type_sig(type_signature), simplify_candidate(si_ca),
-    simplify_knob_building(si_kb), _cscorer(sc), _params(pa), _filter_params(fp)
+    simplify_knob_building(si_kb), _cscorer(sc), _params(pa), _filter_params(fp),
+    _port(port), _store(store)
 {
     random_shuffle_gen = [&](ptrdiff_t i) { return randGen().randint(i); };
 }
@@ -487,9 +490,25 @@ void deme_expander::optimize_demes(int max_evals, time_t max_time)
             }
 
             // Optimize
-            combo_based_scorer cpx_scorer =
-                combo_based_scorer(_cscorer, _reps[i], _params.reduce_all);
-            _optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
+            if (_port) {
+                ComboToAtomeseConverter _to_atomese;
+                if (_store) {
+                    AtomSpace *as;
+                    atomese_based_scorer cpx_scorer =
+                            atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, _to_atomese, as);
+                    _optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
+                }
+                else {
+                    atomese_based_scorer cpx_scorer =
+                            atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, _to_atomese);
+                    _optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
+                }
+            }
+            else {
+                combo_based_scorer cpx_scorer =
+                        combo_based_scorer(_cscorer, _reps[i], _params.reduce_all);
+                _optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
+            }
         }
 
         if (n_ss_demes > 1)
