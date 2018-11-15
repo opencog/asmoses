@@ -273,7 +273,9 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
                              const subsample_deme_filter_parameters& filter_params,
                              const metapop_parameters& meta_params,
                              const moses_parameters& moses_params,
-                             Printer& printer)
+                             Printer& printer,
+                             bool port = false,
+                             bool store = false)
 {
     moses_statistics stats;
     optimizer_base* optimizer = nullptr;
@@ -308,7 +310,7 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
         simple_bases.push_back(siba);
     }
 
-    deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params);
+    deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params, port, store);
     metapopulation metapop(simple_bases, sc, meta_params, filter_params);
 
     run_moses(metapop, dex, moses_params, stats);
@@ -339,7 +341,9 @@ void metapop_moses_results(const std::vector<combo_tree>& bases,
                            const subsample_deme_filter_parameters& filter_params,
                            const metapop_parameters& meta_params,
                            moses_parameters moses_params,
-                           Printer& printer)
+                           Printer& printer,
+                           bool port = false,
+                           bool store = false)
 {
     adjust_termination_criteria(c_scorer, opt_params, moses_params);
 
@@ -357,13 +361,13 @@ void metapop_moses_results(const std::vector<combo_tree>& bases,
                                 ss_cscorer,
                                 opt_params, hc_params, ps_params,
                                 deme_params, filter_params, meta_params,
-                                moses_params, printer);
+                                moses_params, printer, port, store);
     } else {
         metapop_moses_results_b(bases, type_sig, si_ca, si_kb,
                                 c_scorer,
                                 opt_params, hc_params, ps_params,
                                 deme_params, filter_params, meta_params,
-                                moses_params, printer);
+                                moses_params, printer, port, store);
     }
 }
 

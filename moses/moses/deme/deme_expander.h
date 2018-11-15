@@ -43,7 +43,9 @@ struct deme_expander
                   behave_cscore& sc,
                   optimizer_base& opt,
                   const deme_parameters& pa = deme_parameters(),
-                  const subsample_deme_filter_parameters& fp = subsample_deme_filter_parameters());
+                  const subsample_deme_filter_parameters& fp = subsample_deme_filter_parameters(),
+                  bool _port = false,
+                  bool _store = false);
 
     ~deme_expander() {}
 
@@ -81,6 +83,10 @@ struct deme_expander
                                              // dataset
 
     optimizer_base &_optimize;
+
+    bool _port;
+
+    bool _store;
 
 protected:
     /**
