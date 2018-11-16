@@ -118,8 +118,7 @@ void bool_problem_base::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, pms.atomspace_port,
-                          pms.atomspace_store);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -282,8 +281,7 @@ void polynomial_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, pms.atomspace_port,
-                          pms.atomspace_store);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -398,8 +396,7 @@ void combo_problem::run(option_base* ob)
                               cscore,
                               pms.opt_params, pms.hc_params, pms.ps_params,
                               pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa, pms.atomspace_port,
-                              pms.atomspace_store);
+                              pms.moses_params, pms.mmr_pa);
     }
     else if (output_type == id::contin_type) {
 
@@ -442,8 +439,7 @@ void combo_problem::run(option_base* ob)
                               cscore,
                               pms.opt_params, pms.hc_params, pms.ps_params,
                               pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa, pms.atomspace_port,
-                              pms.atomspace_store);
+                              pms.moses_params, pms.mmr_pa);
     } else {
         logger().error() << "Error: combo_problem: type " << tt << " not supported.";
         std::cerr << "Error: combo_problem: type " << tt << " not supported." << std::endl;
@@ -496,8 +492,7 @@ void ann_combo_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, pms.atomspace_port,
-                          pms.atomspace_store);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
