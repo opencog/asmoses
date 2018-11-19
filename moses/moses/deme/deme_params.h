@@ -46,7 +46,9 @@ struct deme_parameters
         perceptions(_perceptions),
         actions(_actions),
         fstor(_fstor),
-        linear_contin(true)
+        linear_contin(true),
+        atomspace_store(false),
+        atomspace_port(false)
         {}
 
     // The max number of candidates considered to be added to the
@@ -80,6 +82,10 @@ struct deme_parameters
     // literals and arity pairs of literals, 1 means arity positive
     // literals and arity*(arity-1) pairs of literals
     float perm_ratio;
+
+    bool atomspace_store;
+
+    bool atomspace_port;
 };
 
 } // ~namespace moses
