@@ -33,7 +33,7 @@ ADD_LIBRARY (moses SHARED
 	metapopulation/metapopulation
 	metapopulation/metapop_params
 	metapopulation/subsample
-
+    main/populate_atomspace
 	moses/complexity
 	moses/distributed_moses
 	moses/local_moses

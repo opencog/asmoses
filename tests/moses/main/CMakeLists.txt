@@ -50,3 +50,11 @@ TARGET_LINK_LIBRARIES(weightedUTest
         ${COGUTIL_LIBRARY}
         )
 
+
+ADD_CXXTEST(populateAtomSpaceUTest)
+TARGET_LINK_LIBRARIES(populateAtomSpaceUTest
+        data
+        moses
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )

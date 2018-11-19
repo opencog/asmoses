@@ -32,6 +32,17 @@ TARGET_LINK_LIBRARIES (aseval-candidate
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
+ADD_EXECUTABLE (aspopulate_atomspace populate_atomspace)
+TARGET_LINK_LIBRARIES (aspopulate_atomspace
+        asmoses_exec
+        moses
+        data
+        ascomboant
+        ascombo
+        ${COGUTIL_LIBRARY}
+        ${ATOMSPACE_LIBRARIES}
+        )
+
 
 ADD_EXECUTABLE (aseval-candidate-likelihood eval-candidate-likelihood)
 TARGET_LINK_LIBRARIES (aseval-candidate-likelihood

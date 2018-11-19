@@ -1,0 +1,77 @@
+#include <cxxtest/TestSuite.h>
+#include <moses/moses/main/populate_atomspace.h>
+#include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
+#include <opencog/atomspace/AtomSpace.h>
+
+using namespace opencog;
+using namespace moses;
+using namespace combo;
+using namespace std;
+
+class populateAtomSpaceUTest : public CxxTest::TestSuite {
+public:
+
+
+    void test_contin_type() {
+        AtomSpace _as;
+        //create  a table of inputs
+        ITable it(vector<type_node>(2, id::contin_type));
+        it.push_back({0.4, 244.2});
+        it.push_back({9.5, 4.2});
+        populate(_as, it);
+
+        //get the inputs from AtomSpace
+        vector<vector<double>> results = {};
+        ProtoAtomPtr ptr_atom = _as.get_atom(in)->getValue(value_key);
+        auto res = LinkValueCast(ptr_atom)->value();
+        for (ProtoAtomPtr pr:res) {
+            results.push_back(FloatValueCast(pr)->value());
+        }
+
+
+        vector<vector<double>> expected = {{0.4,   9.5},
+                                           {244.2, 4.2}};
+        TS_ASSERT_EQUALS(expected, results);
+
+
+    }
+
+    void test_boolean_type() {
+        AtomSpace _as;
+        //create a table of inputs
+        vector<string> labels{"f1", "f2"};
+        ITable it(vector<type_node>(2, id::boolean_type), labels);
+        it.push_back({id::logical_true, id::logical_false});
+        it.push_back({id::logical_false, id::logical_true});
+        populate(_as, it);
+
+        //get the inputs from AtomSpace
+        vector<vector<bool>> results = {};
+        ProtoAtomPtr ptr_atom = _as.get_atom(in)->getValue(value_key);
+
+        //Interprete the input for Evaluation
+        auto  linkvales = LinkValueCast(ptr_atom)->value();
+        for (ProtoAtomPtr pr:linkvales)
+        {
+            auto tfvalues = LinkValueCast(pr)->value();
+            vector<bool> construct ={};
+            for(ProtoAtomPtr ptr:tfvalues){
+                bool istrue = HandleCast(ptr)->get_type() == TRUE_LINK;
+                construct.push_back(istrue);
+
+            }
+            results.push_back(construct);
+
+        }
+
+
+        vector<vector<bool>> expected={{true,false},{false,true}};
+        TS_ASSERT_EQUALS(results,expected);
+
+
+        }
+
+
+
+    };
