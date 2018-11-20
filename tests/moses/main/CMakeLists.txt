@@ -10,6 +10,14 @@ TARGET_LINK_LIBRARIES(MOSESUTest
         ${COGUTIL_LIBRARY}
         )
 
+ADD_CXXTEST(AS-MOSESUTest)
+TARGET_LINK_LIBRARIES(AS-MOSESUTest
+        asmoses_exec
+        moses
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
+
 ADD_CXXTEST(mixedUTest)
 TARGET_LINK_LIBRARIES(mixedUTest
         asmoses_exec
