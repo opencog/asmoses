@@ -222,6 +222,32 @@ void moses_test_combo(vector<string> arguments,
     if (f_it != expected_tr_strs.end())
          unlink(cmd_tmp.second.c_str());
 }
+
+// test the atomese program candidates
+void moses_test_atomese(vector<string> arguments,
+						vector<string> expected_atomese_strs)
+{
+	auto t1 = microsec_clock::local_time();
+	// build command
+	pair<vector<string>, string> cmd_tmp = build_cmd(arguments);
+	// run moses
+	moses_exec(cmd_tmp.first);
+	// parse the result
+	auto result = parse_result(cmd_tmp.second);
+	// check that the result is one of the expected ones
+	auto f_it = boost::find_if(expected_atomese_strs,
+							   [&](const string& tr_str) {
+								   combo_tree tr;
+								   stringstream(tr_str) >> tr;
+								   return tr == result.second;});
+	TS_ASSERT(f_it != expected_atomese_strs.end());
+	auto t2 = microsec_clock::local_time();
+	std::cout << "Wallclock time: " << (t2 - t1) << std::endl;
+
+	// Unlink only if test passed.
+	if (f_it != expected_atomese_strs.end())
+		unlink(cmd_tmp.second.c_str());
+}
 // like above but uses cheap_parse_result instead of parse_result
 void cheap_moses_test_combo(vector<string> arguments,
                             vector<string> expected_tr_strs)
