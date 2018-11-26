@@ -32,7 +32,7 @@ using namespace combo;
 using namespace moses;
 using namespace std;
 
-const string mosesUTest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
+const string scoringUTest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
 const string target_feature = "target";
 
 class scoringUTest : public CxxTest::TestSuite
@@ -45,7 +45,7 @@ public:
     }
     
     void test_precision_bscore_best_possible_bscore() {
-        Table tt = loadTable(mosesUTest_dir + "precision.csv", target_feature);
+        Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
         CTable ct = tt.compressed();
 
         float penalty = 1.0, nim_act = 0.5, max_act = 1.0;
@@ -57,7 +57,7 @@ public:
     }
 
 	void test_ctruth_table_bscore_best_possible_bscore() {
-        Table tt = loadTable(mosesUTest_dir + "precision.csv", target_feature);
+        Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
         CTable ct = tt.compressed();
 
         ctruth_table_bscore ctbsc(ct);
@@ -71,7 +71,7 @@ public:
 	
     // disabled till we fix best_possible_bscore
     // void test_precision2_bscore_best_possible_bscore() {
-    //     CTable ct = loadCTable(mosesUTest_dir + "precision2.ctable");
+    //     CTable ct = loadCTable(scoringUTest_dir + "precision2.ctable");
 
     //     cout << "ct =" << ct;
 
