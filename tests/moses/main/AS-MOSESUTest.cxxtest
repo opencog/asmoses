@@ -113,4 +113,16 @@ public:
 		string cp_opt("-y");
 		moses_test_atomese({"-Hcp", cp_opt + atomese_str, "--atomspace-port=1"}, {atomese_str});
 	}
+	void test_atomese_output_labels() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+		Handle and_link = createLink(seq_1, AND_LINK);
+		string atomese_str = oc_to_string(and_link);
+		string data_file_path("-i" + MOSESUTest_dir + "dataset.csv"),
+				max_evals("-m1000"),
+				output_format("--output-format=atomese"),
+				output_labels("-W1");
+		cheap_moses_test_combo({data_file_path, max_evals, output_format, output_labels},
+							   {atomese_str});
+	}
 };

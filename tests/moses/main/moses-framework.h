@@ -271,6 +271,29 @@ void cheap_moses_test_combo(vector<string> arguments,
          unlink(cmd_tmp.second.c_str());
 }
 
+// Test AS-Moses using cheap parse
+void cheap_moses_test_atomese(vector<string> arguments,
+							vector<string> expected_tr_strs)
+{
+	auto t1 = microsec_clock::local_time();
+	// build command
+	pair<vector<string>, string> cmd_tmp = build_cmd(arguments);
+	// run moses
+	moses_exec(cmd_tmp.first);
+	// parse the result
+	auto result = cheap_parse_result(cmd_tmp.second);
+	// check that the result is one of the expected ones
+	auto f_it = boost::find_if(expected_tr_strs, [&](const string& tr_str) {
+		return trim_copy(result.second) == trim_copy(tr_str); });
+	TS_ASSERT(f_it != expected_tr_strs.end());
+	auto t2 = microsec_clock::local_time();
+	std::cout << "Wallclock time: " << (t2 - t1) << std::endl;
+
+	// Unlink only if test passed.
+	if (f_it != expected_tr_strs.end())
+		unlink(cmd_tmp.second.c_str());
+}
+
 // Test multiple solutions, trees and scores
 void moses_test_scored_combo_trees(const vector<string>& arguments,
                                    const vector<scored_combo_tree>& expected_scts)
