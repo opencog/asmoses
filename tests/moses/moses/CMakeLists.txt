@@ -23,3 +23,11 @@ TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
         ascombo
         ${COGUTIL_LIBRARY}
         )
+
+ADD_CXXTEST(atomese_complexityUTest)
+TARGET_LINK_LIBRARIES(atomese_complexityUTest
+        moses
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
+        
