@@ -30,3 +30,4 @@ TARGET_LINK_LIBRARIES(atomese_complexityUTest
         ascombo
         ${COGUTIL_LIBRARY}
         )
+        
