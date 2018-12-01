@@ -11,7 +11,12 @@ using namespace std;
 
 class populateAtomSpaceUTest : public CxxTest::TestSuite {
 public:
-
+    string f1 = "f1";
+    string f2 = "f2";
+    ProtoAtomPtr feature1;
+    ProtoAtomPtr feature2;
+    vector<ProtoAtomPtr>  linkvalues1;
+    vector<ProtoAtomPtr>  linkvalues2;
 
     void test_contin_type() {
         AtomSpace _as;
@@ -21,19 +26,19 @@ public:
         it.push_back({9.5, 4.2});
         populate(_as, it);
 
-        //get the inputs from AtomSpace
-        vector<vector<double>> results = {};
-        ProtoAtomPtr ptr_atom = _as.get_atom(in)->getValue(value_key);
-        auto res = LinkValueCast(ptr_atom)->value();
-        for (ProtoAtomPtr pr:res) {
-            results.push_back(FloatValueCast(pr)->value());
-        }
+        //Get the value from Atomspace
+        feature1 =  _as.get_handle(SCHEMA_NODE,f1)->getValue(value_key);
+        feature2 =  _as.get_handle(SCHEMA_NODE,f2)->getValue(value_key);
 
+        //Get the value
+        vector<double> results1 =FloatValueCast(feature1)->value();
+        vector<double> results2 = FloatValueCast(feature2)->value();
 
-        vector<vector<double>> expected = {{0.4,   9.5},
-                                           {244.2, 4.2}};
-        TS_ASSERT_EQUALS(expected, results);
+        vector<double> expected1 = {0.4,9.5};
+        vector<double>  expected2 = {244.2, 4.2};
 
+        TS_ASSERT_EQUALS(expected1, results1);
+        TS_ASSERT_EQUALS(expected2, results2);
 
     }
 
@@ -47,31 +52,30 @@ public:
         populate(_as, it);
 
         //get the inputs from AtomSpace
-        vector<vector<bool>> results = {};
-        ProtoAtomPtr ptr_atom = _as.get_atom(in)->getValue(value_key);
+        feature1 = _as.get_handle(SCHEMA_NODE, f1)->getValue(value_key);
+        feature2 = _as.get_handle(SCHEMA_NODE, f2)->getValue(value_key);
 
-        //Interprete the input for Evaluation
-        auto  linkvales = LinkValueCast(ptr_atom)->value();
-        for (ProtoAtomPtr pr:linkvales)
-        {
-            auto tfvalues = LinkValueCast(pr)->value();
-            vector<bool> construct ={};
-            for(ProtoAtomPtr ptr:tfvalues){
-                bool istrue = HandleCast(ptr)->get_type() == TRUE_LINK;
-                construct.push_back(istrue);
 
-            }
-            results.push_back(construct);
+        //Get the values
+        linkvalues1 = LinkValueCast(feature1)->value();
+        linkvalues2 = LinkValueCast(feature2)->value();
+
+
+
+        vector<bool> results1 = {};
+        vector<bool> results2 = {};
+
+        //Convert linkvalue to equivalent bool
+        for (ProtoAtomPtr pr:linkvalues1)  results1.push_back( HandleCast(pr)->get_type() == TRUE_LINK);
+        for (ProtoAtomPtr pr:linkvalues2)  results2.push_back( HandleCast(pr)->get_type() == TRUE_LINK);
+
+        vector<bool> expected1 = {true, false};
+        vector<bool> expected2 = {false, true};
+
+        TS_ASSERT_EQUALS(results1,expected1);
+        TS_ASSERT_EQUALS(results2,expected2);
 
         }
-
-
-        vector<vector<bool>> expected={{true,false},{false,true}};
-        TS_ASSERT_EQUALS(results,expected);
-
-
-        }
-
 
 
     };
