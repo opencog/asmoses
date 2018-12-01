@@ -31,7 +31,6 @@
 #include <opencog/atoms/base/Link.h>
 namespace opencog { namespace moses {
 using namespace combo;
-Handle in;
 /**
  * Populate the given atomspace with the input data.
  * @param Atomspace&     as
