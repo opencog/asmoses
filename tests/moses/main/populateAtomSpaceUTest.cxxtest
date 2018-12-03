@@ -3,6 +3,7 @@
 #include <moses/data/table/table.h>
 #include <moses/data/table/table_io.h>
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/atoms/value/Value.h>
 
 using namespace opencog;
 using namespace moses;
@@ -11,71 +12,72 @@ using namespace std;
 
 class populateAtomSpaceUTest : public CxxTest::TestSuite {
 public:
-    string f1 = "f1";
-    string f2 = "f2";
-    ProtoAtomPtr feature1;
-    ProtoAtomPtr feature2;
-    vector<ProtoAtomPtr>  linkvalues1;
-    vector<ProtoAtomPtr>  linkvalues2;
+	string f1;
+	string f2;
+	ValuePtr feature1;
+	ValuePtr feature2;
+	vector<ValuePtr> values_vec1;
+	vector<ValuePtr> values_vec2;
 
-    void test_contin_type() {
-        AtomSpace _as;
-        //create  a table of inputs
-        ITable it(vector<type_node>(2, id::contin_type));
-        it.push_back({0.4, 244.2});
-        it.push_back({9.5, 4.2});
-        populate(_as, it);
+	void test_contin_type() {
+		AtomSpace as;
+		//create  a table of inputs
+		ITable it(vector<type_node>(2, id::contin_type));
+		it.push_back({0.4, 244.2});
+		it.push_back({9.5, 4.2});
+		populate(&as, it);
 
-        //Get the value from Atomspace
-        feature1 =  _as.get_handle(SCHEMA_NODE,f1)->getValue(value_key);
-        feature2 =  _as.get_handle(SCHEMA_NODE,f2)->getValue(value_key);
+		//Get the labels of the Table
+		f1 = it.get_labels().at(0);
+		f2 = it.get_labels().at(1);
 
-        //Get the value
-        vector<double> results1 =FloatValueCast(feature1)->value();
-        vector<double> results2 = FloatValueCast(feature2)->value();
+		//Get the value from Atomspace
+		feature1 = as.get_handle(SCHEMA_NODE, f1)->getValue(value_key);
+		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(value_key);
 
-        vector<double> expected1 = {0.4,9.5};
-        vector<double>  expected2 = {244.2, 4.2};
+		//Get the value
+		vector<double> results1 = FloatValueCast(feature1)->value();
+		vector<double> results2 = FloatValueCast(feature2)->value();
 
-        TS_ASSERT_EQUALS(expected1, results1);
-        TS_ASSERT_EQUALS(expected2, results2);
+		vector<double> expected1 = {0.4, 9.5};
+		vector<double> expected2 = {244.2, 4.2};
 
-    }
+		TS_ASSERT_EQUALS(expected1, results1);
+		TS_ASSERT_EQUALS(expected2, results2);
+	}
 
-    void test_boolean_type() {
-        AtomSpace _as;
-        //create a table of inputs
-        vector<string> labels{"f1", "f2"};
-        ITable it(vector<type_node>(2, id::boolean_type), labels);
-        it.push_back({id::logical_true, id::logical_false});
-        it.push_back({id::logical_false, id::logical_true});
-        populate(_as, it);
+	void test_boolean_type() {
+		AtomSpace as;
+		//create a table of inputs
+		vector<string> labels{"f1", "f2"};
+		ITable it(vector<type_node>(2, id::boolean_type), labels);
+		it.push_back({id::logical_true, id::logical_false});
+		it.push_back({id::logical_false, id::logical_true});
+		populate(&as, it);
 
-        //get the inputs from AtomSpace
-        feature1 = _as.get_handle(SCHEMA_NODE, f1)->getValue(value_key);
-        feature2 = _as.get_handle(SCHEMA_NODE, f2)->getValue(value_key);
+		//Get the labels of the Table
+		f1 = it.get_labels().at(0);
+		f2 = it.get_labels().at(1);
 
+		//get the inputs from AtomSpace
+		feature1 = as.get_handle(SCHEMA_NODE, f1)->getValue(value_key);
+		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(value_key);
 
-        //Get the values
-        linkvalues1 = LinkValueCast(feature1)->value();
-        linkvalues2 = LinkValueCast(feature2)->value();
+		//Get the values
+		values_vec1 = LinkValueCast(feature1)->value();
+		values_vec2 = LinkValueCast(feature2)->value();
 
+		vector<bool> results1 = {};
+		vector<bool> results2 = {};
 
+		//Convert linkvalue to equivalent bool
+		for (ValuePtr pr:values_vec1) results1.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+		for (ValuePtr pr:values_vec2) results2.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
 
-        vector<bool> results1 = {};
-        vector<bool> results2 = {};
+		vector<bool> expected1 = {true, false};
+		vector<bool> expected2 = {false, true};
 
-        //Convert linkvalue to equivalent bool
-        for (ProtoAtomPtr pr:linkvalues1)  results1.push_back( HandleCast(pr)->get_type() == TRUE_LINK);
-        for (ProtoAtomPtr pr:linkvalues2)  results2.push_back( HandleCast(pr)->get_type() == TRUE_LINK);
-
-        vector<bool> expected1 = {true, false};
-        vector<bool> expected2 = {false, true};
-
-        TS_ASSERT_EQUALS(results1,expected1);
-        TS_ASSERT_EQUALS(results2,expected2);
-
-        }
-
-
-    };
+		TS_ASSERT_EQUALS(results1, expected1);
+		TS_ASSERT_EQUALS(results2, expected2);
+	}
+};

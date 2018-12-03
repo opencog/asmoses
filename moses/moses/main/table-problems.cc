@@ -164,8 +164,8 @@ void table_problem_base::common_setup(problem_params& pms)
 
     // Check that work with atomspace if enabled, create Atomspace object
     // and populate it with the input data
-    if (pms.atomspace_port) {
-         _as = new AtomSpace();
+    if (pms.deme_params.atomspace_port) {
+        _as = new AtomSpace();
         populate(_as, table.itable);
     }
 
