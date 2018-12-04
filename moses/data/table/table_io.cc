@@ -1438,4 +1438,42 @@ ostream& operator<<(ostream& out, const CTable& ct)
     return ostreamCTable(out, ct);
 }
 
-}} // ~namespaces combo opencog
+} // ~namespaces combo
+
+std::string oc_to_string(const combo::ITable& it, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << it;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::OTable& ot, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << ot;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::Table& table, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << table;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::CTable& ct, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << ct;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::complete_truth_table& tt,
+                         const std::string& indent)
+{
+    std::stringstream ss;
+    ss << tt;
+    return ss.str();
+}
+
+} // ~namespaces opencog
