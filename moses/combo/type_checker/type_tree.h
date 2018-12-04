@@ -405,7 +405,7 @@ type_tree_seq get_signature_inputs(const type_tree& ty);
 ///      gen_signature({id::contin_type,  id::contin_type}, id::boolean_type)
 /// returns
 ///     ->(contin contin boolean)
-type_tree gen_signature(const std::vector<type_node>& itypes, type_node otype);
+type_tree gen_signature(const type_node_seq& itypes, type_node otype);
 
 /// As above, except using a vector of input types.
 type_tree gen_signature(const type_tree_seq& inputs, const type_tree& output);

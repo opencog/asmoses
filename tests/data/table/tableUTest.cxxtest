@@ -67,7 +67,7 @@ public:
 	{
 		vertex_seq o{id::logical_true, id::logical_false};
 		OTable ot(o);
-		ITable it(vector<type_node>(2, id::boolean_type));
+		ITable it(type_node_seq(2, id::boolean_type));
 		it.push_back({id::logical_true, id::logical_false});
 		it.push_back({id::logical_false, id::logical_true});
 		Table table(ot, it);
@@ -80,7 +80,7 @@ public:
 	{
 		vertex_seq o{10.1, 6.5};
 		OTable ot(o);
-		ITable it(vector<type_node>(2, id::contin_type));
+		ITable it(type_node_seq(2, id::contin_type));
 		it.push_back({0.4, 244.2});
 		it.push_back({9.5, 4.2});
 		Table table(ot, it);
@@ -92,7 +92,7 @@ public:
 	{
 		vertex_seq o{0, 1, 10.1, 6.5};
 		OTable ot(o);
-		ITable it(vector<type_node>(2, id::contin_type));
+		ITable it(type_node_seq(2, id::contin_type));
 		it.push_back({1.0, 1.0});
 		it.push_back({0.0, 1.0});
 		it.push_back({0.4, 244.2});
@@ -108,7 +108,7 @@ public:
 	{
 		vertex_seq o{0, 10.1, 6.5};
 		OTable ot(o, olabel);
-		ITable it(vector<type_node>(2, id::contin_type));
+		ITable it(type_node_seq(2, id::contin_type));
 		it.push_back({1.0, 1.0});
 		it.push_back({0.4, 244.2});
 		it.push_back({9.5, 4.2});
@@ -125,7 +125,7 @@ public:
 	{
 		vertex_seq o{enum_t("sad"), enum_t("bored"), enum_t("super-happy")};
 		OTable ot(o, olabel);
-		vector<type_node> itypes({id::contin_type, id::contin_type, id::boolean_type});
+		type_node_seq itypes({id::contin_type, id::contin_type, id::boolean_type});
 		vector<string> il{label1, label2, "truth"};
 		ITable it(itypes, il);
 		it.push_back(vertex_seq({1, 1, id::logical_false}));
@@ -142,7 +142,7 @@ public:
 	{
 		std::cout << "\n----------------------------" << std::endl;
 		vector<string> lbs{"truc", "trac"};
-		ITable it(vector<type_node>(2, id::boolean_type), lbs);
+		ITable it(type_node_seq(2, id::boolean_type), lbs);
 		it.push_back({id::logical_true, id::logical_false});
 		it.push_back({id::logical_false, id::logical_true});
 		vertex_seq o{id::logical_true, id::logical_false,};
@@ -182,7 +182,7 @@ public:
 	void test_filterCTable()
 	{
 		std::cout << "\n----------------------------" << std::endl;
-		vector<type_node> ts(2, id::boolean_type);
+		type_node_seq ts(2, id::boolean_type);
 		vector<string> lbs{"truc", "trac"};
 		ITable it(ts, lbs);
 		it.push_back({id::logical_true, id::logical_false});
@@ -234,7 +234,7 @@ public:
 		vertex_seq o{0.4, 9.5}; // price column
 		OTable ot(o, label1);
 		vector<string> il{olabel};
-		ITable it(vector<type_node>({id::contin_type}), il);
+		ITable it(type_node_seq({id::contin_type}), il);
 		it.push_back({10.1});
 		it.push_back({6.5});
 		Table table(ot, it);
@@ -251,7 +251,7 @@ public:
 		vertex_seq o{1, 0.44, 9.5}; // price column
 		OTable ot(o, label1);
 		vector<string> il{olabel, "truth"};
-		vector<type_node> itypes({id::enum_type, id::boolean_type});
+		type_node_seq itypes({id::enum_type, id::boolean_type});
 		ITable it(itypes, il);
 		it.push_back(vertex_seq({enum_t("sad"), id::logical_false}));
 		it.push_back(vertex_seq({enum_t("bored"), id::logical_true}));
@@ -271,7 +271,7 @@ public:
 	// {
 	//     vertex_seq o{1, 0.44, 9.5}; // price column
 	//     OTable ot(o, label1);
-	//     vector<type_node> itypes({id::enum_type, id::boolean_type});
+	//     type_node_seq itypes({id::enum_type, id::boolean_type});
 	//     vector<string> il{olabel, "truth"};
 	//     ITable it(itypes, il);
 	//     it.push_back(vertex_seq({enum_t("sad"), id::logical_false}));
