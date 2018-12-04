@@ -82,7 +82,7 @@ string table_fmt_vertex_to_str(const vertex &v)
 ITable::ITable()
 {}
 
-ITable::ITable(const vector<type_node> &ts, const vector<string> &il)
+ITable::ITable(const type_node_seq &ts, const vector<string> &il)
 		: types(ts), labels(il)
 {}
 
@@ -172,12 +172,12 @@ const vector<string> &ITable::get_labels() const
 	return labels;
 }
 
-void ITable::set_types(const vector<type_node> &il)
+void ITable::set_types(const type_node_seq &il)
 {
 	types = il;
 }
 
-const vector<type_node> &ITable::get_types() const
+const type_node_seq &ITable::get_types() const
 {
 	if (types.empty() and !super::empty()) {
 		arity_t arity = get_arity();

@@ -902,7 +902,7 @@ public:
 	typedef std::vector<multi_type_seq> super;
 	typedef super::value_type value_type;
 	typedef std::vector<std::string> string_seq;
-	typedef std::vector<type_node> type_seq;
+	typedef type_node_seq type_seq;
 
 	ITable();
 
