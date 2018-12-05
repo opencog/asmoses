@@ -34,6 +34,7 @@
 
 #include "moses_exec_def.h"
 #include "table-problems.h"
+#include "populate_atomspace.h"
 
 namespace opencog { namespace moses {
 
@@ -160,6 +161,13 @@ void table_problem_base::common_setup(problem_params& pms)
         }
     }
     logger().info("Inferred arity = %d", arity);
+
+    // Check that work with atomspace if enabled, create Atomspace object
+    // and populate it with the input data
+    if (pms.deme_params.atomspace_port) {
+        _as= new AtomSpace();
+        populate(_as, table.itable);
+    }
 
     pms.mmr_pa.ilabels = ilabels;
 }
@@ -351,8 +359,8 @@ void ann_table_problem::run(option_base* ob)
     metapop_moses_results(pms.exemplars, cand_type_signature,        \
                       *reduct_cand, *reduct_rep, mbcscore,           \
                       pms.opt_params, pms.hc_params, pms.ps_params,  \
-                      pms.deme_params, pms.filter_params, pms.meta_params,              \
-                      pms.moses_params, pms.mmr_pa);                 \
+                      pms.deme_params, pms.filter_params, pms.meta_params, \
+                      pms.moses_params, pms.mmr_pa);                                \
 }
 
 void pre_table_problem::run(option_base* ob)

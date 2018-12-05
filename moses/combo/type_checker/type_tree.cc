@@ -1296,13 +1296,13 @@ type_tree_seq get_signature_inputs(const type_tree& ty)
 }
 
 
-type_tree gen_signature(const vector<type_node>& inputs, type_node otype)
+type_tree gen_signature(const type_node_seq& inputs, type_node otype)
 {
     type_tree res(id::lambda_type);
     type_tree_pre_it root = res.begin();
     res.append_children(root, inputs.size() + 1);
     type_tree_sib_it sib = root.begin();
-    vector<type_node>::const_iterator vi = inputs.begin();
+    type_node_seq::const_iterator vi = inputs.begin();
     for(; sib!= root.last_child(); ++sib, ++vi)
         sib = res.replace(sib, *vi);
     res.replace(sib, otype);

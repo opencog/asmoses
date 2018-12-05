@@ -408,7 +408,7 @@ vector<string> get_header(const string& file_name)
  */
 struct from_tokens_visitor : public boost::static_visitor<multi_type_seq>
 {
-    from_tokens_visitor(const std::vector<type_node>& types) : _types(types) {
+    from_tokens_visitor(const type_node_seq& types) : _types(types) {
         all_boolean = boost::count(types, id::boolean_type) == (int)types.size();
         all_contin = boost::count(types, id::contin_type) == (int)types.size();
     }
@@ -435,7 +435,7 @@ struct from_tokens_visitor : public boost::static_visitor<multi_type_seq>
         OC_ASSERT(false, "You are not supposed to do that");
         return result_type();
     }
-    const std::vector<type_node>& _types;
+    const type_node_seq& _types;
     bool all_boolean, all_contin;
 };
 
@@ -445,7 +445,7 @@ struct from_tokens_visitor : public boost::static_visitor<multi_type_seq>
  */
 struct from_sparse_tokens_visitor : public from_tokens_visitor
 {
-    from_sparse_tokens_visitor(const std::vector<type_node>& types,
+    from_sparse_tokens_visitor(const type_node_seq& types,
                                const std::map<const std::string, size_t>& index,
                                size_t fixed_arity)
         : from_tokens_visitor(types), _index(index), _fixed_arity(fixed_arity) {}
@@ -567,7 +567,7 @@ istream& istreamSparseITable(istream& in, ITable& tab)
     type_node feat_type = id::unknown_type;
 
     // Fixed features may have different types, by column.
-    vector<type_node> types(fixed_arity, id::unknown_type);
+    type_node_seq types(fixed_arity, id::unknown_type);
 
     for (const string& line : lines) {
         vector<string> chunks = tokenizeSparseRow(line);
@@ -630,12 +630,12 @@ istream& istreamSparseITable(istream& in, ITable& tab)
  * Infer the column types of the input table. It is assumed the
  * table's rows are vector of strings.
  */
-vector<type_node> infer_column_types(const ITable& tab)
+type_node_seq infer_column_types(const ITable& tab)
 {
     vector<multi_type_seq>::const_iterator rowit = tab.begin();
 
     arity_t arity = rowit->size();
-    vector<type_node> types(arity, id::unknown_type);
+    type_node_seq types(arity, id::unknown_type);
 
     // Skip the first line, it might be a header...
     // and that would confuse type inference.
@@ -656,7 +656,7 @@ vector<type_node> infer_column_types(const ITable& tab)
  * then the first row must be a header, i.e. a set of ascii column
  * labels.
  */
-bool has_header(ITable& tab, vector<type_node> col_types)
+bool has_header(ITable& tab, type_node_seq col_types)
 {
     const string_seq& row = tab.begin()->get_seq<string>();
 
@@ -675,7 +675,7 @@ bool has_header(ITable& tab, vector<type_node> col_types)
  * types.  If there is a mis-match, then it must be a header, i.e. a
  * set of ascii column labels.
  */
-bool is_header(const vector<string>& tokens, const vector<type_node>& col_types)
+bool is_header(const vector<string>& tokens, const type_node_seq& col_types)
 {
     for (size_t i = 0; i < tokens.size(); i++) {
         type_node flt = infer_type_from_token2(col_types[i], tokens[i]);
@@ -707,7 +707,7 @@ istream& istreamITable(istream& in, ITable& tab,
     }
 
     // Determine the column types.
-    vector<type_node> col_types = infer_column_types(tab);
+    type_node_seq col_types = infer_column_types(tab);
     tab.set_types(col_types);
 
     // If there is a header row, then it must be the column labels.
@@ -746,7 +746,7 @@ istream& istreamITable_ignore_indices(istream& in, ITable& tab,
     istreamRawITable(in, tab, ignore_indices);
 
     // Determine the column types.
-    vector<type_node> col_types = infer_column_types(tab);
+    type_node_seq col_types = infer_column_types(tab);
     tab.set_types(col_types);
 
     // If there is a header row, then it must be the column labels.
@@ -946,7 +946,7 @@ inferTableAttributes(istream& in, const string& target_feature,
     std::atomic<int> arity_fail_row(-1);
 
     // determine initial type
-    vector<type_node> types(arity, id::unknown_type);
+    type_node_seq types(arity, id::unknown_type);
 
     // parse the rest, determine its type and whether the arity is
     // consistent
@@ -1007,7 +1007,7 @@ inferTableAttributes(istream& in, const string& target_feature,
 
         // Generate type signature
         type_node otype = types[target_idx];
-        vector<type_node> itypes;
+        type_node_seq itypes;
         for (unsigned i = 0; i < types.size(); ++i)
             if (!boost::binary_search(ignore_idxs, i))
                 itypes.push_back(types[i]);
@@ -1110,7 +1110,7 @@ istreamDenseTable_noHeader(istream& in, Table& tab,
         tab.ttable.resize(lines.size());
 
     // Get the elementary io types
-    vector<type_node> itypes =
+    type_node_seq itypes =
         vector_comp(get_signature_inputs(tt), get_type_node);
     type_node otype = get_type_node(get_signature_output(tt));
 
@@ -1438,4 +1438,42 @@ ostream& operator<<(ostream& out, const CTable& ct)
     return ostreamCTable(out, ct);
 }
 
-}} // ~namespaces combo opencog
+} // ~namespaces combo
+
+std::string oc_to_string(const combo::ITable& it, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << it;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::OTable& ot, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << ot;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::Table& table, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << table;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::CTable& ct, const std::string& indent)
+{
+    std::stringstream ss;
+    ss << ct;
+    return ss.str();
+}
+
+std::string oc_to_string(const combo::complete_truth_table& tt,
+                         const std::string& indent)
+{
+    std::stringstream ss;
+    ss << tt;
+    return ss.str();
+}
+
+} // ~namespaces opencog

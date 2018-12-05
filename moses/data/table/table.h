@@ -902,7 +902,7 @@ public:
 	typedef std::vector<multi_type_seq> super;
 	typedef super::value_type value_type;
 	typedef std::vector<std::string> string_seq;
-	typedef std::vector<type_node> type_seq;
+	typedef type_node_seq type_seq;
 
 	ITable();
 
@@ -1727,7 +1727,6 @@ protected:
 
 	arity_t _arity;
 	mutable builtin_seq inputs;
-	const Handle key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
 };
 
 }

@@ -245,6 +245,21 @@ std::ostream& operator<<(std::ostream& out, const CTable& ct);
 
 std::ostream& operator<<(std::ostream& out, const complete_truth_table& tt);
 
-}} // ~namespaces combo opencog
+} // ~namespaces combo
+
+// For pretty printing OpenCog objects while debugging, see
+// https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
+std::string oc_to_string(const combo::ITable& it,
+                         const std::string& indent=empty_string);
+std::string oc_to_string(const combo::OTable& ot,
+                         const std::string& indent=empty_string);
+std::string oc_to_string(const combo::Table& table,
+                         const std::string& indent=empty_string);
+std::string oc_to_string(const combo::CTable& ct,
+                         const std::string& indent=empty_string);
+std::string oc_to_string(const combo::complete_truth_table& tt,
+                         const std::string& indent=empty_string);
+
+} // ~namespaces opencog
 
 #endif // _OPENCOG_TABLE_IO_H

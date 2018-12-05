@@ -624,7 +624,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
 
         ("output-format",
          po::value<string>(&output_format_str)->default_value("combo"),
-         "Supported output formats are combo, python and scheme.\n")
+         "Supported output formats are combo, atomese, python and scheme.\n")
 
         (opt_desc_str(output_file_opt).c_str(),
          po::value<string>(&output_file)->default_value(""),
@@ -1125,6 +1125,18 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "If subsample by time is enable then subsample contiguous "
          "(chronologically ordered) time segments.\n")
 
+        // Option to store population in Atomspace.
+
+        (opt_desc_str(atomspace_store_opt).c_str(),
+         po::value<bool>(&deme_params.atomspace_store)->default_value(0),
+         "If atomspace store is enable then deme populations will"
+         " be stored in Atomspace.")
+
+        // option to run codes related to Atomspace
+         (opt_desc_str(atomspace_port_opt).c_str(),
+          po::value<bool>(&deme_params.atomspace_port)->default_value(0),
+          "If atomspace port is enable then run codes related to"
+           " Atomspace.")
         // ========== THE END of the options; note semicolon ===========
         ;
 

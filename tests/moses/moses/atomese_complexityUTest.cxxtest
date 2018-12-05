@@ -1,0 +1,106 @@
+/** AtomeseComplexityUTest.cxxtest ---
+ *
+ * Copyright (C) 2018 OpenCog Foundation
+ *
+ * Author: Behailu Dereje <behailu04@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+#include <cxxtest/TestSuite.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/util/Logger.h>
+#include <moses/moses/moses/complexity.h>
+using namespace opencog;
+using namespace moses;
+/**
+* Atomese Complexity Test
+*/
+class AtomeseComplexityUTest : public CxxTest::TestSuite
+{
+private:
+    AtomSpace as;
+public:
+    AtomeseComplexityUTest() {
+            // Logger setting
+            logger().set_print_to_stdout_flag(true);
+            // logger().set_level(Logger::DEBUG);
+            logger().set_level(Logger::INFO);
+    }
+    ~AtomeseComplexityUTest()
+    {
+            if (!CxxTest::TestTracker::tracker().suiteFailed())
+                    std::remove(logger().get_filename().c_str());
+    }
+    void setUp();
+    void tearDown();
+    void test_number_node();
+    void test_times_link();
+    void test_multiple_number_node();
+};
+#define an as.add_node
+#define al as.add_link
+void AtomeseComplexityUTest::setUp()
+{
+}
+void AtomeseComplexityUTest::tearDown()
+{
+        as.clear();
+}
+
+// Test NumberNode Complexity
+void AtomeseComplexityUTest::test_number_node()
+{
+        logger().info("BEGIN TEST: %s", __FUNCTION__);
+        Handle h = an(NUMBER_NODE, "1");
+        complexity_t comptn;
+        comptn = atomese_complexity(h);
+        complexity_t expected = 1;
+        TS_ASSERT_EQUALS(comptn, expected);
+}
+
+// Test TimesLink Complexity
+void AtomeseComplexityUTest::test_times_link()
+{
+        logger().info("BEGIN TEST: %s", __FUNCTION__);
+        Handle num1 = an(NUMBER_NODE, "4");
+        Handle num2 = an(NUMBER_NODE, "0");
+        HandleSeq hseq = {num1, num2};
+        Handle result = al(TIMES_LINK,hseq);
+        complexity_t comptt;
+        comptt = atomese_complexity(result);
+        complexity_t expected = 0;
+        TS_ASSERT_EQUALS(comptt, expected);
+}
+
+// Test multiple NumberNode Complexity
+void AtomeseComplexityUTest::test_multiple_number_node()
+{
+        logger().info("BEGIN TEST: %s", __FUNCTION__);
+        Handle num1 = an(NUMBER_NODE, "3");
+        Handle num2 = an(NUMBER_NODE, "2");
+        HandleSeq hseq1 = {num1, num2};
+        Handle num3 = an(NUMBER_NODE, "4");
+        Handle num4 = an(NUMBER_NODE, "5");
+        HandleSeq hseq2 = {num3, num4};
+        Handle times_link = al(TIMES_LINK, hseq1);
+        Handle plus_link = al(PLUS_LINK, hseq2);
+        HandleSeq hseq3 = {plus_link, times_link};
+        Handle greater_than_link = al(GREATER_THAN_LINK, hseq3);
+        complexity_t comptm;
+        comptm = atomese_complexity(greater_than_link);
+        complexity_t expected = 4;
+        TS_ASSERT_EQUALS(comptm, expected);
+}

@@ -22,11 +22,11 @@
  */
 
 #include <cxxtest/TestSuite.h>
-#include "moses-framework.h"
+#include "tests/moses/main/moses-framework.h"
 
 using namespace opencog::moses;
 
-const string weightedUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/";
+const string weightedUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
 
 /**
  * Test learning of problems that require a weieghted score
