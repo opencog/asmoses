@@ -878,46 +878,46 @@ void complete_truth_table::populate(const Handle &handle)
 {
 	// create a vector containing values for each feature or arity.
 	// this will contain the inputs of the truth table.
-	std::vector<ProtoAtomPtrVec> features(_arity);
+	std::vector<ValuePtrVec> features(_arity);
 	populate_features(features);
 
 	// map the values of inputs to the program.
 	setup_features(handle, features);
 
 	atomese::Interpreter interpreter(moses::value_key);
-	std::vector<ProtoAtomPtr> result = LinkValueCast(interpreter(handle))->value();
+	std::vector<ValuePtr> result = LinkValueCast(interpreter(handle))->value();
 
 	// convert Links in the result of the interpreter to bool,
 	// and store it to the truth table.
-	std::transform(result.begin(), result.end(), begin(), [](ProtoAtomPtr p){
+	std::transform(result.begin(), result.end(), begin(), [](ValuePtr p){
 		return HandleCast(p)->get_type() == TRUE_LINK;
 	});
 }
 
-void complete_truth_table::populate_features(std::vector<ProtoAtomPtrVec> &features)
+void complete_truth_table::populate_features(std::vector<ValuePtrVec> &features)
 {
 	auto it = begin();
 	for (int i = 0; it != end(); ++i, ++it) {
 		for (int j = 0; j < _arity; ++j) {
-			ProtoAtomPtr v;
+			ValuePtr v;
 			if ((i >> j) % 2)
-				v = ProtoAtomPtr(createLink(TRUE_LINK));
-			else v = ProtoAtomPtr(createLink(FALSE_LINK));
+				v = ValuePtr(createLink(TRUE_LINK));
+			else v = ValuePtr(createLink(FALSE_LINK));
 			features[j].push_back(v);
 		}
 	}
 }
 
-void complete_truth_table::setup_features(const Handle &handle, const std::vector<ProtoAtomPtrVec> &features)
+void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValuePtrVec> &features)
 {
 	if (PREDICATE_NODE == handle->get_type()) {
 		// We extract the index of the feature from the name of the Predicate Node.
 		// the assumption is the Predicate nodes have names in [$#] format. and this
 		// convention is adopted from the combo counterpart.
 		const std::string h_name = handle->get_name();
-		ProtoAtomPtrVec value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
+		ValuePtrVec value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
 
-		handle->setValue(moses::value_key, ProtoAtomPtr(new LinkValue(value)));
+		handle->setValue(moses::value_key, ValuePtr(new LinkValue(value)));
 		return;
 	}
 

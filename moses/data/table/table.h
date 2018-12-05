@@ -42,9 +42,9 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/util/KLD.h>
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/proto/atom_types.h>
+#include <opencog/atoms/value/atom_types.h>
 #include <opencog/atoms/base/Node.h>
-#include <opencog/atoms/proto/LinkValue.h>
+#include <opencog/atoms/value/LinkValue.h>
 
 #include <moses/combo/type_checker/type_tree.h>
 #include <moses/combo/interpreter/eval.h>
@@ -1615,7 +1615,7 @@ void subsampleTable(ITable &it, unsigned nsamples);
  * +-----------------------+--+--+
  */
 typedef std::vector<bool> bool_seq;
-typedef std::vector<ProtoAtomPtr> ProtoAtomPtrVec;
+typedef std::vector<ValuePtr> ValuePtrVec;
 
 class complete_truth_table : public bool_seq
 {
@@ -1719,11 +1719,11 @@ protected:
 	 * @param It from      beginning iterator of the vector containing values of variables.
 	 * @param It to        end iterator of vector containing values of variables.
 	 */
-	void setup_features(const Handle &handle, const std::vector<ProtoAtomPtrVec>& features);
+	void setup_features(const Handle &handle, const std::vector<ValuePtrVec>& features);
 
 	void populate(const Handle &handle);
 
-	void populate_features(std::vector<ProtoAtomPtrVec> &features);
+	void populate_features(std::vector<ValuePtrVec> &features);
 
 	arity_t _arity;
 	mutable builtin_seq inputs;
