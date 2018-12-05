@@ -186,7 +186,7 @@ behavioral_score contin_bscore::operator()(const Handle &handle) const
 	behavioral_score bs;
 	atomese::Interpreter interpreter(moses::value_key);
 
-	const ProtoAtomPtr result = interpreter(handle);
+	const ValuePtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), target, back_inserter(bs),
 	          [&](contin_t res, const vertex &tar_ver){
 		          contin_t tar = get_contin(tar_ver);

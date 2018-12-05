@@ -27,7 +27,7 @@
 #include <moses/atomese/interpreter/Interpreter.h>
 #include <moses/atomese/interpreter/logical_interpreter.h>
 #include <opencog/atoms/core/NumberNode.h>
-#include <opencog/atoms/proto/LinkValue.h>
+#include <opencog/atoms/value/LinkValue.h>
 
 #include "moses/utils/value_key.h"
 
@@ -42,8 +42,8 @@ private:
 	Handle p1;
 	Handle p2;
 	Handle p3;
-	ProtoAtomPtr t_link;
-	ProtoAtomPtr f_link;
+	ValuePtr t_link;
+	ValuePtr f_link;
 
 public:
 	InterpreterUTest(){
@@ -58,13 +58,13 @@ public:
 		std::vector<double> _f3_values = {0.0, 0.0, 0.0};
 		std::vector<double> _size_value = {3};
 
-		ProtoAtomPtr f1_proto_atom(new FloatValue(_f1_values));
+		ValuePtr f1_proto_atom(new FloatValue(_f1_values));
 		f1->setValue(moses::value_key, f1_proto_atom);
 
-		ProtoAtomPtr f2_proto_atom(new FloatValue(_f2_values));
+		ValuePtr f2_proto_atom(new FloatValue(_f2_values));
 		f2->setValue(moses::value_key, f2_proto_atom);
 
-		ProtoAtomPtr f3_proto_atom(new FloatValue(_f3_values));
+		ValuePtr f3_proto_atom(new FloatValue(_f3_values));
 		f3->setValue(moses::value_key, f3_proto_atom);
 
 		// initialization of program [Boolean]
@@ -72,20 +72,20 @@ public:
 		p2 = createNode(PREDICATE_NODE, "p2");
 		p3 = createNode(PREDICATE_NODE, "p3");
 
-		t_link = ProtoAtomPtr(createLink(TRUE_LINK));
-		f_link = ProtoAtomPtr(createLink(FALSE_LINK));
+		t_link = ValuePtr(createLink(TRUE_LINK));
+		f_link = ValuePtr(createLink(FALSE_LINK));
 
-		std::vector<ProtoAtomPtr> _p1 = {t_link, t_link, f_link};
-		std::vector<ProtoAtomPtr> _p2 = {f_link, t_link, f_link};
-		std::vector<ProtoAtomPtr> _p3 = {f_link, f_link, t_link};
+		std::vector<ValuePtr> _p1 = {t_link, t_link, f_link};
+		std::vector<ValuePtr> _p2 = {f_link, t_link, f_link};
+		std::vector<ValuePtr> _p3 = {f_link, f_link, t_link};
 
-		ProtoAtomPtr p1_proto_atom(new LinkValue(_p1));
+		ValuePtr p1_proto_atom(new LinkValue(_p1));
 		p1->setValue(moses::value_key, p1_proto_atom);
 
-		ProtoAtomPtr p2_proto_atom(new LinkValue(_p2));
+		ValuePtr p2_proto_atom(new LinkValue(_p2));
 		p2->setValue(moses::value_key, p2_proto_atom);
 
-		ProtoAtomPtr p3_proto_atom(new LinkValue(_p3));
+		ValuePtr p3_proto_atom(new LinkValue(_p3));
 		p3->setValue(moses::value_key, p3_proto_atom);
 	}
 
@@ -100,7 +100,7 @@ public:
 
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
-		ProtoAtomPtr _result = interpreter(program);
+		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
@@ -118,7 +118,7 @@ public:
 
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
-		ProtoAtomPtr _result = interpreter(program);
+		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
@@ -138,7 +138,7 @@ public:
 
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
-		ProtoAtomPtr _result = interpreter(program);
+		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
@@ -153,12 +153,12 @@ public:
 		Handle program = createLink(seq2, OR_LINK);
 
 		// expected out put vector
-		std::vector<ProtoAtomPtr> exp_value = {f_link, t_link, f_link};
-		ProtoAtomPtr expected(new LinkValue(exp_value));
+		std::vector<ValuePtr> exp_value = {f_link, t_link, f_link};
+		ValuePtr expected(new LinkValue(exp_value));
 
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
-		ProtoAtomPtr result = interpreter(program);
+		ValuePtr result = interpreter(program);
 
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
 	}
