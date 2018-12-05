@@ -25,7 +25,7 @@
 #define MOSES_INTERPRETER_H
 
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/proto/LinkValue.h>
+#include <opencog/atoms/value/LinkValue.h>
 
 /**
  * class Interpreter -- create an unfolded program from compressed program
@@ -53,10 +53,10 @@ public:
 	 * executes/evaluates a program over a problem data.
 	 *
 	 * @param Handle&       handle ref, stores the atomese program
-	 * @return               return ProtoAtomPtr containing the output
+	 * @return               return ValuePtr containing the output
 	 *                       of the program executed/evaluated on the problem data.
 	 */
-	opencog::ProtoAtomPtr operator()(const opencog::Handle& program);
+	opencog::ValuePtr operator()(const opencog::Handle& program);
 
 private:
 	value_size _problem_data_size;
@@ -67,7 +67,7 @@ private:
 	 * @param value_size    size of the values stored in the handle.
 	 * @return              protoAtomPtr containing values.
 	 */
-	ProtoAtomPtr unwrap_constant(const Handle &handle);
+	ValuePtr unwrap_constant(const Handle &handle);
 
 	/**
 	 * returns the execution/evaluation of type t with the given parameters
@@ -77,7 +77,7 @@ private:
 	 * @param value_size    size of the output.
 	 * @return              protoAtomPtr containing the result.
 	 */
-	ProtoAtomPtr execute(const Type t, const ProtomSeq &params);
+	ValuePtr execute(const Type t, const ProtomSeq &params);
 
 	/**
 	 * retrive the size of the output after the program is interpreted. The size is
