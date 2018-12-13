@@ -50,7 +50,7 @@ bscore_ctable_time_dispersion::bscore_ctable_time_dispersion(const CTable& _ctab
             timestamp_classes.insert(get_timestamp_class(tcv.first.timestamp));
 
     // Compute Hmax
-    _Hmax = log2(timestamp_classes.size());
+    _Hmax = std::log2(timestamp_classes.size());
 }
 
 TTable::value_type bscore_ctable_time_dispersion::get_timestamp_class(const TTable::value_type& timestamp) const
