@@ -42,7 +42,7 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/util/KLD.h>
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/value/atom_types.h>
+#include <opencog/atoms/atom_types/atom_types.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/value/LinkValue.h>
 
@@ -1021,7 +1021,7 @@ private:
 	{
 		if (contin_arity == 0)
 			return 1;
-		else return COEF_SAMPLE_COUNT * log(contin_arity + EXPONENTIAL);
+		else return COEF_SAMPLE_COUNT * log(contin_arity + M_E);
 	}
 
 };
