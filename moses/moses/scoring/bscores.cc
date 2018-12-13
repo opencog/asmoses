@@ -1017,7 +1017,7 @@ behavioral_score cluster_bscore::operator()(const combo_tree &tr) const
 		for (j = 0; j < numvals; j++) {
 			score_t sc = vals[j];
 
-			if (isinf(sc) || isnan(sc)) {
+			if (std::isinf(sc) || std::isnan(sc)) {
 				behavioral_score bs;
 				bs.push_back(-INFINITY);
 				return bs;
