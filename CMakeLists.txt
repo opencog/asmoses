@@ -19,33 +19,17 @@ ADD_DEFINITIONS(-DASMOSES_VERSION_PATCH="${ASMOSES_VERSION_PATCH}")
 
 SET (ASMOSES_VERSION "${ASMOSES_VERSION_MAJOR}.${ASMOSES_VERSION_MINOR}.${ASMOSES_VERSION_PATCH}")
 
-# Seems to work fine with cmake-2.6
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+# cogutils already requires 2.8.12.2, so may as well ask for that.
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12.2)
 IF (COMMAND CMAKE_POLICY)
 	CMAKE_POLICY(SET CMP0003 NEW)
 ENDIF (COMMAND CMAKE_POLICY)
 
 PROJECT(asmoses)
 
-# Cogutil
-FIND_PACKAGE(CogUtil CONFIG)
-IF (COGUTIL_FOUND)
-        MESSAGE(STATUS "CogUtil found.")
-        ADD_DEFINITIONS(-DHAVE_COGUTIL)
-    SET(HAVE_COGUTIL 1)
-ELSE (COGUTIL_FOUND)
-        MESSAGE(FATAL_ERROR "CogUtil missing: it is needed for everything!")
-ENDIF (COGUTIL_FOUND)
-
-# add the 'cmake' directory from cogutil to search path
-list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
-
-include(${COGUTIL_DATA_DIR}/cmake/Summary.cmake)
-
-# To supress Cygwin warning "CMake no longer defines WIN32 on Cygwin!"
-# Remove when CMake >= 2.8.4 is required to build the project
-set(CMAKE_LEGACY_CYGWIN_WIN32 0)
-
+# ----------------------------------------------------------
+# User-modifiable options. Feel free to change these!
+#
 # uncomment to be in Release mode [default]
 # SET(CMAKE_BUILD_TYPE Release)
 
@@ -75,11 +59,9 @@ ADD_DEFINITIONS(-DPROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 # Detect different compilers and OS'es, tweak flags as necessary.
 
 IF (CMAKE_COMPILER_IS_GNUCXX)
-	# aiiee cmake version 2.8.8 or newer is needed for below to
-	# work...
-	# IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6.4)
-	#	MESSAGE(FATAL_ERROR "GCC version must be at least 4.6.4!")
-	# ENDIF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6.4)
+	IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6.4)
+		MESSAGE(FATAL_ERROR "GCC version must be at least 4.6.4!")
+	ENDIF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6.4)
 
 	IF (APPLE)
 		SET(CMAKE_C_FLAGS "-Wall -Wno-long-long -Wno-conversion")
@@ -119,7 +101,9 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
 ENDIF (CMAKE_COMPILER_IS_GNUCXX)
 
+# ----------------------------------------------------
 # Do the windows build
+
 IF (WIN32)
 	ADD_DEFINITIONS(-DWIN32)
 	IF (CYGWIN)
@@ -146,6 +130,25 @@ IF (WIN32)
 	ENDIF (NOT UNIX)
 ENDIF (WIN32)
 
+# ===============================================================
+# Check for existance of various required, optional packages.
+# Listed in alphabetical order, more or less.
+# CogUtil must come first, because it supplies various FindXXX macros.
+
+FIND_PACKAGE(CogUtil CONFIG REQUIRED)
+IF (COGUTIL_FOUND)
+        MESSAGE(STATUS "CogUtil found.")
+        ADD_DEFINITIONS(-DHAVE_COGUTIL)
+    SET(HAVE_COGUTIL 1)
+ELSE (COGUTIL_FOUND)
+        MESSAGE(FATAL_ERROR "CogUtil missing: it is needed!")
+ENDIF (COGUTIL_FOUND)
+
+# add the 'cmake' directory from cogutil to search path
+list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
+
+include(${COGUTIL_DATA_DIR}/cmake/Summary.cmake)
+
 # ===================================================================
 # Check for existance of various required, optional packages.
 
@@ -162,20 +165,9 @@ FIND_PACKAGE(Boost 1.46 COMPONENTS date_time filesystem program_options regex se
 
 IF(Boost_FOUND)
 	SET(Boost_FOUND_SAVE 1)
-
-	# Boost.Signals2 requires this in signal_type.hpp
-	SET(BOOST_PARAMETER_MAX_ARITY 7)
-	ADD_DEFINITIONS(-DBOOST_PARAMETER_MAX_ARITY=${BOOST_PARAMETER_MAX_ARITY})
 ELSE(Boost_FOUND)
-	MESSAGE(FATAL_ERROR "Boost 1.46 or newer is needed to build OpenCog!")
+	MESSAGE(FATAL_ERROR "Boost 1.46 or newer is needed to build Moses!")
 ENDIF(Boost_FOUND)
-
-# Opencog won't compile with Boost 1.51, some kind of conflict with
-# hash functions, see github bugs 1 and 36
-IF(105100 EQUAL ${Boost_VERSION})
-	MESSAGE(FATAL_ERROR "Boost version 1.51 will not work with OpenCog.  Please use a different version.")
-ENDIF(105100 EQUAL ${Boost_VERSION})
-MESSAGE(STATUS "Boost version ${Boost_VERSION} found.")
 
 # Optional boost packages; can build without these.
 FIND_PACKAGE(Boost 1.46 COMPONENTS python program_options QUIET)
@@ -189,7 +181,7 @@ ENDIF(Boost_FOUND_SAVE)
 IF(Boost_PROGRAM_OPTIONS_FOUND)
 	MESSAGE(STATUS "Found Boost::program_options")
 ELSE(Boost_PROGRAM_OPTIONS_FOUND)
-	MESSAGE(STATUS "Boost program_options missing: needed for Spatial tools (MapTools).")
+	MESSAGE(STATUS "Boost program_options missing: needed for Moses.")
 ENDIF(Boost_PROGRAM_OPTIONS_FOUND)
 
 IF(Boost_MATH_C99_FOUND)
@@ -198,6 +190,9 @@ ELSE(Boost_MATH_C99_FOUND)
 	MESSAGE(STATUS "Boost math missing: needed to run combo learning tests.")
 ENDIF(Boost_MATH_C99_FOUND)
 
+# ----------------------------------------------------------
+# Needed for unit tests
+
 FIND_PACKAGE(Cxxtest)
 IF (CXXTEST_FOUND)
 	MESSAGE(STATUS "Found CxxTest.")
@@ -205,6 +200,7 @@ ELSE (CXXTEST_FOUND)
 	MESSAGE(STATUS "CxxTest missing: needed for unit tests.")
 ENDIF (CXXTEST_FOUND)
 
+# ----------------------------------------------------------
 # This is required for Guile
 FIND_LIBRARY(GMP_LIBRARY gmp)
 FIND_PATH(GMP_INCLUDE_DIR gmp.h)
@@ -221,6 +217,7 @@ ELSE (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 	MESSAGE(FATAL_ERROR "${GUILE_DIR_MESSAGE}")
 ENDIF (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 
+# ----------------------------------------------------------
 # AtomSpace
 FIND_PACKAGE(AtomSpace 5.0.3 CONFIG REQUIRED)
 IF (ATOMSPACE_FOUND)
@@ -231,6 +228,7 @@ ELSE (ATOMSPACE_FOUND)
 	MESSAGE(FATAL_ERROR "AtomSpace missing: it is needed to build this package!")
 ENDIF (ATOMSPACE_FOUND)
 
+# ----------------------------------------------------------
 # MPI is needed for MOSES on compute clusters.
 FIND_PACKAGE(MPI)
 
@@ -243,23 +241,10 @@ ELSE (MPI_FOUND)
 	MESSAGE(STATUS "MPI missing: needed for MPI-MOSES.")
 ENDIF (MPI_FOUND)
 
-
-# Optional, currently needed only to hush up DRD in util/Logger.cc
-FIND_PACKAGE(VALGRIND)
-IF (VALGRIND_FOUND)
-	MESSAGE(STATUS "VALGRIND was found.")
-	IF (VALGRIND_INCLUDE_DIR)
-		MESSAGE(STATUS "VALGRIND devel headers found.")
-		ADD_DEFINITIONS(-DHAVE_VALGRIND)
-	ELSE (VALGRIND_INCLUDE_DIR)
-		MESSAGE(STATUS "VALGRIND devel headers NOT FOUND: needed for thread debugging.")
-	ENDIF (VALGRIND_INCLUDE_DIR)
-ELSE (VALGRIND_FOUND)
-	MESSAGE(STATUS "VALGRIND missing: needed for thread debugging.")
-ENDIF (VALGRIND_FOUND)
-
+# ----------------------------------------------------------
 # Python bindings using Cython
 # Cython is used to generate bindings
+# XXX FIXME; switch to python3; see opencog Cmakefile for guidance.
 FIND_PACKAGE(PythonLibs 2.7)
 IF(PYTHONLIBS_FOUND)
 	MESSAGE(STATUS "Python libs found.")
@@ -296,33 +281,36 @@ IF (NOSETESTS_EXECUTABLE AND CYTHON_FOUND AND PYTHONLIBS_FOUND)
 	SET(HAVE_NOSETESTS 1)
 ENDIF (NOSETESTS_EXECUTABLE AND CYTHON_FOUND AND PYTHONLIBS_FOUND)
 
-# ==========================================================
-# Decide what to build, based on the packages found.
-
-IF(Boost_FOUND AND COGUTIL_FOUND)
-	SET(HAVE_COMBOREDUCT 1)
-	SET(HAVE_MOSES 1)
-	SET(HAVE_FEATURE_SELECTION 1)
-ENDIF(Boost_FOUND AND COGUTIL_FOUND)
+# ----------------------------------------------------------
+# Optional, currently needed only to hush up DRD in util/Logger.cc
+FIND_PACKAGE(VALGRIND)
+IF (VALGRIND_FOUND)
+	MESSAGE(STATUS "VALGRIND was found.")
+	IF (VALGRIND_INCLUDE_DIR)
+		MESSAGE(STATUS "VALGRIND devel headers found.")
+		ADD_DEFINITIONS(-DHAVE_VALGRIND)
+	ELSE (VALGRIND_INCLUDE_DIR)
+		MESSAGE(STATUS "VALGRIND devel headers NOT FOUND: needed for thread debugging.")
+	ENDIF (VALGRIND_INCLUDE_DIR)
+ELSE (VALGRIND_FOUND)
+	MESSAGE(STATUS "VALGRIND missing: needed for thread debugging.")
+ENDIF (VALGRIND_FOUND)
 
 # ===================================================================
-# global includes
+# Global includes
 
-# set confdir and datadir
-IF (NOT DEFINED CONFDIR)
-	SET (CONFDIR "${CMAKE_INSTALL_PREFIX}/etc")
-ENDIF (NOT DEFINED CONFDIR)
-IF (NOT DEFINED DATADIR)
-	SET (DATADIR "${CMAKE_INSTALL_PREFIX}/share/moses")
-ENDIF (NOT DEFINED DATADIR)
-ADD_DEFINITIONS(-DCONFDIR="${CONFDIR}")
-ADD_DEFINITIONS(-DDATADIR="${DATADIR}")
+# -------------------------------------------------
+# Include configuration.
 
-# (re?)define MAN_INSTALL_DIR
-SET (MAN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/man")
+# Set default include paths
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} ${Boost_INCLUDE_DIRS}
+	${COGUTIL_INCLUDE_DIR})
 
-# small hack to handle unixes that use "/usr/lib64" instead of "/usr/lib" as the
-# default lib path on 64 bit archs
+# -------------------------------------------------
+# Library configuration
+
+# Small hack to handle unixes that use "/usr/lib64" instead of
+# "/usr/lib" as the # default lib path on 64 bit archs
 IF (NOT DEFINED LIB_DIR_SUFFIX)
 	EXECUTE_PROCESS(COMMAND ${CMAKE_CXX_COMPILER} -print-search-dirs OUTPUT_VARIABLE PRINT_SEARCH_DIRS_OUTPUT)
 	STRING(REGEX MATCH "\r?\nlibraries:.*\r?\n" COMPILER_LIB_SEARCH_DIRS ${PRINT_SEARCH_DIRS_OUTPUT})
@@ -334,15 +322,41 @@ IF (NOT DEFINED LIB_DIR_SUFFIX)
 	ENDIF (NOT ${COMPILER_LIB_SEARCH_DIRS} STREQUAL "")
 ENDIF (NOT DEFINED LIB_DIR_SUFFIX)
 
-# set default include paths
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} ${Boost_INCLUDE_DIRS}
-	${COGUTIL_INCLUDE_DIR})
-
 # rpath handling
 SET(CMAKE_SKIP_BUILD_RPATH	FALSE)
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/moses")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+# -------------------------------------------------
+# Install configuration
+
+# Only list install files that have actually changed.
+SET(CMAKE_INSTALL_MESSAGE "LAZY")
+
+# Set confdir and datadir
+IF (NOT DEFINED CONFDIR)
+	SET (CONFDIR "${CMAKE_INSTALL_PREFIX}/etc")
+ENDIF (NOT DEFINED CONFDIR)
+
+IF (NOT DEFINED DATADIR)
+	SET (DATADIR "${CMAKE_INSTALL_PREFIX}/share/moses")
+ENDIF (NOT DEFINED DATADIR)
+
+ADD_DEFINITIONS(-DCONFDIR="${CONFDIR}")
+ADD_DEFINITIONS(-DDATADIR="${DATADIR}")
+
+# (re?)define MAN_INSTALL_DIR
+SET (MAN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/man")
+
+# ==========================================================
+# Decide what to build, based on the packages found.
+
+IF(Boost_FOUND AND COGUTIL_FOUND)
+	SET(HAVE_COMBOREDUCT 1)
+	SET(HAVE_MOSES 1)
+	SET(HAVE_FEATURE_SELECTION 1)
+ENDIF(Boost_FOUND AND COGUTIL_FOUND)
 
 ADD_SUBDIRECTORY(moses)
 
@@ -379,7 +393,6 @@ IF (CXXTEST_FOUND AND COGUTIL_FOUND)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
 ENDIF (CXXTEST_FOUND AND COGUTIL_FOUND)
 
-
 ADD_SUBDIRECTORY(examples EXCLUDE_FROM_ALL)
 
 IF (NOT WIN32)
@@ -396,7 +409,6 @@ IF (NOT WIN32)
 	)
 ENDIF (NOT WIN32)
 
-
 ADD_CUSTOM_TARGET(cscope
 	COMMAND find moses tests -name '*.cc' -o -name '*.h' -o -name '*.cxxtest' > ${CMAKE_SOURCE_DIR}/cscope.files
 	COMMAND cscope -b
@@ -404,7 +416,8 @@ ADD_CUSTOM_TARGET(cscope
 	COMMENT "Generating CScope database"
 )
 
-# packaging
+# ===================================================================
+# Packaging
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Meta-Optimizing Semantic Evolutionary Search")
 SET(CPACK_PACKAGE_NAME "moses")
 SET(CPACK_PACKAGE_VENDOR "opencog.org")
@@ -475,15 +488,18 @@ IF (WIN32)
 	ENDIF(NOT UNIX)
 ENDIF(WIN32)
 
-SET(CPACK_PACKAGE_EXECUTABLES "cogserver" "The Open Cognition Framework")
+SET(CPACK_PACKAGE_EXECUTABLES "asmoses" "The Moses solver")
 INCLUDE(CPack)
 
+# ===================================================================
 # documentation
 FIND_PACKAGE(Doxygen)
 ADD_SUBDIRECTORY(doc EXCLUDE_FROM_ALL)
 ADD_SUBDIRECTORY(lib)
 
-# Show a summary of what we got
+# ===================================================================
+# Show a summary of what we found, what we will do.
+
 SUMMARY_ADD("ComboReduct" "Library for reduction of combo program trees" HAVE_COMBOREDUCT)
 SUMMARY_ADD("Doxygen" "Code documentation" DOXYGEN_FOUND)
 SUMMARY_ADD("Feature selection" "MOSES based feature selection tool" HAVE_FEATURE_SELECTION)
