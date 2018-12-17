@@ -21,7 +21,7 @@ void populate(AtomSpace *as, ITable &itable) {
 	}
 }
 
-ValuePtr vertex_seq_to_value(const vertex_seq& col, id::type_node& col_type) {
+ValuePtr vertex_seq_to_value(const vertex_seq& col, id::type_node col_type) {
 
 	int n_rows = col.size();
 	switch (col_type) {
@@ -31,15 +31,13 @@ ValuePtr vertex_seq_to_value(const vertex_seq& col, id::type_node& col_type) {
 				bool col_data = vertex_to_bool(col.at(j));
 				col_values.push_back(ValuePtr(createLink(col_data ? TRUE_LINK : FALSE_LINK)));
 			}
-			ValuePtr  vtr(new LinkValue(col_values));
-			return vtr;
+			return ValuePtr(new LinkValue(col_values));
 		}
 		case id::contin_type: {
 			std::vector<double> col_values_contin = {};
 			for (int j = 0; j < n_rows; j++)
 				col_values_contin.push_back(get_contin(col.at(j)));
-			ValuePtr vtr(new FloatValue(col_values_contin));
-			return vtr;
+			return ValuePtr(new FloatValue(col_values_contin));
 		}
 		case id::enum_type: {
 			//TODO enum_type data to be added to Atomspace
@@ -49,7 +47,7 @@ ValuePtr vertex_seq_to_value(const vertex_seq& col, id::type_node& col_type) {
 			std::stringstream ss;
 			ss << col_type;
 			throw ComboException(TRACE_INFO,
-			                     "populate atomspace can not handle type_node %s",
+			                     "vertex_seq_to_value can not handle type_node %s",
 			                     ss.str().c_str());
 		}
 	}

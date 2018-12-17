@@ -38,22 +38,18 @@ using namespace combo;
  * @param Atomspace&     as
  * @param Itable&     itable
  *
- * @return                 LinkValue pointer containing the logical_and.
  */
 void populate(AtomSpace *as,  ITable &itable);
 
 /**
- * Populate the given atomspace using Otable
- * @param Atomspace&
- * @param OTable&
- * @return
+ * Convertes vertex sequences to its corresponding values
+ * @param vseq
+ * @param tnode
+ * @return ValuePtr containing values such as FloatValue, LinKValues...etc
  */
+ValuePtr vertex_seq_to_value(const vertex_seq& vseq, id::type_node tnode);
 
-
-ValuePtr vertex_seq_to_value(const vertex_seq& vseq, id::type_node& tnode);
-
-#endif
 } // ~namespace moses
 } // ~namespace opencog
-
+#endif
 
