@@ -50,6 +50,8 @@ void populate(AtomSpace *as,  ITable &itable);
  */
 
 
+ValuePtr vertex_seq_to_value(const vertex_seq& vseq, id::type_node& tnode);
+
 #endif
 } // ~namespace moses
 } // ~namespace opencog
