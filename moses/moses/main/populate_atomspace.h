@@ -25,23 +25,31 @@
 #define MOSES_POPULATE_ATOMSPACE_H
 
 #include <moses/data/table/table.h>
+#include <moses/data/table/table_io.h>
 #include <opencog/atomspace/AtomSpace.h>
+#include <moses/utils/value_key.h>
+#include <opencog/atoms/base/Link.h>
 
 namespace opencog { namespace moses {
+using namespace combo;
 
 /**
  * Populate the given atomspace with the input data.
  * @param Atomspace&     as
  * @param Itable&     itable
  *
- * @return                 LinkValue pointer containing the logical_and.
  */
-void populate(AtomSpace* as, const ITable &itable)
-{
-	OC_ASSERT(false, "populate_atomspace Not implemented yet!");
-}
+void populate(AtomSpace *as,  ITable &itable);
 
-}
-}
+/**
+ * Convertes vertex sequences to its corresponding values
+ * @param vseq
+ * @param tnode
+ * @return ValuePtr containing values such as FloatValue, LinKValues...etc
+ */
+ValuePtr vertex_seq_to_value(const vertex_seq& vseq, id::type_node tnode);
 
+} // ~namespace moses
+} // ~namespace opencog
 #endif
+
