@@ -16,7 +16,7 @@
 #include <math.h>
 #include <sstream>
 #include <sys/time.h>
-#include <moses/moses/main/moses_exec.h>
+#include <opencog/moses/main/moses_exec.h>
 
 using namespace std;
 using namespace opencog::moses;

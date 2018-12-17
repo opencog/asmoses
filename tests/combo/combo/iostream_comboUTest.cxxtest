@@ -1,5 +1,5 @@
-#include <moses/combo/combo/iostream_combo.h>
-#include <moses/combo/combo/combo.h>
+#include <opencog/combo/combo/iostream_combo.h>
+#include <opencog/combo/combo/combo.h>
 
 using namespace opencog::combo;
 using namespace std;

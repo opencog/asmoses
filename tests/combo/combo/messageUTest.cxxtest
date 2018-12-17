@@ -1,4 +1,4 @@
-#include <moses/combo/combo/combo.h>
+#include <opencog/combo/combo/combo.h>
 
 using namespace opencog::combo;
 using namespace std;

@@ -21,8 +21,8 @@
  */
 
 
-#include <moses/combo/converter/combo_atomese.h>
-#include <moses/combo/combo/combo.h>
+#include <opencog/combo/converter/combo_atomese.h>
+#include <opencog/combo/combo/combo.h>
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/value/atom_types.h>
 #include <opencog/atoms/base/Link.h>
