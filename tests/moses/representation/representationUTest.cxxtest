@@ -26,8 +26,8 @@
 #include <sstream>
 #include <string>
 
-#include <moses/moses/representation/representation.h>
-#include <moses/reduct/reduct/reduct.h>
+#include <opencog/moses/representation/representation.h>
+#include <opencog/reduct/reduct/reduct.h>
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/Logger.h>
 

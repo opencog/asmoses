@@ -1,5 +1,5 @@
-#include <moses/combo/combo/combo.h>
-#include <moses/combo/type_checker/type_tree.h>
+#include <opencog/combo/combo/combo.h>
+#include <opencog/combo/type_checker/type_tree.h>
 
 using namespace opencog;
 using namespace opencog::combo;

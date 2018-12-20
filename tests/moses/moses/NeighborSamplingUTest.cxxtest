@@ -3,10 +3,10 @@
 
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/dorepeat.h>
-#include <moses/moses/representation/field_set.h>
-#include <moses/moses/representation/instance_set.h>
-#include <moses/moses/moses/types.h>
-#include <moses/moses/moses/neighborhood_sampling.h>
+#include <opencog/moses/representation/field_set.h>
+#include <opencog/moses/representation/instance_set.h>
+#include <opencog/moses/moses/types.h>
+#include <opencog/moses/moses/neighborhood_sampling.h>
 
 
 using namespace opencog;
