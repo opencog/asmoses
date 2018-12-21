@@ -175,7 +175,6 @@ ELSE(Boost_FOUND)
 ENDIF(Boost_FOUND)
 
 # Optional boost packages; can build without these.
-FIND_PACKAGE(Boost 1.46 COMPONENTS python program_options QUIET)
 FIND_PACKAGE(Boost 1.46 COMPONENTS math_c99 QUIET)
 
 # Arghhh. Except cmake is treating above as required, not optional. #$%**&
@@ -186,7 +185,7 @@ ENDIF(Boost_FOUND_SAVE)
 IF(Boost_PROGRAM_OPTIONS_FOUND)
 	MESSAGE(STATUS "Found Boost::program_options")
 ELSE(Boost_PROGRAM_OPTIONS_FOUND)
-	MESSAGE(STATUS "Boost program_options missing: needed for Moses.")
+	MESSAGE(STATUS "Boost program_options missing: needed for command line.")
 ENDIF(Boost_PROGRAM_OPTIONS_FOUND)
 
 IF(Boost_MATH_C99_FOUND)
@@ -249,31 +248,67 @@ ENDIF (MPI_FOUND)
 # ----------------------------------------------------------
 # Python bindings using Cython
 # Cython is used to generate bindings
-# XXX FIXME; switch to python3; see opencog Cmakefile for guidance.
-FIND_PACKAGE(PythonLibs 2.7)
-IF(PYTHONLIBS_FOUND)
-	MESSAGE(STATUS "Python libs found.")
-ELSE(PYTHONLIBS_FOUND)
-	MESSAGE(STATUS "Python libs NOT found.")
-ENDIF(PYTHONLIBS_FOUND)
+#
+# NOTE: Python interpreter is needed for runing python unit tests,
+# and for running the FindCython module.
+#
+# Search for Python3 first, and use that, if found. Else use Python2.
+# To use Python2 only from the build directory run the following
+# rm CMakeCache.txt && cmake
+# -DCMAKE_DISABLE_FIND_PACKAGE_Python3Interp=TRUE ..
+
+FIND_PACKAGE(Python3Interp)
+IF (3.4.0 VERSION_LESS "${PYTHON3_VERSION_STRING}")
+	SET (HAVE_PY_INTERP 1)
+	SET (PYTHON_VER python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+	MESSAGE(STATUS "Python ${PYTHON3_VERSION_STRING} interpreter found.")
+ENDIF()
+
+IF (NOT HAVE_PY_INTERP)
+	FIND_PACKAGE(PythonInterp)
+	IF (2.7.0 VERSION_LESS ${PYTHON_VERSION_STRING})
+		SET (HAVE_PY_INTERP 1)
+		SET (PYTHON_VER python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+		MESSAGE(STATUS "Python ${PYTHON_VERSION_STRING} interpreter found.")
+	ENDIF()
+ENDIF()
+
+FIND_PACKAGE(PythonLibs)
+IF (PYTHONLIBS_FOUND AND
+     ((PYTHON3INTERP_FOUND AND 3.4.0 VERSION_LESS ${PYTHONLIBS_VERSION_STRING})
+     OR
+     (2.7.0 VERSION_LESS ${PYTHONLIBS_VERSION_STRING})))
+	SET (HAVE_PY_LIBS 1)
+	MESSAGE(STATUS "Python ${PYTHONLIBS_VERSION_STRING} libraries found.")
+ELSE()
+	MESSAGE(STATUS "Python libraries NOT found.")
+ENDIF()
 
 FIND_PACKAGE(Cython 0.19.0)
 IF (CYTHON_FOUND AND PYTHONLIBS_FOUND)
-	# find python destination dir for python bindings
 	ADD_DEFINITIONS(-DHAVE_CYTHON)
 	SET(HAVE_CYTHON 1)
+
+	# Find python destination dir for python bindings
+	# because it may differ on each operating system.
 	EXECUTE_PROCESS(
 		COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import *;print(get_python_lib())"
 		OUTPUT_VARIABLE PYTHON_DEST
 	)
 
-	# replace new line at end
+	# Chop off leading /usr
+	STRING(REPLACE "/usr" ${CMAKE_INSTALL_PREFIX} PYTHON_DEST "${PYTHON_DEST}")
+
+	# Replace new line at end
 	STRING(REPLACE "\n" "" PYTHON_DEST "${PYTHON_DEST}")
 	IF ("${PYTHON_DEST}" STREQUAL "")
 		MESSAGE(FATAL_ERROR "Python destination dir not found")
 	ELSE ("${PYTHON_DEST}" STREQUAL "")
 		MESSAGE(STATUS "Python destination dir found: ${PYTHON_DEST}" )
 	ENDIF ("${PYTHON_DEST}" STREQUAL "")
+
+	# thunk
+	SET(PYTHON_DEST "${PYTHON_DEST}/opencog")
 ELSE (CYTHON_FOUND AND PYTHONLIBS_FOUND)
 	IF(NOT CYTHON_FOUND)
 		MESSAGE(STATUS "Cython executable not found.")
@@ -281,10 +316,20 @@ ELSE (CYTHON_FOUND AND PYTHONLIBS_FOUND)
 ENDIF (CYTHON_FOUND AND PYTHONLIBS_FOUND)
 
 # Nosetests will find and automatically run python tests.
-FIND_PROGRAM(NOSETESTS_EXECUTABLE nosetests)
-IF (NOSETESTS_EXECUTABLE AND CYTHON_FOUND AND PYTHONLIBS_FOUND)
-	SET(HAVE_NOSETESTS 1)
-ENDIF (NOSETESTS_EXECUTABLE AND CYTHON_FOUND AND PYTHONLIBS_FOUND)
+IF (CYTHON_FOUND AND PYTHONLIBS_FOUND)
+	IF (PYTHON3INTERP_FOUND)
+		FIND_PROGRAM(NOSETESTS_EXECUTABLE nosetests3)
+	ELSE ()
+		FIND_PROGRAM(NOSETESTS_EXECUTABLE nosetests-2.7)
+	ENDIF ()
+	IF (NOSETESTS_EXECUTABLE)
+		SET(HAVE_NOSETESTS 1)
+		MESSAGE(STATUS "Using nosetests executable " ${NOSETESTS_EXECUTABLE})
+	ELSE (NOSETESTS_EXECUTABLE)
+		MESSAGE(STATUS "nosetests not found: needed for python tests")
+	ENDIF (NOSETESTS_EXECUTABLE)
+
+ENDIF (CYTHON_FOUND AND PYTHONLIBS_FOUND)
 
 # ----------------------------------------------------------
 # Optional, currently needed only to hush up DRD in util/Logger.cc
@@ -396,6 +441,11 @@ IF (CXXTEST_FOUND AND COGUTIL_FOUND)
 			COMMENT "Running tests..."
 		)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+	ADD_CUSTOM_TARGET(test_python
+		WORKING_DIRECTORY tests/cython
+		COMMAND ${CMAKE_CTEST_COMMAND} $(ARGS)
+		COMMENT "Running Python and Cython tests..."
+	)
 ENDIF (CXXTEST_FOUND AND COGUTIL_FOUND)
 
 ADD_SUBDIRECTORY(examples EXCLUDE_FROM_ALL)
@@ -509,6 +559,7 @@ SUMMARY_ADD("ComboReduct" "Library for reduction of combo program trees" HAVE_CO
 SUMMARY_ADD("Doxygen" "Code documentation" DOXYGEN_FOUND)
 SUMMARY_ADD("Feature selection" "MOSES based feature selection tool" HAVE_FEATURE_SELECTION)
 SUMMARY_ADD("MOSES" "Meta-Optimizing Semantic Evolutionary Search" HAVE_MOSES)
+SUMMARY_ADD("MPI-MOSES" "Distributed MOSES via MPI" HAVE_MPI)
 SUMMARY_ADD("Python bindings" "Python (cython) bindings" HAVE_CYTHON)
 SUMMARY_ADD("Python tests" "Python bindings nose tests" HAVE_NOSETESTS)
 SUMMARY_ADD("Unit tests" "Unit tests" CXXTEST_FOUND AND COGUTIL_FOUND)
