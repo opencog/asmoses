@@ -84,19 +84,3 @@ workflows:
           filters:
             branches:
               only: master
-  build-nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - as-moses
-      - package:
-          requires:
-            - as-moses
-          filters:
-            branches:
-              only: master
