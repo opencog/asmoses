@@ -69,9 +69,9 @@ IF (HAVE_MOSES)
 
 	INSTALL (TARGETS moses_cython
 	         EXPORT ASMosesTargets
-	DESTINATION "${DATADIR}/python/asmoses")
+	         DESTINATION "${DATADIR}/python/asmoses")
 ENDIF (HAVE_MOSES)
 
 INSTALL (FILES
 	__init__.py
-DESTINATION "${DATADIR}/python/asmoses")
+	DESTINATION "${DATADIR}/python/asmoses")
