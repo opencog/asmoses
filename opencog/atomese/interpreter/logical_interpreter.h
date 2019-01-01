@@ -148,5 +148,22 @@ bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2){
 
 	return std::equal(p1_value.begin(), p1_value.end(), p2_value.begin(), comparator);
 }
+
+/**
+ * compute logical_not.
+ * it expects the values of the LinkValues to be TRUE_LINK and FALSE_LINK
+ * @param LinkValuePtr&     p1
+ *
+ * @return                 LinkValue pointer containing the logical_not.
+ */
+LinkValuePtr logical_not(const LinkValuePtr& p){
+    std::vector<ValuePtr> _result;
+    std::vector<ValuePtr> p_value = p->value();
+    std::vector<ValuePtr>::iterator it;
+    for(it = p_value.begin(); it != p_value.end(); ++it)
+        _result.push_back((HandleCast(*it)->get_type() == TRUE_LINK) ?
+        ValuePtr(createLink(FALSE_LINK)): ValuePtr(createLink(TRUE_LINK)));
+    return LinkValuePtr(new LinkValue(_result));
+}
 }}
 #endif //MOSES_LOGICAL_INTERPRETER_H
