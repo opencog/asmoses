@@ -72,7 +72,7 @@ public:
 
 		even_parity func;
 		logical_bscore lbsc(func, _arity);
-		behavioral_score bs = lbsc(or_link);
+		behavioral_score bs = lbsc(program);
 
 		behavioral_score expected_bs = {-1, -1, -1, -0, -0, -0, -0, -1};
 		std::cout << "bs = " <<bs << std::endl
