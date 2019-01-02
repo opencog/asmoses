@@ -67,4 +67,39 @@ public:
         TS_ASSERT(content_eq(h, plus_link));
 
     }
+
+    void test_atomese_combo_true_link(void){
+        combo::combo_tree tr = combo::str2combo_tree("true", {});
+
+        combo::ComboToAtomeseConverter to_atomese;
+        Handle h = to_atomese(tr);
+
+        Handle true_link = createLink(TRUE_LINK);
+
+        TS_ASSERT(content_eq(h, true_link));
+
+    }
+
+    void test_atomese_combo_false_link(void){
+        combo::combo_tree tr = combo::str2combo_tree("false", {});
+
+        combo::ComboToAtomeseConverter to_atomese;
+        Handle h = to_atomese(tr);
+
+        Handle false_link = createLink(FALSE_LINK);
+
+        TS_ASSERT(content_eq(h, false_link));
+
+    }
+
+    void test_atomese_combo_arguments(void) {
+        combo::combo_tree tr = combo::str2combo_tree("$1", {});
+
+        combo::ComboToAtomeseConverter to_atomese;
+        Handle h = to_atomese(tr);
+
+        Handle predicate_node = createNode(PREDICATE_NODE, "1");
+
+        TS_ASSERT(content_eq(predicate_node, h));
+    }
 };
