@@ -89,6 +89,12 @@ Type ComboToAtomeseConverter::atomese_builtin(const builtin &b, id::procedure_ty
 		case id::plus:
 			procedure_type = id::schema;
 			return PLUS_LINK;
+		case id::logical_true:
+			procedure_type = id::predicate;
+			return TRUE_LINK;
+		case id::logical_false:
+			procedure_type = id::predicate;
+			return FALSE_LINK;
 		default:
 			OC_ASSERT(false, "unsupported");
 			return -1;
@@ -101,6 +107,9 @@ std::pair<Type, Handle> ComboToAtomeseConverter::atomese_vertex(const vertex &v,
 	Handle handle;
 	Type type = -1;
 	if (const argument *a = get<argument>(&v)) {
+		if(parent_procedure_type == id::unknown) {
+			parent_procedure_type = id::predicate;
+		}
 		handle = atomese_argument(*a, parent_procedure_type);
 	} else if (const builtin *b = get<builtin>(&v)) {
 		type = atomese_builtin(*b, parent_procedure_type);
