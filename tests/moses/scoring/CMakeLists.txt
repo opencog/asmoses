@@ -19,3 +19,11 @@ TARGET_LINK_LIBRARIES(contin_bscoreUTest
 		atomese
 		${COGUTIL_LIBRARY}
 		)
+
+ADD_CXXTEST(ctruth_table_bscoreUTest)
+TARGET_LINK_LIBRARIES(ctruth_table_bscoreUTest
+		moses
+		ascombo
+		atomese
+		${COGUTIL_LIBRARY}
+		)
