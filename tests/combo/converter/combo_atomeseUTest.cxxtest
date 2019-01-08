@@ -23,8 +23,8 @@
 
 #include <opencog/combo/converter/combo_atomese.h>
 #include <opencog/combo/combo/combo.h>
+#include <opencog/atoms/atom_types/atom_types.h>
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/value/atom_types.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>
 

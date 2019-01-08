@@ -25,6 +25,8 @@
  * be used for instance in model combination to weight each candidate.
  */
 
+#include <ext/numeric>  // needed for __gnu_cxx::power
+
 #include <boost/math/special_functions/binomial.hpp>
 #include <boost/range/algorithm_ext/for_each.hpp>
 #include <boost/algorithm/string/trim.hpp>
@@ -258,8 +260,8 @@ double likelihood(const combo_tree& tr, const Table& table,
                                     * binomial_coefficient<double>(N1, j)
                                     * binomial_coefficient<double>(A0, k)
                                     * binomial_coefficient<double>(A1, h)
-                                    * power(p, i + N1-j + k + A1-h)
-                                    * power(1-p, N0-i + j + A0-k + h);
+                                    * __gnu_cxx::power(p, i + N1-j + k + A1-h)
+                                    * __gnu_cxx::power(1-p, N0-i + j + A0-k + h);
         } else PrMR = 1.0;
 
         log_ss << "PrMR=" << PrMR << ",";
