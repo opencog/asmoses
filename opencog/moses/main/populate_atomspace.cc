@@ -50,6 +50,9 @@ ValuePtr vertex_seq_to_value(const vertex_seq& col, id::type_node col_type) {
 			                     ss.str().c_str());
 		}
 	}
+
+	// Silence compiler warning
+	return nullptr;
 }
 
 }
