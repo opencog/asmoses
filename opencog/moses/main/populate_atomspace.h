@@ -42,6 +42,14 @@ using namespace combo;
 void populate(AtomSpace *as,  ITable &itable);
 
 /**
+ * Populate the given atomspace with input features of compressed table.
+ * @param Atomspace&     as
+ * @param Ctable&     ctable
+ *
+ */
+void populate(AtomSpace *as,  CTable &ctable);
+
+/**
  * Convertes vertex sequences to its corresponding values
  * @param vseq
  * @param tnode
