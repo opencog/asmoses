@@ -103,7 +103,7 @@ void metapopulation::deme_to_trees(deme_t& deme,
         const composite_score& inst_csc = inst.second;
         score_t inst_sc = inst_csc.get_score();
         // If score is really bad, don't bother.
-        if (inst_sc <= very_worst_score || !isfinite(inst_sc))
+        if (inst_sc <= very_worst_score or not std::isfinite(inst_sc))
             return;
 
         // Get the combo_tree associated to inst, cleaned and reduced.
@@ -533,13 +533,15 @@ void metapopulation::keep_top_unique_candidates(
                 logger().debug(ss.str());
             }
 
+#define EPSILON static_cast<score_t>(1e-6)
+
             // Remove duplicates till at most top_cnd unique
             // candidates remains
             for (auto it = deme.begin(), prev_it = it++;
                  it != deme.begin() + top_cnd;) {
                 score_t sc = (select_tag()(*it)).get_penalized_score(),
                     prev_sc = (select_tag()(*prev_it)).get_penalized_score();
-                if (is_approx_eq(prev_sc, sc)) { // they might be identical
+                if (is_approx_eq(prev_sc, sc, EPSILON)) { // they might be identical
                     combo_tree tr = rep.get_candidate(*it, true),
                         prev_tr = rep.get_candidate(*prev_it, true);
                     if (prev_tr == tr) { // they actually are identical

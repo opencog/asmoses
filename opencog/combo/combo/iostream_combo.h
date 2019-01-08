@@ -43,6 +43,7 @@ enum class output_format {
     combo,
     atomese,
     python,
+    python3,
     scheme,
     output_format_count                // to get the number of formats
 };
@@ -83,7 +84,8 @@ std::ostream& ostream_combo_it(std::ostream& out, Iter it,
             out << ")";
         }
         return out;
-    case(output_format::python): {
+    case(output_format::python):
+    case(output_format::python3): {
         bool is_infix = *it == id::logical_and or *it == id::logical_or;
 
         std::stringstream seperator;
