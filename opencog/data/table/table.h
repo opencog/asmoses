@@ -726,6 +726,8 @@ public:
 	arity_t get_arity() const
 	{ return ilabels.size(); }
 
+	vertex_seq get_input_col_data(int offset) const;
+
 	/// Return the total number of observations.
 	/// This will equal to the size of the corresponding uncompressed
 	/// when all row weights are equal to 1.0; otherwise, this is the

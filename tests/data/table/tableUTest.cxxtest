@@ -468,4 +468,18 @@ public:
 
 		TS_ASSERT(ctable == c_ctable);
 	}
+
+	void test_get_input_col_data()
+	{
+		string input_file = tableUTest_dir + "dataset.ctable";
+		CTable ct = loadCTable(input_file);
+
+		vertex_seq first_col = ct.get_input_col_data(0);
+
+		vertex_seq expected;
+		expected.push_back(id::logical_true);
+		expected.push_back(id::logical_false);
+
+		TS_ASSERT_EQUALS(expected, first_col);
+	}
 };
