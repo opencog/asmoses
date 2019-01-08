@@ -383,6 +383,8 @@ struct ctruth_table_bscore : public bscore_ctable_base
 
 	behavioral_score operator()(const combo_tree &tr) const;
 
+	behavioral_score operator()(const Handle &handle) const;
+
 	behavioral_score operator()(const scored_combo_tree_set &) const;
 
 	// Return the best possible bscore. Used as one of the

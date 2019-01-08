@@ -334,6 +334,23 @@ behavioral_score ctruth_table_bscore::operator()(const combo_tree &tr) const
 	return bs;
 }
 
+behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
+{
+	behavioral_score bs;
+	atomese::Interpreter interpreter(moses::compressed_value_key);
+
+	const ValuePtr result = interpreter(handle);
+	boost::transform(LinkValueCast(result)->value(), _wrk_ctable, back_inserter(bs),
+	                 [&](ValuePtr res, const CTable::value_type &vct){
+		                 const CTable::counter_t &c = vct.second;
+		                 // if predicted true return negative of arity of false
+		                 // and vice versa
+		                 return -c.get(HandleCast(res)->get_type() == TRUE_LINK ?
+		                               id::logical_false : id::logical_true);
+	                 });
+	return bs;
+}
+
 /// Boolean ensemble scorer.  Assumes that the ensemble signature outputs
 /// a boolean value.  All of the trees in the ensmble get a weighted vote,
 /// that vote is totalled to get the prediction of the ensemble, and then

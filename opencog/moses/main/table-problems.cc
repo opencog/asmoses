@@ -167,6 +167,7 @@ void table_problem_base::common_setup(problem_params& pms)
     if (pms.deme_params.atomspace_port) {
         _as = new AtomSpace();
         populate(_as, table.itable);
+        populate(_as, ctable);
     }
 
     pms.mmr_pa.ilabels = ilabels;
