@@ -107,8 +107,12 @@ public:
 		vector<bool> feature2_results = {};
 
 		//Convert linkvalue to equivalent bool
-		for (ValuePtr pr:values_vec1) feature1_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
-		for (ValuePtr pr:values_vec2) feature2_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+		for (ValuePtr pr:values_vec1) {
+			feature1_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+		}
+		for (ValuePtr pr:values_vec2) {
+			feature2_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+		}
 
 		vector<bool> expected_feature1 = {true, false};
 		vector<bool> expected_feature2 = {false, true};
