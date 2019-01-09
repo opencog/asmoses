@@ -87,8 +87,8 @@ struct composite_score:
 	// Note: we cache the total penalized_score, in order to avoid a
 	// subtraction in the comparison operator.
 	composite_score(score_t scor, complexity_t cpxy,
-	                score_t complexity_penalty_ = 0.0,
-	                score_t diversity_penalty_ = 0.0)
+	                score_t complexity_penalty_=0.0,
+	                score_t diversity_penalty_=0.0)
 		: multiply_diversity(false), score(scor), complexity(cpxy),
 		  complexity_penalty(complexity_penalty_),
 		  diversity_penalty(diversity_penalty_)
@@ -140,7 +140,7 @@ struct composite_score:
 	bool operator<(const composite_score &r) const;
 
 	/// used in test cases -- compare equality to 7 decimal places.
-	bool operator==(const composite_score& r) const;
+	bool operator==(const composite_score &r) const;
 
 	// EXPERIMENTAL: if multiply_diversity is set to true then the
 	// diversity_penalty is multiplied with the raw score instead
@@ -190,7 +190,7 @@ extern const composite_score worst_composite_score;
 // XXX wouldn't it be better to store ints here ??
 struct demeID_t : public std::string
 {
-	demeID_t(unsigned expansion = 0 /* default initial deme */);
+	demeID_t(unsigned expansion=0 /* default initial deme */);
 	demeID_t(unsigned expansion, unsigned breadth_first);
 	demeID_t(unsigned expansion, unsigned breadth_first, unsigned ss_deme);
 };
@@ -409,10 +409,10 @@ std::ostream& ostream_behavioral_score(std::ostream& out, const behavioral_score
 // Stream out a scored combo tree.
 std::ostream& ostream_scored_combo_tree(std::ostream& out,
                                         const scored_combo_tree&,
-                                        bool output_score = true,
-                                        bool output_cscore = true,
-                                        bool output_demeID = true,
-                                        bool output_bscore = true,
+                                        bool output_score=true,
+                                        bool output_cscore=true,
+                                        bool output_demeID=true,
+                                        bool output_bscore=true,
                                         const std::vector<std::string>& labels
                                         = std::vector<std::string>(),
                                         combo::output_format fmt
