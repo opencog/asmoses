@@ -7,28 +7,28 @@
 
 namespace opencog { namespace moses {
 
-void populate(AtomSpace *as, ITable &itable) {
+void populate(AtomSpace *as, const ITable &itable) {
 
 	int n_columns = itable.get_types().size();
 	for (int i = 0; i < n_columns; i++) {
 		id::type_node col_type = itable.get_types().at(i);
-		vertex_seq col = itable.get_column_data(i);
-		Handle feature = createNode(SCHEMA_NODE,itable.get_labels().at(i));
-		ValuePtr vtr = vertex_seq_to_value(col, col_type);
+		const vertex_seq &col = itable.get_column_data(i);
+		const Handle &feature = createNode(SCHEMA_NODE,itable.get_labels().at(i));
+		const ValuePtr &vtr = vertex_seq_to_value(col, col_type);
 		feature->setValue(value_key, vtr);
 		as->add_atom(feature);
 	}
 }
 
-void populate(AtomSpace *as, CTable &ctable)
+void populate(AtomSpace *as, const CTable &ctable)
 {
 	const string_seq &labels = ctable.get_input_labels();
 	const type_tree_seq &types = get_signature_inputs(ctable.get_signature());
 
 	for (int j = 0; j < labels.size(); ++j) {
-		vertex_seq col = ctable.get_input_col_data(j);
-		Handle feature = createNode(SCHEMA_NODE, labels[j]);
-		ValuePtr vtr = vertex_seq_to_value(col, get_type_node(types[j]));
+		const vertex_seq &col = ctable.get_input_col_data(j);
+		const Handle &feature = createNode(SCHEMA_NODE, labels[j]);
+		const ValuePtr &vtr = vertex_seq_to_value(col, get_type_node(types[j]));
 		feature->setValue(compressed_value_key, vtr);
 		as->add_atom(feature);
 	}
