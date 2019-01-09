@@ -26,7 +26,7 @@
 
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/value/LinkValue.h>
-#include "opencog/utils/valueUtils.h"
+#include <opencog/utils/valueUtils.h>
 #include <boost/iterator/zip_iterator.hpp>
 
 namespace opencog{ namespace atomese{

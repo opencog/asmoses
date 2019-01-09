@@ -4,7 +4,7 @@
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/value/Value.h>
-#include "opencog/utils/valueUtils.h"
+#include <opencog/utils/valueUtils.h>
 
 using namespace opencog;
 using namespace moses;

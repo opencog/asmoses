@@ -45,8 +45,8 @@
 #include <opencog/util/MannWhitneyU.h>
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomese/interpreter/Interpreter.h>
-#include "opencog/utils/valueUtils.h"
-#include "opencog/utils/value_key.h"
+#include <opencog/utils/valueUtils.h>
+#include <opencog/utils/value_key.h>
 #include "bscores.h"
 
 namespace opencog

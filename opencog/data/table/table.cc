@@ -40,11 +40,11 @@
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atomese/interpreter/Interpreter.h>
 
-#include "opencog/combo/combo/ann.h"
-#include "opencog/combo/combo/simple_nn.h"
-#include "opencog/combo/combo/convert_ann_combo.h"
-#include "opencog/utils/value_key.h"
-#include "opencog/utils/valueUtils.h"
+#include <opencog/combo/combo/ann.h>
+#include <opencog/combo/combo/simple_nn.h>
+#include <opencog/combo/combo/convert_ann_combo.h>
+#include <opencog/utils/value_key.h>
+#include <opencog/utils/valueUtils.h>
 
 #include "table.h"
 #include "table_io.h"

@@ -27,8 +27,8 @@
 #include <opencog/data/table/table.h>
 #include <opencog/data/table/table_io.h>
 
-#include "opencog/utils/value_key.h"
-#include "opencog/utils/valueUtils.h"
+#include <opencog/utils/value_key.h>
+#include <opencog/utils/valueUtils.h>
 
 using namespace opencog;
 using namespace combo;
