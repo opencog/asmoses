@@ -905,9 +905,7 @@ void complete_truth_table::populate(const Handle &handle)
 
 	// convert Links in the result of the interpreter to bool,
 	// and store it to the truth table.
-	std::transform(result.begin(), result.end(), begin(), [](ValuePtr p){
-		return bool_value_to_bool(p);
-	});
+	std::transform(result.begin(), result.end(), begin(), bool_value_to_bool);
 }
 
 void complete_truth_table::populate_features(std::vector<ValuePtrVec> &features)
