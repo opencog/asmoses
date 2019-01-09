@@ -26,6 +26,7 @@
 
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/value/LinkValue.h>
+#include "opencog/utils/valueUtils.h"
 #include <boost/iterator/zip_iterator.hpp>
 
 namespace opencog{ namespace atomese{
@@ -43,8 +44,8 @@ struct zip_and :
 
 	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
 	{
-		if (HandleCast(t.get<0>())->get_type() == TRUE_LINK
-		   && HandleCast(t.get<1>())->get_type() == TRUE_LINK) {
+		if (bool_value_to_bool(t.get<0>())
+		   && bool_value_to_bool(t.get<1>())) {
 			_result.push_back(ValuePtr(createLink(TRUE_LINK)));
 		}
 		else {
@@ -66,8 +67,8 @@ struct zip_or :
 
 	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
 	{
-		if ((HandleCast(t.get<0>())->get_type() == TRUE_LINK)
-		   || (HandleCast(t.get<1>())->get_type() == TRUE_LINK)) {
+		if (bool_value_to_bool(t.get<0>())
+		   || bool_value_to_bool(t.get<1>())) {
 			_result.push_back(ValuePtr(createLink(TRUE_LINK)));
 		}
 		else {

@@ -44,6 +44,7 @@
 #include "opencog/combo/combo/simple_nn.h"
 #include "opencog/combo/combo/convert_ann_combo.h"
 #include "opencog/utils/value_key.h"
+#include "opencog/utils/valueUtils.h"
 
 #include "table.h"
 #include "table_io.h"
@@ -905,7 +906,7 @@ void complete_truth_table::populate(const Handle &handle)
 	// convert Links in the result of the interpreter to bool,
 	// and store it to the truth table.
 	std::transform(result.begin(), result.end(), begin(), [](ValuePtr p){
-		return HandleCast(p)->get_type() == TRUE_LINK;
+		return bool_value_to_bool(p);
 	});
 }
 

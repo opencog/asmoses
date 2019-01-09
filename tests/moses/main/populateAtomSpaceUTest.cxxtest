@@ -4,6 +4,7 @@
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/value/Value.h>
+#include "opencog/utils/valueUtils.h"
 
 using namespace opencog;
 using namespace moses;
@@ -73,8 +74,8 @@ public:
 		vector<bool> results2 = {};
 
 		//Convert linkvalue to equivalent bool
-		for (ValuePtr pr:values_vec1) results1.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
-		for (ValuePtr pr:values_vec2) results2.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+		for (ValuePtr pr:values_vec1) results1.push_back(bool_value_to_bool(pr));
+		for (ValuePtr pr:values_vec2) results2.push_back(bool_value_to_bool(pr));
 
 		vector<bool> expected1 = {true, false};
 		vector<bool> expected2 = {false, true};
@@ -108,10 +109,10 @@ public:
 
 		//Convert linkvalue to equivalent bool
 		for (ValuePtr pr:values_vec1) {
-			feature1_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+			feature1_results.push_back(bool_value_to_bool(pr));
 		}
 		for (ValuePtr pr:values_vec2) {
-			feature2_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+			feature2_results.push_back(bool_value_to_bool(pr));
 		}
 
 		vector<bool> expected_feature1 = {true, false};

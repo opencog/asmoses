@@ -2,6 +2,7 @@
 #define _OPENCOG_VALUE_UTILS_H_
 
 #include <opencog/atoms/value/Value.h>
+#include <opencog/atoms/base/Link.h>
 #include <opencog/combo/combo/vertex.h>
 
 namespace opencog
