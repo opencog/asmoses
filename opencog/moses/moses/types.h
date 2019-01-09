@@ -449,6 +449,6 @@ inline std::ostream& operator<<(std::ostream& out,
 }
 
 } // ~namespace moses
-} // ~namespace moses
+} // ~namespace opencog
 
 #endif
