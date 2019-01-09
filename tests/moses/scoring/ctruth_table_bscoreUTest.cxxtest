@@ -1,0 +1,79 @@
+/** ctruth_table_bscoreUTest.cxxtest ---
+ *
+ * Copyright (C) 2019 OpenCog Foundation
+ *
+ * Authors: Kasim Ebrahim <se.kasim.ebrahim@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <cxxtest/TestSuite.h>
+#include <opencog/moses/scoring/bscores.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/data/table/table.h>
+#include <opencog/data/table/table_io.h>
+
+#include "opencog/utils/value_key.h"
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+#define GET_VALUE [](const vertex &ver)                              \
+{                                                                    \
+	return ValuePtr(get_builtin(ver)==id::logical_true ?             \
+		   createLink(TRUE_LINK) : createLink(FALSE_LINK));          \
+}
+
+const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+
+class ctruth_table_bscoreUTest : public CxxTest::TestSuite
+{
+public:
+	void test_ctruth_table_bscore(void)
+	{
+		string input_file = utest_dir + "dataset.ctable";
+		CTable ct = loadCTable(input_file);
+		ctruth_table_bscore ct_bscore(ct);
+
+		Handle f1 = createNode(PREDICATE_NODE, "f1");
+		Handle f2 = createNode(PREDICATE_NODE, "f2");
+		std::vector<ValuePtr> _f1_values;
+		std::vector<ValuePtr> _f2_values;
+
+		boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), GET_VALUE);
+		boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), GET_VALUE);
+
+		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+		f1->setValue(moses::compressed_value_key, f1_proto_atom);
+		ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+		f2->setValue(moses::compressed_value_key, f2_proto_atom);
+
+		HandleSeq handleSeq = {f1, f2};
+		Handle program = createLink(handleSeq, AND_LINK);
+
+		behavioral_score bs = ct_bscore(program);
+		// note that the compressed table might get reordered in this case the
+		// third row will come at the first. Since the population of the input data
+		// to atomspace is called after the reorder this should have no problem.
+		// [it is called at the end of table_problem_base::common_setup(problem_params& pms)].
+		behavioral_score expected_bs = {-1, -10, -4, -6};
+
+		TS_ASSERT_EQUALS(bs, expected_bs);
+	}
+};

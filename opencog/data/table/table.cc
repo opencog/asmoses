@@ -847,6 +847,21 @@ void CTable::balance()
 	}
 }
 
+vertex_seq CTable::get_input_col_data(int offset) const
+{
+	vertex_seq col;
+
+	if (-1 == offset)
+		return col;
+
+	get_at_visitor<vertex> gvav(offset);
+	auto agva = boost::apply_visitor(gvav);
+	for (const auto &row : *this) {
+		col.push_back(agva(row.first.get_variant()));
+	}
+	return col;
+}
+
 // -------------------------------------------------------
 
 // XXX TODO replace this by the util p_norm function.

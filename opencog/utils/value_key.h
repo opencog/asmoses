@@ -8,6 +8,7 @@ namespace moses
 {
 
 const static Handle value_key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
+const static Handle compressed_value_key = createNode(NODE, "*-AS-MOSES:SchemaCompressedValuesKey-*");
 
 } // ~namespace moses
 } // ~namespace opencog

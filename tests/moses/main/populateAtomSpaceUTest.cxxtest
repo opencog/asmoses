@@ -10,6 +10,8 @@ using namespace moses;
 using namespace combo;
 using namespace std;
 
+const string populateAtomSpaceUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
+
 class populateAtomSpaceUTest : public CxxTest::TestSuite {
 public:
 	string f1;
@@ -79,5 +81,43 @@ public:
 
 		TS_ASSERT_EQUALS(results1, expected1);
 		TS_ASSERT_EQUALS(results2, expected2);
+	}
+
+	void test_populate_compressed() {
+		AtomSpace as;
+		string input_file = populateAtomSpaceUTest_dir + "dataset.ctable";
+		CTable ct = loadCTable(input_file);
+
+		populate(&as, ct);
+
+		//Get the labels of the Table
+		const string_seq labels = ct.get_input_labels();
+		f1 = labels[0];
+		f2 = labels[1];
+
+		//get the inputs from AtomSpace
+		feature1 = as.get_handle(SCHEMA_NODE, f1)->getValue(moses::compressed_value_key);
+		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(moses::compressed_value_key);
+
+		//Get the values
+		values_vec1 = LinkValueCast(feature1)->value();
+		values_vec2 = LinkValueCast(feature2)->value();
+
+		vector<bool> feature1_results = {};
+		vector<bool> feature2_results = {};
+
+		//Convert linkvalue to equivalent bool
+		for (ValuePtr pr:values_vec1) {
+			feature1_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+		}
+		for (ValuePtr pr:values_vec2) {
+			feature2_results.push_back(HandleCast(pr)->get_type() == TRUE_LINK);
+		}
+
+		vector<bool> expected_feature1 = {true, false};
+		vector<bool> expected_feature2 = {false, true};
+
+		TS_ASSERT_EQUALS(feature1_results, expected_feature1);
+		TS_ASSERT_EQUALS(feature2_results, expected_feature2);
 	}
 };
