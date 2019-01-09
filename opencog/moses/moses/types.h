@@ -261,9 +261,9 @@ class scored_combo_tree : public boost::equality_comparable<scored_combo_tree>
 {
 public:
 	scored_combo_tree(combo::combo_tree tr,
-	                  demeID_t id = demeID_t(),
-	                  composite_score cs = composite_score(),
-	                  behavioral_score bs = behavioral_score())
+	                  demeID_t id=demeID_t(),
+	                  composite_score cs=composite_score(),
+	                  behavioral_score bs=behavioral_score())
 		: _tree(tr), _deme_id(id), _cscore(cs), _bscore(bs), _weight(1.0)
 		{}
 
