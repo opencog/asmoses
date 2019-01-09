@@ -28,6 +28,7 @@
 #include <opencog/data/table/table_io.h>
 
 #include "opencog/utils/value_key.h"
+#include "opencog/utils/valueUtils.h"
 
 using namespace opencog;
 using namespace combo;
@@ -36,8 +37,7 @@ using namespace std;
 
 #define GET_VALUE [](const vertex &ver)                              \
 {                                                                    \
-	return ValuePtr(get_builtin(ver)==id::logical_true ?             \
-		   createLink(TRUE_LINK) : createLink(FALSE_LINK));          \
+	return bool_vertex_to_value(ver);                                \
 }
 
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
