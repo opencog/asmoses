@@ -295,4 +295,29 @@ std::istream& istream_scored_combo_trees(std::istream& in,
 }
 
 } // ~namespace moses
+
+std::string oc_to_string(const moses::composite_score& cs,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	moses::operator<<(ss, cs);
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::behavioral_score& bs,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	moses::operator<<(ss, bs);
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::scored_combo_tree &sct,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	moses::operator<<(ss, sct);
+	return ss.str();
+}
+
 } // ~namespace opencog

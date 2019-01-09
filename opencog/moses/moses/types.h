@@ -37,6 +37,7 @@
 #include <boost/operators.hpp>
 #include <boost/ptr_container/ptr_set.hpp>
 
+#include <opencog/util/empty_string.h> // For gdb pretty print
 #include <opencog/util/functional.h>
 #include <opencog/util/iostreamContainer.h>
 
@@ -449,6 +450,16 @@ inline std::ostream& operator<<(std::ostream& out,
 }
 
 } // ~namespace moses
+
+// For gdb pretty print, see
+// https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
+std::string oc_to_string(const moses::composite_score& cs,
+                         const std::string &indent=empty_string);
+std::string oc_to_string(const moses::behavioral_score& bs,
+                         const std::string &indent=empty_string);
+std::string oc_to_string(const moses::scored_combo_tree &sct,
+                         const std::string &indent=empty_string);
+
 } // ~namespace opencog
 
 #endif
