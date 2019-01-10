@@ -16,7 +16,9 @@ inline bool bool_value_to_bool (const ValuePtr &valuePtr)
 
 inline ValuePtr bool_vertex_to_value (const vertex &v)
 {
-	return ValuePtr(vertex_to_bool(v) ? createLink(TRUE_LINK) : createLink(FALSE_LINK));
+	static const ValuePtr t_value(createLink(TRUE_LINK));
+	static const ValuePtr f_value(createLink(FALSE_LINK));
+	return vertex_to_bool(v) ? t_value : f_value;
 }
 } // ~namespace opencog
 
