@@ -45,8 +45,8 @@
 #include <opencog/util/MannWhitneyU.h>
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomese/interpreter/Interpreter.h>
-
-#include "opencog/utils/value_key.h"
+#include <opencog/utils/valueUtils.h>
+#include <opencog/utils/value_key.h>
 #include "bscores.h"
 
 namespace opencog
@@ -345,7 +345,7 @@ behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
 		                 const CTable::counter_t &c = vct.second;
 		                 // if predicted true return negative of arity of false
 		                 // and vice versa
-		                 return -c.get(HandleCast(res)->get_type() == TRUE_LINK ?
+		                 return -c.get(bool_value_to_bool(res) ?
 		                               id::logical_false : id::logical_true);
 	                 });
 	return bs;

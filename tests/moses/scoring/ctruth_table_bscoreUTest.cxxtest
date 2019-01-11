@@ -27,18 +27,13 @@
 #include <opencog/data/table/table.h>
 #include <opencog/data/table/table_io.h>
 
-#include "opencog/utils/value_key.h"
+#include <opencog/utils/value_key.h>
+#include <opencog/utils/valueUtils.h>
 
 using namespace opencog;
 using namespace combo;
 using namespace moses;
 using namespace std;
-
-#define GET_VALUE [](const vertex &ver)                              \
-{                                                                    \
-	return ValuePtr(get_builtin(ver)==id::logical_true ?             \
-		   createLink(TRUE_LINK) : createLink(FALSE_LINK));          \
-}
 
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
 
@@ -56,8 +51,8 @@ public:
 		std::vector<ValuePtr> _f1_values;
 		std::vector<ValuePtr> _f2_values;
 
-		boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), GET_VALUE);
-		boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), GET_VALUE);
+		boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+		boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
 
 		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
 		f1->setValue(moses::compressed_value_key, f1_proto_atom);
