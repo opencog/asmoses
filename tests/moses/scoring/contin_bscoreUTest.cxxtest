@@ -37,7 +37,7 @@ using namespace std;
 #define GET_CONTIN [](const vertex &ver){ return get_contin(ver); }
 
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
-const string target_feature = "out";
+const string target_feature="out";
 
 class contin_bscoreUTest : public CxxTest::TestSuite
 {

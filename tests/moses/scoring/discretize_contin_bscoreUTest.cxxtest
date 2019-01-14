@@ -35,7 +35,7 @@ using namespace moses;
 using namespace std;
 
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
-const string target_feature = "out";
+const string target_feature="out";
 const vector<double> thresholds={0};
 
 class discretize_contin_bscoreUTest : public CxxTest::TestSuite
