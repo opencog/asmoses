@@ -307,6 +307,20 @@ behavioral_score discretize_contin_bscore::operator()(const combo_tree &tr) cons
 	return bs;
 }
 
+behavioral_score discretize_contin_bscore::operator()(const Handle &handle) const
+{
+	behavioral_score bs;
+	atomese::Interpreter interpreter(moses::value_key);
+
+	const ValuePtr result = interpreter(handle);
+	boost::transform(FloatValueCast(result)->value(), classes, back_inserter(bs),
+	                 [&](contin_t res, size_t c_idx){
+		                 return (c_idx != this->class_idx(res)) * this->weights[c_idx];
+	                 });
+	log_candidate_bscore(handle, bs);
+	return bs;
+}
+
 /////////////////////////
 // ctruth_table_bscore //
 /////////////////////////

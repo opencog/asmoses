@@ -1,6 +1,6 @@
-/** contin_bscore_UTest.cxxtest ---
+/** discretize_contin_bscore_UTest.cxxtest ---
  *
- * Copyright (C) 2018 OpenCog Foundation
+ * Copyright (C) 2019 OpenCog Foundation
  *
  * Authors: Kasim Ebrahim <se.kasim.ebrahim@gmail.com>
  *
@@ -34,26 +34,25 @@ using namespace combo;
 using namespace moses;
 using namespace std;
 
-#define GET_CONTIN [](const vertex &ver){ return get_contin(ver); }
-
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
 const string target_feature="out";
+const vector<double> thresholds={0};
 
-class contin_bscoreUTest : public CxxTest::TestSuite
+class discretize_contin_bscoreUTest : public CxxTest::TestSuite
 {
 public:
-	void test_contin_bscore(void)
+	void test_disc_contin_bscore(void)
 	{
-		Table table = loadTable(utest_dir + "contin_data.csv", target_feature);
-		contin_bscore c_bscore(table);
+		Table table = loadTable(utest_dir + "disc_contin_data.csv", target_feature);
+		discretize_contin_bscore dis_c_bscore(table.otable, table.itable, thresholds, false);
 
 		Handle f1 = createNode(SCHEMA_NODE, "f1");
 		Handle f2 = createNode(SCHEMA_NODE, "f2");
 		std::vector<double > _f1_values;
 		std::vector<double > _f2_values;
 
-		boost::transform(table.itable.get_column_data(0), back_inserter(_f1_values), GET_CONTIN);
-		boost::transform(table.itable.get_column_data(1), back_inserter(_f2_values), GET_CONTIN);
+		boost::transform(table.itable.get_column_data(0), back_inserter(_f1_values), get_contin);
+		boost::transform(table.itable.get_column_data(1), back_inserter(_f2_values), get_contin);
 
 		ValuePtr f1_proto_atom(new FloatValue(_f1_values));
 		f1->setValue(moses::value_key, f1_proto_atom);
@@ -63,8 +62,8 @@ public:
 		HandleSeq handleSeq = {f1, f2};
 		Handle program = createLink(handleSeq, PLUS_LINK);
 
-		behavioral_score bs = c_bscore(program);
-		behavioral_score expected_bs = {0, 0, -1};
+		behavioral_score bs = dis_c_bscore(program);
+		behavioral_score expected_bs = {0, 0, 0, 1, 0};
 
 		TS_ASSERT_EQUALS(bs, expected_bs);
 	}

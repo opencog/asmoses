@@ -372,6 +372,15 @@ static inline void log_candidate_bscore(const combo_tree &tr,
 		                << " bscore: " << bs;
 }
 
+static inline void log_candidate_bscore(const Handle &handle,
+                                        const behavioral_score &bs)
+{
+	if (logger().is_fine_enabled())
+		logger().fine() << "Evaluate candidate: " << handle->to_string() << "\n"
+		                << "\tBScore size=" << bs.size()
+		                << " bscore: " << bs;
+}
+
 } //~namespace moses
 } //~namespace opencog
 
