@@ -85,7 +85,7 @@ struct zip_or :
  *
  * @return                 LinkValue pointer containing the logical_and.
  */
-LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2){
+LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -111,7 +111,7 @@ LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2){
  *
  * @return                 LinkValue pointer containing the logical_or.
  */
-LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2){
+LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -136,7 +136,7 @@ LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2){
  *
  * @return                 boolean of the comparision.
  */
-bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2){
+bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -156,7 +156,7 @@ bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2){
  *
  * @return                 LinkValue pointer containing the logical_not.
  */
-LinkValuePtr logical_not(const LinkValuePtr& p){
+LinkValuePtr logical_not(const LinkValuePtr& p) {
 	std::vector<ValuePtr> _result;
 	std::vector<ValuePtr> p_value = p->value();
 	std::vector<ValuePtr>::iterator it;
