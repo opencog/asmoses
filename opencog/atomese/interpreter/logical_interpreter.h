@@ -161,7 +161,7 @@ LinkValuePtr logical_not(const LinkValuePtr& p) {
 	std::vector<ValuePtr> p_value = p->value();
 	std::vector<ValuePtr>::iterator it;
 	for(it = p_value.begin(); it != p_value.end(); ++it)
-		_result.push_back((HandleCast(*it)->get_type() == TRUE_LINK) ?
+		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
 		ValuePtr(createLink(FALSE_LINK)): ValuePtr(createLink(TRUE_LINK)));
 	return LinkValuePtr(new LinkValue(_result));
 }
