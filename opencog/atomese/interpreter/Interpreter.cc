@@ -130,6 +130,12 @@ ValuePtr Interpreter::execute(const Type t, const ProtomSeq& params)
 		}
 		return ValuePtr(result);
 	}
+	if (t == NOT_LINK) {
+		OC_ASSERT(params.size() == 1);
+		LinkValuePtr result;
+		result = logical_not( LinkValueCast(params[0]));
+		return ValuePtr(result);
+	}
 	return ValuePtr();
 }
 

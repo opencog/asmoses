@@ -85,7 +85,7 @@ struct zip_or :
  *
  * @return                 LinkValue pointer containing the logical_and.
  */
-LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2){
+LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -111,7 +111,7 @@ LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2){
  *
  * @return                 LinkValue pointer containing the logical_or.
  */
-LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2){
+LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -136,7 +136,7 @@ LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2){
  *
  * @return                 boolean of the comparision.
  */
-bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2){
+bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -147,6 +147,23 @@ bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2){
 	};
 
 	return std::equal(p1_value.begin(), p1_value.end(), p2_value.begin(), comparator);
+}
+
+/**
+ * compute logical_not.
+ * it expects the values of the LinkValues to be TRUE_LINK and FALSE_LINK
+ * @param LinkValuePtr&     p1
+ *
+ * @return                 LinkValue pointer containing the logical_not.
+ */
+LinkValuePtr logical_not(const LinkValuePtr& p) {
+	std::vector<ValuePtr> _result;
+	std::vector<ValuePtr> p_value = p->value();
+	std::vector<ValuePtr>::iterator it;
+	for(it = p_value.begin(); it != p_value.end(); ++it)
+		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
+		ValuePtr(createLink(FALSE_LINK)): ValuePtr(createLink(TRUE_LINK)));
+	return LinkValuePtr(new LinkValue(_result));
 }
 }}
 #endif //MOSES_LOGICAL_INTERPRETER_H

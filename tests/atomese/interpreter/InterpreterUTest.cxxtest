@@ -148,12 +148,14 @@ public:
 	{
 		// Atomese program to be evaluated over the problem_data
 		HandleSeq seq1 = {p1, p2};
-		Handle sub_program = createLink(seq1, AND_LINK);
-		HandleSeq seq2 = {sub_program, createLink(FALSE_LINK)};
-		Handle program = createLink(seq2, OR_LINK);
+		Handle sub_program1 = createLink(seq1, AND_LINK);
+		HandleSeq seq2 = {p3};
+		Handle sub_program2 = createLink(seq2, NOT_LINK);
+		HandleSeq seq3 = {sub_program1, sub_program2};
+		Handle program = createLink(seq3, OR_LINK);
 
 		// expected out put vector
-		std::vector<ValuePtr> exp_value = {f_link, t_link, f_link};
+		std::vector<ValuePtr> exp_value = {t_link, t_link, f_link};
 		ValuePtr expected(new LinkValue(exp_value));
 
 		// interpret
