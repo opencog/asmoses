@@ -21,7 +21,7 @@
  */
 
 #include <cxxtest/TestSuite.h>
-#include <moses/moses/scoring/bscores.h>
+#include <opencog/moses/scoring/bscores.h>
 #include <examples/example-progs/scoring_iterators.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/util/Logger.h>
@@ -72,9 +72,9 @@ public:
 
 		even_parity func;
 		logical_bscore lbsc(func, _arity);
-		behavioral_score bs = lbsc(or_link);
+		behavioral_score bs = lbsc(program);
 
-		behavioral_score expected_bs = {-1, -1, -1, -0, -0, -0, -0, -1};
+		behavioral_score expected_bs = {-1, -1, -1, -0, -0, -1, -1, -0};
 		std::cout << "bs = " <<bs << std::endl
 				  << "expected_bs = " << expected_bs << std::endl;
 		TS_ASSERT_EQUALS(bs, expected_bs);

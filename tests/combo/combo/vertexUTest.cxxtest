@@ -1,5 +1,5 @@
-#include <moses/combo/combo/vertex.h>
-#include <moses/combo/combo/iostream_combo.h>
+#include <opencog/combo/combo/vertex.h>
+#include <opencog/combo/combo/iostream_combo.h>
 
 using namespace opencog::combo;
 using namespace std;

@@ -22,12 +22,12 @@
 
 
 #include <cxxtest/TestSuite.h>
-#include <moses/moses/scoring/bscores.h>
+#include <opencog/moses/scoring/bscores.h>
 #include <opencog/atoms/base/Link.h>
-#include <moses/data/table/table.h>
-#include <moses/data/table/table_io.h>
+#include <opencog/data/table/table.h>
+#include <opencog/data/table/table_io.h>
 
-#include "moses/utils/value_key.h"
+#include "opencog/utils/value_key.h"
 
 using namespace opencog;
 using namespace combo;
@@ -37,7 +37,7 @@ using namespace std;
 #define GET_CONTIN [](const vertex &ver){ return get_contin(ver); }
 
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
-const string target_feature = "out";
+const string target_feature="out";
 
 class contin_bscoreUTest : public CxxTest::TestSuite
 {

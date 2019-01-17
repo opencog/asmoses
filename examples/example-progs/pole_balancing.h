@@ -1,7 +1,7 @@
 #ifndef POLEBALANCINGINC
 #define POLEBALANCINGINC
 
-#include <moses/combo/combo/simple_nn.h>
+#include <opencog/combo/combo/simple_nn.h>
 
 using namespace opencog;
 

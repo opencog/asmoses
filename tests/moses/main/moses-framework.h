@@ -29,9 +29,9 @@
 
 #include <opencog/util/oc_assert.h>
 
-#include <moses/combo/combo/vertex.h>
-#include <moses/moses/moses/types.h>
-#include <moses/moses/main/moses_exec.h>
+#include <opencog/combo/combo/vertex.h>
+#include <opencog/moses/moses/types.h>
+#include <opencog/moses/main/moses_exec.h>
 
 using namespace std;
 using boost::trim_copy;
