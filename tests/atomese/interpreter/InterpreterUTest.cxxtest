@@ -58,13 +58,13 @@ public:
 		std::vector<double> _f3_values = {0.0, 0.0, 0.0};
 		std::vector<double> _size_value = {3};
 
-		ValuePtr f1_proto_atom(new FloatValue(_f1_values));
+		ValuePtr f1_proto_atom(new FloatSeqValue(_f1_values));
 		f1->setValue(moses::value_key, f1_proto_atom);
 
-		ValuePtr f2_proto_atom(new FloatValue(_f2_values));
+		ValuePtr f2_proto_atom(new FloatSeqValue(_f2_values));
 		f2->setValue(moses::value_key, f2_proto_atom);
 
-		ValuePtr f3_proto_atom(new FloatValue(_f3_values));
+		ValuePtr f3_proto_atom(new FloatSeqValue(_f3_values));
 		f3->setValue(moses::value_key, f3_proto_atom);
 
 		// initialization of program [Boolean]
@@ -101,7 +101,7 @@ public:
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
 		ValuePtr _result = interpreter(program);
-		std::vector<double> result = FloatValueCast(_result)->value();
+		std::vector<double> result = FloatSeqValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
 	}
@@ -119,7 +119,7 @@ public:
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
 		ValuePtr _result = interpreter(program);
-		std::vector<double> result = FloatValueCast(_result)->value();
+		std::vector<double> result = FloatSeqValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
 	}
@@ -139,7 +139,7 @@ public:
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
 		ValuePtr _result = interpreter(program);
-		std::vector<double> result = FloatValueCast(_result)->value();
+		std::vector<double> result = FloatSeqValueCast(_result)->value();
 
 		TS_ASSERT(result == exp_value);
 	}
