@@ -83,7 +83,7 @@ ValuePtr Interpreter::unwrap_constant(const Handle &handle)
 	if (FALSE_LINK == t || TRUE_LINK == t) {
 		std::vector<ValuePtr> constant_value(_problem_data_size,
 		                                   ValuePtr(handle));
-		ValuePtr constant(new LinkValue(constant_value));
+		ValuePtr constant(new SeqValue(constant_value));
 		return constant;
 	}
 	OC_ASSERT(false, "Unsupported Constant Type");
@@ -113,20 +113,20 @@ ValuePtr Interpreter::execute(const Type t, const ProtomSeq& params)
 	if (t == AND_LINK) {
 		std::vector<ValuePtr> _result(_problem_data_size,
 		                                  ValuePtr(createLink(TRUE_LINK)));
-		LinkValuePtr result(new LinkValue(_result));
+		SeqValuePtr result(new SeqValue(_result));
 
 		for (const ValuePtr &p : params) {
-			result = logical_and(result, LinkValueCast(p));
+			result = logical_and(result, SeqValueCast(p));
 		}
 		return ValuePtr(result);
 	}
 	if (t == OR_LINK) {
 		std::vector<ValuePtr> _result(_problem_data_size,
 		                                  ValuePtr(createLink(FALSE_LINK)));
-		LinkValuePtr result(new LinkValue(_result));
+		SeqValuePtr result(new SeqValue(_result));
 
 		for (const ValuePtr &p : params) {
-			result = logical_or(result, LinkValueCast(p));
+			result = logical_or(result, SeqValueCast(p));
 		}
 		return ValuePtr(result);
 	}
@@ -151,7 +151,7 @@ value_size Interpreter::extract_output_size(const Handle &program, const Handle 
 		if (f_value) {
 			return f_value->value().size();
 		}
-		return LinkValueCast(v)->value().size();
+		return SeqValueCast(v)->value().size();
 	}
 	if (program->is_link()) {
 		for (const Handle& child : program->getOutgoingSet()) {

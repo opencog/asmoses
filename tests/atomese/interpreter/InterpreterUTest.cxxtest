@@ -27,7 +27,7 @@
 #include <opencog/atomese/interpreter/Interpreter.h>
 #include <opencog/atomese/interpreter/logical_interpreter.h>
 #include <opencog/atoms/core/NumberNode.h>
-#include <opencog/atoms/value/LinkValue.h>
+#include <opencog/atoms/value/SeqValue.h>
 
 #include "opencog/utils/value_key.h"
 
@@ -79,13 +79,13 @@ public:
 		std::vector<ValuePtr> _p2 = {f_link, t_link, f_link};
 		std::vector<ValuePtr> _p3 = {f_link, f_link, t_link};
 
-		ValuePtr p1_proto_atom(new LinkValue(_p1));
+		ValuePtr p1_proto_atom(new SeqValue(_p1));
 		p1->setValue(moses::value_key, p1_proto_atom);
 
-		ValuePtr p2_proto_atom(new LinkValue(_p2));
+		ValuePtr p2_proto_atom(new SeqValue(_p2));
 		p2->setValue(moses::value_key, p2_proto_atom);
 
-		ValuePtr p3_proto_atom(new LinkValue(_p3));
+		ValuePtr p3_proto_atom(new SeqValue(_p3));
 		p3->setValue(moses::value_key, p3_proto_atom);
 	}
 
@@ -156,12 +156,12 @@ public:
 
 		// expected out put vector
 		std::vector<ValuePtr> exp_value = {t_link, t_link, f_link};
-		ValuePtr expected(new LinkValue(exp_value));
+		ValuePtr expected(new SeqValue(exp_value));
 
 		// interpret
 		atomese::Interpreter interpreter(moses::value_key);
 		ValuePtr result = interpreter(program);
 
-		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
+		TS_ASSERT(atomese::logical_compare(SeqValueCast(expected), SeqValueCast(result)));
 	}
 };
