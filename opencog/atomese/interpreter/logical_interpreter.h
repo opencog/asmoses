@@ -156,14 +156,14 @@ bool logical_compare(const SeqValuePtr& p1, const SeqValuePtr& p2) {
  *
  * @return                 LinkValue pointer containing the logical_not.
  */
-LinkValuePtr logical_not(const LinkValuePtr& p) {
+SeqValuePtr logical_not(const SeqValuePtr& p) {
 	std::vector<ValuePtr> _result;
 	std::vector<ValuePtr> p_value = p->value();
 	std::vector<ValuePtr>::iterator it;
 	for(it = p_value.begin(); it != p_value.end(); ++it)
 		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
 		ValuePtr(createLink(FALSE_LINK)): ValuePtr(createLink(TRUE_LINK)));
-	return LinkValuePtr(new LinkValue(_result));
+	return SeqValuePtr(new SeqValue(_result));
 }
 }}
 #endif //MOSES_LOGICAL_INTERPRETER_H

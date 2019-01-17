@@ -54,9 +54,9 @@ public:
 		boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
 		boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
 
-		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+		ValuePtr f1_proto_atom(new SeqValue(_f1_values));
 		f1->setValue(moses::compressed_value_key, f1_proto_atom);
-		ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+		ValuePtr f2_proto_atom(new SeqValue(_f2_values));
 		f2->setValue(moses::compressed_value_key, f2_proto_atom);
 
 		HandleSeq handleSeq = {f1, f2};
