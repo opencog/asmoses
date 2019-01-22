@@ -56,13 +56,6 @@ void populate(AtomSpace *as, const CTable &ctable);
  * @return ValuePtr containing values such as FloatValue, LinKValues...etc
  */
 ValuePtr vertex_seq_to_value(const vertex_seq& vseq, id::type_node tnode);
-/**
- *
- * @param vseq
- * @param n_rows
- * @return Opencog::Type
- */
-Type vertex_seq_to_value(const vertex_seq& vseq, int n_rows);
 
 } // ~namespace moses
 } // ~namespace opencog
