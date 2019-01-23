@@ -41,6 +41,25 @@ enum __attribute__((packed)) procedure_type{
 
 }
 
+struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
+{
+public:
+	vertex_2_atom (id::procedure_type* parent, AtomSpace* as=nullptr);
+	std::pair<Type, Handle> operator()(const argument& a) const;
+	std::pair<Type, Handle> operator()(const builtin& b) const;
+	std::pair<Type, Handle> operator()(const enum_t& e) const;
+	template <typename T>
+	std::pair<Type, Handle> operator()(const T&) const
+	{
+		OC_ASSERT(false, "Not Implemented Yet");
+		return std::pair<Type, Handle>();
+	}
+
+private:
+	AtomSpace* _as;
+	mutable id::procedure_type* _parent;
+};
+
 class ComboToAtomeseConverter
 {
 public:
