@@ -72,12 +72,11 @@ private:
 	/**
 	 * returns the execution/evaluation of type t with the given parameters
 	 *
-	 * @param Type          type of the atomese scheme to execute or evaluate.
-	 * @param ProtomSeq     sequence containing parameters of the execution/evaluation.
-	 * @param value_size    size of the output.
-	 * @return              protoAtomPtr containing the result.
+	 * @param t          type of the atomese scheme to execute or evaluate.
+	 * @param params     sequence containing parameters of the execution/evaluation.
+	 * @return           ValuePtr containing the result.
 	 */
-	ValuePtr execute(const Type t, const ProtomSeq &params);
+	ValuePtr execute(const Type t, const ValueSeq &params);
 
 	/**
 	 * retrive the size of the output after the program is interpreted. The size is
