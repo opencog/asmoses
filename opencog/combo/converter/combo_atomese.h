@@ -103,7 +103,8 @@ protected:
 
 		id::procedure_type procedure_type = parent_procedure_type;
 		combo_tree::iterator head = it;
-		std::pair <Type, Handle> atomese = atomese_vertex(*head, procedure_type);
+		vertex_2_atom* v2a = new vertex_2_atom(&procedure_type, _as);
+		std::pair <Type, Handle> atomese = boost::apply_visitor(*v2a, *head);
 		Type link_type = atomese.first;
 		Handle handle = atomese.second;
 
