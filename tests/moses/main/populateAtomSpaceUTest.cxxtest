@@ -39,8 +39,8 @@ public:
 		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(value_key);
 
 		//Get the value
-		vector<double> results1 = FloatValueCast(feature1)->value();
-		vector<double> results2 = FloatValueCast(feature2)->value();
+		vector<double> results1 = FloatSeqValueCast(feature1)->value();
+		vector<double> results2 = FloatSeqValueCast(feature2)->value();
 
 		vector<double> expected1 = {0.4, 9.5};
 		vector<double> expected2 = {244.2, 4.2};
@@ -67,8 +67,8 @@ public:
 		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(value_key);
 
 		//Get the values
-		values_vec1 = LinkValueCast(feature1)->value();
-		values_vec2 = LinkValueCast(feature2)->value();
+		values_vec1 = SeqValueCast(feature1)->value();
+		values_vec2 = SeqValueCast(feature2)->value();
 
 		vector<bool> results1 = {};
 		vector<bool> results2 = {};
@@ -101,8 +101,8 @@ public:
 		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(moses::compressed_value_key);
 
 		//Get the values
-		values_vec1 = LinkValueCast(feature1)->value();
-		values_vec2 = LinkValueCast(feature2)->value();
+		values_vec1 = SeqValueCast(feature1)->value();
+		values_vec2 = SeqValueCast(feature2)->value();
 
 		vector<bool> feature1_results = {};
 		vector<bool> feature2_results = {};

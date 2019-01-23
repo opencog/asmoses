@@ -25,7 +25,7 @@
 #define MOSES_INTERPRETER_H
 
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/value/LinkValue.h>
+#include <opencog/atoms/value/SeqValue.h>
 
 /**
  * class Interpreter -- create an unfolded program from compressed program

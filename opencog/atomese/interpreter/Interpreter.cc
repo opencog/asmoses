@@ -77,13 +77,13 @@ ValuePtr Interpreter::unwrap_constant(const Handle &handle)
 	if (NUMBER_NODE == t) {
 		std::vector<double> constant_value(_problem_data_size,
 			                                   NumberNodeCast(handle)->get_value());
-		ValuePtr constant(new FloatValue(constant_value));
+		ValuePtr constant(new FloatSeqValue(constant_value));
 		return constant;
 	}
 	if (FALSE_LINK == t || TRUE_LINK == t) {
 		std::vector<ValuePtr> constant_value(_problem_data_size,
 		                                   ValuePtr(handle));
-		ValuePtr constant(new LinkValue(constant_value));
+		ValuePtr constant(new SeqValue(constant_value));
 		return constant;
 	}
 	OC_ASSERT(false, "Unsupported Constant Type");
@@ -94,46 +94,46 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq& params)
 {
 	if (t == PLUS_LINK) {
 		std::vector<double> _result(_problem_data_size, 0.0);
-		ValuePtr result(new FloatValue(_result));
+		ValuePtr result(new FloatSeqValue(_result));
 
 		for (const ValuePtr & p : params) {
-			result = plus(FloatValueCast(result), FloatValueCast(p));
+			result = plus(FloatSeqValueCast(result), FloatSeqValueCast(p));
 		}
 		return result;
 	}
 	if (t == TIMES_LINK) {
-		std::vector<double> _result(FloatValueCast(params[0])->value().size(), 1.0);
-		ValuePtr result(new FloatValue(_result));
+		std::vector<double> _result(FloatSeqValueCast(params[0])->value().size(), 1.0);
+		ValuePtr result(new FloatSeqValue(_result));
 
 		for (const ValuePtr & p : params) {
-			result = times(FloatValueCast(result), FloatValueCast(p));
+			result = times(FloatSeqValueCast(result), FloatSeqValueCast(p));
 		}
 		return result;
 	}
 	if (t == AND_LINK) {
 		std::vector<ValuePtr> _result(_problem_data_size,
 		                                  ValuePtr(createLink(TRUE_LINK)));
-		LinkValuePtr result(new LinkValue(_result));
+		SeqValuePtr result(new SeqValue(_result));
 
 		for (const ValuePtr &p : params) {
-			result = logical_and(result, LinkValueCast(p));
+			result = logical_and(result, SeqValueCast(p));
 		}
 		return ValuePtr(result);
 	}
 	if (t == OR_LINK) {
 		std::vector<ValuePtr> _result(_problem_data_size,
 		                                  ValuePtr(createLink(FALSE_LINK)));
-		LinkValuePtr result(new LinkValue(_result));
+		SeqValuePtr result(new SeqValue(_result));
 
 		for (const ValuePtr &p : params) {
-			result = logical_or(result, LinkValueCast(p));
+			result = logical_or(result, SeqValueCast(p));
 		}
 		return ValuePtr(result);
 	}
 	if (t == NOT_LINK) {
 		OC_ASSERT(params.size() == 1);
-		LinkValuePtr result;
-		result = logical_not( LinkValueCast(params[0]));
+		SeqValuePtr result;
+		result = logical_not(SeqValueCast(params[0]));
 		return ValuePtr(result);
 	}
 	return ValuePtr();
@@ -147,11 +147,11 @@ value_size Interpreter::extract_output_size(const Handle &program, const Handle 
 	// the same size as the output of the interpretation of this
 	// program.
 	if (ValuePtr v = program->getValue(key)) {
-		auto f_value = FloatValueCast(v);
+		auto f_value = FloatSeqValueCast(v);
 		if (f_value) {
 			return f_value->value().size();
 		}
-		return LinkValueCast(v)->value().size();
+		return SeqValueCast(v)->value().size();
 	}
 	if (program->is_link()) {
 		for (const Handle& child : program->getOutgoingSet()) {

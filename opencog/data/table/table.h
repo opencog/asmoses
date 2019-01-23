@@ -44,7 +44,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/atom_types/atom_types.h>
 #include <opencog/atoms/base/Node.h>
-#include <opencog/atoms/value/LinkValue.h>
+#include <opencog/atoms/value/SeqValue.h>
 
 #include <opencog/combo/type_checker/type_tree.h>
 #include <opencog/combo/interpreter/eval.h>
