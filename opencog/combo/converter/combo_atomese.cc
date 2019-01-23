@@ -111,6 +111,10 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			*_parent = id::schema;
 			type = PLUS_LINK;
 			break;
+		case id::times:
+			*_parent = id::schema;
+			type = TIMES_LINK;
+			break;
 		case id::logical_true:
 			*_parent = id::predicate;
 			type = TRUE_LINK;
@@ -123,6 +127,12 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			OC_ASSERT(false, "unsupported");
 	}
 	return std::make_pair(type, Handle());
+}
+
+std::pair<Type, Handle> vertex_2_atom::operator()(const contin_t& c) const
+{
+	Handle h = createNode(NUMBER_NODE,to_string(c));
+	return std::make_pair(-1, h);
 }
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const enum_t &e) const
