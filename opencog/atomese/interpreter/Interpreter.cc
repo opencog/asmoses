@@ -56,7 +56,7 @@ opencog::ValuePtr Interpreter::operator()(const opencog::Handle &program)
 		return unwrap_constant(program);
 	}
 
-	ProtomSeq params;
+	ValueSeq params;
 	for (const Handle& h : program->getOutgoingSet()) {
 		params.push_back((*this)(h));
 	}
@@ -90,7 +90,7 @@ ValuePtr Interpreter::unwrap_constant(const Handle &handle)
 	return ValuePtr();
 }
 
-ValuePtr Interpreter::execute(const Type t, const ProtomSeq& params)
+ValuePtr Interpreter::execute(const Type t, const ValueSeq& params)
 {
 	if (t == PLUS_LINK) {
 		std::vector<double> _result(_problem_data_size, 0.0);
