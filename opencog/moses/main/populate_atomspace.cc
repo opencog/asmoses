@@ -44,13 +44,13 @@ ValuePtr vertex_seq_to_value(const vertex_seq& col, id::type_node col_type) {
 				bool col_data = vertex_to_bool(col.at(j));
 				col_values.push_back(ValuePtr(createLink(col_data ? TRUE_LINK : FALSE_LINK)));
 			}
-			return ValuePtr(new SeqValue(col_values));
+			return ValuePtr(new LinkValue(col_values));
 		}
 		case id::contin_type: {
 			std::vector<double> col_values_contin = {};
 			for (int j = 0; j < n_rows; j++)
 				col_values_contin.push_back(get_contin(col.at(j)));
-			return ValuePtr(new FloatSeqValue(col_values_contin));
+			return ValuePtr(new FloatValue(col_values_contin));
 		}
 		case id::enum_type: {
 			//TODO enum_type data to be added to Atomspace

@@ -187,7 +187,7 @@ behavioral_score contin_bscore::operator()(const Handle &handle) const
 	atomese::Interpreter interpreter(moses::value_key);
 
 	const ValuePtr result = interpreter(handle);
-	boost::transform(FloatSeqValueCast(result)->value(), target, back_inserter(bs),
+	boost::transform(FloatValueCast(result)->value(), target, back_inserter(bs),
 	          [&](contin_t res, const vertex &tar_ver){
 		          contin_t tar = get_contin(tar_ver);
 		          return -err_func(res, tar);
@@ -313,7 +313,7 @@ behavioral_score discretize_contin_bscore::operator()(const Handle &handle) cons
 	atomese::Interpreter interpreter(moses::value_key);
 
 	const ValuePtr result = interpreter(handle);
-	boost::transform(FloatSeqValueCast(result)->value(), classes, back_inserter(bs),
+	boost::transform(FloatValueCast(result)->value(), classes, back_inserter(bs),
 	                 [&](contin_t res, size_t c_idx){
 		                 return (c_idx != this->class_idx(res)) * this->weights[c_idx];
 	                 });
@@ -354,7 +354,7 @@ behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
 	atomese::Interpreter interpreter(moses::compressed_value_key);
 
 	const ValuePtr result = interpreter(handle);
-	boost::transform(SeqValueCast(result)->value(), _wrk_ctable, back_inserter(bs),
+	boost::transform(LinkValueCast(result)->value(), _wrk_ctable, back_inserter(bs),
 	                 [&](ValuePtr res, const CTable::value_type &vct){
 		                 const CTable::counter_t &c = vct.second;
 		                 // if predicted true return negative of arity of false

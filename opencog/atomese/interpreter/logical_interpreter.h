@@ -25,7 +25,7 @@
 #define MOSES_LOGICAL_INTERPRETER_H
 
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atoms/value/SeqValue.h>
+#include <opencog/atoms/value/LinkValue.h>
 #include <opencog/utils/valueUtils.h>
 #include <boost/iterator/zip_iterator.hpp>
 
@@ -34,7 +34,7 @@ namespace opencog{ namespace atomese{
 /**
  * Performs logical_and of two ValuePtrs[Links].
  * this struct is expected to be used in boost::zip_iterator to perform
- * logical_and on SeqValues containing TRUE_LINK and FALSE_LINK.
+ * logical_and on LinkValues containing TRUE_LINK and FALSE_LINK.
  */
 struct zip_and :
 		public std::unary_function<const boost::tuple
@@ -57,7 +57,7 @@ struct zip_and :
 /**
  * Performs logical_or of two ValuePtrs[Links].
  * this struct is expected to be used in boost::zip_iterator to perform
- * logical_or on SeqValues containing TRUE_LINK and FALSE_LINK.
+ * logical_or on LinkValues containing TRUE_LINK and FALSE_LINK.
  */
 struct zip_or :
 		public std::unary_function<const boost::tuple
@@ -79,13 +79,13 @@ struct zip_or :
 
 /**
  * Compute logical_and.
- * it expects the values of the SeqValues to be TRUE_LINK and FALSE_LINK
- * @param SeqValuePtr&     p1
- * @param SeqValuePtr&     p2
+ * it expects the values of the LinkValues to be TRUE_LINK and FALSE_LINK
+ * @param LinkValuePtr&     p1
+ * @param LinkValuePtr&     p2
  *
- * @return                 SeqValue pointer containing the logical_and.
+ * @return                 LinkValue pointer containing the logical_and.
  */
-SeqValuePtr logical_and(const SeqValuePtr& p1, const SeqValuePtr& p2) {
+LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -100,18 +100,18 @@ SeqValuePtr logical_and(const SeqValuePtr& p1, const SeqValuePtr& p2) {
 	);
 
 	std::vector<ValuePtr> _result = _and._result;
-	return SeqValuePtr(new SeqValue(_result));
+	return LinkValuePtr(new LinkValue(_result));
 }
 
 /**
  * Compute logical_or.
- * it expects the values of the SeqValues to be TRUE_LINK and FALSE_LINK
- * @param SeqValuePtr&     p1
- * @param SeqValuePtr&     p2
+ * it expects the values of the LinkValues to be TRUE_LINK and FALSE_LINK
+ * @param LinkValuePtr&     p1
+ * @param LinkValuePtr&     p2
  *
- * @return                 SeqValue pointer containing the logical_or.
+ * @return                 LinkValue pointer containing the logical_or.
  */
-SeqValuePtr logical_or(const SeqValuePtr& p1, const SeqValuePtr& p2) {
+LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -126,17 +126,17 @@ SeqValuePtr logical_or(const SeqValuePtr& p1, const SeqValuePtr& p2) {
 	);
 
 	std::vector<ValuePtr> _result = _or._result;
-	return SeqValuePtr(new SeqValue(_result));
+	return LinkValuePtr(new LinkValue(_result));
 }
 
 /**
  * Compare Contents of two link_values.
- * @param SeqValuePtr&     p1
- * @param SeqValuePtr&     p2
+ * @param LinkValuePtr&     p1
+ * @param LinkValuePtr&     p2
  *
  * @return                 boolean of the comparision.
  */
-bool logical_compare(const SeqValuePtr& p1, const SeqValuePtr& p2) {
+bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 	std::vector<ValuePtr> p1_value = p1->value();
 	std::vector<ValuePtr> p2_value = p2->value();
 
@@ -156,14 +156,14 @@ bool logical_compare(const SeqValuePtr& p1, const SeqValuePtr& p2) {
  *
  * @return                 LinkValue pointer containing the logical_not.
  */
-SeqValuePtr logical_not(const SeqValuePtr& p) {
+LinkValuePtr logical_not(const LinkValuePtr& p) {
 	std::vector<ValuePtr> _result;
 	std::vector<ValuePtr> p_value = p->value();
 	std::vector<ValuePtr>::iterator it;
 	for(it = p_value.begin(); it != p_value.end(); ++it)
 		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
 		ValuePtr(createLink(FALSE_LINK)): ValuePtr(createLink(TRUE_LINK)));
-	return SeqValuePtr(new SeqValue(_result));
+	return LinkValuePtr(new LinkValue(_result));
 }
 }}
 #endif //MOSES_LOGICAL_INTERPRETER_H

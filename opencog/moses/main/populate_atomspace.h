@@ -37,6 +37,7 @@ using namespace combo;
  * Populate the given atomspace with the input data.
  * @param Atomspace&     as
  * @param Itable&     itable
+ *
  */
 void populate(AtomSpace *as, const ITable &itable);
 

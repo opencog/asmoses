@@ -901,7 +901,7 @@ void complete_truth_table::populate(const Handle &handle)
 	setup_features(handle, features);
 
 	atomese::Interpreter interpreter(moses::value_key);
-	std::vector<ValuePtr> result = SeqValueCast(interpreter(handle))->value();
+	std::vector<ValuePtr> result = LinkValueCast(interpreter(handle))->value();
 
 	// convert Links in the result of the interpreter to bool,
 	// and store it to the truth table.
@@ -931,7 +931,7 @@ void complete_truth_table::setup_features(const Handle &handle, const std::vecto
 		const std::string h_name = handle->get_name();
 		ValuePtrVec value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
 
-		handle->setValue(moses::value_key, ValuePtr(new SeqValue(value)));
+		handle->setValue(moses::value_key, ValuePtr(new LinkValue(value)));
 		return;
 	}
 
