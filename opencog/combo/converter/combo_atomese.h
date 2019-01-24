@@ -48,6 +48,7 @@ public:
 	std::pair<Type, Handle> operator()(const argument& a) const;
 	std::pair<Type, Handle> operator()(const builtin& b) const;
 	std::pair<Type, Handle> operator()(const enum_t& e) const;
+	std::pair<Type, Handle> operator()(const contin_t& c) const;
 	template <typename T>
 	std::pair<Type, Handle> operator()(const T&) const
 	{
