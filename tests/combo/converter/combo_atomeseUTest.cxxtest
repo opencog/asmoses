@@ -27,6 +27,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/core/NumberNode.h>
 
 
 using namespace std;
@@ -109,7 +110,7 @@ public:
 		combo::ComboToAtomeseConverter to_atomese;
 		Handle h = to_atomese(tr);
 
-		HandleSeq list_plus = {createNode(NUMBER_NODE, "1"), createNode(NUMBER_NODE, "2")};
+		HandleSeq list_plus = {Handle(createNumberNode(1)), Handle(createNumberNode(2))};
 		Handle times_link = createLink(list_plus, TIMES_LINK);
 
 		TS_ASSERT(content_eq(h, times_link));

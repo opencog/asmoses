@@ -24,6 +24,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/core/NumberNode.h>
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include "combo_atomese.h"
@@ -131,8 +132,7 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const contin_t& c) const
 {
-	Handle h = createNode(NUMBER_NODE,to_string(c));
-	return std::make_pair(-1, h);
+	return std::make_pair(-1, Handle(createNumberNode(c)));
 }
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const enum_t &e) const
