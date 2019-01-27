@@ -1,0 +1,127 @@
+/** ASMOSESUTest.cxxtest ---
+ *
+ * Copyright (C) 2018 OpenCog Foundation
+ *
+ * Author: Behailu Dereje <Behailu04@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+#include <opencog/moses/main/moses_exec.h>
+#include <opencog/util/Logger.h>
+#include <boost/current_function.hpp>
+#include <opencog/moses/scoring/bscores.h>
+#include <examples/example-progs/scoring_iterators.h>
+#include <opencog/atoms/base/Link.h>
+#include "moses-framework.h"
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+const string MOSESUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
+
+/**
+ * MOSES test on toy problems
+ */
+class ASMOSESUTest : public CxxTest::TestSuite
+{
+public:
+	ASMOSESUTest() {
+		opencog::logger().set_print_to_stdout_flag(true);
+	}
+	// moses_test_score
+	void test_atomese_2_parity() {
+	    cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hpa", "-k2", "--atomspace-port=1"});
+	}
+	void test_atomese_2_parity_with_labels() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hpa", "-k2", "-W1", "--atomspace-port=1"});
+	}
+	void test_atomese_3_parity_multi_thread() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hpa", "-k3", "-m100000", "-j4", "--atomspace-port=1"});
+	}
+	void test_atomese_4_parity_boosting() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hpa", "-k4", "--boost=1", "--atomspace-port=1"});
+	}
+	void test_atomese_5_parity_boosting() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hpa", "-k5", "--boost=1", "-m40000", "--atomspace-port=1"});
+	}
+	void test_atomese_1_mux() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hmux", "-k1", "--atomspace-port=1"});
+	}
+	void test_atomese_2_mux() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hmux", "-k2", "--atomspace-port=1"});
+	}
+	void test_sa_2_parity() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hpa", "-k2", "-asa", "--atomspace-port=1"});
+	}
+	void test_atomese_ps_2_parity() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hpa", "-k2", "-aps", "--atomspace-port=1"});
+	}
+	void test_atomese_sa_1_mux() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hmux", "-k1", "-asa", "--atomspace-port=1"});
+	}
+	void test_atomese_un_3_pa_multi_thread() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-r3", "-Hpa", "-k3", "-aun", "-m500000", "-j4", "-c3000", "--atomspace-port=1"});
+	}
+	void test_atomese_it() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		string data_file_path("-i" + MOSESUTest_dir + "dataset.csv");
+		string max_evals("-m1000");
+		string atomspace_port("--atomspace-port=1");
+		moses_test_score({data_file_path, max_evals, atomspace_port}, -5);
+	}
+	void test_atomese_sr_3() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hsr", "-k3", "-m100000", "-L1", "--atomspace-port=1"});
+	}
+//    // test for moses_test_atomese
+//	void test_atomese_cp_simple() {
+//		cout << BOOST_CURRENT_FUNCTION << endl;
+//
+//		// Sniff test, make sure -Hcp is at least minimally working.
+//		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+//		Handle and_link = createLink(seq_1, AND_LINK);
+//		string atomese_str = oc_to_string(and_link);
+//		string cp_opt("-y");
+//		moses_test_atomese({"-Hcp", cp_opt + atomese_str, "--atomspace-port=1"}, {atomese_str});
+//	}
+//	void test_atomese_output_labels() {
+//		cout << BOOST_CURRENT_FUNCTION << endl;
+//		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+//		Handle and_link = createLink(seq_1, AND_LINK);
+//		string atomese_str = oc_to_string(and_link);
+//		string data_file_path("-i" + MOSESUTest_dir + "dataset.csv"),
+//				max_evals("-m1000"),
+//				output_format("--output-format=atomese"),
+//				output_labels("-W1");
+//		cheap_moses_test_combo({data_file_path, max_evals, output_format, output_labels},
+//							   {atomese_str});
+//	}
+};
