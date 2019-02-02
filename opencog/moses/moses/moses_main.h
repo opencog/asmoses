@@ -284,7 +284,7 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
     moses_statistics stats;
     optimizer_base* optimizer = nullptr;
 
-    if (opt_params.opt_algo == hc) { // exhaustive neighborhood search
+    if (opt_params.opt_algo == hc) { // stochastic local search
         optimizer = new hill_climbing(opt_params, hc_params);
     }
     else if (opt_params.opt_algo == sa) { // simulated annealing
