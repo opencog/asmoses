@@ -46,7 +46,8 @@ using namespace combo;
 static bool expand_deme(metapopulation& mp,
                         deme_expander& dex,
                         int max_evals, time_t max_time,
-                        moses_statistics& stats)
+                        moses_statistics& stats,
+                        AtomSpace *_as)
 {
     if (mp.empty())
         return true;
@@ -75,7 +76,7 @@ static bool expand_deme(metapopulation& mp,
         OC_ASSERT(false, "Exemplar failed to expand!\n");
     }
 
-    dex.optimize_demes(max_evals, max_time);
+    dex.optimize_demes(max_evals, max_time, _as);
     stats.n_evals += dex.total_evals();
     stats.n_expansions++;
 
@@ -107,7 +108,8 @@ static bool expand_deme(metapopulation& mp,
 void local_moses(metapopulation& mp,
                  deme_expander& dex,
                  const moses_parameters& pa,
-                 moses_statistics& stats)
+                 moses_statistics& stats,
+                 AtomSpace *_as)
 {
     logger().info("MOSES starts, max_evals=%d max_gens=%d max_time=%d",
                   pa.max_evals, pa.max_gens, pa.max_time);
@@ -142,7 +144,7 @@ void local_moses(metapopulation& mp,
             expand_deme(mp, dex,
                         pa.max_evals - stats.n_evals, 
                         pa.max_time - stats.elapsed_secs, 
-                        stats);
+                        stats, _as);
 
         struct timeval stop, elapsed;
         gettimeofday(&stop, NULL);

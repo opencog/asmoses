@@ -38,7 +38,8 @@ using namespace combo;
 void local_moses(metapopulation&,
                  deme_expander&,
                  const moses_parameters&,
-                 moses_statistics&);
+                 moses_statistics&,
+                 AtomSpace *_as = nullptr);
 
 } // ~namespace moses
 } // ~namespace opencog

@@ -400,7 +400,7 @@ bool deme_expander::create_demes(const combo_tree& exemplar, int n_expansions)
 }
 
 
-void deme_expander::optimize_demes(int max_evals, time_t max_time)
+void deme_expander::optimize_demes(int max_evals, time_t max_time, AtomSpace *_as)
 {
     int max_evals_per_deme = max_evals / _demes.size();
     // We set to 1 n_ss_demes in case n_subsample_demes was set to 0
@@ -489,10 +489,7 @@ void deme_expander::optimize_demes(int max_evals, time_t max_time)
             // Optimize
             if (_params.atomspace_port) {
                 ComboToAtomeseConverter _to_atomese;
-                AtomSpace *as = new AtomSpace();
-                atomese_based_scorer cpx_scorer = (_params.atomspace_store) ?
-                		atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, _to_atomese, as) :
-                		atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, _to_atomese);
+                atomese_based_scorer cpx_scorer = atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, _to_atomese, _as);
 			_optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
             }
             else {

@@ -62,7 +62,7 @@ struct deme_expander
      *                  function to perform.
      * @param max_time the maximum elapsed (wall-clock) time to allow.
      */
-    void optimize_demes(int max_evals, time_t max_time);
+    void optimize_demes(int max_evals, time_t max_time, AtomSpace *_as = nullptr);
 
     void free_demes();
 
@@ -91,7 +91,7 @@ protected:
 
     /**
      * Subsample by row. return a vector (of size n_ss_demes) of sets
-     * of indexes (of a corresponding uncompressed table) to be
+     * of indexes (of a corresponding uncompressed table) to b      e
      * discarded during subsampling.
      */
     std::vector<std::set<unsigned>> subsample_by_row() const;

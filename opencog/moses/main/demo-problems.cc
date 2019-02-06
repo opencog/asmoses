@@ -90,6 +90,7 @@ class bool_problem_base : public problem_base
         virtual void run(option_base*);
     protected:
         demo_params& _dparms;
+		AtomSpace *_as;
 };
 
 void bool_problem_base::run(option_base* ob)
@@ -105,6 +106,11 @@ void bool_problem_base::run(option_base* ob)
         pms.exemplars.push_back(type_to_exemplar(id::boolean_type));
     }
 
+    // create atomspace if the code is running through port atomspace
+	if (pms.deme_params.atomspace_port) {
+		_as = new AtomSpace();
+	}
+
     logical_bscore bscore = get_bscore(_dparms.problem_size);
     if (pms.meta_params.do_boosting) bscore.use_weighted_scores();
 
@@ -118,7 +124,7 @@ void bool_problem_base::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+                          pms.moses_params, pms.mmr_pa, _as);
 }
 
 // ==================================================================
@@ -241,6 +247,8 @@ class polynomial_problem : public problem_base
         virtual void run(option_base*);
     protected:
         demo_params& _dparms;
+        AtomSpace *_as;
+
 };
 
 void polynomial_problem::run(option_base* ob)
@@ -254,6 +262,10 @@ void polynomial_problem::run(option_base* ob)
     // default contin_type exemplar (+)
     if (pms.exemplars.empty()) {
         pms.exemplars.push_back(type_to_exemplar(id::contin_type));
+    }
+
+    if (pms.deme_params.atomspace_port) {
+    	_as = new AtomSpace();
     }
 
     // sr is fundamentally a kind of non-linear regression!
@@ -281,7 +293,7 @@ void polynomial_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+                          pms.moses_params, pms.mmr_pa, _as);
 }
 
 // ==================================================================
@@ -305,6 +317,7 @@ class combo_problem_base : public problem_base
         void check_args(problem_params&);
     protected:
         demo_params& _dparms;
+        AtomSpace *_as;
 };
 
 void combo_problem_base::check_args(problem_params& pms)
@@ -387,6 +400,10 @@ void combo_problem::run(option_base* ob)
         pms.exemplars.push_back(type_to_exemplar(output_type));
     }
 
+    if (pms.deme_params.atomspace_port) {
+    	_as = new AtomSpace();
+    }
+
     if (output_type == id::boolean_type) {
         // @todo: Occam's razor and nsamples is not taken into account
         logical_bscore bscore(tr, arity);
@@ -396,7 +413,7 @@ void combo_problem::run(option_base* ob)
                               cscore,
                               pms.opt_params, pms.hc_params, pms.ps_params,
                               pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa);
+                              pms.moses_params, pms.mmr_pa, _as);
     }
     else if (output_type == id::contin_type) {
 
@@ -439,7 +456,7 @@ void combo_problem::run(option_base* ob)
                               cscore,
                               pms.opt_params, pms.hc_params, pms.ps_params,
                               pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa);
+                              pms.moses_params, pms.mmr_pa, _as);
     } else {
         logger().error() << "Error: combo_problem: type " << tt << " not supported.";
         std::cerr << "Error: combo_problem: type " << tt << " not supported." << std::endl;
@@ -475,6 +492,10 @@ void ann_combo_problem::run(option_base* ob)
         pms.exemplars.push_back(type_to_exemplar(output_type));
     }
 
+    if (pms.deme_params.atomspace_port) {
+    	_as = new AtomSpace();
+    }
+
     if (pms.nsamples <= 0)
         pms.nsamples = pms.default_nsamples;
 
@@ -492,7 +513,7 @@ void ann_combo_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+                          pms.moses_params, pms.mmr_pa, _as);
 }
 
 // ==================================================================

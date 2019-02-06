@@ -277,7 +277,7 @@ void ip_problem::run(option_base* ob)
                           mbcscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+                          pms.moses_params, pms.mmr_pa, _as);
 
 }
 
@@ -325,7 +325,7 @@ void ann_table_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+                          pms.moses_params, pms.mmr_pa, _as);
 }
 
 // ==================================================================
@@ -361,7 +361,7 @@ void ann_table_problem::run(option_base* ob)
                       *reduct_cand, *reduct_rep, mbcscore,           \
                       pms.opt_params, pms.hc_params, pms.ps_params,  \
                       pms.deme_params, pms.filter_params, pms.meta_params,              \
-                      pms.moses_params, pms.mmr_pa);                 \
+                      pms.moses_params, pms.mmr_pa, _as);                 \
 }
 
 void pre_table_problem::run(option_base* ob)
@@ -413,7 +413,7 @@ void pre_table_problem::run(option_base* ob)
                           mbcscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+                          pms.moses_params, pms.mmr_pa, _as);
 }
 
 void pre_conj_table_problem::run(option_base* ob)
