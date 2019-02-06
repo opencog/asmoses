@@ -91,7 +91,7 @@ protected:
 
     /**
      * Subsample by row. return a vector (of size n_ss_demes) of sets
-     * of indexes (of a corresponding uncompressed table) to b      e
+     * of indexes (of a corresponding uncompressed table) to be
      * discarded during subsampling.
      */
     std::vector<std::set<unsigned>> subsample_by_row() const;

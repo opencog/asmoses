@@ -489,8 +489,8 @@ void deme_expander::optimize_demes(int max_evals, time_t max_time, AtomSpace *_a
             // Optimize
             if (_params.atomspace_port) {
                 ComboToAtomeseConverter _to_atomese;
-                atomese_based_scorer cpx_scorer = atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, _to_atomese, _as);
-			_optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
+				atomese_based_scorer cpx_scorer = atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, _to_atomese, _as);
+				_optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
             }
             else {
             	combo_based_scorer cpx_scorer =
