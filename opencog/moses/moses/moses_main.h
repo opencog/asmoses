@@ -54,8 +54,7 @@ extern const char * version_string;
 void run_moses(metapopulation&,
                deme_expander&,
                const moses_parameters&,
-               moses_statistics&,
-               AtomSpace *as = nullptr);
+               moses_statistics&);
 
 /// Print metapopulation results to stdout, logfile, etc.
 struct metapop_printer
@@ -280,8 +279,7 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
                              const subsample_deme_filter_parameters& filter_params,
                              const metapop_parameters& meta_params,
                              const moses_parameters& moses_params,
-                             Printer& printer,
-                             AtomSpace *_as = nullptr)
+                             Printer& printer)
 {
     moses_statistics stats;
     optimizer_base* optimizer = nullptr;
@@ -319,7 +317,7 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
     deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params);
     metapopulation metapop(simple_bases, sc, meta_params, filter_params);
 
-    run_moses(metapop, dex, moses_params, stats, _as);
+    run_moses(metapop, dex, moses_params, stats);
     printer(metapop, dex, stats);
     delete optimizer;
 }

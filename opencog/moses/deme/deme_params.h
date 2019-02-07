@@ -47,8 +47,9 @@ struct deme_parameters
         actions(_actions),
         fstor(_fstor),
         linear_contin(true),
-        atomspace_store(false),
-        atomspace_port(false)
+        atomspace_store(true),
+        atomspace_port(false),
+        _data_as(nullptr)
         {}
 
     // The max number of candidates considered to be added to the
@@ -88,6 +89,8 @@ struct deme_parameters
 
     // Flag used to run port as-moses codes.
     bool atomspace_port;
+
+    AtomSpace *_data_as;
 };
 
 } // ~namespace moses

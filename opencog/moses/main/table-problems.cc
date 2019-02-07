@@ -165,9 +165,9 @@ void table_problem_base::common_setup(problem_params& pms)
     // Check that work with atomspace if enabled, create Atomspace object
     // and populate it with the input data
     if (pms.deme_params.atomspace_port) {
-        _as = new AtomSpace();
-        populate(_as, table.itable);
-        populate(_as, ctable);
+        pms.deme_params._data_as = new AtomSpace();
+        populate(pms.deme_params._data_as, table.itable);
+        populate(pms.deme_params._data_as, ctable);
     }
 
     pms.mmr_pa.ilabels = ilabels;
@@ -277,7 +277,7 @@ void ip_problem::run(option_base* ob)
                           mbcscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, _as);
+                          pms.moses_params, pms.mmr_pa);
 
 }
 
@@ -325,7 +325,7 @@ void ann_table_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, _as);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -361,7 +361,7 @@ void ann_table_problem::run(option_base* ob)
                       *reduct_cand, *reduct_rep, mbcscore,           \
                       pms.opt_params, pms.hc_params, pms.ps_params,  \
                       pms.deme_params, pms.filter_params, pms.meta_params,              \
-                      pms.moses_params, pms.mmr_pa, _as);                 \
+                      pms.moses_params, pms.mmr_pa);                 \
 }
 
 void pre_table_problem::run(option_base* ob)
@@ -413,7 +413,7 @@ void pre_table_problem::run(option_base* ob)
                           mbcscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, _as);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 void pre_conj_table_problem::run(option_base* ob)

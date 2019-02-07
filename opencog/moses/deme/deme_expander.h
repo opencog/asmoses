@@ -62,7 +62,7 @@ struct deme_expander
      *                  function to perform.
      * @param max_time the maximum elapsed (wall-clock) time to allow.
      */
-    void optimize_demes(int max_evals, time_t max_time, AtomSpace *_as = nullptr);
+    void optimize_demes(int max_evals, time_t max_time);
 
     void free_demes();
 

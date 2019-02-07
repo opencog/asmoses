@@ -76,7 +76,7 @@ static bool expand_deme(metapopulation& mp,
         OC_ASSERT(false, "Exemplar failed to expand!\n");
     }
 
-    dex.optimize_demes(max_evals, max_time, _as);
+    dex.optimize_demes(max_evals, max_time);
     stats.n_evals += dex.total_evals();
     stats.n_expansions++;
 

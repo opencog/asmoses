@@ -54,12 +54,12 @@ const char * version_string =
 void run_moses(metapopulation& metapop,
                deme_expander& dex,
                const moses_parameters& moses_params,
-               moses_statistics& stats,
-               AtomSpace *as)
+               moses_statistics& stats
+               )
 {
     // Run moses, either on localhost, or distributed.
     if (moses_params.local)
-        local_moses(metapop, dex, moses_params, stats, as);
+        local_moses(metapop, dex, moses_params, stats);
     else if (moses_params.mpi)
         mpi_moses(metapop, dex, moses_params, stats);
     else

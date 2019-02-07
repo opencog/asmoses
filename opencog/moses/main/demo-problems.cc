@@ -90,7 +90,6 @@ class bool_problem_base : public problem_base
         virtual void run(option_base*);
     protected:
         demo_params& _dparms;
-		AtomSpace *_as;
 };
 
 void bool_problem_base::run(option_base* ob)
@@ -108,7 +107,7 @@ void bool_problem_base::run(option_base* ob)
 
     // create atomspace if the code is running through port atomspace
 	if (pms.deme_params.atomspace_port) {
-		_as = new AtomSpace();
+		pms.deme_params._data_as = new AtomSpace();
 	}
 
     logical_bscore bscore = get_bscore(_dparms.problem_size);
@@ -124,7 +123,7 @@ void bool_problem_base::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, _as);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -247,7 +246,6 @@ class polynomial_problem : public problem_base
         virtual void run(option_base*);
     protected:
         demo_params& _dparms;
-        AtomSpace *_as;
 
 };
 
@@ -265,7 +263,7 @@ void polynomial_problem::run(option_base* ob)
     }
 
     if (pms.deme_params.atomspace_port) {
-    	_as = new AtomSpace();
+    	pms.deme_params._data_as = new AtomSpace();
     }
 
     // sr is fundamentally a kind of non-linear regression!
@@ -293,7 +291,7 @@ void polynomial_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, _as);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -317,7 +315,6 @@ class combo_problem_base : public problem_base
         void check_args(problem_params&);
     protected:
         demo_params& _dparms;
-        AtomSpace *_as;
 };
 
 void combo_problem_base::check_args(problem_params& pms)
@@ -401,7 +398,7 @@ void combo_problem::run(option_base* ob)
     }
 
     if (pms.deme_params.atomspace_port) {
-    	_as = new AtomSpace();
+    	pms.deme_params._data_as = new AtomSpace();
     }
 
     if (output_type == id::boolean_type) {
@@ -413,7 +410,7 @@ void combo_problem::run(option_base* ob)
                               cscore,
                               pms.opt_params, pms.hc_params, pms.ps_params,
                               pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa, _as);
+                              pms.moses_params, pms.mmr_pa);
     }
     else if (output_type == id::contin_type) {
 
@@ -456,7 +453,7 @@ void combo_problem::run(option_base* ob)
                               cscore,
                               pms.opt_params, pms.hc_params, pms.ps_params,
                               pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa, _as);
+                              pms.moses_params, pms.mmr_pa);
     } else {
         logger().error() << "Error: combo_problem: type " << tt << " not supported.";
         std::cerr << "Error: combo_problem: type " << tt << " not supported." << std::endl;
@@ -493,7 +490,7 @@ void ann_combo_problem::run(option_base* ob)
     }
 
     if (pms.deme_params.atomspace_port) {
-    	_as = new AtomSpace();
+    	pms.deme_params._data_as = new AtomSpace();
     }
 
     if (pms.nsamples <= 0)
@@ -513,7 +510,7 @@ void ann_combo_problem::run(option_base* ob)
                           cscore,
                           pms.opt_params, pms.hc_params, pms.ps_params,
                           pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa, _as);
+                          pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
