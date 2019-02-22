@@ -300,7 +300,7 @@ behavioral_score discretize_contin_bscore::operator()(const combo_tree &tr) cons
 	OTable ct(tr, cit);
 	behavioral_score bs(target.size());
 	boost::transform(ct, classes, bs.begin(), [&](const vertex &v, size_t c_idx) {
-		return (c_idx != this->class_idx(get_contin(v))) * this->weights[c_idx];
+		return -((c_idx != this->class_idx(get_contin(v))) * this->weights[c_idx]);
 	});
 
 	log_candidate_bscore(tr, bs);
@@ -315,7 +315,7 @@ behavioral_score discretize_contin_bscore::operator()(const Handle &handle) cons
 	const ValuePtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), classes, back_inserter(bs),
 	                 [&](contin_t res, size_t c_idx){
-		                 return (c_idx != this->class_idx(res)) * this->weights[c_idx];
+		                 return -((c_idx != this->class_idx(res)) * this->weights[c_idx]);
 	                 });
 	log_candidate_bscore(handle, bs);
 	return bs;

@@ -63,7 +63,7 @@ public:
 		Handle program = createLink(handleSeq, PLUS_LINK);
 
 		behavioral_score bs = dis_c_bscore(program);
-		behavioral_score expected_bs = {0, 0, 0, 1, 0};
+		behavioral_score expected_bs = {0, 0, 0, -1, 0};
 
 		TS_ASSERT_EQUALS(bs, expected_bs);
 	}
