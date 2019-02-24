@@ -1,0 +1,6 @@
+ADD_GUILE_MODULE(FILES
+		reduct.scm
+		MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/reduct"
+		)
+
+ADD_SUBDIRECTORY (rules)
