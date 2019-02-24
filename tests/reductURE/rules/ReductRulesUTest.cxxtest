@@ -1,0 +1,98 @@
+/*
+ * tests/pln/rules/ReductRulesUTest.cxxtest
+ *
+ * Copyright (C) 2019 Kasim
+ * All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <opencog/guile/SchemeEval.h>
+#include <opencog/guile/SchemeSmob.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <cxxtest/TestSuite.h>
+#include <string>
+
+using namespace opencog;
+using namespace std;
+
+class ReductRulesUTest : public CxxTest::TestSuite
+{
+private:
+	AtomSpace as;
+	SchemeEval eval;
+
+public:
+	ReductRulesUTest() : eval(&as)
+	{
+		logger().set_level(Logger::DEBUG);
+		logger().set_timestamp_flag(false);
+		logger().set_print_to_stdout_flag(true);
+
+		const string reductUREUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/reductURE/rules";
+		const string reductURE_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/reductURE/rules";
+
+		eval.eval(string("(add-to-load-path \"") + reductUREUTest_rules_dir + string("\")"));
+		eval.eval(string("(add-to-load-path \"") + reductURE_rules_dir + string("\")"));
+
+		eval.eval("(use-modules (opencog))");
+		eval.eval("(use-modules (opencog exec))");
+	}
+
+	~ReductRulesUTest()
+	{
+		// Erase the log file if no assertions failed.
+		if (!CxxTest::TestTracker::tracker().suiteFailed())
+			std::remove(logger().get_filename().c_str());
+	}
+
+	void setUp();
+
+	void tearDown();
+
+	void load_scm_files(std::vector<std::string>);
+
+	void test_temp();
+};
+
+void ReductRulesUTest::tearDown()
+{
+}
+
+void ReductRulesUTest::setUp()
+{
+	as.clear();
+}
+
+void ReductRulesUTest::load_scm_files(std::vector<std::string> files)
+{
+	std::string hd("(load-from-path \"");
+	std::string tl("\")");
+	for (auto f: files) {
+		string result = eval.eval(hd + f + tl);
+		logger().debug() << "[ReductRulesUTest] Loaded \"" << f << "\":"
+		                 << std::endl << result;
+	}
+}
+
+/**
+ * tests the temp rule defined in:
+ * opencog/reductURE/rules/temp.scm
+ */
+void ReductRulesUTest::test_temp()
+{
+	TS_ASSERT(true);
+}
