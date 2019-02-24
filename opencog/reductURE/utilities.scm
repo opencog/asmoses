@@ -57,12 +57,14 @@
 
   ;; Load rule files
   (reduct-load-rules "temp")
+  (reduct-load-rules "contin-rules")
 
   ;; Attach rules to reduct rule-base
   (ure-add-rules-by-names
    (reduct-mk-rb)
    (list
    ;; list rules in rule files
+    plus-zero-rule
     ))
 
   ;; Switch back to previous space
