@@ -142,11 +142,11 @@ ENDIF (WIN32)
 
 FIND_PACKAGE(CogUtil CONFIG REQUIRED)
 IF (COGUTIL_FOUND)
-        MESSAGE(STATUS "CogUtil found.")
-        ADD_DEFINITIONS(-DHAVE_COGUTIL)
-    SET(HAVE_COGUTIL 1)
+	MESSAGE(STATUS "CogUtil found.")
+	ADD_DEFINITIONS(-DHAVE_COGUTIL)
+	SET(HAVE_COGUTIL 1)
 ELSE (COGUTIL_FOUND)
-        MESSAGE(FATAL_ERROR "CogUtil missing: it is needed!")
+	MESSAGE(FATAL_ERROR "CogUtil missing: it is needed!")
 ENDIF (COGUTIL_FOUND)
 
 # add the 'cmake' directory from cogutil to search path
@@ -415,29 +415,32 @@ IF (CXXTEST_FOUND AND COGUTIL_FOUND)
 	ADD_SUBDIRECTORY(tests EXCLUDE_FROM_ALL)
 	IF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
 		# doing coverage stuff while running tests if this is the Coverage build
-		ADD_CUSTOM_TARGET(test
+		ADD_CUSTOM_TARGET(covtest
 			# TODO lcov should be found by cmake first
 			# TODO set it up so that we can pick to run coverage per test, or
 			# combined across all tests (the latter is MUCH faster). Use a define?
 			# There is coverage specific stuff in AddCxxTest.cmake now...
 			# -
-			# Depends on cogserver because RESTFulTest needs it
-			# and cmake has no way to add non-test dependencies to tests
-			DEPENDS tests cogserver
 			WORKING_DIRECTORY tests
 			COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process $(ARGS)
-			# This script combines the coverage analysis of each test,
-			# then creates html in tests/lcov
-			# Note: this should now be run separately...
-			#COMMAND ${PROJECT_SOURCE_DIR}/scripts/combine_lcov.sh
 			COMMENT "Running tests with coverage..."
 		)
+		ADD_CUSTOM_TARGET(test
+			DEPENDS covtest
+			WORKING_DIRECTORY ./
+			# This script combines the coverage analysis of each test,
+			# then creates html in tests/lcov
+			# COMMAND genhtml -o ../lcov -t "All AtomSpace unit tests" *.info
+			COMMAND ${PROJECT_SOURCE_DIR}/scripts/combine_lcov.sh
+			COMMENT "Generating lcov report..."
+		)
 	ELSE (CMAKE_BUILD_TYPE STREQUAL "Coverage")
-		# If this is a build with coverage enabled then test normally
+		# Coverage is disabled; test normally
 		ADD_CUSTOM_TARGET(test
 			DEPENDS tests
 			WORKING_DIRECTORY tests
-			COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process $(ARGS)
+			# COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process $(ARGS)
+			COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process --output-on-failure $(ARGS)
 			COMMENT "Running tests..."
 		)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
