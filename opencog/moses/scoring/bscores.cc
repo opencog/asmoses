@@ -25,6 +25,7 @@
  */
 #include <cmath>
 #include <limits.h>
+#include <set>
 
 #include <boost/range/irange.hpp>
 #include <boost/range/algorithm/sort.hpp>
