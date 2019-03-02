@@ -1,4 +1,5 @@
 LINK_LIBRARIES(
+	-Wl,--no-as-needed
 	ascombo
 	${ATOMSPACE_LIBRARIES}
 	${COGUTIL_LIBRARY}
