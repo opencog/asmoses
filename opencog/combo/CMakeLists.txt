@@ -30,7 +30,7 @@ ADD_LIBRARY(ascombo SHARED
 	combo/vertex
 
 	interpreter/interpreter
-    interpreter/eval
+	interpreter/eval
 
 	type_checker/type_tree_def
 	type_checker/type_tree
@@ -40,11 +40,11 @@ ADD_LIBRARY(ascombo SHARED
 
 TARGET_LINK_LIBRARIES (ascombo
 	atomese
+	${ATOMSPACE_LIBRARIES}
 	${COGUTIL_LIBRARY}
 	${Boost_DATE_TIME_LIBRARY}
 	${Boost_THREAD_LIBRARY}
 	${Boost_REGEX_LIBRARY}
-	${ATOMSPACE_atombase_LIBRARY}
 )
 
 ADD_LIBRARY(ascomboant SHARED

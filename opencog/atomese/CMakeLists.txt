@@ -5,8 +5,8 @@ ADD_LIBRARY(atomese SHARED
 )
 
 TARGET_LINK_LIBRARIES (atomese
-	${COGUTIL_LIBRARY}
 	${ATOMSPACE_LIBRARIES}
+	${COGUTIL_LIBRARY}
 )
 
 #install library

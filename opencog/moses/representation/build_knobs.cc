@@ -234,7 +234,7 @@ build_knobs::logical_probe_rec(pre_it subtree,
         auto s_jobs = split_jobs(n_jobs);
 
         // Define new range
-        It mid = from + distance(from, to) / 2;
+        It mid = from + std::distance(from, to) / 2;
 
         // Copy exemplar and it for the second recursive call (this
         // has to be put before the asyncronous call to avoid
