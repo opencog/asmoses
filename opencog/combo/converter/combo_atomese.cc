@@ -24,6 +24,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/core/NumberNode.h>
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include "combo_atomese.h"
@@ -38,20 +39,35 @@ ComboToAtomeseConverter::ComboToAtomeseConverter(AtomSpace *as)
 		:_as(as)
 {}
 
-Handle ComboToAtomeseConverter::atomese_argument(const argument &a,
-                      const id::procedure_type &parent_procedure_type)
+Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
 {
-	Handle h;
-	switch (parent_procedure_type) {
+	Handle handle;
+	combo_tree::iterator it = ct.begin();
+	id::procedure_type ptype = id::procedure_type::unknown;
+	handle = atomese_combo_it(it, ptype);
+	return handle;
+}
+
+vertex_2_atom::vertex_2_atom(id::procedure_type* parent, AtomSpace *as)
+		: _as(as), _parent(parent)
+{}
+
+std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
+{
+	Handle handle;
+	if(*_parent == id::unknown) {
+		*_parent = id::predicate;
+	}
+	switch (*_parent) {
 		case id::predicate: {
 			Handle tmp = createNode(PREDICATE_NODE,
 			                        to_string(a.is_negated() ? -a.idx : a.idx));
 			if (a.is_negated()) {
 				HandleSeq handle_seq;
 				handle_seq.push_back(tmp);
-				h = createLink(handle_seq, NOT_LINK);
+				handle = createLink(handle_seq, NOT_LINK);
 			} else {
-				h = tmp;
+				handle = tmp;
 			}
 			break;
 		}
@@ -61,9 +77,9 @@ Handle ComboToAtomeseConverter::atomese_argument(const argument &a,
 				HandleSeq handle_seq;
 				handle_seq.push_back(tmp);
 				handle_seq.push_back(createNode(NUMBER_NODE, "-1"));
-				h = createLink(handle_seq, TIMES_LINK);
+				handle = createLink(handle_seq, TIMES_LINK);
 			} else {
-				h = tmp;
+				handle = tmp;
 			}
 			break;
 		}
@@ -71,59 +87,57 @@ Handle ComboToAtomeseConverter::atomese_argument(const argument &a,
 			OC_ASSERT(false, "unsupported procedure type");
 		}
 	}
-	return _as ? _as->add_atom(h) : h;
+	handle = _as ? _as->add_atom(handle) : handle;
+
+	return std::make_pair(-1, handle);
 }
 
-Type ComboToAtomeseConverter::atomese_builtin(const builtin &b, id::procedure_type &procedure_type)
+std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 {
+	Type type = -1;
 	switch (b) {
 		case id::logical_and:
-			procedure_type = id::predicate;
-			return AND_LINK;
+			*_parent = id::predicate;
+			type = AND_LINK;
+			break;
 		case id::logical_or:
-			procedure_type = id::predicate;
-			return OR_LINK;
+			*_parent = id::predicate;
+			type = OR_LINK;
+			break;
 		case id::logical_not:
-			procedure_type = id::predicate;
-			return NOT_LINK;
+			*_parent = id::predicate;
+			type = NOT_LINK;
+			break;
 		case id::plus:
-			procedure_type = id::schema;
-			return PLUS_LINK;
+			*_parent = id::schema;
+			type = PLUS_LINK;
+			break;
+		case id::times:
+			*_parent = id::schema;
+			type = TIMES_LINK;
+			break;
 		case id::logical_true:
-			procedure_type = id::predicate;
-			return TRUE_LINK;
+			*_parent = id::predicate;
+			type = TRUE_LINK;
+			break;
 		case id::logical_false:
-			procedure_type = id::predicate;
-			return FALSE_LINK;
+			*_parent = id::predicate;
+			type = FALSE_LINK;
+			break;
 		default:
 			OC_ASSERT(false, "unsupported");
-			return -1;
 	}
+	return std::make_pair(type, Handle());
 }
 
-std::pair<Type, Handle> ComboToAtomeseConverter::atomese_vertex(const vertex &v,
-                    id::procedure_type &parent_procedure_type)
+std::pair<Type, Handle> vertex_2_atom::operator()(const contin_t& c) const
 {
-	Handle handle;
-	Type type = -1;
-	if (const argument *a = get<argument>(&v)) {
-		if(parent_procedure_type == id::unknown) {
-			parent_procedure_type = id::predicate;
-		}
-		handle = atomese_argument(*a, parent_procedure_type);
-	} else if (const builtin *b = get<builtin>(&v)) {
-		type = atomese_builtin(*b, parent_procedure_type);
-	}
-	return std::make_pair(type, handle);
+	return std::make_pair(-1, Handle(createNumberNode(c)));
 }
 
-Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
+std::pair<Type, Handle> vertex_2_atom::operator()(const enum_t &e) const
 {
-	Handle handle;
-	combo_tree::iterator it = ct.begin();
-	id::procedure_type ptype = id::procedure_type::unknown;
-	handle = atomese_combo_it(it, ptype);
-	return handle;
+	return pair<Type, Handle>();
 }
 
 }}  // ~namespaces combo opencog

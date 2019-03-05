@@ -63,8 +63,8 @@ public:
 		f2 = it.get_labels().at(1);
 
 		//get the inputs from AtomSpace
-		feature1 = as.get_handle(SCHEMA_NODE, f1)->getValue(value_key);
-		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(value_key);
+		feature1 = as.get_handle(PREDICATE_NODE, f1)->getValue(value_key);
+		feature2 = as.get_handle(PREDICATE_NODE, f2)->getValue(value_key);
 
 		//Get the values
 		values_vec1 = LinkValueCast(feature1)->value();
@@ -97,8 +97,8 @@ public:
 		f2 = labels[1];
 
 		//get the inputs from AtomSpace
-		feature1 = as.get_handle(SCHEMA_NODE, f1)->getValue(moses::compressed_value_key);
-		feature2 = as.get_handle(SCHEMA_NODE, f2)->getValue(moses::compressed_value_key);
+		feature1 = as.get_handle(PREDICATE_NODE, f1)->getValue(moses::compressed_value_key);
+		feature2 = as.get_handle(PREDICATE_NODE, f2)->getValue(moses::compressed_value_key);
 
 		//Get the values
 		values_vec1 = LinkValueCast(feature1)->value();

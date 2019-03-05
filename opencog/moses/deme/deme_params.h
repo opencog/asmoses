@@ -83,8 +83,10 @@ struct deme_parameters
     // literals and arity*(arity-1) pairs of literals
     float perm_ratio;
 
+    // Flag used to store atomese programs to atomspace
     bool atomspace_store;
 
+    // Flag used to run port as-moses codes.
     bool atomspace_port;
 };
 

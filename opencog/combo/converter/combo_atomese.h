@@ -41,6 +41,26 @@ enum __attribute__((packed)) procedure_type{
 
 }
 
+struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
+{
+public:
+	vertex_2_atom (id::procedure_type* parent, AtomSpace* as=nullptr);
+	std::pair<Type, Handle> operator()(const argument& a) const;
+	std::pair<Type, Handle> operator()(const builtin& b) const;
+	std::pair<Type, Handle> operator()(const enum_t& e) const;
+	std::pair<Type, Handle> operator()(const contin_t& c) const;
+	template <typename T>
+	std::pair<Type, Handle> operator()(const T&) const
+	{
+		OC_ASSERT(false, "Not Implemented Yet");
+		return std::pair<Type, Handle>();
+	}
+
+private:
+	AtomSpace* _as;
+	mutable id::procedure_type* _parent;
+};
+
 class ComboToAtomeseConverter
 {
 public:
@@ -59,19 +79,6 @@ private:
 
 protected:
 	/**
-	 * Convert a combo_tree::vertex to atomese program.
-	 *
-	 * @param Handle&       handle ref, if the vertex is converted to node it
-	 *                      will be stored here
-	 * @param const vertex&     a vertex ref containing the combo_tree vertex
-	 *                          to be converted to atom
-	 * @param procedure_type&     containing the type  of the atom i:e predicate, shema
-	 * @return                 if the vertex is to be converted to an atomese link
-	 *                          return Link type otherwise return -1
-	 */
-	std::pair<Type, Handle> atomese_vertex(const vertex &, id::procedure_type &);
-
-	/**
 	 * Convert a combo_tree to atomese from a head of a combo_tree program.
 	 *
 	 * @param combo_tree::iterator   the iterater to the head of a combo_tree
@@ -84,7 +91,7 @@ protected:
 
 		id::procedure_type procedure_type = parent_procedure_type;
 		combo_tree::iterator head = it;
-		std::pair <Type, Handle> atomese = atomese_vertex(*head, procedure_type);
+		std::pair <Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as), *head);
 		Type link_type = atomese.first;
 		Handle handle = atomese.second;
 
@@ -97,30 +104,6 @@ protected:
 		}
 		return handle;
 	}
-
-	/**
-	 * Convert a combo argument to atomese.
-	 *
-	 * @param Handle&       handle ref, stores the atomese converted from combo argument
-	 * @param const argument&     a argumet ref containing the combo argument to be
-	 *                              converted to atom
-	 * @param procedure_type&     ref to parent procidere type containing the type of
-	 *                              the atom to be created
-	 *                            i:e predicateNode, shemaNode
-	 * @return                 return -1 todo:// return void
-	 */
-	Handle atomese_argument(const argument &, const id::procedure_type &);
-
-	/**
-	 * Convert a combo builtin to atomese.
-	 *
-	 * @param const builtin&       a builtin ref containing the combo builtin to be
-	 *                              converted to atom
-	 * @param procedure_type&     set procedure type from the Link to be created
-	 *                            i:e predicate, shema
-	 * @return                 return Link type to be created
-	 */
-	Type atomese_builtin(const builtin &, id::procedure_type &);
 
 };
 
