@@ -1,13 +1,14 @@
 .\"                                      Hey, EMACS: -*- nroff -*-
-.\" Man page for moses-exec
+.\" Man page for asmoses
 .\"
 .\" Copyright (C) 2011,2012,2014 Linas Vepstas
+.\"               2019 SingularityNET Foundation
 .\"
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
 .pc
-.TH MOSES 1 "October 6, 2014" "3.6.10" "OpenCog Learning"
+.TH AS-MOSES 1 "Mars 8, 2019" "3.6.10" "OpenCog Learning"
 .LO 1
 .\" Please adjust this date whenever revising the manpage.
 .\"
@@ -22,17 +23,17 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-moses \- meta-optimizing semantic evolutionary search solver
+asmoses \- meta-optimizing semantic evolutionary search solver
 .SH SYNOPSIS
 .\" The help & version command line
-.B moses
+.B asmoses
 .RB \-h | \--help
 .br
-.B moses
+.B asmoses
 .RB \--version
 .br
 .\" The general command line
-.B moses
+.B asmoses
 .RB [ \-H
 .IR problem_type ]
 .RB [ \-i
@@ -124,12 +125,12 @@ moses \- meta-optimizing semantic evolutionary search solver
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invoke bold face and italics,
 .\" respectively.
-\fBmoses\fP is the command-line wrapper to the MOSES program learning
-library. It may be used to solve learning tasks specified with file
-inputs, or to run various demonstration problems.  Given an input table
-of values, it will perform a regression, generating, as output,
-a \fBcombo\fP program that best fits the data. \fBmoses\fP is
-multi-threaded, and can be distributed across multiple machines to
+\fBasmoses\fP is the command-line wrapper to the AS-MOSES program
+learning library. It may be used to solve learning tasks specified
+with file inputs, or to run various demonstration problems.  Given an
+input table of values, it will perform a regression, generating, as
+output, a \fBcombo\fP program that best fits the data. \fBasmoses\fP
+is multi-threaded, and can be distributed across multiple machines to
 improve run-time performance.
 .PP
 .\" ============================================================
@@ -154,11 +155,11 @@ should be printed on output.
 .PP
 .\" ============================================================
 .SH OVERVIEW
-\fBmoses\fP implements program learning by using a meta-optimization
-algorithm. That is, it uses two optimization algorithms, one wrapped inside
-the other, to find solutions.  The outer optimization algorithm selects
-candidate programs (called \fIexemplars\fP), and then creates similar
-programs by taking an exemplar and inserting variables (called
+\fBasmoses\fP implements program learning by using a meta-optimization
+algorithm. That is, it uses two optimization algorithms, one wrapped
+inside the other, to find solutions.  The outer optimization algorithm
+selects candidate programs (called \fIexemplars\fP), and then creates
+similar programs by taking an exemplar and inserting variables (called
 \fIknobs\fP) in selected locations. The inner optimization algorithm
 then searches for the best possible 'knob settings', returning a set
 of programs (a \fIdeme\fP) that provide the best fit to the data. The
@@ -176,7 +177,7 @@ compact form possible.  Reduction is an important step of the algorithm,
 as it prevents the evolved programs from turning into 'spaghetti code',
 avoiding needless complexity that can cost during program evaluation.
 .PP
-The operation of \fBmoses\fP can be modified by using a large variety of
+The operation of \fBasmoses\fP can be modified by using a large variety of
 options to control different parts of the above meta-algorithm.
 The inner optimization step can be done using one of several different
 algorithms, including \fIhillclimbing\fP, \fIsimulated annealing\fP,
@@ -191,13 +192,13 @@ In addition to controlling the operation of the algorithm, many
 options are used to describe the format of the input data, and to
 control the printing of the output.
 .PP
-\fBmoses\fP also has a 'demo' mode: it has a number of built-in
+\fBasmoses\fP also has a 'demo' mode: it has a number of built-in
 scoring functions for various 'well-known' optimization problems,
 such as parity, disjunction, and multiplex. Each of these typically
 presents a different set of challenges to the optimization algorithm,
 and are used to illustrate 'hard' optimization problems.  These demo
 problems are useful both for learning and understanding the use of
-\fBmoses\fP, and also for developers and maintainers of \fBmoses\fP
+\fBasmoses\fP, and also for developers and maintainers of \fBasmoses\fP
 itself, when testing new features and enhancements.
 
 .PP
@@ -255,7 +256,7 @@ is required for this.
 .PP
 Options fall into four classes: those for specifying inputs,
 controlling operation, printing output, and running
-\fBmoses\fP in demo mode.
+\fBasmoses\fP in demo mode.
 
 .SS "General options"
 .TP
@@ -277,12 +278,12 @@ Print program version, and exit.
 .PP
 .\" ============================================================
 .SS "Problem-type options"
-\fBmoses\fR is able to handle a variety of different 'problem types',
+\fBasmoses\fR is able to handle a variety of different 'problem types',
 such as regression, categorization and clustering, as well as a number
 of demo problems, such as parity and factorization.  The \fB\-H\fR
 option is used to specify the problem type; the demo problem types are
 listed in a later section. This section lists the various "table"
-problems, where the goal is to train \fBmoses\fR on an input table
+problems, where the goal is to train \fBasmoses\fR on an input table
 of values.
 
 .TP
@@ -360,7 +361,7 @@ T}
 Discovery of "interesting predicates" that select rows from the
 input table. The data table is assumed to consist of a number of
 boolean-valued input columns, and a contin-valued (floating point)
-target column. \fBmoses\fP will learn predicates that select the
+target column. \fBasmoses\fP will learn predicates that select the
 most "interesting" subset of the rows in the table.  The values in
 the output columns of the selected rows form a probability
 distribution (PDF); this PDF is considered to be "interesting"
@@ -430,7 +431,7 @@ defined as the formula (precision + recall) / 2
 .\" ============================================================
 .SS "Input specification options"
 These options control how input data is specified and interpreted.
-In its primary mode of operation, \fBmoses\fR performs regression on a
+In its primary mode of operation, \fBasmoses\fR performs regression on a
 a table of input data. One column is designated as the target, the
 remaining columns are taken as predictors.  The output of regression
 is a \fBcombo\fR program that is a function of the predictors,
@@ -714,11 +715,11 @@ answer.
 Problems with a large number of input features (typically, hundreds
 or more) can lead to excessively long run-times, and overwhelming
 amounts of memory usage.  Such problems can be tamed in two different
-ways: by static feature pre-selection (i.e. by giving \fBmoses\fR
+ways: by static feature pre-selection (i.e. by giving \fBasmoses\fR
 fewer features to work with) or by reducing the number of features
 considered during the knob-building stage.
 
-Recall that, as \fBmoses\fR runs, it iterates over two loops: an outer
+Recall that, as \fBasmoses\fR runs, it iterates over two loops: an outer
 loop where an exemplar is selected and decorated with knobs, and an
 inner loop, where the knobs are 'turned', searching for the best
 knob-settings.  Each knob corresponds to one feature added to a
@@ -746,12 +747,12 @@ search space is much smaller.
 
 Dynamic, boosted feature selection differs from static feature
 pre-selection in many important ways.  In dynamic selection, the total
-number of features available to moses is not reduced: just because
+number of features available to asmoses is not reduced: just because
 a feature was not used in a given round of knob-decoration does not
 mean that it won't be used next time.  Dynamic feature selection also
 resembles boosting, in that it focuses on fixing the wrong answers
 of the current exemplar.  By contrast, static pre-selection permanently
-discards features, making them unavailable to moses; it is also unable
+discards features, making them unavailable to asmoses; it is also unable
 to predict which features are the most likely to be useful during
 iteration.
 
@@ -798,7 +799,7 @@ find the redundant features in the featureset, removing those. This
 is iteratively repeated until the desired number of features is
 obtained.  Note that \fBinc\fR runs orders of magnitude more slowly
 than \fBsimple\fR, and probably does not provide better results.
-The \fBhc\fR algorithm runs moses hill-climbing to discover those
+The \fBhc\fR algorithm runs asmoses hill-climbing to discover those
 features most likely to appear.
 The \fBrandom\fR algorithm selects features randomly.  It is useful
 only for limiting the numberof knobs created, but not otherwise
@@ -1009,12 +1010,12 @@ overall accuracy.
 
 .\" ============================================================
 .SS "Controlling RAM usage"
-Deploying \fBmoses\fR on large problems can cause all available RAM on a
+Deploying \fBasmoses\fR on large problems can cause all available RAM on a
 given machine to be used up.  Actual RAM usage depends strongly on
 the dataset, and on various tuning paramters. Typical tasks require
 systems with dozens or hundreds of gigabytes of RAM.
 
-There are three primary consumers of RAM within \fBmoses\fR: the
+There are three primary consumers of RAM within \fBasmoses\fR: the
 metapopulation (the set of combo trees being evolved), the deme
 (the set of instances describing the knob setttings, when a single
 combo tree is being explored), and the score casche.  The following
@@ -1056,7 +1057,7 @@ the temerpature is set to an appropriatte value, before making use of
 this flag.
 .TP
 .BI \-\-hc\-resize\-to\-fit\-ram=1
-If set to true, this will cause \fBmoses\fR to try to limit memory
+If set to true, this will cause \fBasmoses\fR to try to limit memory
 usage so that it will fit in available RAM (and thus avoid an OOM kill).
 The RAM usage is controlled by automatically resizing the deme during
 the hillclimbing search. (The deme contains instances of knob settings
@@ -1084,7 +1085,7 @@ to score. If negative, then all results are returned.
 .TP
 .BI \-f\  filename \fR,\ \fB\-\-log\-file= filename
 Write debug log traces \fIfilename\fR. If not specified, traces
-are written to \fBmoses.log\fR.
+are written to \fBasmoses.log\fR.
 .TP
 .BI \-F\fR,\ \fB\-\-log\-file\-dep\-opt
 Write debug log traces to a filename constructed from the passed
@@ -1133,7 +1134,7 @@ is to sort inputs into one of two sets, while maximizing either
 the precision, the sensitivity, or some other figure of merit
 of the test.
 .PP
-In \fBmoses\fR, precision and recall (sensitivity) are defined as usual.
+In \fBasmoses\fR, precision and recall (sensitivity) are defined as usual.
 Precision is defined as the number of true positives, divided by the number
 of true positives plus the number of false positives.  Classifiers
 with a high precision make very few mistakes identifying positives:
@@ -1158,7 +1159,7 @@ maximize precision, while maintaining a minimum sensitivity; this
 may be accomplished with the \fB\-Hprerec\fR option.  Note that,
 although these two proceedures seem superficially similar, they can
 often lead to dramatically different models of the input data.
-This is in part because, during early stages, \fBmoses\fP will choose
+This is in part because, during early stages, \fBasmoses\fP will choose
 exemplars that maximize one or the other, thus causing dramatically
 different parts of the solution space to be searched.
 .PP
@@ -1169,10 +1170,10 @@ when the \fB\-Hbep\fR option is specified.  The harmonic mean is known
 as the F_1 score, it is maximized when the \fB\-Hf_one\fR option is
 specified.
 .PP
-\fBmoses\fR also provides a second way of maximizing precision, using
+\fBasmoses\fR also provides a second way of maximizing precision, using
 the \fB\-Hpre\fR option.  This option searches for the test with the
 highest precision, while holding the 'activation' in a bounded range.
-The definition of 'activation' is idiosyncratic to moses; it is defined
+The definition of 'activation' is idiosyncratic to asmoses; it is defined
 as the sum of true positives plus false positives: that is, it is
 the fraction of rows for which the trial combo program returned
 a positive answer, regardless of whether this was the right answer.
@@ -1232,7 +1233,7 @@ that is, \fIn\fR uses of this option will create \fIn+1\fR domains.
 These options pertain to the various built-in demo and example problem
 modes.  Such demo problems are commonly used to evaluate different
 machine learning algorithms, and are thus included here to facilitate
-such comparison, as well as to simplify moses regression and performance
+such comparison, as well as to simplify asmoses regression and performance
 testing.
 .TP
 .BI \-H\  type \fR,\ \fB\-\-problem\-type= type
@@ -1306,7 +1307,7 @@ Specify the combo program to be learned, when used in combination with
 the \fB-H cp\fR option.  Thus, for example, \fB-H cp -y "and(\\$1 \\$2)"\fR
 specifies that the two-input conjunction is to be learned.  Keep in mind
 that $ is a reserved character in many shells, and thus must be escaped
-with a backslash in order to be passed to moses.
+with a backslash in order to be passed to asmoses.
 .PP
 .\" ============================================================
 .SH Complexity Penalty
@@ -1453,16 +1454,16 @@ feature that must be fit.
 .\" ============================================================
 .SH Distributed processing
 .PP
-\fBmoses\fR provides two different styles of distributed processing for
+\fBasmoses\fR provides two different styles of distributed processing for
 cluster computing systems.  One style is to use MPI (as implemented in
 the OpenMPI/MPICH2 systems), the second is to use SSH. The first style
 is best suited for local area networks (LANs) and compute clusters. The
 second style allows operation over the open Internet, but is more
 problematic, as it may require manual cleanup of log files and failed
 jobs.  Because MPI is easy to install and manage, it is the recommended
-method for distributing moses operation across many machines.
+method for distributing asmoses operation across many machines.
 .PP
-When \fBmoses\fP is run in distributed fashion, one single node, the
+When \fBasmoses\fP is run in distributed fashion, one single node, the
 root node, maintains control over a pool of workers that execute on
 remote nodes.  The root node maintains the set of candidate solutions,
 and assigns these to the workers for additional exploration, as the
@@ -1472,40 +1473,40 @@ termination criteria are met, processing will terminate on all nodes,
 and the root node will report the merged, best results.
 .PP
 .SS "MPI"
-Using MPI requires a \fBmoses\fR binary with MPI support compiled in, with
-either the OpenMPI or the MPICH2 implementations.  MPI support in \fBmoses\fR
+Using MPI requires a \fBasmoses\fR binary with MPI support compiled in, with
+either the OpenMPI or the MPICH2 implementations.  MPI support in \fBasmoses\fR
 is enabled with the \fB\-\-mpi=1\fR command-line flag.  When this flag
-is specified, \fBmoses\fR may be run as usual in an MPI environment.
+is specified, \fBasmoses\fR may be run as usual in an MPI environment.
 Details will vary from one system configuration to another, but a
 typical usage might resemble the following:
 
 .\" .TP
-.BI mpirun\ \-n \ 15 \ \-\-hostfile \ mpd.hosts \ moses\ \-\-mpi=1\ \-j \ 12\ <other\ moses\ params>
+.BI mpirun\ \-n \ 15 \ \-\-hostfile \ mpd.hosts \ asmoses\ \-\-mpi=1\ \-j \ 12\ <other\ asmoses\ params>
 
 .PP
 The above specifies that the run should be distributed over fifteen nodes,
 with the node names specified in the \fImpd.hosts\fP file.  The
-\fB\-\-mpi=1\fR flag indicates to \fBmoses\fP that it is being run in an
-MPI environment.  The \fB\-j12\fP flag tells \fBmoses\fP to use up to
+\fB\-\-mpi=1\fR flag indicates to \fBasmoses\fP that it is being run in an
+MPI environment.  The \fB\-j12\fP flag tells \fBasmoses\fP to use up to
 twelve threads on each node, whenever possible; this example assumes
 each node has 12 cores per CPU.
 .PP
 To maximize CPU utilization, it seems best to specify two MPI instances per
-node.  This is because not all parts of moses are parallelized, and some
+node.  This is because not all parts of asmoses are parallelized, and some
 parts are subject to lock contention.  Thus, running multiple instances
 per node seems to be an effective way to utilize all available compute
-power on that node.  It is almost always the case that moses RAM usage
+power on that node.  It is almost always the case that asmoses RAM usage
 is relatively small, and so RAM availability is rarely a problem.  The
-network utilization by moses is also very modest: the only network
+network utilization by asmoses is also very modest: the only network
 traffic is the reporting of candidate solutions, and so the network
 demands are typically in the range of 1 Megabit per second, and are thus
-easily supported on an Ethernet connection.  The moses workload
+easily supported on an Ethernet connection.  The asmoses workload
 distributes in an 'embarrassingly parallel' fashion, and so there is no
 practical limit to scaling on small and medium compute clusters.
 .PP
 When performing input data regression, be sure that the input data file
 is available on all nodes.   This is most easily achieved by placing the
-input data file on a shared filesystem.  Each instance of moses will
+input data file on a shared filesystem.  Each instance of asmoses will
 write a log file.  In order to avoid name collision on the log files,
 the process id (PID) will automatically be incorporated into the
 log-file name when the \fB\-\-mpi=1\fR option is specified.  Log file
@@ -1516,7 +1517,7 @@ difficult.
 .SS "SSH"
 The SSH style of distributed processing uses the \fBssh\fP command to
 establish communications and to control the pool of workers.  Although
-\fBmoses\fP provides job control when the system is running normally, it
+\fBasmoses\fP provides job control when the system is running normally, it
 does not provide any mechanism for cleaning up after hung or failed
 jobs;  this is outside the scope of the ssh implementation.  The use of
 a job manager, such as LSF, is recommended.
@@ -1530,7 +1531,7 @@ one can enter the options \fB\-j\fR4 \fB\-j\fI16:my_server.org\fR
 job under a different user name), meaning that 4 threads are allocated
 on the local machine and 16 threads are allocated on \fImy_server.org\fP.
 Password prompts will appear unless \fBssh\-agent\fR is being used.
-The \fBmoses\fR executable must be on the remote machine(s), and
+The \fBasmoses\fR executable must be on the remote machine(s), and
 located in a directory included in the \fBPATH\fR environment variable.
 Beware that a lot of log files are going to be generated on the
 remote machines.
@@ -1563,6 +1564,6 @@ More information is available at
 .B http://wiki.opencog.org/w/MOSES
 .SH AUTHORS
 .nh
-\fBmoses\fP was written by Moshe Looks, Nil Geisweiller, and many others.
+\fBasmoses\fP was written by Moshe Looks, Nil Geisweiller, and many others.
 .PP
 This manual page is being written by Linas Vepstas. It is INCOMPLETE.

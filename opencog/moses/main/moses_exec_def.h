@@ -51,7 +51,7 @@ static const pair<string, string> output_file_opt("output-file", "o");
 static const pair<string, string> max_gens_opt("max-gens", "g");
 static const pair<string, string> log_level_opt("log-level", "l");
 static const pair<string, string> log_file_opt("log-file", "f");
-static const string default_log_file_prefix = "moses";
+static const string default_log_file_prefix = "asmoses";
 static const string default_log_file_suffix = "log";
 static const string default_log_file = default_log_file_prefix + "." + default_log_file_suffix;
 static const pair<string, string> log_file_dep_opt_opt("log-file-dep-opt", "F");
