@@ -79,3 +79,12 @@ TARGET_LINK_LIBRARIES(populateAtomSpaceUTest
         ascombo
         ${COGUTIL_LIBRARY}
         )
+
+ADD_CXXTEST(diversityUTest)
+TARGET_LINK_LIBRARIES(diversityUTest
+	moses_exec
+	moses
+        moses-framework
+	comboreduct
+	${COGUTIL_LIBRARY}
+)
