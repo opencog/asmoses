@@ -165,9 +165,10 @@ void table_problem_base::common_setup(problem_params& pms)
     // Check that work with atomspace if enabled, create Atomspace object
     // and populate it with the input data
     if (pms.deme_params.atomspace_port) {
-        pms.deme_params._data_as = new AtomSpace();
-        populate(pms.deme_params._data_as, table.itable);
-        populate(pms.deme_params._data_as, ctable);
+	    // atomspace used for populating features
+        pms.deme_params._as = new AtomSpace();
+        populate(pms.deme_params._as, table.itable);
+        populate(pms.deme_params._as, ctable);
     }
 
     pms.mmr_pa.ilabels = ilabels;

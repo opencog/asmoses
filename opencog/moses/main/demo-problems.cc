@@ -107,7 +107,8 @@ void bool_problem_base::run(option_base* ob)
 
     // create atomspace if the code is running through port atomspace
 	if (pms.deme_params.atomspace_port) {
-		pms.deme_params._data_as = new AtomSpace();
+		// atomspace used for storing candidate programs
+		pms.deme_params._as = new AtomSpace();
 	}
 
     logical_bscore bscore = get_bscore(_dparms.problem_size);
@@ -263,7 +264,8 @@ void polynomial_problem::run(option_base* ob)
     }
 
     if (pms.deme_params.atomspace_port) {
-    	pms.deme_params._data_as = new AtomSpace();
+    	// atomspace used for storing candidate programs
+    	pms.deme_params._as = new AtomSpace();
     }
 
     // sr is fundamentally a kind of non-linear regression!
@@ -398,7 +400,8 @@ void combo_problem::run(option_base* ob)
     }
 
     if (pms.deme_params.atomspace_port) {
-    	pms.deme_params._data_as = new AtomSpace();
+	    // atomspace used for storing candidate programs
+    	pms.deme_params._as = new AtomSpace();
     }
 
     if (output_type == id::boolean_type) {
@@ -490,7 +493,8 @@ void ann_combo_problem::run(option_base* ob)
     }
 
     if (pms.deme_params.atomspace_port) {
-    	pms.deme_params._data_as = new AtomSpace();
+		// atomspace used for storing candidate programs
+    	pms.deme_params._as = new AtomSpace();
     }
 
     if (pms.nsamples <= 0)
