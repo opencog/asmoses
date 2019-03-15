@@ -245,7 +245,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
                    candidates.size(), pot_candidates.size()-candidates.size());
 
     // Behavioral scores are needed only if domination-based
-    // merging is asked for, or if the diversity penalty is in use.
+    // merging is asked for, or if the uniformity penalty is in use.
     // Save CPU time, as well as RAM, by not computing them.
     // Note that the instances were previously bscored; the bscores
     // were thrown away way back when, to save on RAM... so we have to
@@ -339,7 +339,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
         rescore();
     }
 
-    // update diversity penalties
+    // update uniformity penalties
     if (diversity_enabled())
         set_diversity();
 
