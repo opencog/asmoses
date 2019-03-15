@@ -19,8 +19,8 @@ foreach(manpage ${MANPAGES})
 	list(APPEND outlist ${CMAKE_CURRENT_BINARY_DIR}/${manpage}.gz)
 endforeach()
 
-# Define target so that 'make moses-man' will do something...
-add_custom_target(moses-man ALL DEPENDS ${outlist})
+# Define target so that 'make asmoses-man' will do something...
+add_custom_target(asmoses-man ALL DEPENDS ${outlist})
 
 # Install to final location ...
 install(
