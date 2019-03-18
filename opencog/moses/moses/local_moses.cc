@@ -46,8 +46,7 @@ using namespace combo;
 static bool expand_deme(metapopulation& mp,
                         deme_expander& dex,
                         int max_evals, time_t max_time,
-                        moses_statistics& stats,
-                        AtomSpace *_as)
+                        moses_statistics& stats)
 {
     if (mp.empty())
         return true;
@@ -144,7 +143,7 @@ void local_moses(metapopulation& mp,
             expand_deme(mp, dex,
                         pa.max_evals - stats.n_evals, 
                         pa.max_time - stats.elapsed_secs, 
-                        stats, _as);
+                        stats);
 
         struct timeval stop, elapsed;
         gettimeofday(&stop, NULL);
