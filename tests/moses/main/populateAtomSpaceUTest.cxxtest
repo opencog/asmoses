@@ -19,8 +19,8 @@ public:
 	string f2;
 	ValuePtr feature1;
 	ValuePtr feature2;
-	vector<ValuePtr> values_vec1;
-	vector<ValuePtr> values_vec2;
+	ValueSeq values_vec1;
+	ValueSeq values_vec2;
 
 	void test_contin_type() {
 		AtomSpace as;

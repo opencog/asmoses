@@ -75,9 +75,9 @@ public:
 		t_link = ValuePtr(createLink(TRUE_LINK));
 		f_link = ValuePtr(createLink(FALSE_LINK));
 
-		std::vector<ValuePtr> _p1 = {t_link, t_link, f_link};
-		std::vector<ValuePtr> _p2 = {f_link, t_link, f_link};
-		std::vector<ValuePtr> _p3 = {f_link, f_link, t_link};
+		ValueSeq _p1 = {t_link, t_link, f_link};
+		ValueSeq _p2 = {f_link, t_link, f_link};
+		ValueSeq _p3 = {f_link, f_link, t_link};
 
 		ValuePtr p1_proto_atom(new LinkValue(_p1));
 		p1->setValue(moses::value_key, p1_proto_atom);
@@ -155,7 +155,7 @@ public:
 		Handle program = createLink(seq3, OR_LINK);
 
 		// expected out put vector
-		std::vector<ValuePtr> exp_value = {t_link, t_link, f_link};
+		ValueSeq exp_value = {t_link, t_link, f_link};
 		ValuePtr expected(new LinkValue(exp_value));
 
 		// interpret

@@ -105,6 +105,12 @@ void bool_problem_base::run(option_base* ob)
         pms.exemplars.push_back(type_to_exemplar(id::boolean_type));
     }
 
+    // create atomspace if the code is running through port atomspace
+	if (pms.deme_params.atomspace_port) {
+		// atomspace used for storing candidate programs
+		pms.deme_params.as = new AtomSpace();
+	}
+
     logical_bscore bscore = get_bscore(_dparms.problem_size);
     if (pms.meta_params.do_boosting) bscore.use_weighted_scores();
 
@@ -256,6 +262,11 @@ void polynomial_problem::run(option_base* ob)
         pms.exemplars.push_back(type_to_exemplar(id::contin_type));
     }
 
+    if (pms.deme_params.atomspace_port) {
+    	// atomspace used for storing candidate programs
+    	pms.deme_params.as = new AtomSpace();
+    }
+
     // sr is fundamentally a kind of non-linear regression!
     // over-ride any flag settings regarding this.
     pms.deme_params.linear_contin = false;
@@ -387,6 +398,11 @@ void combo_problem::run(option_base* ob)
         pms.exemplars.push_back(type_to_exemplar(output_type));
     }
 
+    if (pms.deme_params.atomspace_port) {
+	    // atomspace used for storing candidate programs
+    	pms.deme_params.as = new AtomSpace();
+    }
+
     if (output_type == id::boolean_type) {
         // @todo: Occam's razor and nsamples is not taken into account
         logical_bscore bscore(tr, arity);
@@ -473,6 +489,11 @@ void ann_combo_problem::run(option_base* ob)
     if (pms.exemplars.empty()) {
         type_node output_type = get_type_node(get_signature_output(tt));
         pms.exemplars.push_back(type_to_exemplar(output_type));
+    }
+
+    if (pms.deme_params.atomspace_port) {
+		// atomspace used for storing candidate programs
+    	pms.deme_params.as = new AtomSpace();
     }
 
     if (pms.nsamples <= 0)

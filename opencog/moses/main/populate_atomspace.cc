@@ -41,7 +41,7 @@ ValuePtr vertex_seq_to_value(const vertex_seq& col, id::type_node col_type) {
 	int n_rows = col.size();
 	switch (col_type) {
 		case id::boolean_type: {
-			std::vector<ValuePtr> col_values = {};
+			ValueSeq col_values = {};
 			for (int j = 0; j < n_rows; j++) {
 				bool col_data = vertex_to_bool(col.at(j));
 				col_values.push_back(ValuePtr(createLink(col_data ? TRUE_LINK : FALSE_LINK)));

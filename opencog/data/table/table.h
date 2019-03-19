@@ -1617,7 +1617,7 @@ void subsampleTable(ITable &it, unsigned nsamples);
  * +-----------------------+--+--+
  */
 typedef std::vector<bool> bool_seq;
-typedef std::vector<ValuePtr> ValuePtrVec;
+typedef ValueSeq ValuePtrVec;
 
 class complete_truth_table : public bool_seq
 {
