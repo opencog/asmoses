@@ -107,8 +107,7 @@ static bool expand_deme(metapopulation& mp,
 void local_moses(metapopulation& mp,
                  deme_expander& dex,
                  const moses_parameters& pa,
-                 moses_statistics& stats,
-                 AtomSpace *_as)
+                 moses_statistics& stats)
 {
     logger().info("MOSES starts, max_evals=%d max_gens=%d max_time=%d",
                   pa.max_evals, pa.max_gens, pa.max_time);
