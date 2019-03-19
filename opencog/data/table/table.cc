@@ -894,7 +894,7 @@ void complete_truth_table::populate(const Handle &handle)
 {
 	// create a vector containing values for each feature or arity.
 	// this will contain the inputs of the truth table.
-	std::vector<ValuePtrVec> features(_arity);
+	std::vector<ValueSeq> features(_arity);
 	populate_features(features);
 
 	// map the values of inputs to the program.
@@ -908,7 +908,7 @@ void complete_truth_table::populate(const Handle &handle)
 	std::transform(result.begin(), result.end(), begin(), bool_value_to_bool);
 }
 
-void complete_truth_table::populate_features(std::vector<ValuePtrVec> &features)
+void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 {
 	auto it = begin();
 	for (int i = 0; it != end(); ++i, ++it) {
@@ -922,14 +922,14 @@ void complete_truth_table::populate_features(std::vector<ValuePtrVec> &features)
 	}
 }
 
-void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValuePtrVec> &features)
+void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValueSeq> &features)
 {
 	if (PREDICATE_NODE == handle->get_type()) {
 		// We extract the index of the feature from the name of the Predicate Node.
 		// the assumption is the Predicate nodes have names in [$#] format. and this
 		// convention is adopted from the combo counterpart.
 		const std::string h_name = handle->get_name();
-		ValuePtrVec value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
+		ValueSeq value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
 
 		handle->setValue(moses::value_key, ValuePtr(new LinkValue(value)));
 		return;
