@@ -76,13 +76,12 @@ ValuePtr Interpreter::unwrap_constant(const Handle &handle)
 	Type t = handle->get_type();
 	if (NUMBER_NODE == t) {
 		std::vector<double> constant_value(_problem_data_size,
-			                                   NumberNodeCast(handle)->get_value());
+		                                   NumberNodeCast(handle)->get_value());
 		ValuePtr constant(new FloatValue(constant_value));
 		return constant;
 	}
 	if (FALSE_LINK == t || TRUE_LINK == t) {
-		std::vector<ValuePtr> constant_value(_problem_data_size,
-		                                   ValuePtr(handle));
+		ValueSeq constant_value(_problem_data_size, ValuePtr(handle));
 		ValuePtr constant(new LinkValue(constant_value));
 		return constant;
 	}
@@ -111,8 +110,8 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq& params)
 		return result;
 	}
 	if (t == AND_LINK) {
-		std::vector<ValuePtr> _result(_problem_data_size,
-		                                  ValuePtr(createLink(TRUE_LINK)));
+		ValueSeq _result(_problem_data_size,
+		                              ValuePtr(createLink(TRUE_LINK)));
 		LinkValuePtr result(new LinkValue(_result));
 
 		for (const ValuePtr &p : params) {
@@ -121,7 +120,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq& params)
 		return ValuePtr(result);
 	}
 	if (t == OR_LINK) {
-		std::vector<ValuePtr> _result(_problem_data_size,
+		ValueSeq _result(_problem_data_size,
 		                                  ValuePtr(createLink(FALSE_LINK)));
 		LinkValuePtr result(new LinkValue(_result));
 

@@ -40,7 +40,7 @@ struct zip_and :
 		public std::unary_function<const boost::tuple
 				<const ValuePtr&, const ValuePtr&>&, void>
 {
-	std::vector<ValuePtr> _result;
+	ValueSeq _result;
 
 	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
 	{
@@ -63,7 +63,7 @@ struct zip_or :
 		public std::unary_function<const boost::tuple
 				<const ValuePtr&, const ValuePtr&>&, void>
 {
-	std::vector<ValuePtr> _result;
+	ValueSeq _result;
 
 	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
 	{
@@ -86,8 +86,8 @@ struct zip_or :
  * @return                 LinkValue pointer containing the logical_and.
  */
 LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
-	std::vector<ValuePtr> p1_value = p1->value();
-	std::vector<ValuePtr> p2_value = p2->value();
+	ValueSeq p1_value = p1->value();
+	ValueSeq p2_value = p2->value();
 
 	zip_and _and = std::for_each(
 			boost::make_zip_iterator(
@@ -99,7 +99,7 @@ LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 			zip_and()
 	);
 
-	std::vector<ValuePtr> _result = _and._result;
+	ValueSeq _result = _and._result;
 	return LinkValuePtr(new LinkValue(_result));
 }
 
@@ -112,8 +112,8 @@ LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
  * @return                 LinkValue pointer containing the logical_or.
  */
 LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
-	std::vector<ValuePtr> p1_value = p1->value();
-	std::vector<ValuePtr> p2_value = p2->value();
+	ValueSeq p1_value = p1->value();
+	ValueSeq p2_value = p2->value();
 
 	zip_or _or = std::for_each(
 			boost::make_zip_iterator(
@@ -125,7 +125,7 @@ LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
 			zip_or()
 	);
 
-	std::vector<ValuePtr> _result = _or._result;
+	ValueSeq _result = _or._result;
 	return LinkValuePtr(new LinkValue(_result));
 }
 
@@ -137,8 +137,8 @@ LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
  * @return                 boolean of the comparision.
  */
 bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2) {
-	std::vector<ValuePtr> p1_value = p1->value();
-	std::vector<ValuePtr> p2_value = p2->value();
+	ValueSeq p1_value = p1->value();
+	ValueSeq p2_value = p2->value();
 
 	std::function<bool (const ValuePtr&, const ValuePtr&)> comparator = []
 			(const ValuePtr& left, const ValuePtr& right)
@@ -157,9 +157,9 @@ bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2) {
  * @return                 LinkValue pointer containing the logical_not.
  */
 LinkValuePtr logical_not(const LinkValuePtr& p) {
-	std::vector<ValuePtr> _result;
-	std::vector<ValuePtr> p_value = p->value();
-	std::vector<ValuePtr>::iterator it;
+	ValueSeq _result;
+	ValueSeq p_value = p->value();
+	ValueSeq::iterator it;
 	for(it = p_value.begin(); it != p_value.end(); ++it)
 		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
 		ValuePtr(createLink(FALSE_LINK)): ValuePtr(createLink(TRUE_LINK)));

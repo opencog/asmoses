@@ -48,8 +48,8 @@ public:
 
 		Handle f1 = createNode(PREDICATE_NODE, "f1");
 		Handle f2 = createNode(PREDICATE_NODE, "f2");
-		std::vector<ValuePtr> _f1_values;
-		std::vector<ValuePtr> _f2_values;
+		ValueSeq _f1_values;
+		ValueSeq _f2_values;
 
 		boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
 		boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
