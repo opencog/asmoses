@@ -123,7 +123,7 @@ public:
 		TS_ASSERT(content_eq(h, times_link));
 	}
 
-	void test_combo_atomese_schema()
+	void test_combo_atomese_predicate1()
 	{
 		Handle p1 = createNode(PREDICATE_NODE, "$x");
 		Handle p2 = createNode(PREDICATE_NODE, "$y");
