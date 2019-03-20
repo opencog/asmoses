@@ -123,6 +123,13 @@ protected:
 
 	void atom2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
 	                combo_tree::iterator &iter);
+
+	void link2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	                tree<vertex>::iterator &iter);
+
+	void node2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	                tree<vertex>::iterator &iter);
+
 };
 }}  // ~namespaces combo opencog
 

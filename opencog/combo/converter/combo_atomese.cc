@@ -153,6 +153,29 @@ std::pair<combo_tree, std::vector<std::string>> AtomeseToCombo::operator()(const
 void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &labels,
                                 combo_tree &tr, combo_tree::iterator &iter)
 {
+	const auto prev = iter;
+	if (h->is_link()) {
+		link2combo(h, labels, tr, iter);
+		for (auto child : h->getOutgoingSet()) {
+			atom2combo(child, labels, tr, iter);
+		}
+	} else {
+		node2combo(h, labels, tr, iter);
+		return;
+	}
+	iter = prev;
+}
+
+void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &labels,
+                                combo_tree &tr, combo_tree::iterator &iter)
+{
 	OC_ASSERT(false, "not supported");
 }
+
+void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &labels,
+                                combo_tree &tr, tree<vertex>::iterator &iter)
+{
+	OC_ASSERT(false, "not supported");
+}
+
 }}  // ~namespaces combo opencog
