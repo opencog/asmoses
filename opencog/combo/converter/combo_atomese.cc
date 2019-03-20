@@ -186,11 +186,13 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 
 	if (PREDICATE_NODE == t || SCHEMA_NODE == t || VARIABLE_NODE == t) {
 		const auto label = parse_combo_variables(h->get_name())[0];
-		if (std::find(labels.begin(), labels.end(), label) == labels.end())
-			labels.push_back(label);
+		// The argument idx must be the index of label in labels plus one.
+		auto i = std::find(labels.begin(), labels.end(), label) - labels.begin() + 1;
+		// If label exists in labels already we dont want to add it.
+		if (i > labels.size()) labels.push_back(label);
 
-		if (tr.empty()) tr.set_head(argument(labels.size()));
-		else tr.append_child(iter, argument(labels.size()));
+		if (tr.empty()) tr.set_head(argument(i));
+		else tr.append_child(iter, argument(i));
 
 		return;
 	} else OC_ASSERT(false, "unsupported type");
