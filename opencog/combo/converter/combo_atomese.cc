@@ -31,13 +31,16 @@
 #include "combo_atomese.h"
 
 
-namespace opencog { namespace combo {
+namespace opencog
+{
+namespace combo
+{
 
 using namespace std;
 using namespace boost;
 
 ComboToAtomeseConverter::ComboToAtomeseConverter(AtomSpace *as)
-		:_as(as)
+		: _as(as)
 {}
 
 Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
@@ -49,14 +52,14 @@ Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
 	return handle;
 }
 
-vertex_2_atom::vertex_2_atom(id::procedure_type* parent, AtomSpace *as)
+vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpace *as)
 		: _as(as), _parent(parent)
 {}
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 {
 	Handle handle;
-	if(*_parent == id::unknown) {
+	if (*_parent == id::unknown) {
 		*_parent = id::predicate;
 	}
 	switch (*_parent) {
@@ -125,13 +128,12 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			*_parent = id::predicate;
 			type = FALSE_LINK;
 			break;
-		default:
-			OC_ASSERT(false, "unsupported");
+		default: OC_ASSERT(false, "unsupported");
 	}
 	return std::make_pair(type, Handle());
 }
 
-std::pair<Type, Handle> vertex_2_atom::operator()(const contin_t& c) const
+std::pair<Type, Handle> vertex_2_atom::operator()(const contin_t &c) const
 {
 	return std::make_pair(-1, Handle(createNumberNode(c)));
 }
@@ -174,7 +176,7 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 	if (AND_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::logical_and) : tr.append_child(iter, id::logical_and);
 		return;
-	}else {
+	} else {
 		OC_ASSERT(false, "unsupported type");
 	}
 }
@@ -198,4 +200,5 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 	} else OC_ASSERT(false, "unsupported type");
 }
 
-}}  // ~namespaces combo opencog
+}
+}  // ~namespaces combo opencog
