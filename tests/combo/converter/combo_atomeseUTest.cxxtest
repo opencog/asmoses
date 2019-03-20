@@ -146,4 +146,41 @@ public:
 
 		TS_ASSERT_EQUALS(result, expected);
 	}
+
+	void test_combo_atomese_predicate2()
+	{
+		Handle p1 = createNode(PREDICATE_NODE, "$x");
+		Handle p2 = createLink(FALSE_LINK);
+		Handle p3 = createLink(TRUE_LINK);
+
+		HandleSeq seq = {p1, p2};
+		Handle orlink = createLink(seq, OR_LINK);
+
+		HandleSeq prog_seq = {orlink, p3};
+		Handle program = createLink(prog_seq, AND_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(program);
+
+		const std::vector<string> exp_labels = {"x"};
+		auto expected = std::make_pair(combo::str2combo_tree("and(true or($1 false))", {}), exp_labels);
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
+
+	void test_combo_atomese_schema()
+	{
+		Handle n = createNode(NUMBER_NODE, "5");
+		Handle f = createNode(SCHEMA_NODE, "$f");
+		HandleSeq seq = {n, f};
+		Handle plus = createLink(seq, PLUS_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(plus);
+
+		const std::vector<string> exp_labels = {"f"};
+		auto expected = std::make_pair(combo::str2combo_tree("+(5 $1)", {}), exp_labels);
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
 };
