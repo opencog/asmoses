@@ -71,10 +71,10 @@ private:
 	mutable id::procedure_type *_parent;
 };
 
-class ComboToAtomeseConverter
+class ComboToAtomese
 {
 public:
-	ComboToAtomeseConverter(AtomSpace *as=nullptr);
+	ComboToAtomese(AtomSpace *as=nullptr);
 
 	/**
 	 * Convert a combo_tree to atomese program.

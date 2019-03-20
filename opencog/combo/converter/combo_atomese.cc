@@ -39,11 +39,11 @@ namespace combo
 using namespace std;
 using namespace boost;
 
-ComboToAtomeseConverter::ComboToAtomeseConverter(AtomSpace *as)
+ComboToAtomese::ComboToAtomese(AtomSpace *as)
 		: _as(as)
 {}
 
-Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
+Handle ComboToAtomese::operator()(const combo_tree &ct)
 {
 	Handle handle;
 	combo_tree::iterator it = ct.begin();
