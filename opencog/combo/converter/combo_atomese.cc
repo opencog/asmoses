@@ -27,6 +27,7 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/combo/combo/iostream_combo.h>
 #include "combo_atomese.h"
 
 
@@ -169,13 +170,30 @@ void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &label
 void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &labels,
                                 combo_tree &tr, combo_tree::iterator &iter)
 {
-	OC_ASSERT(false, "not supported");
+	const Type t = h->get_type();
+	if (AND_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::logical_and) : tr.append_child(iter, id::logical_and);
+		return;
+	}else {
+		OC_ASSERT(false, "unsupported type");
+	}
 }
 
 void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &labels,
                                 combo_tree &tr, tree<vertex>::iterator &iter)
 {
-	OC_ASSERT(false, "not supported");
+	Type t = h->get_type();
+
+	if (PREDICATE_NODE == t || SCHEMA_NODE == t || VARIABLE_NODE == t) {
+		const auto label = parse_combo_variables(h->get_name())[0];
+		if (std::find(labels.begin(), labels.end(), label) == labels.end())
+			labels.push_back(label);
+
+		if (tr.empty()) tr.set_head(argument(labels.size()));
+		else tr.append_child(iter, argument(labels.size()));
+
+		return;
+	} else OC_ASSERT(false, "unsupported type");
 }
 
 }}  // ~namespaces combo opencog
