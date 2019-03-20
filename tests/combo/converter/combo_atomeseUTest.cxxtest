@@ -115,4 +115,28 @@ public:
 
 		TS_ASSERT(content_eq(h, times_link));
 	}
+
+	void test_combo_atomese_schema()
+	{
+		Handle p1 = createNode(PREDICATE_NODE, "$x");
+		Handle p2 = createNode(PREDICATE_NODE, "$y");
+		Handle p3 = createNode(PREDICATE_NODE, "$z");
+
+		HandleSeq seq = {p1, p2};
+		Handle andlink = createLink(seq, AND_LINK);
+
+		HandleSeq prog_seq = {andlink, p3};
+		Handle program = createLink(prog_seq, AND_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(program);
+
+		// Note: AndLink is unordered_link meaning the order might require caution.
+		// The order of the labels and the child nodes in the generated combo depends
+		// on the atomese programs' order of out_going_set.
+		const std::vector<string > exp_labels = {"z", "x", "y"};
+		auto expected = std::make_pair(combo::str2combo_tree("and($1 and($2 $3))", {}), exp_labels);
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
 };
