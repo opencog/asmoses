@@ -173,8 +173,30 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
                                 combo_tree &tr, combo_tree::iterator &iter)
 {
 	const Type t = h->get_type();
+	if (PLUS_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::plus) : tr.append_child(iter, id::plus);
+		return;
+	}
+	if (NOT_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::logical_not) : tr.append_child(iter, id::logical_not);
+		return;
+	}
+	if (TRUE_LINK == t) {
+		if (tr.empty()) tr.set_head(id::logical_true);
+		else tr.append_child(iter, id::logical_true);
+		return;
+	}
+	if (FALSE_LINK == t) {
+		if (tr.empty()) tr.set_head(id::logical_false);
+		else tr.append_child(iter, id::logical_false);
+		return;
+	}
 	if (AND_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::logical_and) : tr.append_child(iter, id::logical_and);
+		return;
+	}
+	if (OR_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::logical_or) : tr.append_child(iter, id::logical_or);
 		return;
 	} else {
 		OC_ASSERT(false, "unsupported type");
@@ -195,6 +217,12 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 
 		if (tr.empty()) tr.set_head(argument(i));
 		else tr.append_child(iter, argument(i));
+
+		return;
+	}
+	if (NUMBER_NODE == t) {
+		if (tr.empty()) tr.set_head(NumberNodeCast(h)->get_value());
+		else tr.append_child(iter, NumberNodeCast(h)->get_value());
 
 		return;
 	} else OC_ASSERT(false, "unsupported type");
