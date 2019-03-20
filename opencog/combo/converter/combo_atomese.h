@@ -107,6 +107,23 @@ protected:
 
 };
 
+class AtomeseToCombo
+{
+public:
+	/**
+	 * Convert a atomese to combo_tree program.
+	 *
+	 * @param Handle           the Handle containing the atomese program
+	 * @return pair<combo_tree, vector>      the combo_tree converted from the
+	 *                                       atomese program and labels
+	 */
+	std::pair<combo_tree, std::vector<std::string>> operator()(const Handle &h);
+
+protected:
+
+	void atom2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	                combo_tree::iterator &iter);
+};
 }}  // ~namespaces combo opencog
 
 #endif //MOSES_COMBO_ATOMESE_H

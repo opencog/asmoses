@@ -140,4 +140,19 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const enum_t &e) const
 	return pair<Type, Handle>();
 }
 
+std::pair<combo_tree, std::vector<std::string>> AtomeseToCombo::operator()(const Handle &h)
+{
+	combo_tree tr;
+	auto begin = tr.begin();
+	vector<string> labels = {};
+	atom2combo(h, labels, tr, begin);
+
+	return std::make_pair(tr, labels);
+}
+
+void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &labels,
+                                combo_tree &tr, combo_tree::iterator &iter)
+{
+	OC_ASSERT(false, "not supported");
+}
 }}  // ~namespaces combo opencog
