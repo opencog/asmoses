@@ -47,7 +47,7 @@ combo_tree type_to_exemplar(type_node type);
 struct representation : public knob_mapper, boost::noncopyable
 {
     typedef std::set<combo::vertex> operator_set;
-    typedef std::set<combo::combo_tree, size_tree_order<combo::vertex> >
+    typedef std::set<combo::combo_tree, size_tree_order<combo::vertex>>
     combo_tree_ns_set;
 
     // Optional arguments are used only for actions/Petbrain

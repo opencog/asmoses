@@ -269,7 +269,7 @@ struct reduce_inequality_from_assumptions : public crule<reduce_inequality_from_
     //double_matrix, a matrix of doubles
     //used by reduce_inequality_from_assumptions
     //each inner vector is a row, the outer vector is a list of rows
-    typedef std::vector< std::vector<double> > double_matrix;
+    typedef std::vector< std::vector<double>> double_matrix;
     void operator()(combo_tree& tr,combo_tree::iterator it) const;
     //take a tree that has id::times at it.
     //Take off the coef and return it, modify 'it' accordigly

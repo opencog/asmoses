@@ -571,7 +571,7 @@ void reduce_fraction::operator()(combo_tree& tr,combo_tree::iterator it) const
 {
     //associate the number of instances of each subtree encountered
     //on the numerator of the fraction
-    typedef std::multiset<pre_it, lexicographic_subtree_order<vertex> >
+    typedef std::multiset<pre_it, lexicographic_subtree_order<vertex>>
         num_counts;
     typedef num_counts::iterator num_counts_it;
     if(*it==id::div) {

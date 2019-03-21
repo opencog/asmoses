@@ -1008,7 +1008,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
 
         // no need of that for now
         // (opt_desc_str(hc_initial_feature_opt).c_str(),
-        //  po::value<vector<string> >(&fs_params.hc_initial_features),
+        //  po::value<vector<string>>(&fs_params.hc_initial_features),
         //  "Hillclimbing parameter.  Initial feature to search from.  "
         //  "This option can be used as many times as there are features, "
         //  "to have them included in the initial feature set. If the "

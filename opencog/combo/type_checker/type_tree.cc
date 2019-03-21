@@ -959,7 +959,7 @@ type_tree get_intersection(const type_tree& tt1, type_tree_pre_it it1,
     //check if tt1 and tt2 are unions, if so the intersection of the unions
     //is the union of the interections
     else if (*it1 == id::union_type && *it2 == id::union_type) {
-        set<type_tree, opencog::size_tree_order<type_node> > union_of_inter;
+        set<type_tree, opencog::size_tree_order<type_node>> union_of_inter;
         for (type_tree_sib_it sib1 = it1.begin(); sib1 != it1.end(); ++sib1) {
             for (type_tree_sib_it sib2 = it2.begin(); sib2 != it2.end(); ++sib2) {
                 type_tree inter_tt = get_intersection(tt1,

@@ -498,7 +498,7 @@ void metapopulation::sort_demes(std::vector<std::vector<deme_t>>& all_demes) {
     logger().debug("Sort the deme(s)");
     for (auto& ss_demes : all_demes)
         for (auto& deme : ss_demes)
-            boost::sort(deme, std::greater<scored_instance<composite_score> >());
+            boost::sort(deme, std::greater<scored_instance<composite_score>>());
 }
 
 void metapopulation::keep_top_unique_candidates(

@@ -83,7 +83,7 @@ int main(int argc, char** argv)
         (opt_desc_str(output_file_opt).c_str(), value<string>(&pa.output_file),
          "File where to save the results. If empty then it outputs on the stdout.\n")
         
-        (opt_desc_str(feature_opt).c_str(), value<vector<string> >(&pa.features),
+        (opt_desc_str(feature_opt).c_str(), value<vector<string>>(&pa.features),
          "Feature to consider. Can be used several time for several features.\n")
         
         (opt_desc_str(features_file_opt).c_str(), value<string>(&pa.features_file),

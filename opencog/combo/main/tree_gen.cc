@@ -88,10 +88,10 @@ int main(int argc, char** argv)
     ss.add("$4", 0, 100);
     ss.add("$5", 0, 100);
 
-    vector<tree<string> > trees(noe);
+    vector<tree<string>> trees(noe);
     ramped_half_and_half(trees.begin(), trees.end(), ss, 2, max_depth, tce);
     //out put generated trees.
-    for (vector<tree<string> >::const_iterator tr = trees.begin();
+    for (vector<tree<string>>::const_iterator tr = trees.begin();
             tr != trees.end();++tr)
         cout << (*tr) << endl;
 }

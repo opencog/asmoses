@@ -259,7 +259,7 @@ Problems:
 What is a deme_t?
 
 typedef instance_set<composite_score> deme_t;
-struct instance_set : public vector<scored_instance<ScoreT> >
+struct instance_set : public vector<scored_instance<ScoreT>>
 All instances in instance set have same field description.
 
 why is there ever more than one instance set??
