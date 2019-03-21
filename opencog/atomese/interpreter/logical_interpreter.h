@@ -29,7 +29,7 @@
 #include <opencog/utils/valueUtils.h>
 #include <boost/iterator/zip_iterator.hpp>
 
-namespace opencog{ namespace atomese{
+namespace opencog { namespace atomese {
 
 /**
  * Performs logical_and of two ValuePtrs[Links].
@@ -42,16 +42,7 @@ struct zip_and :
 {
 	ValueSeq _result;
 
-	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
-	{
-		if (bool_value_to_bool(t.get<0>())
-		   && bool_value_to_bool(t.get<1>())) {
-			_result.push_back(ValuePtr(createLink(TRUE_LINK)));
-		}
-		else {
-			_result.push_back(ValuePtr(createLink(FALSE_LINK)));
-		}
-	}
+	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t);
 };
 
 /**
@@ -65,16 +56,7 @@ struct zip_or :
 {
 	ValueSeq _result;
 
-	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
-	{
-		if (bool_value_to_bool(t.get<0>())
-		   || bool_value_to_bool(t.get<1>())) {
-			_result.push_back(ValuePtr(createLink(TRUE_LINK)));
-		}
-		else {
-			_result.push_back(ValuePtr(createLink(FALSE_LINK)));
-		}
-	}
+	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t);
 };
 
 /**
@@ -85,23 +67,7 @@ struct zip_or :
  *
  * @return                 LinkValue pointer containing the logical_and.
  */
-LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
-	ValueSeq p1_value = p1->value();
-	ValueSeq p2_value = p2->value();
-
-	zip_and _and = std::for_each(
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.begin(), p2_value.begin())
-			),
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.end(), p2_value.end())
-			),
-			zip_and()
-	);
-
-	ValueSeq _result = _and._result;
-	return LinkValuePtr(new LinkValue(_result));
-}
+LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2);
 
 /**
  * Compute logical_or.
@@ -111,23 +77,7 @@ LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2) {
  *
  * @return                 LinkValue pointer containing the logical_or.
  */
-LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
-	ValueSeq p1_value = p1->value();
-	ValueSeq p2_value = p2->value();
-
-	zip_or _or = std::for_each(
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.begin(), p2_value.begin())
-			),
-			boost::make_zip_iterator(
-					boost::make_tuple(p1_value.end(), p2_value.end())
-			),
-			zip_or()
-	);
-
-	ValueSeq _result = _or._result;
-	return LinkValuePtr(new LinkValue(_result));
-}
+LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2);
 
 /**
  * Compare Contents of two link_values.
@@ -136,18 +86,7 @@ LinkValuePtr logical_or(const LinkValuePtr& p1, const LinkValuePtr& p2) {
  *
  * @return                 boolean of the comparision.
  */
-bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2) {
-	ValueSeq p1_value = p1->value();
-	ValueSeq p2_value = p2->value();
-
-	std::function<bool (const ValuePtr&, const ValuePtr&)> comparator = []
-			(const ValuePtr& left, const ValuePtr& right)
-	{
-		return HandleCast(left)->get_type()==HandleCast(right)->get_type();
-	};
-
-	return std::equal(p1_value.begin(), p1_value.end(), p2_value.begin(), comparator);
-}
+bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2);
 
 /**
  * compute logical_not.
@@ -156,14 +95,8 @@ bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2) {
  *
  * @return                 LinkValue pointer containing the logical_not.
  */
-LinkValuePtr logical_not(const LinkValuePtr& p) {
-	ValueSeq _result;
-	ValueSeq p_value = p->value();
-	ValueSeq::iterator it;
-	for(it = p_value.begin(); it != p_value.end(); ++it)
-		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
-		ValuePtr(createLink(FALSE_LINK)): ValuePtr(createLink(TRUE_LINK)));
-	return LinkValuePtr(new LinkValue(_result));
-}
+LinkValuePtr logical_not(const LinkValuePtr& p);
+
 }}
+
 #endif //MOSES_LOGICAL_INTERPRETER_H
