@@ -474,7 +474,7 @@ std::ostream& ostream_combo_tree(std::ostream& out, const combo_tree& ct,
                                  const vector<string>& labels,
                                  output_format fmt) {
     if (fmt == output_format::atomese) {
-        ComboToAtomeseConverter converter;
+        ComboToAtomese converter;
         Handle h = converter(ct);
         out << oc_to_string(h);
     }

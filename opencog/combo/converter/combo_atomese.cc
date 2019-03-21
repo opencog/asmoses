@@ -27,19 +27,23 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/combo/combo/iostream_combo.h>
 #include "combo_atomese.h"
 
 
-namespace opencog { namespace combo {
+namespace opencog
+{
+namespace combo
+{
 
 using namespace std;
 using namespace boost;
 
-ComboToAtomeseConverter::ComboToAtomeseConverter(AtomSpace *as)
-		:_as(as)
+ComboToAtomese::ComboToAtomese(AtomSpace *as)
+		: _as(as)
 {}
 
-Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
+Handle ComboToAtomese::operator()(const combo_tree &ct)
 {
 	Handle handle;
 	combo_tree::iterator it = ct.begin();
@@ -48,14 +52,14 @@ Handle ComboToAtomeseConverter::operator()(const combo_tree &ct)
 	return handle;
 }
 
-vertex_2_atom::vertex_2_atom(id::procedure_type* parent, AtomSpace *as)
+vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpace *as)
 		: _as(as), _parent(parent)
 {}
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 {
 	Handle handle;
-	if(*_parent == id::unknown) {
+	if (*_parent == id::unknown) {
 		*_parent = id::predicate;
 	}
 	switch (*_parent) {
@@ -124,13 +128,12 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			*_parent = id::predicate;
 			type = FALSE_LINK;
 			break;
-		default:
-			OC_ASSERT(false, "unsupported");
+		default: OC_ASSERT(false, "unsupported");
 	}
 	return std::make_pair(type, Handle());
 }
 
-std::pair<Type, Handle> vertex_2_atom::operator()(const contin_t& c) const
+std::pair<Type, Handle> vertex_2_atom::operator()(const contin_t &c) const
 {
 	return std::make_pair(-1, Handle(createNumberNode(c)));
 }
@@ -140,4 +143,90 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const enum_t &e) const
 	return pair<Type, Handle>();
 }
 
-}}  // ~namespaces combo opencog
+std::pair<combo_tree, std::vector<std::string>> AtomeseToCombo::operator()(const Handle &h)
+{
+	combo_tree tr;
+	auto begin = tr.begin();
+	vector<string> labels = {};
+	atom2combo(h, labels, tr, begin);
+
+	return std::make_pair(tr, labels);
+}
+
+void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &labels,
+                                combo_tree &tr, combo_tree::iterator &iter)
+{
+	const auto prev = iter;
+	if (h->is_link()) {
+		link2combo(h, labels, tr, iter);
+		for (auto child : h->getOutgoingSet()) {
+			atom2combo(child, labels, tr, iter);
+		}
+	} else {
+		node2combo(h, labels, tr, iter);
+		return;
+	}
+	iter = prev;
+}
+
+void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &labels,
+                                combo_tree &tr, combo_tree::iterator &iter)
+{
+	const Type t = h->get_type();
+	if (PLUS_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::plus) : tr.append_child(iter, id::plus);
+		return;
+	}
+	if (NOT_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::logical_not) : tr.append_child(iter, id::logical_not);
+		return;
+	}
+	if (TRUE_LINK == t) {
+		if (tr.empty()) tr.set_head(id::logical_true);
+		else tr.append_child(iter, id::logical_true);
+		return;
+	}
+	if (FALSE_LINK == t) {
+		if (tr.empty()) tr.set_head(id::logical_false);
+		else tr.append_child(iter, id::logical_false);
+		return;
+	}
+	if (AND_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::logical_and) : tr.append_child(iter, id::logical_and);
+		return;
+	}
+	if (OR_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::logical_or) : tr.append_child(iter, id::logical_or);
+		return;
+	} else {
+		OC_ASSERT(false, "unsupported type");
+	}
+}
+
+void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &labels,
+                                combo_tree &tr, combo_tree::iterator &iter)
+{
+	Type t = h->get_type();
+
+	if (PREDICATE_NODE == t || SCHEMA_NODE == t || VARIABLE_NODE == t) {
+		const auto label = parse_combo_variables(h->get_name())[0];
+		// The argument idx must be the index of label in labels plus one.
+		auto i = std::find(labels.begin(), labels.end(), label) - labels.begin() + 1;
+		// If label exists in labels already we dont want to add it.
+		if (i > labels.size()) labels.push_back(label);
+
+		if (tr.empty()) tr.set_head(argument(i));
+		else tr.append_child(iter, argument(i));
+
+		return;
+	}
+	if (NUMBER_NODE == t) {
+		if (tr.empty()) tr.set_head(NumberNodeCast(h)->get_value());
+		else tr.append_child(iter, NumberNodeCast(h)->get_value());
+
+		return;
+	} else OC_ASSERT(false, "unsupported type");
+}
+
+}
+}  // ~namespaces combo opencog

@@ -29,11 +29,16 @@
 #include <opencog/atoms/base/Link.h>
 
 
-namespace opencog { namespace combo {
+namespace opencog
+{
+namespace combo
+{
 
-namespace id {
+namespace id
+{
 //    Atomese procedure types
-enum __attribute__((packed)) procedure_type{
+enum __attribute__((packed)) procedure_type
+{
 	unknown=0,
 	predicate,
 	schema
@@ -44,27 +49,32 @@ enum __attribute__((packed)) procedure_type{
 struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 {
 public:
-	vertex_2_atom (id::procedure_type* parent, AtomSpace* as=nullptr);
-	std::pair<Type, Handle> operator()(const argument& a) const;
-	std::pair<Type, Handle> operator()(const builtin& b) const;
-	std::pair<Type, Handle> operator()(const enum_t& e) const;
-	std::pair<Type, Handle> operator()(const contin_t& c) const;
-	template <typename T>
-	std::pair<Type, Handle> operator()(const T&) const
+	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr);
+
+	std::pair<Type, Handle> operator()(const argument &a) const;
+
+	std::pair<Type, Handle> operator()(const builtin &b) const;
+
+	std::pair<Type, Handle> operator()(const enum_t &e) const;
+
+	std::pair<Type, Handle> operator()(const contin_t &c) const;
+
+	template<typename T>
+	std::pair<Type, Handle> operator()(const T &) const
 	{
 		OC_ASSERT(false, "Not Implemented Yet");
 		return std::pair<Type, Handle>();
 	}
 
 private:
-	AtomSpace* _as;
-	mutable id::procedure_type* _parent;
+	AtomSpace *_as;
+	mutable id::procedure_type *_parent;
 };
 
-class ComboToAtomeseConverter
+class ComboToAtomese
 {
 public:
-	ComboToAtomeseConverter(AtomSpace* as=nullptr);
+	ComboToAtomese(AtomSpace *as=nullptr);
 
 	/**
 	 * Convert a combo_tree to atomese program.
@@ -75,7 +85,7 @@ public:
 	Handle operator()(const combo_tree &tr);
 
 private:
-	AtomSpace* _as;
+	AtomSpace *_as;
 
 protected:
 	/**
@@ -91,7 +101,7 @@ protected:
 
 		id::procedure_type procedure_type = parent_procedure_type;
 		combo_tree::iterator head = it;
-		std::pair <Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as), *head);
+		std::pair<Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as), *head);
 		Type link_type = atomese.first;
 		Handle handle = atomese.second;
 
@@ -107,6 +117,31 @@ protected:
 
 };
 
-}}  // ~namespaces combo opencog
+class AtomeseToCombo
+{
+public:
+	/**
+	 * Convert a atomese to combo_tree program.
+	 *
+	 * @param Handle           the Handle containing the atomese program
+	 * @return pair<combo_tree, vector>      the combo_tree converted from the
+	 *                                       atomese program and labels
+	 */
+	std::pair<combo_tree, std::vector<std::string>> operator()(const Handle &h);
+
+protected:
+
+	void atom2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	                combo_tree::iterator &iter);
+
+	void link2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	                combo_tree::iterator &iter);
+
+	void node2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	                combo_tree::iterator &iter);
+
+};
+}
+}  // ~namespaces combo opencog
 
 #endif //MOSES_COMBO_ATOMESE_H
