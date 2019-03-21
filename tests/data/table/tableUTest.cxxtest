@@ -478,8 +478,7 @@ public:
 		combo_tree c_program = combo::str2combo_tree("true", {"f1","f2","f3"});
 		complete_truth_table c_ctable(c_program, 3);
 
-		TS_ASSERT(true);
-		// TS_ASSERT(ctable == c_ctable);
+		TS_ASSERT(ctable == c_ctable);
 	}
 
 	void test_complete_truth_table_4()
@@ -491,8 +490,7 @@ public:
 		combo_tree c_program = combo::str2combo_tree("true", {"f1","f2","f3"});
 		complete_truth_table c_ctable(c_program, 3);
 
-		TS_ASSERT(true);
-		// TS_ASSERT(ctable == c_ctable);
+		 TS_ASSERT(ctable == c_ctable);
 	}
 
 	void test_get_input_col_data()
