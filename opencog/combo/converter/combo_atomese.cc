@@ -204,7 +204,7 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 }
 
 void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &labels,
-                                combo_tree &tr, tree<vertex>::iterator &iter)
+                                combo_tree &tr, combo_tree::iterator &iter)
 {
 	Type t = h->get_type();
 

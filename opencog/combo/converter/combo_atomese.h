@@ -135,10 +135,10 @@ protected:
 	                combo_tree::iterator &iter);
 
 	void link2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
-	                tree<vertex>::iterator &iter);
+	                combo_tree::iterator &iter);
 
 	void node2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
-	                tree<vertex>::iterator &iter);
+	                combo_tree::iterator &iter);
 
 };
 }
