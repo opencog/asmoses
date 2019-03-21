@@ -105,7 +105,7 @@ using combo::combo_tree;
 class metapopulation
 {
     // Init the metapopulation with the following set of exemplars.
-    void init(const std::vector<combo_tree>& exemplars);
+    void init(const combo_tree_seq& exemplars);
 
 public:
     /**
@@ -124,7 +124,7 @@ public:
      *                exemplar decorated with knobs.
      * @param pa      Control parameters for this class.
      */
-    metapopulation(const std::vector<combo_tree>& bases,
+    metapopulation(const combo_tree_seq& bases,
                    behave_cscore& sc,
                    const metapop_parameters& pa = metapop_parameters(),
                    const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
@@ -505,7 +505,7 @@ private:
         const boost::ptr_vector<representation>& reps) const;
 
     // Return stats about the Tanimoto distances of a vector of combo trees
-    void ss_tanimoto_stats(const std::vector<combo_tree>& trs,
+    void ss_tanimoto_stats(const combo_tree_seq& trs,
                            tanimoto_acc_t& acc) const;
 
     // Return stats about the Tanimoto distances of the top candidates

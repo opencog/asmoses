@@ -176,7 +176,7 @@ bool deme_expander::create_representations(const combo_tree& exemplar)
 	// pre-selection, which only limits the total number of features that
 	// MOSES can work with.
 	std::vector<operator_set> ignore_ops_seq, considered_args_seq;
-	std::vector<combo_tree> xmplr_seq;
+	combo_tree_seq xmplr_seq;
 	if (_params.fstor) {
 		// Copy, as any change in the parameters will not be remembered.
 		feature_selector festor = *_params.fstor;

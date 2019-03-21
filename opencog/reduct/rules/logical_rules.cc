@@ -636,7 +636,7 @@ subtree_to_enf::reduce_to_enf::reduce_and(sib_it current,
                                     dominant.begin(), dominant.end(), comp);
 
 
-    std::vector<combo_tree> negated;
+    combo_tree_seq negated;
     push_back_negated_arguments(command, negated);
     std::sort(negated.begin(), negated.end(), comp);
 

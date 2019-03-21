@@ -267,7 +267,7 @@ private:
  * Create metapopulation, run moses, print results.
  */
 template<typename Printer>
-void metapop_moses_results_b(const std::vector<combo_tree>& bases,
+void metapop_moses_results_b(const combo_tree_seq& bases,
                              const opencog::combo::type_tree& tt,
                              const reduct::rule& si_ca,
                              const reduct::rule& si_kb,
@@ -307,7 +307,7 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
 
     // This seems kind of cheesy ... shouldn't the exemplars
     // already be simplified, by now?
-    std::vector<combo_tree> simple_bases;
+    combo_tree_seq simple_bases;
     for (const combo_tree& xmplr: bases) {
         combo_tree siba(xmplr);
         si_ca(siba);
@@ -339,7 +339,7 @@ void autoscale_diversity(const behave_cscore& sc,
  * like above, but assumes that the score is bscore based
  */
 template<typename Printer>
-void metapop_moses_results(const std::vector<combo_tree>& bases,
+void metapop_moses_results(const combo_tree_seq& bases,
                            const opencog::combo::type_tree& type_sig,
                            const reduct::rule& si_ca,
                            const reduct::rule& si_kb,

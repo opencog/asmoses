@@ -112,7 +112,7 @@ class partial_solver
         CTable _ctable;
         const CTable& _orig_ctable;
         const type_tree& _table_type_signature;
-        std::vector<combo_tree> _exemplars;
+        combo_tree_seq _exemplars;
         combo_tree _leader;
         unsigned _prefix_count;
         const rule& _reduct;

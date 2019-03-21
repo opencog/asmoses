@@ -33,7 +33,7 @@ namespace moses {
 
 using namespace combo;
 
-metapopulation::metapopulation(const std::vector<combo_tree>& bases,
+metapopulation::metapopulation(const combo_tree_seq& bases,
                behave_cscore& sc,
                const metapop_parameters& pa,
                const subsample_deme_filter_parameters& subp) :
@@ -61,13 +61,13 @@ metapopulation::metapopulation(const combo_tree& base,
     _best_cscore(worst_composite_score),
     _ensemble(sc, pa.ensemble_params)
 {
-    std::vector<combo_tree> bases(1, base);
+    combo_tree_seq bases(1, base);
     init(bases);
 }
 
 
 // Init the metapopulation with the following set of exemplars.
-void metapopulation::init(const std::vector<combo_tree>& exemplars)
+void metapopulation::init(const combo_tree_seq& exemplars)
 {
     scored_combo_tree_set candidates;
     for (const combo_tree& base : exemplars) {
