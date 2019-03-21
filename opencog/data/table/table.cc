@@ -903,6 +903,11 @@ void complete_truth_table::populate(const Handle &handle)
 	atomese::Interpreter interpreter(moses::value_key);
 	ValueSeq result = LinkValueCast(interpreter(handle))->value();
 
+	// This happens if the program[handle] is a constant [i:e TRUE_LINK or NUMBER_NODE]
+	// the Interpreter returns a single value. hence we need to resize result to _arity
+	// with the same constant.
+	if (result.size() == 1) result.resize(pow2(_arity), result[0]);
+
 	// convert Links in the result of the interpreter to bool,
 	// and store it to the truth table.
 	std::transform(result.begin(), result.end(), begin(), bool_value_to_bool);
