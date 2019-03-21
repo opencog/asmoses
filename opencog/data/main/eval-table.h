@@ -85,7 +85,7 @@ void output_results(const evalTableParameters& pa,
                     const string output_file = "");
 
 void eval_output_results(const evalTableParameters& pa,
-                         const Table& table, const vector<combo_tree>& trs);
+                         const Table& table, const combo_tree_seq& trs);
 
 /**
  * Get all combo tree strings, from the command line and the files

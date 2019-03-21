@@ -302,7 +302,7 @@ int main(int argc, char** argv)
     ITable& it = table.itable;
 
     // Parse combo programs
-    vector<combo_tree> trs;
+    combo_tree_seq trs;
     for (const string& tr_str : flat_all_combo_tree_str) {
         combo_tree tr = str2combo_tree_label(tr_str, it.get_labels());
         if (logger().is_debug_enabled()) {

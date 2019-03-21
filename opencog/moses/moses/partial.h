@@ -42,7 +42,7 @@ class partial_solver
 {
     public:
         partial_solver(const CTable &ctable,
-                       const vector<combo_tree>& exemplars,
+                       const combo_tree_seq& exemplars,
                        const rule& reduct,
                        const optim_parameters& opt_params,
                        const hc_parameters& hc_params,
