@@ -2,6 +2,7 @@ ADD_SUBDIRECTORY(interpreter)
 
 ADD_LIBRARY(atomese SHARED
 		interpreter/Interpreter
+		interpreter/logical_interpreter
 )
 
 TARGET_LINK_LIBRARIES (atomese
