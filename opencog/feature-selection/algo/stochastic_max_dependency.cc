@@ -37,7 +37,7 @@ feature_set_pop smd_select_feature_sets(const CTable& ctable,
     auto ir = boost::irange(0, ctable.get_arity());
 
     feature_set all_features(ir.begin(), ir.end());
-    fs_scorer<set<arity_t> > fs_sc(ctable, fs_params);
+    fs_scorer<set<arity_t>> fs_sc(ctable, fs_params);
 
     if (fs_params.target_size <= 0) {
         // Nothing happened, return the all features by default

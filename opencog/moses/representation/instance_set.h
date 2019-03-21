@@ -49,9 +49,9 @@ namespace opencog {
 namespace moses {
 
 template<typename ScoreT>
-struct instance_set : public std::vector<scored_instance<ScoreT> >
+struct instance_set : public std::vector<scored_instance<ScoreT>>
 {
-    typedef std::vector<scored_instance<ScoreT> > super;
+    typedef std::vector<scored_instance<ScoreT>> super;
     typedef typename super::value_type value_type;
     typedef boost::transform_iterator < select_tag,
                                         typename super::iterator,

@@ -104,7 +104,7 @@ struct problem_params : public option_base
     std::vector<std::string> ignore_ops_str;
     vertex_set ignore_ops;
     std::vector<std::string> exemplars_str;
-    std::vector<combo_tree> exemplars;
+    combo_tree_seq exemplars;
 
     // metapop_param
     int max_candidates_per_deme;

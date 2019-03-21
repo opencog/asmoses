@@ -127,7 +127,7 @@ protected:
                            bool add_if_in_exemplar = true);
 
     void sample_logical_perms(combo_tree::iterator it,
-                              std::vector<combo_tree>& perms);
+                              combo_tree_seq& perms);
 
     void insert_typed_arg(combo_tree &tr,
                           type_tree_sib_it arg_type,
@@ -180,9 +180,9 @@ protected:
     void add_simple_action_knobs(combo_tree::iterator it,
                                  bool add_if_in_exemplar = true);
     void sample_action_perms(combo_tree::iterator it,
-                             std::vector<combo_tree>& perms);
+                             combo_tree_seq& perms);
     void simple_action_probe(combo_tree::iterator it, bool add_if_in_exemplar);
-    void action_probe(std::vector<combo_tree>& perms,
+    void action_probe(combo_tree_seq& perms,
                       combo_tree::iterator it, bool add_if_in_exemplar);
     void action_cleanup();
 

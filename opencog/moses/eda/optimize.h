@@ -134,7 +134,7 @@ namespace moses {
             // Select n_select promising instances to enroll in tournament.
             logger().debug("Select %d promising instances for model building",
                            n_select);
-            std::vector<scored_instance<ScoreT> > promising(n_select);
+            std::vector<scored_instance<ScoreT>> promising(n_select);
             select(current.begin(), current.end(), promising.begin(), n_select);
             
             // Initialize the model (run it's constructor).

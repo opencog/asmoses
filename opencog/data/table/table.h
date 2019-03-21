@@ -441,7 +441,7 @@ struct interpreter_visitor : public boost::static_visitor<vertex>
 		return vertex();
 	}
 
-	vertex operator()(const std::vector<combo_tree> &inputs)
+	vertex operator()(const combo_tree_seq &inputs)
 	{
 		OC_ASSERT(false, "Not implemented");
 		return vertex();
