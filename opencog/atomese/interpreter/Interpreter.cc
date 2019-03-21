@@ -53,6 +53,10 @@ opencog::ValuePtr Interpreter::operator()(const opencog::Handle &program)
 		_problem_data_size = extract_output_size(program, _key);
 
 	if (is_constant(program->get_type())) {
+		// if the program is a constant then the output size should be one
+		// regardless of the expected _problem_data_size.
+		if (!_problem_data_size) _problem_data_size = 1;
+
 		return unwrap_constant(program);
 	}
 
