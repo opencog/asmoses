@@ -49,7 +49,8 @@ enum __attribute__((packed)) procedure_type
 struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 {
 public:
-	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr);
+	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr,
+	              const std::vector<std::string> &labels={});
 
 	std::pair<Type, Handle> operator()(const argument &a) const;
 
@@ -68,6 +69,7 @@ public:
 
 private:
 	AtomSpace *_as;
+	const std::vector<std::string> &_labels;
 	mutable id::procedure_type *_parent;
 };
 
@@ -82,7 +84,7 @@ public:
 	 * @param combo_tree   the combo_tree containing the combo program
 	 * @return                 the Handle containing the atomese program
 	 */
-	Handle operator()(const combo_tree &tr);
+	Handle operator()(const combo_tree &tr, const std::vector<std::string> &labels={});
 
 private:
 	AtomSpace *_as;
@@ -96,19 +98,20 @@ protected:
 	 */
 	template<typename Iter>
 	opencog::Handle atomese_combo_it(Iter it,
-	                                 id::procedure_type &parent_procedure_type)
+	                                 id::procedure_type &parent_procedure_type,
+	                                 const std::vector<std::string> &labels)
 	{
 
 		id::procedure_type procedure_type = parent_procedure_type;
 		combo_tree::iterator head = it;
-		std::pair<Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as), *head);
+		std::pair<Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as, labels), *head);
 		Type link_type = atomese.first;
 		Handle handle = atomese.second;
 
 		if (link_type != (unsigned short) -1) {
 			HandleSeq handle_seq;
 			for (auto sib = head.begin(); sib != head.end(); ++sib) {
-				handle_seq.push_back(atomese_combo_it(sib, procedure_type));
+				handle_seq.push_back(atomese_combo_it(sib, procedure_type, labels));
 			}
 			handle = createLink(handle_seq, link_type);
 		}

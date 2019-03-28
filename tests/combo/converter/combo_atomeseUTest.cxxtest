@@ -45,10 +45,10 @@ public:
 		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
-		HandleSeq list_or = {createNode(PREDICATE_NODE, "1"), createNode(PREDICATE_NODE, "2")};
+		HandleSeq list_or = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
 		Handle or_link = createLink(list_or, OR_LINK);
 
-		HandleSeq list_not = {createNode(PREDICATE_NODE, "3")};
+		HandleSeq list_not = {createNode(PREDICATE_NODE, "$3")};
 		Handle not_link = createLink(list_not, NOT_LINK);
 
 		HandleSeq list_and = {or_link, not_link};
@@ -65,7 +65,7 @@ public:
 		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
-		HandleSeq list_plus = {createNode(SCHEMA_NODE, "1"), createNode(SCHEMA_NODE, "2")};
+		HandleSeq list_plus = {createNode(SCHEMA_NODE, "$1"), createNode(SCHEMA_NODE, "$2")};
 		Handle plus_link = createLink(list_plus, PLUS_LINK);
 
 		TS_ASSERT(content_eq(h, plus_link));
@@ -105,7 +105,7 @@ public:
 		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
-		Handle predicate_node = createNode(PREDICATE_NODE, "1");
+		Handle predicate_node = createNode(PREDICATE_NODE, "$1");
 
 		TS_ASSERT(content_eq(predicate_node, h));
 	}
