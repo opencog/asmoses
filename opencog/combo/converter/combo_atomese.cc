@@ -43,17 +43,19 @@ ComboToAtomese::ComboToAtomese(AtomSpace *as)
 		: _as(as)
 {}
 
-Handle ComboToAtomese::operator()(const combo_tree &ct)
+Handle ComboToAtomese::operator()(const combo_tree &ct,
+                                  const std::vector<std::string> &labels)
 {
 	Handle handle;
 	combo_tree::iterator it = ct.begin();
 	id::procedure_type ptype = id::procedure_type::unknown;
-	handle = atomese_combo_it(it, ptype);
+	handle = atomese_combo_it(it, ptype, labels);
 	return handle;
 }
 
-vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpace *as)
-		: _as(as), _parent(parent)
+vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpace *as,
+                             const std::vector<std::string> &labels)
+		: _as(as), _parent(parent), _labels(labels)
 {}
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
@@ -64,8 +66,12 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 	}
 	switch (*_parent) {
 		case id::predicate: {
-			Handle tmp = createNode(PREDICATE_NODE,
-			                        to_string(a.is_negated() ? -a.idx : a.idx));
+			string var_name;
+			if (!_labels.empty()) {
+				var_name = "$" + _labels[(a.is_negated() ? -a.idx : a.idx) -1];
+			} else var_name = "$" + to_string(a.is_negated() ? -a.idx : a.idx);
+
+			Handle tmp = createNode(PREDICATE_NODE, var_name);
 			if (a.is_negated()) {
 				HandleSeq handle_seq;
 				handle_seq.push_back(tmp);
@@ -76,7 +82,12 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 			break;
 		}
 		case id::schema: {
-			Handle tmp = createNode(SCHEMA_NODE, to_string(a.is_negated() ? -a.idx : a.idx));
+			string var_name;
+			if (!_labels.empty()) {
+				var_name = "$" + _labels[(a.is_negated() ? -a.idx : a.idx) -1];
+			} else var_name = "$" + to_string(a.is_negated() ? -a.idx : a.idx);
+
+			Handle tmp = createNode(SCHEMA_NODE, var_name);
 			if (a.is_negated()) {
 				HandleSeq handle_seq;
 				handle_seq.push_back(tmp);
