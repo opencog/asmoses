@@ -27,6 +27,8 @@
 #include <opencog/util/RandGen.h>
 
 #include <opencog/combo/combo/vertex.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atomspace/AtomSpace.h>
 
 namespace opencog { namespace reduct {
 
@@ -47,6 +49,10 @@ struct rule
             (*this)(tr, tr.begin());
     }
 
+	void operator()(Handle &handle, AtomSpace *as=nullptr) const
+	{
+		OC_ASSERT(false, "not implemented");
+	}
     std::string get_name() const
     {
         return name;
@@ -132,6 +138,16 @@ inline void logical_reduce(int effort, combo_tree& tr)
 {
     logical_reduction r;
     r(effort)(tr);
+}
+
+inline void logical_reduce(int effort, Handle &handle,
+                           const HandleSet &a_ignore_ops,
+                           AtomSpace *as=nullptr)
+{
+    // TODO: delete this and convert a_ignore_ops to c_ignore_ops;
+    vertex_set c_ignore_ops;
+    logical_reduction r(c_ignore_ops);
+    r(effort)(handle, as);
 }
 
 /**
