@@ -29,6 +29,9 @@
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/combo/converter/combo_atomese.h>
 
 namespace opencog { namespace reduct {
 
@@ -49,10 +52,18 @@ struct rule
             (*this)(tr, tr.begin());
     }
 
-	void operator()(Handle &handle, AtomSpace *as=nullptr) const
-	{
-		OC_ASSERT(false, "not implemented");
-	}
+    void operator()(Handle &handle, AtomSpace *as=nullptr) const
+    {
+        AtomeseToCombo to_combo;
+        auto conv_result = to_combo(handle);
+
+        if (!conv_result.first.empty())
+            (*this)(conv_result.first, conv_result.first.begin());
+
+        ComboToAtomese to_atomese(as);
+        handle = to_atomese(conv_result.first);
+    }
+
     std::string get_name() const
     {
         return name;
