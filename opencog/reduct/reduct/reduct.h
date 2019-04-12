@@ -114,6 +114,12 @@ public:
 const rule& contin_reduction(int reduct_effort,
                              const vertex_set& ignore_ops);
 
+const rule& contin_reduction(int reduct_effort,
+                             const HandleSet& ignore_ops);
+
+const rule& setup_contine_reduction(int reduct_effort,
+                             const vertex_set& ignore_ops);
+
 const rule& fold_reduction();
 const rule& mixed_reduction();
 const rule& full_reduction();
@@ -177,6 +183,13 @@ inline void contin_reduce(combo_tree& tr,
                           const vertex_set& ignore_ops)
 {
     contin_reduction(reduct_effort, ignore_ops)(tr);
+}
+
+inline void contin_reduce(Handle& h,
+                          int reduct_effort,
+                          const HandleSet& ignore_ops)
+{
+	contin_reduction(reduct_effort, ignore_ops)(h);
 }
 
 inline void fold_reduce(combo_tree& tr, combo_tree::iterator it)
