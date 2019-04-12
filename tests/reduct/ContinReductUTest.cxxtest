@@ -31,9 +31,26 @@
 using namespace std;
 using namespace opencog::combo;
 using namespace opencog::reduct;
+using namespace opencog;
 
-class ContinReductUTest : public CxxTest::TestSuite {
+#define al _as.add_link
+#define an _as.add_node
+
+class ContinReductUTest : public CxxTest::TestSuite
+{
+private:
+    AtomSpace _as;
+    Handle ZERO, X, XPLUS0;
+
 public:
+    ContinReductUTest()
+    {
+        ZERO = an(NUMBER_NODE, "0");
+        X = an(NUMBER_NODE, "5");
+        XPLUS0 = al(PLUS_LINK, {X, ZERO});
+    }
+
+private:
     // test if the combo program of string tr_str is shorter (or equal
     // if strict is false) to the result once reduced, and preserves
     // semantics (compare contin table)
@@ -73,7 +90,46 @@ public:
             TS_ASSERT(true);
         }
     }
-    
+
+    void perform_test_reduce(Handle &h, bool strict = true)
+    {
+        int size_before, size_after;
+        int reduct_effort = 2;
+
+        AtomeseToCombo to_combo;
+        combo_tree tr_before = to_combo(h).first;
+
+        type_tree tt = infer_type_tree(tr_before);
+        ITable rnt(tt);
+
+        contin_reduce(h, reduct_effort, HandleSet());
+
+        combo_tree tr_after = to_combo(h).first;
+
+        try {
+            OTable ct1(tr_before, rnt);
+            OTable ct2(tr_after, rnt);
+
+            size_before=tr_before.size();
+            size_after=tr_after.size();
+
+            std::cout << "before: " << tr_before << std::endl;
+            std::cout << "after:  " << tr_after << std::endl;
+
+            if(strict) {
+                TS_ASSERT_LESS_THAN(size_after, size_before);
+            } else {
+                TS_ASSERT_LESS_THAN_EQUALS(size_after, size_before);
+            }
+            TS_ASSERT_EQUALS(ct1, ct2);
+        }
+        catch(EvalException& e) {
+            std::cout << "An expection has been raised during the test (could be normal)" << std::endl;
+            TS_ASSERT(true);
+        }
+    }
+
+public:
     // test_simplify1 :
     // x+0 -> x
     // x*1 -> x
@@ -235,5 +291,9 @@ public:
     void test_simplify20() {
         string tree_str="*(-1.75 impulse(or(and(or(0<(+(2 *(2 $1) 6)))))))";
         perform_test_reduce(tree_str);
+    }
+
+    void test_simplify21() {
+        perform_test_reduce(XPLUS0);
     }
 };
