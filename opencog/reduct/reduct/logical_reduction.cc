@@ -101,37 +101,56 @@ logical_reduction::logical_reduction(const vertex_set& ignore_ops)
     using namespace opencog::combo;
 
     do_init();
+    setup_logical_reduction(ignore_ops);
+}
 
+logical_reduction::logical_reduction(const HandleSet &ignore_ops)
+{
+    using namespace opencog::combo;
+
+    do_init();
+
+    vertex_set c_ignore_ops;
+    AtomeseToCombo to_combo;
+    std::transform(ignore_ops.begin(), ignore_ops.end(),
+                   std::inserter(c_ignore_ops, c_ignore_ops.begin()), [&to_combo](const Handle h){
+			    return *to_combo(h).first.begin();
+		    });
+
+    setup_logical_reduction(c_ignore_ops);
+}
+
+void logical_reduction::setup_logical_reduction(const vertex_set& ignore_ops)
+{
     // medium
-    sequential pre_subtree_to_enf = 
-        sequential(upwards(eval_logical_identities()),
-                   downwards(level()),
-                   downwards(insert_ands(), id::boolean_type));
+    sequential pre_subtree_to_enf =
+            sequential(upwards(eval_logical_identities()),
+                       downwards(level()),
+                       downwards(insert_ands(), id::boolean_type));
 
     sequential post_subtree_to_enf =
-        sequential(downwards(reduce_ands(), id::boolean_type),
-                   downwards(reduce_ors(), id::boolean_type));
+            sequential(downwards(reduce_ands(), id::boolean_type),
+                       downwards(reduce_ors(), id::boolean_type));
 
     // Arghh .. XXX should use reduct_effort==3 for the complexe rule.
     int reduct_effort = 2;
 
     // Can't be static, due to ignore_ops argument
     p_medium = new sequential(
-        downwards(simplify_predicates(reduct_effort, ignore_ops), id::boolean_type),
-        downwards(reduce_nots(), id::boolean_type),
-                   
-        iterative(sequential(pre_subtree_to_enf,
-                             subtree_to_enf(),
-                             post_subtree_to_enf)),
-        downwards(remove_unary_junctors(), id::boolean_type),
-        "medium");
+            downwards(simplify_predicates(reduct_effort, ignore_ops), id::boolean_type),
+            downwards(reduce_nots(), id::boolean_type),
+
+            iterative(sequential(pre_subtree_to_enf,
+                                 subtree_to_enf(),
+                                 post_subtree_to_enf)),
+            downwards(remove_unary_junctors(), id::boolean_type),
+            "medium");
 
     // complexe
     p_complexe = new
-        iterative(sequential(*p_medium,
-                             reduce_remove_subtree_equal_tt()),
-                  "complexe");
-
+            iterative(sequential(*p_medium,
+                                 reduce_remove_subtree_equal_tt()),
+                      "complexe");
 }
 
 // effort 0 (extra simple) to 3 (complex)

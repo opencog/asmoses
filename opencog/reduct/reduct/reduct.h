@@ -95,12 +95,14 @@ struct logical_reduction
     logical_reduction();
     logical_reduction(const logical_reduction&);
     logical_reduction(const vertex_set& ignore_ops);
+    logical_reduction(const HandleSet& ignore_ops);
     logical_reduction& operator=(const logical_reduction&);
     ~logical_reduction();
 
     const rule& operator()(int effort = 2);
 private:
     void do_init();
+    void setup_logical_reduction(const vertex_set& ignore_ops);
     const rule* p_medium;
     const rule* p_complexe;
 public:
@@ -155,9 +157,7 @@ inline void logical_reduce(int effort, Handle &handle,
                            const HandleSet &a_ignore_ops,
                            AtomSpace *as=nullptr)
 {
-    // TODO: delete this and convert a_ignore_ops to c_ignore_ops;
-    vertex_set c_ignore_ops;
-    logical_reduction r(c_ignore_ops);
+    logical_reduction r(a_ignore_ops);
     r(effort)(handle, as);
 }
 
