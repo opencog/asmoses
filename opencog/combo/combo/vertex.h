@@ -45,6 +45,7 @@
 #include <opencog/combo/combo/indefinite_object.h>
 #include <opencog/combo/combo/message.h>
 #include <opencog/combo/combo/perception.h>
+#include <opencog/atoms/base/Handle.h>
 
 // uncomment that if you want to interpret log(x) as log(abs(x))
 // #define ABS_LOG

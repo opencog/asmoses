@@ -106,6 +106,7 @@ class metapopulation
 {
     // Init the metapopulation with the following set of exemplars.
     void init(const combo_tree_seq& exemplars);
+    void init(const HandleSeq& exemplars);
 
 public:
     /**
@@ -129,9 +130,20 @@ public:
                    const metapop_parameters& pa = metapop_parameters(),
                    const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
 
+    metapopulation(const HandleSeq& bases,
+                   behave_cscore& sc,
+                   const metapop_parameters& pa = metapop_parameters(),
+                   const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
+
+
     // Like above but using a single base, and a single reduction rule.
     /// @todo use C++11 redirection
     metapopulation(const combo_tree& base,
+                   behave_cscore& sc,
+                   const metapop_parameters& pa = metapop_parameters(),
+                   const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
+
+    metapopulation(const Handle& base,
                    behave_cscore& sc,
                    const metapop_parameters& pa = metapop_parameters(),
                    const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
@@ -194,6 +206,7 @@ public:
     /// reallocate candidates once they are selected. It might be
     /// minor though in terms of performance gain. FIXME.
     void merge_candidates(scored_combo_tree_set& candidates);
+    void merge_candidates(scored_atomese_set& candidates);
 
     /**
      * merge demes -- convert instances to trees, and merge them
@@ -221,6 +234,7 @@ public:
     /// Update the record of the best score seen, and the associated tree.
     /// Safe to call in a multi-threaded context.
     void update_best_candidates(const scored_combo_tree_set& candidates);
+    void update_best_candidates(const scored_atomese_set& candidates);
 
 private:
     /**
