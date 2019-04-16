@@ -48,6 +48,22 @@ metapopulation::metapopulation(const combo_tree_seq& bases,
     init(bases);
 }
 
+//atomese
+metapopulation::metapopulation(const HandleSeq& bases,
+               behave_cscore& sc,
+               const metapop_parameters& pa,
+               const subsample_deme_filter_parameters& subp) :
+    _cached_dst(pa.diversity),
+    _params(pa),
+    _filter_params(subp),
+    _cscorer(sc),
+    _merge_count(0),
+    _best_cscore(worst_composite_score),
+    _ensemble(sc, pa.ensemble_params)
+{
+    init(bases);
+}
+
 
 metapopulation::metapopulation(const combo_tree& base,
                behave_cscore& sc,
@@ -65,6 +81,23 @@ metapopulation::metapopulation(const combo_tree& base,
     init(bases);
 }
 
+//atomese
+
+metapopulation::metapopulation(const Handle& base,
+               behave_cscore& sc,
+               const metapop_parameters& pa,
+               const subsample_deme_filter_parameters& subp) :
+    _cached_dst(pa.diversity),
+    _params(pa),
+    _filter_params(subp),
+    _cscorer(sc),
+    _merge_count(0),
+    _best_cscore(worst_composite_score),
+    _ensemble(sc, pa.ensemble_params)
+{
+    HandleSeq bases(1, base);
+    init(bases);
+}
 
 // Init the metapopulation with the following set of exemplars.
 void metapopulation::init(const combo_tree_seq& exemplars)
@@ -86,6 +119,25 @@ void metapopulation::init(const combo_tree_seq& exemplars)
     merge_candidates(candidates);
 }
 
+
+void metapopulation::init(const HandleSeq& exemplars)
+{
+    scored_atomese_set candidates;
+    for (const Handle& base : exemplars) {
+        composite_score csc(_cscorer.get_cscore(base));
+
+        // The behavioral score must be recomputed here, so we can
+        // store it in case diversity preservation is used
+        behavioral_score bs(_cscorer.get_bscore(base));
+
+        scored_atomese sct(base, demeID_t(), csc, bs);
+
+        candidates.insert(sct);
+    }
+
+    update_best_candidates(candidates);
+    merge_candidates(candidates);
+}
 // -------------------------------------------------------------------
 // Exemplar selection-related code
 

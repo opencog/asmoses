@@ -66,12 +66,33 @@ size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 	}
 	return hash;
 }
+//atomese
+size_t scored_atomese_hash::operator()(const scored_atomese& sct) const
+{
+	OC_ASSERT(false, "Not Implemented Yet");
+//	size_t hash = 0;
+//	const combo::combo_tree& tr = sct.get_tree();
+//	for (combo::vertex vtx : tr) {
+//		boost::hash_combine(hash, combo::hash_value(vtx));
+//	}
+//	return hash;
+}
+
+
 
 bool scored_combo_tree_equal::operator()(const scored_combo_tree& tr1,
                                          const scored_combo_tree& tr2) const
 {
 	return tr1.get_tree() == tr2.get_tree();
 }
+//atomese
+bool scored_atomese_equal::operator()(const scored_atomese& h1,
+                                         const scored_atomese& h2) const
+{
+	OC_ASSERT(false, "Not Implemented Yet");
+	// return h1.get_handle() == h2.get_handle();
+}
+
 
 // See header file for description.
 bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
