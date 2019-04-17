@@ -4,3 +4,9 @@ TARGET_LINK_LIBRARIES(metapopulationUTest
         ascombo
         ${COGUTIL_LIBRARY}
         )
+ADD_CXXTEST(atomesemetapopUTest)
+TARGET_LINK_LIBRARIES(atomesemetapopUTest
+        moses
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
