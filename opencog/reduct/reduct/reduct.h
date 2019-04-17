@@ -32,6 +32,7 @@
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/combo/converter/combo_atomese.h>
+#include <opencog/util/comprehension.h>
 
 namespace opencog
 {
@@ -109,7 +110,11 @@ struct logical_reduction
 
 	logical_reduction(const vertex_set &ignore_ops);
 
-	logical_reduction(const HandleSet &ignore_ops);
+	logical_reduction(const HandleSet &ignore_ops)
+			: logical_reduction(set_comp(ignore_ops, [this](const Handle h) {
+		return *to_combo(h).first.begin();
+	}))
+	{}
 
 	logical_reduction &operator=(const logical_reduction &);
 
@@ -124,6 +129,7 @@ private:
 
 	const rule *p_medium;
 	const rule *p_complexe;
+	AtomeseToCombo to_combo;
 public:
 	static rule *p_extra_simple;
 	static rule *p_simple;

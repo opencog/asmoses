@@ -104,27 +104,7 @@ logical_reduction::logical_reduction(const vertex_set &ignore_ops)
 	using namespace opencog::combo;
 
 	do_init();
-	setup_logical_reduction(ignore_ops);
-}
 
-logical_reduction::logical_reduction(const HandleSet &ignore_ops)
-{
-	using namespace opencog::combo;
-
-	do_init();
-
-	vertex_set c_ignore_ops;
-	AtomeseToCombo to_combo;
-	std::transform(ignore_ops.begin(), ignore_ops.end(),
-	               std::inserter(c_ignore_ops, c_ignore_ops.begin()), [&to_combo](const Handle h) {
-				return *to_combo(h).first.begin();
-			});
-
-	setup_logical_reduction(c_ignore_ops);
-}
-
-void logical_reduction::setup_logical_reduction(const vertex_set &ignore_ops)
-{
 	// medium
 	sequential pre_subtree_to_enf =
 			sequential(upwards(eval_logical_identities()),

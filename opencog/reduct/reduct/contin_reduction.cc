@@ -46,10 +46,11 @@ const rule &contin_reduction(int reduct_effort, const HandleSet &ignore_ops)
 {
 	vertex_set c_ignore_ops;
 	AtomeseToCombo to_combo;
-	std::transform(ignore_ops.begin(), ignore_ops.end(),
-	               std::inserter(c_ignore_ops, c_ignore_ops.begin()), [&to_combo](const Handle h) {
-				return *to_combo(h).first.begin();
-			});
+	boost::transform(ignore_ops,
+	                 std::inserter(c_ignore_ops, c_ignore_ops.begin()),
+	                 [&to_combo](const Handle h) {
+		                 return *to_combo(h).first.begin();
+	                 });
 
 	return setup_contine_reduction(reduct_effort, c_ignore_ops);
 }
