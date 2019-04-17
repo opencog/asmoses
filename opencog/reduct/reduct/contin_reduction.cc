@@ -39,7 +39,7 @@ namespace reduct
 const rule &contin_reduction(int reduct_effort,
                              const vertex_set &ignore_ops)
 {
-	return setup_contine_reduction(reduct_effort, ignore_ops);
+	return setup_contin_reduction(reduct_effort, ignore_ops);
 }
 
 const rule &contin_reduction(int reduct_effort, const HandleSet &ignore_ops)
@@ -52,10 +52,10 @@ const rule &contin_reduction(int reduct_effort, const HandleSet &ignore_ops)
 		                 return *to_combo(h).first.begin();
 	                 });
 
-	return setup_contine_reduction(reduct_effort, c_ignore_ops);
+	return setup_contin_reduction(reduct_effort, c_ignore_ops);
 }
 
-const rule &setup_contine_reduction(int reduct_effort, const vertex_set &ignore_ops)
+const rule &setup_contin_reduction(int reduct_effort, const vertex_set &ignore_ops)
 {
 	// A note about the locking below, and the *pr pointer.  It can (and
 	// does!) happen that two different threads may enter this routine

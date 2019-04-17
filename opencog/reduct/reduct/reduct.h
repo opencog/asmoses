@@ -142,7 +142,7 @@ const rule &contin_reduction(int reduct_effort,
 const rule &contin_reduction(int reduct_effort,
                              const HandleSet &ignore_ops);
 
-const rule &setup_contine_reduction(int reduct_effort,
+const rule &setup_contin_reduction(int reduct_effort,
                                     const vertex_set &ignore_ops);
 
 const rule &fold_reduction();
