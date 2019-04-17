@@ -427,6 +427,7 @@ private:
     static scored_combo_tree_set to_set(const scored_combo_tree_ptr_vec& bcv);
 
     void remove_dominated(scored_combo_tree_set& bcs, unsigned jobs = 1);
+    void remove_dominated(scored_atomese_set& bcs, unsigned jobs = 1);
 
     // split in 2 of equal size
     static scored_combo_tree_ptr_vec_pair
