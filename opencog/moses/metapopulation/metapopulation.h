@@ -417,6 +417,8 @@ private:
 
     typedef std::pair<scored_combo_tree_set,
                       scored_combo_tree_set> scored_combo_tree_set_pair;
+    typedef std::pair<scored_atomese_set,
+            scored_atomese_set> scored_atomese_set_pair;
     typedef std::vector<const scored_combo_tree*> scored_combo_tree_ptr_vec;
     typedef scored_combo_tree_ptr_vec::iterator scored_combo_tree_ptr_vec_it;
     typedef scored_combo_tree_ptr_vec::const_iterator scored_combo_tree_ptr_vec_cit;
@@ -427,6 +429,7 @@ private:
     static scored_combo_tree_set to_set(const scored_combo_tree_ptr_vec& bcv);
 
     void remove_dominated(scored_combo_tree_set& bcs, unsigned jobs = 1);
+    void remove_dominated(scored_atomese_set& bcs, unsigned jobs = 1);
 
     // split in 2 of equal size
     static scored_combo_tree_ptr_vec_pair
@@ -454,6 +457,10 @@ private:
     scored_combo_tree_set_pair
     get_nondominated_disjoint(const scored_combo_tree_set& bcs1,
                               const scored_combo_tree_set& bcs2,
+                              unsigned jobs = 1);
+    scored_atomese_set_pair
+    get_nondominated_disjoint(const scored_atomese_set& bcs1,
+                              const scored_atomese_set& bcs2,
                               unsigned jobs = 1);
 
     scored_combo_tree_ptr_vec_pair
