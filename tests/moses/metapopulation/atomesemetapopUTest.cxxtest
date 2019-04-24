@@ -36,9 +36,9 @@ using namespace combo;
 using namespace moses;
 
 // For testing only
-struct dummyy_bscore : public bscore_base
+struct dummy_bscore : public bscore_base
 {
-    behavioral_score operator()(const Handle& handle) const
+    behavioral_score operator()(const Handle& handle)
     {
         return behavioral_score();
     }

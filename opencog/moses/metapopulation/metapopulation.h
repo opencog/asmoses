@@ -420,13 +420,19 @@ private:
     typedef std::pair<scored_atomese_set,
             scored_atomese_set> scored_atomese_set_pair;
     typedef std::vector<const scored_combo_tree*> scored_combo_tree_ptr_vec;
+    typedef std::vector<const scored_atomese*> scored_atomese_ptr_vec;
     typedef scored_combo_tree_ptr_vec::iterator scored_combo_tree_ptr_vec_it;
+    typedef scored_atomese_ptr_vec::iterator scored_atomese_ptr_vec_it;
     typedef scored_combo_tree_ptr_vec::const_iterator scored_combo_tree_ptr_vec_cit;
+    typedef scored_atomese_ptr_vec::const_iterator scored_atomese_ptr_vec_cit;
     typedef std::pair<scored_combo_tree_ptr_vec,
                       scored_combo_tree_ptr_vec> scored_combo_tree_ptr_vec_pair;
+    typedef std::pair<scored_atomese_ptr_vec,
+            scored_atomese_ptr_vec> scored_atomese_ptr_vec_pair;
 
     // reciprocal of random_access_view
     static scored_combo_tree_set to_set(const scored_combo_tree_ptr_vec& bcv);
+    static scored_atomese_set to_set(const scored_atomese_ptr_vec& bcv);
 
     void remove_dominated(scored_combo_tree_set& bcs, unsigned jobs = 1);
     void remove_dominated(scored_atomese_set& bcs, unsigned jobs = 1);
@@ -439,12 +445,21 @@ private:
         return make_pair(scored_combo_tree_ptr_vec(bcv.begin(), middle),
                          scored_combo_tree_ptr_vec(middle, bcv.end()));
     }
-
+    static scored_atomese_ptr_vec_pair
+    inline split(const scored_atomese_ptr_vec& bcv)
+    {
+        scored_atomese_ptr_vec_cit middle = bcv.begin() + bcv.size() / 2;
+        return make_pair(scored_atomese_ptr_vec(bcv.begin(), middle),
+                         scored_atomese_ptr_vec(middle, bcv.end()));
+    }
     static scored_combo_tree_set
     get_nondominated_iter(const scored_combo_tree_set& bcs);
 
     scored_combo_tree_ptr_vec
     get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
+                         unsigned jobs = 1);
+    scored_atomese_ptr_vec
+    get_nondominated_rec(const scored_atomese_ptr_vec& bcv,
                          unsigned jobs = 1);
 
     // return a pair of sets of nondominated candidates between bcs1
@@ -466,6 +481,11 @@ private:
     scored_combo_tree_ptr_vec_pair
     get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& bcv1,
                                   const scored_combo_tree_ptr_vec& bcv2,
+                                  unsigned jobs = 1);
+
+    scored_atomese_ptr_vec_pair
+    get_nondominated_disjoint_rec(const scored_atomese_ptr_vec& bcv1,
+                                  const scored_atomese_ptr_vec& bcv2,
                                   unsigned jobs = 1);
 
     // merge nondominated candidate to the metapopulation assuming
@@ -568,6 +588,7 @@ protected:
     behave_cscore& _cscorer;
 
     scored_combo_tree_ptr_set _scored_trees;
+    scored_atomese_ptr_set _scored_atomese;
 
     static const unsigned _min_pool_size = 250;
 
