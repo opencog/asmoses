@@ -67,7 +67,7 @@ struct bscore_base
 	{};
 
 	/// Return the behavioral score for the combo_tree
-	virtual behavioral_score operator()(const combo_tree &) const = 0;
+	virtual behavioral_score operator()(const combo_tree &) const;
 
 	/// Return the behavioral score for the Handle
 	virtual behavioral_score operator()(const Handle &) const;
