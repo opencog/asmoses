@@ -1,0 +1,752 @@
+[2019-03-28 14:46:05:899] [INFO] moses version "3"."7"."0"
+[2019-03-28 14:46:05:927] [INFO] hostname: bitseat-OptiPlex-7010
+[2019-03-28 14:46:06:027] [INFO] Command line: asmoses -c1 -Hpa -k5 -m10000 --atomspace-port=0 --atomspace-store=1
+[2019-03-28 14:46:06:045] [INFO] Alphabet size = 8 output = boolean
+[2019-03-28 14:46:06:050] [INFO] BScore complexity ratio = 3.5
+[2019-03-28 14:46:06:051] [INFO] Cache composite scores
+[2019-03-28 14:46:06:052] [INFO] Cache compositescore
+[2019-03-28 14:46:06:058] [INFO] Inferred target score = 0
+[2019-03-28 14:46:06:059] [INFO] Subtract 0.5 (minimum significant improvement) from the target score to deal with float imprecision = -0.5
+[2019-03-28 14:46:06:148] [INFO] MOSES starts, max_evals=10000 max_gens=-1 max_time=2147483647
+[2019-03-28 14:46:06:150] [INFO] Stats: # 
+Stats: # Stats are tab-separated, ready for graphing.
+Stats: # You can also use the script parse_log.py to extract a CSV file given a moses log file.
+Stats: # Column explanation:
+Stats: # 
+Stats: # gen is the generation number.
+Stats: # num_evals is the number of scoring function evaluations so far.
+Stats: # elapsed is the wall-clock time, in seconds, since start.
+Stats: # metapop_size is the size of the metapopulation.
+Stats: # best_score is the highest raw score seen, of all exemplars.
+Stats: # complexity is in bits, of the highest-composite score exemplar.
+Stats: # field_set_size is the ESTIMATED number of bits in all the knobs.
+Stats: # optim_steps is the number of steps the optimizer took.
+Stats: # over_budget is bool, T if search exceeded scoring func eval budget.
+Stats: # 
+Stats: # gen	num_evals	elapsed	metapop_size	best_score	complexity	field_set_size	optim_steps	over_budget
+[2019-03-28 14:46:06:160] [INFO] Start knob building, rep size=1 complexity=0
+[2019-03-28 14:46:06:350] [INFO] After knob building, rep size=124 complexity=0
+[2019-03-28 14:46:06:360] [INFO] Total number of field specs: 40
+[2019-03-28 14:46:06:363] [INFO] Number of disc knobs mapped: 40
+[2019-03-28 14:46:06:363] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:06:364] [INFO] Field set, in bytes: 1344
+[2019-03-28 14:46:06:364] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:06:373] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:06:394] [INFO] DemesHill: 1	1	1	1	15118	1	1	3.8147e-05	1	1	-16	3.40282e+38	-16	3.40282e+38	0
+[2019-03-28 14:46:06:483] [INFO] DemesHill: 1	2	2	81	93253	80	81	0.0030899	81	0	-16	0	-16	0	0
+[2019-03-28 14:46:06:709] [INFO] DemesHill: 1	3	3	201	225892	120	201	0.00766754	201	0	-16	0	-16	0	0
+[2019-03-28 14:46:07:469] [INFO] Expansion 1 done
+[2019-03-28 14:46:07:471] [INFO] Total number of evaluations so far: 201
+[2019-03-28 14:46:07:473] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:07:474] [INFO] -16 false
+[2019-03-28 14:46:07:474] [INFO] -16 true
+[2019-03-28 14:46:07:480] [INFO] Stats: 1	201	1	69	-16	0	0	3	0
+[2019-03-28 14:46:07:487] [INFO] Start knob building, rep size=1 complexity=0
+[2019-03-28 14:46:07:582] [INFO] After knob building, rep size=124 complexity=0
+[2019-03-28 14:46:07:582] [INFO] Total number of field specs: 40
+[2019-03-28 14:46:07:583] [INFO] Number of disc knobs mapped: 40
+[2019-03-28 14:46:07:583] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:07:583] [INFO] Field set, in bytes: 1344
+[2019-03-28 14:46:07:583] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:07:584] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:07:585] [INFO] DemesHill: 2	1	4	202	736	1	1	3.8147e-05	1	1	-16	3.40282e+38	-16	3.40282e+38	0
+[2019-03-28 14:46:07:669] [INFO] DemesHill: 2	2	5	282	83367	80	81	0.0030899	81	0	-16	0	-16	0	0
+[2019-03-28 14:46:07:843] [INFO] DemesHill: 2	3	6	402	174211	120	201	0.00766754	201	0	-16	0	-16	0	0
+[2019-03-28 14:46:08:553] [INFO] Expansion 2 done
+[2019-03-28 14:46:08:553] [INFO] Total number of evaluations so far: 402
+[2019-03-28 14:46:08:553] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:08:553] [INFO] -16 false
+[2019-03-28 14:46:08:554] [INFO] -16 true
+[2019-03-28 14:46:08:554] [INFO] Stats: 2	402	2	84	-16	0	0	3	0
+[2019-03-28 14:46:08:555] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:08:735] [INFO] After knob building, rep size=110 complexity=1
+[2019-03-28 14:46:08:736] [INFO] Total number of field specs: 37
+[2019-03-28 14:46:08:736] [INFO] Number of disc knobs mapped: 37
+[2019-03-28 14:46:08:736] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:08:736] [INFO] Field set, in bytes: 1260
+[2019-03-28 14:46:08:736] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:08:736] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:08:738] [INFO] DemesHill: 3	1	7	403	1136	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:08:863] [INFO] DemesHill: 3	2	8	477	124756	74	75	0.00286102	75	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:09:033] [INFO] DemesHill: 3	3	9	597	170222	120	195	0.00743866	195	0	-16	0	-16	0	0
+[2019-03-28 14:46:09:853] [INFO] Expansion 3 done
+[2019-03-28 14:46:09:853] [INFO] Total number of evaluations so far: 597
+[2019-03-28 14:46:09:853] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:09:853] [INFO] -16 false
+[2019-03-28 14:46:09:853] [INFO] -16 true
+[2019-03-28 14:46:09:854] [INFO] Stats: 3	597	3	142	-16	0	0	3	0
+[2019-03-28 14:46:09:856] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:10:053] [INFO] After knob building, rep size=69 complexity=2
+[2019-03-28 14:46:10:054] [INFO] Total number of field specs: 25
+[2019-03-28 14:46:10:055] [INFO] Number of disc knobs mapped: 25
+[2019-03-28 14:46:10:055] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:10:055] [INFO] Field set, in bytes: 924
+[2019-03-28 14:46:10:055] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:10:055] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:10:057] [INFO] DemesHill: 4	1	10	598	1281	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:10:147] [INFO] DemesHill: 4	2	11	644	89753	46	47	0.00143433	47	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:10:366] [INFO] DemesHill: 4	3	12	764	219417	120	167	0.00509644	167	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:11:226] [INFO] Expansion 4 done
+[2019-03-28 14:46:11:226] [INFO] Total number of evaluations so far: 764
+[2019-03-28 14:46:11:226] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:11:226] [INFO] -16 false
+[2019-03-28 14:46:11:227] [INFO] -16 true
+[2019-03-28 14:46:11:227] [INFO] Stats: 4	764	5	191	-16	0	0	3	0
+[2019-03-28 14:46:11:230] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:11:399] [INFO] After knob building, rep size=102 complexity=1
+[2019-03-28 14:46:11:400] [INFO] Total number of field specs: 35
+[2019-03-28 14:46:11:400] [INFO] Number of disc knobs mapped: 35
+[2019-03-28 14:46:11:400] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:11:400] [INFO] Field set, in bytes: 1204
+[2019-03-28 14:46:11:400] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:11:400] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:11:402] [INFO] DemesHill: 5	1	13	765	959	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:11:523] [INFO] DemesHill: 5	2	14	835	120773	70	71	0.00270844	71	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:11:696] [INFO] DemesHill: 5	3	15	955	173457	120	191	0.00728607	191	0	-16	0	-16	0	0
+[2019-03-28 14:46:12:537] [INFO] Expansion 5 done
+[2019-03-28 14:46:12:537] [INFO] Total number of evaluations so far: 955
+[2019-03-28 14:46:12:537] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:12:538] [INFO] -16 false
+[2019-03-28 14:46:12:538] [INFO] -16 true
+[2019-03-28 14:46:12:538] [INFO] Stats: 5	955	6	252	-16	0	0	3	0
+[2019-03-28 14:46:12:542] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:12:719] [INFO] After knob building, rep size=110 complexity=1
+[2019-03-28 14:46:12:720] [INFO] Total number of field specs: 37
+[2019-03-28 14:46:12:720] [INFO] Number of disc knobs mapped: 37
+[2019-03-28 14:46:12:720] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:12:720] [INFO] Field set, in bytes: 1260
+[2019-03-28 14:46:12:720] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:12:720] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:12:722] [INFO] DemesHill: 6	1	16	956	977	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:12:856] [INFO] DemesHill: 6	2	17	1030	134296	74	75	0.00286102	75	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:13:002] [INFO] DemesHill: 6	3	18	1150	145928	120	195	0.00743866	195	0	-16	0	-16	0	0
+[2019-03-28 14:46:13:792] [INFO] Expansion 6 done
+[2019-03-28 14:46:13:792] [INFO] Total number of evaluations so far: 1150
+[2019-03-28 14:46:13:792] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:13:792] [INFO] -16 false
+[2019-03-28 14:46:13:792] [INFO] -16 true
+[2019-03-28 14:46:13:793] [INFO] Stats: 6	1150	7	289	-16	0	0	3	0
+[2019-03-28 14:46:13:796] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:13:966] [INFO] After knob building, rep size=98 complexity=1
+[2019-03-28 14:46:13:966] [INFO] Total number of field specs: 34
+[2019-03-28 14:46:13:967] [INFO] Number of disc knobs mapped: 34
+[2019-03-28 14:46:13:967] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:13:967] [INFO] Field set, in bytes: 1176
+[2019-03-28 14:46:13:967] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:13:967] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:13:968] [INFO] DemesHill: 7	1	19	1151	963	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:14:083] [INFO] DemesHill: 7	2	20	1219	114615	68	69	0.00263214	69	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:14:244] [INFO] DemesHill: 7	3	21	1339	161158	120	189	0.00720978	189	0	-16	0	-16	0	0
+[2019-03-28 14:46:15:045] [INFO] Expansion 7 done
+[2019-03-28 14:46:15:045] [INFO] Total number of evaluations so far: 1339
+[2019-03-28 14:46:15:045] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:15:046] [INFO] -16 false
+[2019-03-28 14:46:15:046] [INFO] -16 true
+[2019-03-28 14:46:15:046] [INFO] Stats: 7	1339	8	327	-16	0	0	3	0
+[2019-03-28 14:46:15:050] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:15:223] [INFO] After knob building, rep size=118 complexity=1
+[2019-03-28 14:46:15:224] [INFO] Total number of field specs: 39
+[2019-03-28 14:46:15:224] [INFO] Number of disc knobs mapped: 39
+[2019-03-28 14:46:15:224] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:15:224] [INFO] Field set, in bytes: 1316
+[2019-03-28 14:46:15:224] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:15:224] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:15:226] [INFO] DemesHill: 8	1	22	1340	960	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:15:360] [INFO] DemesHill: 8	2	23	1418	134574	78	79	0.00301361	79	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:15:537] [INFO] DemesHill: 8	3	24	1538	176750	120	199	0.00759125	199	0	-16	0	-16	0	0
+[2019-03-28 14:46:16:457] [INFO] Expansion 8 done
+[2019-03-28 14:46:16:457] [INFO] Total number of evaluations so far: 1538
+[2019-03-28 14:46:16:457] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:16:457] [INFO] -16 false
+[2019-03-28 14:46:16:457] [INFO] -16 true
+[2019-03-28 14:46:16:458] [INFO] Stats: 8	1538	10	375	-16	0	0	3	0
+[2019-03-28 14:46:16:462] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:16:639] [INFO] After knob building, rep size=122 complexity=1
+[2019-03-28 14:46:16:640] [INFO] Total number of field specs: 40
+[2019-03-28 14:46:16:640] [INFO] Number of disc knobs mapped: 40
+[2019-03-28 14:46:16:640] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:16:640] [INFO] Field set, in bytes: 1344
+[2019-03-28 14:46:16:640] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:16:640] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:16:642] [INFO] DemesHill: 9	1	25	1539	962	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:16:784] [INFO] DemesHill: 9	2	26	1619	142399	80	81	0.0030899	81	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:16:930] [INFO] DemesHill: 9	3	27	1739	145642	120	201	0.00766754	201	0	-16	0	-16	0	0
+[2019-03-28 14:46:17:764] [INFO] Expansion 9 done
+[2019-03-28 14:46:17:764] [INFO] Total number of evaluations so far: 1739
+[2019-03-28 14:46:17:764] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:17:765] [INFO] -16 false
+[2019-03-28 14:46:17:765] [INFO] -16 true
+[2019-03-28 14:46:17:765] [INFO] Stats: 9	1739	11	404	-16	0	0	3	0
+[2019-03-28 14:46:17:770] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:17:944] [INFO] After knob building, rep size=114 complexity=1
+[2019-03-28 14:46:17:944] [INFO] Total number of field specs: 38
+[2019-03-28 14:46:17:945] [INFO] Number of disc knobs mapped: 38
+[2019-03-28 14:46:17:945] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:17:945] [INFO] Field set, in bytes: 1288
+[2019-03-28 14:46:17:945] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:17:945] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:17:946] [INFO] DemesHill: 10	1	28	1740	969	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:18:080] [INFO] DemesHill: 10	2	29	1816	133715	76	77	0.00293732	77	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:18:226] [INFO] DemesHill: 10	3	30	1936	146198	120	197	0.00751495	197	0	-16	0	-16	0	0
+[2019-03-28 14:46:19:032] [INFO] Expansion 10 done
+[2019-03-28 14:46:19:032] [INFO] Total number of evaluations so far: 1936
+[2019-03-28 14:46:19:032] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:19:033] [INFO] -16 false
+[2019-03-28 14:46:19:033] [INFO] -16 true
+[2019-03-28 14:46:19:033] [INFO] Stats: 10	1936	12	438	-16	0	0	3	0
+[2019-03-28 14:46:19:038] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:19:198] [INFO] After knob building, rep size=86 complexity=1
+[2019-03-28 14:46:19:198] [INFO] Total number of field specs: 31
+[2019-03-28 14:46:19:198] [INFO] Number of disc knobs mapped: 31
+[2019-03-28 14:46:19:198] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:19:199] [INFO] Field set, in bytes: 1092
+[2019-03-28 14:46:19:199] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:19:199] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:19:200] [INFO] DemesHill: 11	1	31	1937	940	1	1	3.05176e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:19:302] [INFO] DemesHill: 11	2	32	1999	102313	62	63	0.00192261	63	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:19:463] [INFO] DemesHill: 11	3	33	2119	160924	120	183	0.00558472	183	0	-16	0	-16	0	0
+[2019-03-28 14:46:20:223] [INFO] Expansion 11 done
+[2019-03-28 14:46:20:223] [INFO] Total number of evaluations so far: 2119
+[2019-03-28 14:46:20:223] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:20:224] [INFO] -16 false
+[2019-03-28 14:46:20:224] [INFO] -16 true
+[2019-03-28 14:46:20:224] [INFO] Stats: 11	2119	14	455	-16	0	0	3	0
+[2019-03-28 14:46:20:229] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:20:399] [INFO] After knob building, rep size=102 complexity=1
+[2019-03-28 14:46:20:399] [INFO] Total number of field specs: 35
+[2019-03-28 14:46:20:399] [INFO] Number of disc knobs mapped: 35
+[2019-03-28 14:46:20:399] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:20:399] [INFO] Field set, in bytes: 1204
+[2019-03-28 14:46:20:399] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:20:400] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:20:401] [INFO] DemesHill: 12	1	34	2120	963	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:20:523] [INFO] DemesHill: 12	2	35	2190	121987	70	71	0.00270844	71	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:20:685] [INFO] DemesHill: 12	3	36	2310	162547	120	191	0.00728607	191	0	-16	0	-16	0	0
+[2019-03-28 14:46:21:506] [INFO] Expansion 12 done
+[2019-03-28 14:46:21:506] [INFO] Total number of evaluations so far: 2310
+[2019-03-28 14:46:21:506] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:21:506] [INFO] -16 false
+[2019-03-28 14:46:21:507] [INFO] -16 true
+[2019-03-28 14:46:21:507] [INFO] Stats: 12	2310	15	483	-16	0	0	3	0
+[2019-03-28 14:46:21:512] [INFO] Start knob building, rep size=1 complexity=1
+[2019-03-28 14:46:21:682] [INFO] After knob building, rep size=102 complexity=1
+[2019-03-28 14:46:21:682] [INFO] Total number of field specs: 35
+[2019-03-28 14:46:21:683] [INFO] Number of disc knobs mapped: 35
+[2019-03-28 14:46:21:683] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:21:683] [INFO] Field set, in bytes: 1204
+[2019-03-28 14:46:21:683] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:21:683] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:21:684] [INFO] DemesHill: 13	1	37	2311	964	1	1	3.8147e-05	1	1	-16.2857	3.40282e+38	-16	3.40282e+38	1
+[2019-03-28 14:46:21:804] [INFO] DemesHill: 13	2	38	2381	119973	70	71	0.00270844	71	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:21:981] [INFO] DemesHill: 13	3	39	2501	176369	120	191	0.00728607	191	0	-16	0	-16	0	0
+[2019-03-28 14:46:22:841] [INFO] Expansion 13 done
+[2019-03-28 14:46:22:841] [INFO] Total number of evaluations so far: 2501
+[2019-03-28 14:46:22:841] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:22:841] [INFO] -16 false
+[2019-03-28 14:46:22:842] [INFO] -16 true
+[2019-03-28 14:46:22:842] [INFO] Stats: 13	2501	16	502	-16	0	0	3	0
+[2019-03-28 14:46:22:850] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:23:044] [INFO] After knob building, rep size=65 complexity=2
+[2019-03-28 14:46:23:044] [INFO] Total number of field specs: 24
+[2019-03-28 14:46:23:044] [INFO] Number of disc knobs mapped: 24
+[2019-03-28 14:46:23:044] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:23:044] [INFO] Field set, in bytes: 896
+[2019-03-28 14:46:23:045] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:23:045] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:23:047] [INFO] DemesHill: 14	1	40	2502	1720	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:23:142] [INFO] DemesHill: 14	2	41	2547	94785	45	46	0.00140381	46	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:23:332] [INFO] DemesHill: 14	3	42	2667	190425	120	166	0.00506592	166	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:24:178] [INFO] Expansion 14 done
+[2019-03-28 14:46:24:178] [INFO] Total number of evaluations so far: 2667
+[2019-03-28 14:46:24:178] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:24:179] [INFO] -16 false
+[2019-03-28 14:46:24:179] [INFO] -16 true
+[2019-03-28 14:46:24:179] [INFO] Stats: 14	2667	18	547	-16	0	0	3	0
+[2019-03-28 14:46:24:185] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:24:390] [INFO] After knob building, rep size=77 complexity=2
+[2019-03-28 14:46:24:390] [INFO] Total number of field specs: 27
+[2019-03-28 14:46:24:390] [INFO] Number of disc knobs mapped: 27
+[2019-03-28 14:46:24:390] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:24:390] [INFO] Field set, in bytes: 980
+[2019-03-28 14:46:24:390] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:24:391] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:24:393] [INFO] DemesHill: 15	1	43	2668	1707	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:24:509] [INFO] DemesHill: 15	2	44	2719	116218	51	52	0.00158691	52	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:24:721] [INFO] DemesHill: 15	3	45	2839	211895	120	172	0.00524902	172	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:25:685] [INFO] Expansion 15 done
+[2019-03-28 14:46:25:685] [INFO] Total number of evaluations so far: 2839
+[2019-03-28 14:46:25:685] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:25:685] [INFO] -16 false
+[2019-03-28 14:46:25:685] [INFO] -16 true
+[2019-03-28 14:46:25:686] [INFO] Stats: 15	2839	19	591	-16	0	0	3	0
+[2019-03-28 14:46:25:692] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:25:894] [INFO] After knob building, rep size=89 complexity=2
+[2019-03-28 14:46:25:894] [INFO] Total number of field specs: 30
+[2019-03-28 14:46:25:894] [INFO] Number of disc knobs mapped: 30
+[2019-03-28 14:46:25:894] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:25:895] [INFO] Field set, in bytes: 1064
+[2019-03-28 14:46:25:895] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:25:895] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:25:897] [INFO] DemesHill: 16	1	46	2840	1732	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:26:024] [INFO] DemesHill: 16	2	47	2896	127396	56	57	0.0017395	57	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:26:222] [INFO] DemesHill: 16	3	48	3016	197472	120	177	0.00540161	177	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:27:167] [INFO] Expansion 16 done
+[2019-03-28 14:46:27:167] [INFO] Total number of evaluations so far: 3016
+[2019-03-28 14:46:27:167] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:27:167] [INFO] -16 false
+[2019-03-28 14:46:27:168] [INFO] -16 true
+[2019-03-28 14:46:27:168] [INFO] Stats: 16	3016	21	638	-16	0	0	3	0
+[2019-03-28 14:46:27:175] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:27:375] [INFO] After knob building, rep size=81 complexity=2
+[2019-03-28 14:46:27:375] [INFO] Total number of field specs: 28
+[2019-03-28 14:46:27:375] [INFO] Number of disc knobs mapped: 28
+[2019-03-28 14:46:27:375] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:27:375] [INFO] Field set, in bytes: 1008
+[2019-03-28 14:46:27:376] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:27:376] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:27:377] [INFO] DemesHill: 17	1	49	3017	1310	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:27:487] [INFO] DemesHill: 17	2	50	3070	110082	53	54	0.00164795	54	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:27:711] [INFO] DemesHill: 17	3	51	3190	223174	120	174	0.00531006	174	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:28:699] [INFO] Expansion 17 done
+[2019-03-28 14:46:28:699] [INFO] Total number of evaluations so far: 3190
+[2019-03-28 14:46:28:699] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:28:699] [INFO] -16 false
+[2019-03-28 14:46:28:700] [INFO] -16 true
+[2019-03-28 14:46:28:700] [INFO] Stats: 17	3190	22	667	-16	0	0	3	0
+[2019-03-28 14:46:28:710] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:28:914] [INFO] After knob building, rep size=73 complexity=2
+[2019-03-28 14:46:28:914] [INFO] Total number of field specs: 26
+[2019-03-28 14:46:28:915] [INFO] Number of disc knobs mapped: 26
+[2019-03-28 14:46:28:915] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:28:915] [INFO] Field set, in bytes: 952
+[2019-03-28 14:46:28:915] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:28:915] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:28:917] [INFO] DemesHill: 18	1	52	3191	1723	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:29:016] [INFO] DemesHill: 18	2	53	3238	99214	47	48	0.00146484	48	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:29:196] [INFO] DemesHill: 18	3	54	3358	180068	120	168	0.00512695	168	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:30:014] [INFO] Expansion 18 done
+[2019-03-28 14:46:30:014] [INFO] Total number of evaluations so far: 3358
+[2019-03-28 14:46:30:015] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:30:015] [INFO] -16 false
+[2019-03-28 14:46:30:015] [INFO] -16 true
+[2019-03-28 14:46:30:015] [INFO] Stats: 18	3358	23	696	-16	0	0	3	0
+[2019-03-28 14:46:30:023] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:30:215] [INFO] After knob building, rep size=77 complexity=2
+[2019-03-28 14:46:30:215] [INFO] Total number of field specs: 27
+[2019-03-28 14:46:30:216] [INFO] Number of disc knobs mapped: 27
+[2019-03-28 14:46:30:216] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:30:216] [INFO] Field set, in bytes: 980
+[2019-03-28 14:46:30:217] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:30:217] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:30:219] [INFO] DemesHill: 19	1	55	3359	1719	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:30:327] [INFO] DemesHill: 19	2	56	3409	108585	50	51	0.0015564	51	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:30:532] [INFO] DemesHill: 19	3	57	3529	204515	120	171	0.00521851	171	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:31:457] [INFO] Expansion 19 done
+[2019-03-28 14:46:31:458] [INFO] Total number of evaluations so far: 3529
+[2019-03-28 14:46:31:458] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:31:458] [INFO] -16 false
+[2019-03-28 14:46:31:458] [INFO] -16 true
+[2019-03-28 14:46:31:459] [INFO] Stats: 19	3529	25	737	-16	0	0	3	0
+[2019-03-28 14:46:31:467] [INFO] Start knob building, rep size=3 complexity=2
+[2019-03-28 14:46:31:674] [INFO] After knob building, rep size=101 complexity=2
+[2019-03-28 14:46:31:674] [INFO] Total number of field specs: 33
+[2019-03-28 14:46:31:675] [INFO] Number of disc knobs mapped: 33
+[2019-03-28 14:46:31:675] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:31:675] [INFO] Field set, in bytes: 1148
+[2019-03-28 14:46:31:675] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:31:675] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:31:677] [INFO] DemesHill: 20	1	58	3530	1713	1	1	3.05176e-05	1	1	-16.5714	3.40282e+38	-16	3.40282e+38	2
+[2019-03-28 14:46:31:819] [INFO] DemesHill: 20	2	59	3591	141647	61	62	0.00189209	62	0	-16.2857	0.285713	-16	0	1
+[2019-03-28 14:46:32:016] [INFO] DemesHill: 20	3	60	3711	197259	120	182	0.0055542	182	0	-16	0.285715	-16	0	0
+[2019-03-28 14:46:33:004] [INFO] Expansion 20 done
+[2019-03-28 14:46:33:005] [INFO] Total number of evaluations so far: 3711
+[2019-03-28 14:46:33:005] [INFO] The following candidate(s) have the best score [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]
+[2019-03-28 14:46:33:005] [INFO] -16 false
+[2019-03-28 14:46:33:005] [INFO] -16 true
+[2019-03-28 14:46:33:006] [INFO] Stats: 20	3711	26	765	-16	0	0	3	0
+[2019-03-28 14:46:33:014] [INFO] Start knob building, rep size=4 complexity=3
+[2019-03-28 14:46:33:235] [INFO] After knob building, rep size=56 complexity=3
+[2019-03-28 14:46:33:235] [INFO] Total number of field specs: 20
+[2019-03-28 14:46:33:236] [INFO] Number of disc knobs mapped: 20
+[2019-03-28 14:46:33:236] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:33:236] [INFO] Field set, in bytes: 784
+[2019-03-28 14:46:33:236] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:33:236] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:33:238] [INFO] DemesHill: 21	1	61	3712	1604	1	1	3.05176e-05	1	1	-16.8571	3.40282e+38	-16	3.40282e+38	3
+[2019-03-28 14:46:33:321] [INFO] DemesHill: 21	2	62	3747	82385	35	36	0.00109863	36	0	-16.4286	0.428572	-15	1	5
+[2019-03-28 14:46:33:592] [INFO] DemesHill: 21	3	63	3861	271820	114	150	0.00457764	150	0	-16	0.428572	-15	0	0
+[2019-03-28 14:46:34:626] [INFO] Expansion 21 done
+[2019-03-28 14:46:34:626] [INFO] Total number of evaluations so far: 3861
+[2019-03-28 14:46:34:626] [INFO] The following candidate(s) have the best score [score=-15, penalized score=-16.4285717010498047, complexity=5, complexity penalty=1.42857146263122559, uniformity penalty=0]
+[2019-03-28 14:46:34:627] [INFO] -15 or(and($1 $2 !$3 !$5) $4)
+[2019-03-28 14:46:34:627] [INFO] -15 and(or(and($1 $2 !$3) $5) !$4)
+[2019-03-28 14:46:34:627] [INFO] -15 and(!$1 $2 $3 !$4 !$5)
+[2019-03-28 14:46:34:628] [INFO] -15 or(and($1 !$3 !$4 !$5) !$2)
+[2019-03-28 14:46:34:628] [INFO] -15 or(and($1 !$3 !$5) !$2 $4)
+[2019-03-28 14:46:34:629] [INFO] -15 or(and(!$1 $3 !$5) !$2 $4)
+[2019-03-28 14:46:34:629] [INFO] -15 and($1 $2 !$3 !$4 !$5)
+[2019-03-28 14:46:34:630] [INFO] Stats: 21	3861	28	816	-15	5	0	3	0
+[2019-03-28 14:46:34:639] [INFO] Start knob building, rep size=8 complexity=5
+[2019-03-28 14:46:35:409] [INFO] After knob building, rep size=120 complexity=5
+[2019-03-28 14:46:35:409] [INFO] Total number of field specs: 38
+[2019-03-28 14:46:35:409] [INFO] Number of disc knobs mapped: 38
+[2019-03-28 14:46:35:410] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:35:410] [INFO] Field set, in bytes: 1288
+[2019-03-28 14:46:35:410] [INFO] One instance, in bytes: 32
+[2019-03-28 14:46:35:410] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:35:414] [INFO] DemesHill: 22	1	64	3862	3580	1	1	3.05176e-05	1	1	-16.4286	3.40282e+38	-15	3.40282e+38	5
+[2019-03-28 14:46:35:665] [INFO] DemesHill: 22	2	65	3921	250844	59	60	0.00183105	60	0	-16.4286	0	-15	0	5
+[2019-03-28 14:46:36:281] [INFO] DemesHill: 22	3	66	4041	615919	120	180	0.00549316	180	0	-16	0.428572	-14	1	7
+[2019-03-28 14:46:38:823] [INFO] Expansion 22 done
+[2019-03-28 14:46:38:823] [INFO] Total number of evaluations so far: 4041
+[2019-03-28 14:46:38:823] [INFO] The following candidate(s) have the best score [score=-14, penalized score=-16, complexity=7, complexity penalty=2, uniformity penalty=0]
+[2019-03-28 14:46:38:824] [INFO] -14 and(or(and(or($1 $5) $2 !$3) and($1 $5)) !$4)
+[2019-03-28 14:46:38:824] [INFO] -14 and(or(and(or($1 $5) !$3) and($1 $5)) $2 !$4)
+[2019-03-28 14:46:38:825] [INFO] Stats: 22	4041	32	908	-14	7	0	3	0
+[2019-03-28 14:46:38:837] [INFO] Start knob building, rep size=12 complexity=7
+[2019-03-28 14:46:40:512] [INFO] After knob building, rep size=195 complexity=7
+[2019-03-28 14:46:40:513] [INFO] Total number of field specs: 62
+[2019-03-28 14:46:40:513] [INFO] Number of disc knobs mapped: 62
+[2019-03-28 14:46:40:513] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:40:513] [INFO] Field set, in bytes: 1960
+[2019-03-28 14:46:40:513] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:40:514] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:40:519] [INFO] DemesHill: 23	1	67	4042	5297	1	1	3.8147e-05	1	1	-16	3.40282e+38	-14	3.40282e+38	7
+[2019-03-28 14:46:41:088] [INFO] DemesHill: 23	2	68	4135	569139	93	94	0.00358582	94	0	-15.5714	0.428572	-13	1	9
+[2019-03-28 14:46:42:142] [INFO] DemesHill: 23	3	69	4255	1053558	120	214	0.00816345	214	0	-15.5714	0	-13	0	9
+[2019-03-28 14:46:46:543] [INFO] Expansion 23 done
+[2019-03-28 14:46:46:543] [INFO] Total number of evaluations so far: 4255
+[2019-03-28 14:46:46:543] [INFO] The following candidate(s) have the best score [score=-13, penalized score=-15.5714282989501953, complexity=9, complexity penalty=2.57142877578735352, uniformity penalty=0]
+[2019-03-28 14:46:46:544] [INFO] -13 or(and(or(and(or($1 $5) $2 !$3) and($1 $5)) !$4) and(!$2 $3))
+[2019-03-28 14:46:46:545] [INFO] -13 and(or(and(or(and(!$2 $3) $1) $5) and(or($1 $5) $2 !$3)) !$4)
+[2019-03-28 14:46:46:546] [INFO] Stats: 23	4255	40	977	-13	9	0	3	0
+[2019-03-28 14:46:46:560] [INFO] Start knob building, rep size=16 complexity=9
+[2019-03-28 14:46:49:660] [INFO] After knob building, rep size=273 complexity=9
+[2019-03-28 14:46:49:661] [INFO] Total number of field specs: 83
+[2019-03-28 14:46:49:661] [INFO] Number of disc knobs mapped: 83
+[2019-03-28 14:46:49:661] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:46:49:661] [INFO] Field set, in bytes: 2548
+[2019-03-28 14:46:49:661] [INFO] One instance, in bytes: 40
+[2019-03-28 14:46:49:662] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:46:49:670] [INFO] DemesHill: 24	1	70	4256	7736	1	1	3.8147e-05	1	1	-15.5714	3.40282e+38	-13	3.40282e+38	9
+[2019-03-28 14:46:50:684] [INFO] DemesHill: 24	2	71	4376	1014698	120	121	0.00461578	121	0	-15.5714	0	-13	0	9
+[2019-03-28 14:46:51:747] [INFO] DemesHill: 24	3	72	4496	1063004	120	241	0.00919342	241	0	-15.5714	0	-13	0	9
+[2019-03-28 14:46:57:466] [INFO] Expansion 24 done
+[2019-03-28 14:46:57:466] [INFO] Total number of evaluations so far: 4496
+[2019-03-28 14:46:57:466] [INFO] The following candidate(s) have the best score [score=-13, penalized score=-15.5714282989501953, complexity=9, complexity penalty=2.57142877578735352, uniformity penalty=0]
+[2019-03-28 14:46:57:467] [INFO] -13 or(and(or(and(or($1 $5) $2 !$3) and($1 $5)) !$4) and(!$2 $3))
+[2019-03-28 14:46:57:468] [INFO] -13 and(or(and(or(and(!$2 $3) $1) $5) and(or($1 $5) $2 !$3)) !$4)
+[2019-03-28 14:46:57:469] [INFO] Stats: 24	4496	51	1064	-13	9	0	3	0
+[2019-03-28 14:46:57:488] [INFO] Start knob building, rep size=16 complexity=9
+[2019-03-28 14:47:01:146] [INFO] After knob building, rep size=238 complexity=9
+[2019-03-28 14:47:01:147] [INFO] Total number of field specs: 73
+[2019-03-28 14:47:01:147] [INFO] Number of disc knobs mapped: 73
+[2019-03-28 14:47:01:147] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:47:01:147] [INFO] Field set, in bytes: 2268
+[2019-03-28 14:47:01:147] [INFO] One instance, in bytes: 40
+[2019-03-28 14:47:01:148] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:47:01:158] [INFO] DemesHill: 25	1	73	4497	10110	1	1	3.8147e-05	1	1	-15.5714	3.40282e+38	-13	3.40282e+38	9
+[2019-03-28 14:47:02:345] [INFO] DemesHill: 25	2	74	4610	1186678	113	114	0.00434875	114	0	-15.5714	0	-13	0	9
+[2019-03-28 14:47:03:518] [INFO] DemesHill: 25	3	75	4730	1173502	120	234	0.00892639	234	0	-15.5714	0	-13	0	9
+[2019-03-28 14:47:10:034] [INFO] Expansion 25 done
+[2019-03-28 14:47:10:034] [INFO] Total number of evaluations so far: 4730
+[2019-03-28 14:47:10:034] [INFO] The following candidate(s) have the best score [score=-13, penalized score=-15.5714282989501953, complexity=9, complexity penalty=2.57142877578735352, uniformity penalty=0]
+[2019-03-28 14:47:10:035] [INFO] -13 or(and(or(and(or($1 $5) $2 !$3) and($1 $5)) !$4) and(!$2 $3))
+[2019-03-28 14:47:10:036] [INFO] -13 and(or(and(or(and(!$2 $3) $1) $5) and(or($1 $5) $2 !$3)) !$4)
+[2019-03-28 14:47:10:037] [INFO] Stats: 25	4730	63	1159	-13	9	0	3	0
+[2019-03-28 14:47:10:057] [INFO] Start knob building, rep size=18 complexity=10
+[2019-03-28 14:47:14:164] [INFO] After knob building, rep size=320 complexity=10
+[2019-03-28 14:47:14:165] [INFO] Total number of field specs: 101
+[2019-03-28 14:47:14:165] [INFO] Number of disc knobs mapped: 101
+[2019-03-28 14:47:14:165] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:47:14:166] [INFO] Field set, in bytes: 3052
+[2019-03-28 14:47:14:166] [INFO] One instance, in bytes: 48
+[2019-03-28 14:47:14:166] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:47:14:175] [INFO] DemesHill: 26	1	76	4731	8861	1	1	4.57764e-05	1	1	-15.8571	3.40282e+38	-13	3.40282e+38	10
+[2019-03-28 14:47:15:498] [INFO] DemesHill: 26	2	77	4871	1322734	140	141	0.00645447	141	1	-15.1429	0.714286	-12	1	11
+[2019-03-28 14:47:17:000] [INFO] DemesHill: 26	3	78	5011	1502282	140	281	0.0128632	281	1	-14.4286	0.714286	-11	1	12
+[2019-03-28 14:47:18:575] [INFO] DemesHill: 26	4	79	5151	1574488	140	421	0.0192719	421	0	-14.4286	0	-11	0	12
+[2019-03-28 14:47:20:020] [INFO] DemesHill: 26	5	80	5271	1445220	120	541	0.024765	541	0	-14.2857	0.142857	-10	1	15
+[2019-03-28 14:47:33:234] [INFO] Expansion 26 done
+[2019-03-28 14:47:33:234] [INFO] Total number of evaluations so far: 5271
+[2019-03-28 14:47:33:234] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:47:33:235] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:47:33:237] [INFO] Stats: 26	5271	87	250	-10	15	0	5	0
+[2019-03-28 14:47:33:247] [INFO] Start knob building, rep size=25 complexity=15
+[2019-03-28 14:47:40:364] [INFO] After knob building, rep size=366 complexity=15
+[2019-03-28 14:47:40:364] [INFO] Total number of field specs: 116
+[2019-03-28 14:47:40:365] [INFO] Number of disc knobs mapped: 116
+[2019-03-28 14:47:40:365] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:47:40:365] [INFO] Field set, in bytes: 3472
+[2019-03-28 14:47:40:365] [INFO] One instance, in bytes: 48
+[2019-03-28 14:47:40:366] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:47:40:378] [INFO] DemesHill: 27	1	81	5272	12251	1	1	4.57764e-05	1	1	-14.2857	3.40282e+38	-10	3.40282e+38	15
+[2019-03-28 14:47:42:628] [INFO] DemesHill: 27	2	82	5442	2249850	170	171	0.00782776	171	0	-14.2857	0	-10	0	15
+[2019-03-28 14:47:44:431] [INFO] DemesHill: 27	3	83	5562	1802735	120	291	0.0133209	291	0	-14.2857	0	-10	0	15
+[2019-03-28 14:47:54:388] [INFO] Expansion 27 done
+[2019-03-28 14:47:54:389] [INFO] Total number of evaluations so far: 5562
+[2019-03-28 14:47:54:389] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:47:54:390] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:47:54:392] [INFO] Stats: 27	5562	108	292	-10	15	0	3	0
+[2019-03-28 14:47:54:405] [INFO] Start knob building, rep size=20 complexity=12
+[2019-03-28 14:47:59:229] [INFO] After knob building, rep size=374 complexity=12
+[2019-03-28 14:47:59:230] [INFO] Total number of field specs: 115
+[2019-03-28 14:47:59:230] [INFO] Number of disc knobs mapped: 115
+[2019-03-28 14:47:59:230] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:47:59:231] [INFO] Field set, in bytes: 3444
+[2019-03-28 14:47:59:231] [INFO] One instance, in bytes: 48
+[2019-03-28 14:47:59:231] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:47:59:241] [INFO] DemesHill: 28	1	84	5563	10134	1	1	4.57764e-05	1	1	-14.4286	3.40282e+38	-11	3.40282e+38	12
+[2019-03-28 14:48:01:338] [INFO] DemesHill: 28	2	85	5747	2096186	184	185	0.00846863	185	0	-14.4286	0	-11	0	12
+[2019-03-28 14:48:03:226] [INFO] DemesHill: 28	3	86	5867	1888467	120	305	0.0139618	305	0	-14.2857	0.142857	-10	1	15
+[2019-03-28 14:48:12:739] [INFO] Expansion 28 done
+[2019-03-28 14:48:12:739] [INFO] Total number of evaluations so far: 5867
+[2019-03-28 14:48:12:739] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:48:12:740] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:48:12:741] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:48:12:743] [INFO] Stats: 28	5867	126	407	-10	15	0	3	0
+[2019-03-28 14:48:12:760] [INFO] Start knob building, rep size=24 complexity=15
+[2019-03-28 14:48:20:477] [INFO] After knob building, rep size=358 complexity=15
+[2019-03-28 14:48:20:477] [INFO] Total number of field specs: 112
+[2019-03-28 14:48:20:478] [INFO] Number of disc knobs mapped: 112
+[2019-03-28 14:48:20:478] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:48:20:478] [INFO] Field set, in bytes: 3360
+[2019-03-28 14:48:20:478] [INFO] One instance, in bytes: 48
+[2019-03-28 14:48:20:478] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:48:20:496] [INFO] DemesHill: 29	1	87	5868	16724	1	1	4.57764e-05	1	1	-14.2857	3.40282e+38	-10	3.40282e+38	15
+[2019-03-28 14:48:23:652] [INFO] DemesHill: 29	2	88	6044	3156752	176	177	0.00810242	177	0	-14.2857	0	-10	0	15
+[2019-03-28 14:48:25:676] [INFO] DemesHill: 29	3	89	6164	2023722	120	297	0.0135956	297	0	-14.2857	0	-10	0	15
+[2019-03-28 14:48:38:858] [INFO] Expansion 29 done
+[2019-03-28 14:48:38:859] [INFO] Total number of evaluations so far: 6164
+[2019-03-28 14:48:38:859] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:48:38:860] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:48:38:861] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:48:38:863] [INFO] Stats: 29	6164	152	541	-10	15	0	3	0
+[2019-03-28 14:48:38:886] [INFO] Start knob building, rep size=27 complexity=16
+[2019-03-28 14:48:48:367] [INFO] After knob building, rep size=437 complexity=16
+[2019-03-28 14:48:48:368] [INFO] Total number of field specs: 136
+[2019-03-28 14:48:48:368] [INFO] Number of disc knobs mapped: 136
+[2019-03-28 14:48:48:368] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:48:48:368] [INFO] Field set, in bytes: 4032
+[2019-03-28 14:48:48:369] [INFO] One instance, in bytes: 56
+[2019-03-28 14:48:48:369] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:48:48:388] [INFO] DemesHill: 30	1	90	6165	18612	1	1	5.34058e-05	1	1	-14.5714	3.40282e+38	-10	3.40282e+38	16
+[2019-03-28 14:48:52:038] [INFO] DemesHill: 30	2	91	6365	3649716	200	201	0.0107346	201	0	-14.4286	0.142857	-10	0	12
+[2019-03-28 14:48:53:838] [INFO] DemesHill: 30	3	92	6485	1799996	120	321	0.0171432	321	0	-14.2857	0.142857	-10	0	15
+[2019-03-28 14:49:06:531] [INFO] Expansion 30 done
+[2019-03-28 14:49:06:532] [INFO] Total number of evaluations so far: 6485
+[2019-03-28 14:49:06:532] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:49:06:533] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:06:534] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:06:536] [INFO] Stats: 30	6485	180	641	-10	15	0	3	0
+[2019-03-28 14:49:06:563] [INFO] Start knob building, rep size=26 complexity=16
+[2019-03-28 14:49:14:109] [INFO] After knob building, rep size=151 complexity=16
+[2019-03-28 14:49:14:109] [INFO] Total number of field specs: 43
+[2019-03-28 14:49:14:110] [INFO] Number of disc knobs mapped: 43
+[2019-03-28 14:49:14:110] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:49:14:110] [INFO] Field set, in bytes: 1428
+[2019-03-28 14:49:14:110] [INFO] One instance, in bytes: 40
+[2019-03-28 14:49:14:110] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:49:14:124] [INFO] DemesHill: 31	1	93	6486	13267	1	1	3.8147e-05	1	1	-14.2857	3.40282e+38	-10	3.40282e+38	15
+[2019-03-28 14:49:15:005] [INFO] DemesHill: 31	2	94	6551	881593	65	66	0.0025177	66	0	-14.2857	0	-10	0	15
+[2019-03-28 14:49:16:796] [INFO] DemesHill: 31	3	95	6671	1790485	120	186	0.00709534	186	0	-14.2857	0	-10	0	15
+[2019-03-28 14:49:22:665] [INFO] Expansion 31 done
+[2019-03-28 14:49:22:666] [INFO] Total number of evaluations so far: 6671
+[2019-03-28 14:49:22:666] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:49:22:667] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:22:668] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:22:669] [INFO] Stats: 31	6671	196	670	-10	15	0	3	0
+[2019-03-28 14:49:22:694] [INFO] Start knob building, rep size=20 complexity=12
+[2019-03-28 14:49:27:607] [INFO] After knob building, rep size=334 complexity=12
+[2019-03-28 14:49:27:609] [INFO] Total number of field specs: 108
+[2019-03-28 14:49:27:610] [INFO] Number of disc knobs mapped: 108
+[2019-03-28 14:49:27:610] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:49:27:610] [INFO] Field set, in bytes: 3248
+[2019-03-28 14:49:27:610] [INFO] One instance, in bytes: 48
+[2019-03-28 14:49:27:611] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:49:27:620] [INFO] DemesHill: 32	1	96	6672	9382	1	1	4.57764e-05	1	1	-14.4286	3.40282e+38	-11	3.40282e+38	12
+[2019-03-28 14:49:29:564] [INFO] DemesHill: 32	2	97	6848	1943818	176	177	0.00810242	177	0	-14.4286	0	-11	0	12
+[2019-03-28 14:49:31:212] [INFO] DemesHill: 32	3	98	6968	1647813	120	297	0.0135956	297	0	-14.4286	0	-10	1	12
+[2019-03-28 14:49:39:861] [INFO] Expansion 32 done
+[2019-03-28 14:49:39:861] [INFO] Total number of evaluations so far: 6968
+[2019-03-28 14:49:39:861] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:49:39:862] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:39:863] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:39:865] [INFO] Stats: 32	6968	213	788	-10	15	0	3	0
+[2019-03-28 14:49:39:898] [INFO] Start knob building, rep size=21 complexity=12
+[2019-03-28 14:49:45:455] [INFO] After knob building, rep size=378 complexity=12
+[2019-03-28 14:49:45:455] [INFO] Total number of field specs: 121
+[2019-03-28 14:49:45:456] [INFO] Number of disc knobs mapped: 121
+[2019-03-28 14:49:45:456] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:49:45:456] [INFO] Field set, in bytes: 3612
+[2019-03-28 14:49:45:456] [INFO] One instance, in bytes: 48
+[2019-03-28 14:49:45:457] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:49:45:467] [INFO] DemesHill: 33	1	99	6969	10509	1	1	4.57764e-05	1	1	-14.4286	3.40282e+38	-11	3.40282e+38	12
+[2019-03-28 14:49:47:626] [INFO] DemesHill: 33	2	100	7153	2158856	184	185	0.00846863	185	0	-14.4286	0	-11	0	12
+[2019-03-28 14:49:49:265] [INFO] DemesHill: 33	3	101	7273	1638951	120	305	0.0139618	305	0	-14.4286	0	-11	0	12
+[2019-03-28 14:49:58:815] [INFO] Expansion 33 done
+[2019-03-28 14:49:58:815] [INFO] Total number of evaluations so far: 7273
+[2019-03-28 14:49:58:815] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:49:58:816] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:58:817] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:49:58:819] [INFO] Stats: 33	7273	232	886	-10	15	0	3	0
+[2019-03-28 14:49:58:855] [INFO] Start knob building, rep size=26 complexity=16
+[2019-03-28 14:50:06:710] [INFO] After knob building, rep size=381 complexity=16
+[2019-03-28 14:50:06:710] [INFO] Total number of field specs: 120
+[2019-03-28 14:50:06:711] [INFO] Number of disc knobs mapped: 120
+[2019-03-28 14:50:06:711] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:50:06:711] [INFO] Field set, in bytes: 3584
+[2019-03-28 14:50:06:711] [INFO] One instance, in bytes: 48
+[2019-03-28 14:50:06:712] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:50:06:726] [INFO] DemesHill: 34	1	102	7274	13848	1	1	4.57764e-05	1	1	-14.5714	3.40282e+38	-10	3.40282e+38	16
+[2019-03-28 14:50:09:431] [INFO] DemesHill: 34	2	103	7461	2704937	187	188	0.00860596	188	0	-14.2857	0.285713	-10	0	15
+[2019-03-28 14:50:11:328] [INFO] DemesHill: 34	3	104	7581	1897601	120	308	0.0140991	308	0	-14.2857	0	-10	0	15
+[2019-03-28 14:50:23:331] [INFO] Expansion 34 done
+[2019-03-28 14:50:23:332] [INFO] Total number of evaluations so far: 7581
+[2019-03-28 14:50:23:332] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:50:23:333] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:50:23:334] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:50:23:336] [INFO] Stats: 34	7581	257	958	-10	15	0	3	0
+[2019-03-28 14:50:23:376] [INFO] Start knob building, rep size=26 complexity=16
+[2019-03-28 14:50:32:309] [INFO] After knob building, rep size=412 complexity=16
+[2019-03-28 14:50:32:309] [INFO] Total number of field specs: 130
+[2019-03-28 14:50:32:310] [INFO] Number of disc knobs mapped: 130
+[2019-03-28 14:50:32:310] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:50:32:310] [INFO] Field set, in bytes: 3864
+[2019-03-28 14:50:32:310] [INFO] One instance, in bytes: 56
+[2019-03-28 14:50:32:311] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:50:32:329] [INFO] DemesHill: 35	1	105	7582	18367	1	1	5.34058e-05	1	1	-14.5714	3.40282e+38	-10	3.40282e+38	16
+[2019-03-28 14:50:36:503] [INFO] DemesHill: 35	2	106	7782	4174165	200	201	0.0107346	201	0	-14.2857	0.285713	-10	0	15
+[2019-03-28 14:50:38:872] [INFO] DemesHill: 35	3	107	7902	2368103	120	321	0.0171432	321	0	-14.2857	0	-10	0	15
+[2019-03-28 14:50:54:741] [INFO] Expansion 35 done
+[2019-03-28 14:50:54:741] [INFO] Total number of evaluations so far: 7902
+[2019-03-28 14:50:54:741] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:50:54:742] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:50:54:743] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:50:54:745] [INFO] Stats: 35	7902	288	1044	-10	15	0	3	0
+[2019-03-28 14:50:54:787] [INFO] Start knob building, rep size=28 complexity=17
+[2019-03-28 14:51:04:235] [INFO] After knob building, rep size=447 complexity=17
+[2019-03-28 14:51:04:236] [INFO] Total number of field specs: 143
+[2019-03-28 14:51:04:237] [INFO] Number of disc knobs mapped: 143
+[2019-03-28 14:51:04:237] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:51:04:237] [INFO] Field set, in bytes: 4228
+[2019-03-28 14:51:04:237] [INFO] One instance, in bytes: 56
+[2019-03-28 14:51:04:237] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:51:04:252] [INFO] DemesHill: 36	1	108	7903	14573	1	1	5.34058e-05	1	1	-14.8571	3.40282e+38	-10	3.40282e+38	17
+[2019-03-28 14:51:07:962] [INFO] DemesHill: 36	2	109	8129	3709675	226	227	0.0121231	227	1	-14.2857	0.571428	-10	0	15
+[2019-03-28 14:51:12:073] [INFO] DemesHill: 36	3	110	8355	4110877	226	453	0.0241928	453	0	-14.2857	0	-10	0	15
+[2019-03-28 14:51:14:449] [INFO] DemesHill: 36	4	111	8475	2376516	120	573	0.0306015	573	0	-14.2857	0	-10	0	15
+[2019-03-28 14:51:36:380] [INFO] Expansion 36 done
+[2019-03-28 14:51:36:380] [INFO] Total number of evaluations so far: 8475
+[2019-03-28 14:51:36:380] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:51:36:381] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:51:36:382] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:51:36:384] [INFO] Stats: 36	8475	330	1109	-10	15	0	4	0
+[2019-03-28 14:51:36:428] [INFO] Start knob building, rep size=21 complexity=13
+[2019-03-28 14:51:41:708] [INFO] After knob building, rep size=301 complexity=13
+[2019-03-28 14:51:41:708] [INFO] Total number of field specs: 98
+[2019-03-28 14:51:41:709] [INFO] Number of disc knobs mapped: 98
+[2019-03-28 14:51:41:709] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:51:41:709] [INFO] Field set, in bytes: 2968
+[2019-03-28 14:51:41:709] [INFO] One instance, in bytes: 48
+[2019-03-28 14:51:41:710] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:51:41:723] [INFO] DemesHill: 37	1	112	8476	12793	1	1	4.57764e-05	1	1	-14.7143	3.40282e+38	-11	3.40282e+38	13
+[2019-03-28 14:51:43:531] [INFO] DemesHill: 37	2	113	8636	1808429	160	161	0.00737	161	0	-14.4286	0.285714	-11	0	12
+[2019-03-28 14:51:45:007] [INFO] DemesHill: 37	3	114	8756	1475971	120	281	0.0128632	281	0	-14.4286	0	-11	0	12
+[2019-03-28 14:51:52:813] [INFO] Expansion 37 done
+[2019-03-28 14:51:52:814] [INFO] Total number of evaluations so far: 8756
+[2019-03-28 14:51:52:814] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:51:52:815] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:51:52:816] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:51:52:817] [INFO] Stats: 37	8756	346	1185	-10	15	0	3	0
+[2019-03-28 14:51:52:864] [INFO] Start knob building, rep size=26 complexity=16
+[2019-03-28 14:52:00:661] [INFO] After knob building, rep size=167 complexity=16
+[2019-03-28 14:52:00:661] [INFO] Total number of field specs: 47
+[2019-03-28 14:52:00:661] [INFO] Number of disc knobs mapped: 47
+[2019-03-28 14:52:00:662] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:52:00:662] [INFO] Field set, in bytes: 1540
+[2019-03-28 14:52:00:662] [INFO] One instance, in bytes: 40
+[2019-03-28 14:52:00:662] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:52:00:675] [INFO] DemesHill: 38	1	115	8757	12795	1	1	3.8147e-05	1	1	-14.2857	3.40282e+38	-10	3.40282e+38	15
+[2019-03-28 14:52:01:636] [INFO] DemesHill: 38	2	116	8827	961110	70	71	0.00270844	71	0	-14.2857	0	-10	0	15
+[2019-03-28 14:52:03:489] [INFO] DemesHill: 38	3	117	8947	1852866	120	191	0.00728607	191	0	-14.2857	0	-10	0	15
+[2019-03-28 14:52:10:111] [INFO] Expansion 38 done
+[2019-03-28 14:52:10:111] [INFO] Total number of evaluations so far: 8947
+[2019-03-28 14:52:10:111] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:52:10:112] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:52:10:114] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:52:10:114] [INFO] Stats: 38	8947	363	1197	-10	15	0	3	0
+[2019-03-28 14:52:10:159] [INFO] Start knob building, rep size=25 complexity=16
+[2019-03-28 14:52:19:116] [INFO] After knob building, rep size=350 complexity=16
+[2019-03-28 14:52:19:117] [INFO] Total number of field specs: 111
+[2019-03-28 14:52:19:118] [INFO] Number of disc knobs mapped: 111
+[2019-03-28 14:52:19:118] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:52:19:118] [INFO] Field set, in bytes: 3332
+[2019-03-28 14:52:19:118] [INFO] One instance, in bytes: 48
+[2019-03-28 14:52:19:118] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:52:19:137] [INFO] DemesHill: 39	1	118	8948	18215	1	1	4.57764e-05	1	1	-14.5714	3.40282e+38	-10	3.40282e+38	16
+[2019-03-28 14:52:22:744] [INFO] DemesHill: 39	2	119	9114	3607310	166	167	0.00764465	167	0	-14.5714	0	-10	0	16
+[2019-03-28 14:52:25:264] [INFO] DemesHill: 39	3	120	9234	2519522	120	287	0.0131378	287	0	-14.2857	0.285713	-10	0	15
+[2019-03-28 14:52:40:257] [INFO] Expansion 39 done
+[2019-03-28 14:52:40:257] [INFO] Total number of evaluations so far: 9234
+[2019-03-28 14:52:40:258] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:52:40:259] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:52:40:260] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:52:40:261] [INFO] Stats: 39	9234	394	1286	-10	15	0	3	0
+[2019-03-28 14:52:40:314] [INFO] Start knob building, rep size=16 complexity=9
+[2019-03-28 14:52:44:002] [INFO] After knob building, rep size=362 complexity=9
+[2019-03-28 14:52:44:002] [INFO] Total number of field specs: 113
+[2019-03-28 14:52:44:003] [INFO] Number of disc knobs mapped: 113
+[2019-03-28 14:52:44:003] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:52:44:003] [INFO] Field set, in bytes: 3388
+[2019-03-28 14:52:44:003] [INFO] One instance, in bytes: 48
+[2019-03-28 14:52:44:004] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:52:44:013] [INFO] DemesHill: 40	1	121	9235	8695	1	1	4.57764e-05	1	1	-14.5714	3.40282e+38	-12	3.40282e+38	9
+[2019-03-28 14:52:46:012] [INFO] DemesHill: 40	2	122	9424	1999010	189	190	0.00869751	190	0	-14.5714	0	-12	0	9
+[2019-03-28 14:52:47:318] [INFO] DemesHill: 40	3	123	9544	1306554	120	310	0.0141907	310	0	-14.5714	0	-12	0	9
+[2019-03-28 14:52:55:437] [INFO] Expansion 40 done
+[2019-03-28 14:52:55:437] [INFO] Total number of evaluations so far: 9544
+[2019-03-28 14:52:55:438] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:52:55:439] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:52:55:440] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:52:55:441] [INFO] Stats: 40	9544	409	1345	-10	15	0	3	0
+[2019-03-28 14:52:55:494] [INFO] Start knob building, rep size=27 complexity=16
+[2019-03-28 14:53:05:184] [INFO] After knob building, rep size=436 complexity=16
+[2019-03-28 14:53:05:185] [INFO] Total number of field specs: 141
+[2019-03-28 14:53:05:188] [INFO] Number of disc knobs mapped: 141
+[2019-03-28 14:53:05:189] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:53:05:189] [INFO] Field set, in bytes: 4172
+[2019-03-28 14:53:05:189] [INFO] One instance, in bytes: 56
+[2019-03-28 14:53:05:190] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:53:05:210] [INFO] DemesHill: 41	1	124	9545	19889	1	1	5.34058e-05	1	1	-14.5714	3.40282e+38	-10	3.40282e+38	16
+[2019-03-28 14:53:08:880] [INFO] DemesHill: 41	2	125	9765	3669834	220	221	0.0118027	221	0	-14.2857	0.285713	-10	0	15
+[2019-03-28 14:53:10:677] [INFO] DemesHill: 41	3	126	9885	1797402	120	341	0.0182114	341	0	-14.2857	0	-10	0	15
+[2019-03-28 14:53:23:264] [INFO] Expansion 41 done
+[2019-03-28 14:53:23:265] [INFO] Total number of evaluations so far: 9885
+[2019-03-28 14:53:23:265] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:53:23:266] [INFO] -10 and(or(and(or(and(!$2 $3) $5) or($1 $4)) and(or($1 $4 $5) $2 !$3) and(!$2 $3 $5)) or(!$1 !$4))
+[2019-03-28 14:53:23:267] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:53:23:268] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:53:23:270] [INFO] Stats: 41	9885	437	1446	-10	15	0	3	0
+[2019-03-28 14:53:23:330] [INFO] Start knob building, rep size=25 complexity=15
+[2019-03-28 14:53:31:022] [INFO] After knob building, rep size=384 complexity=15
+[2019-03-28 14:53:31:023] [INFO] Total number of field specs: 126
+[2019-03-28 14:53:31:023] [INFO] Number of disc knobs mapped: 126
+[2019-03-28 14:53:31:024] [INFO] Number of contin knobs mapped: 0
+[2019-03-28 14:53:31:024] [INFO] Field set, in bytes: 3752
+[2019-03-28 14:53:31:024] [INFO] One instance, in bytes: 56
+[2019-03-28 14:53:31:024] [INFO] DemesHill: # demeID	iteration	total_steps	total_evals	microseconds	new_instances	num_instances	inst_RAM	num_evals	has_improved	best_weighted_score	delta_weighted	best_raw	delta_raw	complexity
+[2019-03-28 14:53:31:041] [INFO] DemesHill: 42	1	127	9886	16349	1	1	5.34058e-05	1	1	-14.2857	3.40282e+38	-10	3.40282e+38	15
+[2019-03-28 14:53:32:811] [INFO] DemesHill: 42	2	128	10000	1769593	114	115	0.00614166	115	0	-14.2857	0	-10	0	15
+[2019-03-28 14:53:37:262] [INFO] Expansion 42 done
+[2019-03-28 14:53:37:262] [INFO] Total number of evaluations so far: 10000
+[2019-03-28 14:53:37:262] [INFO] The following candidate(s) have the best score [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0]
+[2019-03-28 14:53:37:263] [INFO] -10 and(or(and(or(and(!$2 $3) $5) or($1 $4)) and(or($1 $4 $5) $2 !$3) and(!$2 $3 $5)) or(!$1 !$4))
+[2019-03-28 14:53:37:264] [INFO] -10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:53:37:266] [INFO] -10 or(and(or(and(or($1 $4) $5) and(or($1 $4 $5) $2 !$3)) or(!$1 !$4)) and(or(!$1 !$4 $5) !$2 $3))
+[2019-03-28 14:53:37:267] [INFO] Stats: 42	10000	451	1484	-10	15	0	2	1
+[2019-03-28 14:53:37:473] [INFO] Best candidate:
+-10 or(and(or(and($2 !$3) $5) or(and($2 !$3 $5) !$1 !$4) or($1 $4)) and(or(!$1 !$4 $5) !$2 $3))  [score=-10, penalized score=-14.2857151031494141, complexity=15, complexity penalty=4.28571462631225586, uniformity penalty=0] demeID: 28
+
+[2019-03-28 14:53:37:663] [INFO] Cache compositescore hits=0 misses=0
+[2019-03-28 14:53:37:664] [INFO] Cache composite scores hits=0 misses=0
