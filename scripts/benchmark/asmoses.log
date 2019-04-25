@@ -1,0 +1,13 @@
+[2019-04-03 13:40:25:303] [INFO] moses version "3"."7"."0"
+[2019-04-03 13:40:25:303] [INFO] hostname: bitseat-OptiPlex-7010
+[2019-04-03 13:40:25:303] [INFO] Command line: asmoses REPEAT
+[2019-04-03 13:40:25:303] [ERROR] Error: no input data file has been specified (option -i)
+	Stack Trace:
+	2: Logger.h:214	  opencog::Logger::Base::~Base()
+	3: ostream:561	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc()
+	4: table-problems.cc:107	  opencog::moses::table_problem_base::common_setup(opencog::moses::problem_params&)
+	5: table-problems.cc:485	  opencog::moses::it_table_problem::run(opencog::moses::option_base*)
+	6: moses_exec.cc:57	  opencog::moses::moses_exec(int, char**)
+	7: libc-start.c:342	__libc_start_main()
+	8: [0x9ea] ??() ??:0
+
