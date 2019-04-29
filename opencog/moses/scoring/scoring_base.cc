@@ -73,9 +73,15 @@ void bscore_base::set_complexity_coef(score_t complexity_ratio)
 	logger().info() << "BScore complexity ratio = " << 1.0 / _complexity_coef;
 }
 
+behavioral_score bscore_base::operator()(const combo_tree &) const {
+    OC_ASSERT(false, "combo_tree scoring not implemented for bscorer %s",
+              typeid(*this).name());
+    return behavioral_score();
+}
+
 behavioral_score bscore_base::operator()(const Handle &) const
 {
-	OC_ASSERT(false, "Ensemble scoring not implemented for bscorer %s",
+	OC_ASSERT(false, "Handle scoring not implemented for bscorer %s",
 	          typeid(*this).name());
 	return behavioral_score();
 }
