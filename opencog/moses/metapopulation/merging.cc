@@ -183,35 +183,35 @@ void metapopulation::merge_candidates(scored_combo_tree_set& candidates)
 //atomese
 void metapopulation::merge_candidates(scored_atomese_set& candidates)
 {
-    OC_ASSERT(false, "Not Implemented Yet");
-//    if (logger().is_debug_enabled()) {
-//        logger().debug("Going to merge %u candidates with the metapopulation",
-//                       candidates.size());
-//        if (logger().is_fine_enabled()) {
-//            std::stringstream ss;
-//            ss << "Candidates to merge with the metapopulation:" << std::endl;
-//            for (const auto& cnd : candidates)
-//                ss << cnd;
-//            logger().fine(ss.str());
-//        }
-//    }
-//
-//    // Serialize access
-//    std::lock_guard<std::mutex> lock(_merge_mutex);
-//
-//    // Note that merge_nondominated() is very cpu-expensive and
-//    // complex...
-//    if (not _params.discard_dominated) {
-//        logger().debug("Insert all candidates in the metapopulation");
-//        for (const auto& cnd : candidates)
-//            _scored_trees.insert(new scored_combo_tree(cnd));
-//    } else {
-//        logger().debug("Insert non-dominated candidates in the metapopulation");
-//        unsigned old_size = size();
-//        merge_nondominated(candidates, _params.jobs);
-//        logger().debug("Inserted %u non-dominated candidates "
-//                       "in the metapopulation", size() - old_size);
-//    }
+
+    if (logger().is_debug_enabled()) {
+        logger().debug("Going to merge %u candidates with the metapopulation",
+                       candidates.size());
+        if (logger().is_fine_enabled()) {
+            std::stringstream ss;
+            ss << "Candidates to merge with the metapopulation:" << std::endl;
+            for (const auto& cnd : candidates)
+                ss << cnd;
+            logger().fine(ss.str());
+        }
+    }
+
+    // Serialize access
+    std::lock_guard<std::mutex> lock(_merge_mutex);
+
+    // Note that merge_nondominated() is very cpu-expensive and
+    // complex...
+    if (not _params.discard_dominated) {
+        logger().debug("Insert all candidates in the metapopulation");
+        for (const auto& cnd : candidates)
+            _scored_trees.insert(new scored_atomese(cnd));
+    } else {
+        logger().debug("Insert non-dominated candidates in the metapopulation");
+        unsigned old_size = size();
+        merge_nondominated(candidates, _params.jobs);
+        logger().debug("Inserted %u non-dominated candidates "
+                       "in the metapopulation", size() - old_size);
+    }
 }
 
 /// Given a vector of demes, and the corresponding representations for
@@ -643,41 +643,40 @@ void metapopulation::update_best_candidates(const scored_combo_tree_set& candida
 ///atomese
 void metapopulation::update_best_candidates(const scored_atomese_set& candidates)
 {
-    OC_ASSERT(false, "Not Implemented Yet");
-//    if (candidates.empty())
-//        return;
-//
-//    // Make this routine thread-safe.
-//    // XXX this lock probably doesn't have to be the same one
-//    // that merge uses.  I think.
-//    std::lock_guard<std::mutex> lock(_merge_mutex);
-//
-//    // Candidates are kept in penalized score order, not in
-//    // absolute score order.  Thus, we need to search through
-//    // the first few to find the true best score.  Also, there
-//    // may be several candidates with the best score.
-//    score_t best_sc = _best_cscore.get_score();
-//    complexity_t best_cpx = _best_cscore.get_complexity();
-//
-//    for (const scored_atomese& cnd : candidates)
-//    {
-//        const composite_score& csc = cnd.get_composite_score();
-//        score_t sc = csc.get_score();
-//        complexity_t cpx = csc.get_complexity();
-//        if ((sc > best_sc) || ((sc == best_sc) && (cpx <= best_cpx)))
-//        {
-//            if ((sc > best_sc) || ((sc == best_sc) && (cpx < best_cpx)))
-//            {
-//                _best_cscore = csc;
-//                best_sc = _best_cscore.get_score();
-//                best_cpx = _best_cscore.get_complexity();
-//                _best_candidates.clear();
-//                logger().debug() << "New best score: " << _best_cscore
-//                                 << "\n\tfor tree: " << cnd.get_tree();
-//            }
-//            _best_candidates.insert(cnd);
-//        }
-//    }
+    if (candidates.empty())
+        return;
+
+    // Make this routine thread-safe.
+    // XXX this lock probably doesn't have to be the same one
+    // that merge uses.  I think.
+    std::lock_guard<std::mutex> lock(_merge_mutex);
+
+    // Candidates are kept in penalized score order, not in
+    // absolute score order.  Thus, we need to search through
+    // the first few to find the true best score.  Also, there
+    // may be several candidates with the best score.
+    score_t best_sc = _best_cscore.get_score();
+    complexity_t best_cpx = _best_cscore.get_complexity();
+
+    for (const scored_atomese& cnd : candidates)
+    {
+        const composite_score& csc = cnd.get_composite_score();
+        score_t sc = csc.get_score();
+        complexity_t cpx = csc.get_complexity();
+        if ((sc > best_sc) || ((sc == best_sc) && (cpx <= best_cpx)))
+        {
+            if ((sc > best_sc) || ((sc == best_sc) && (cpx < best_cpx)))
+            {
+                _best_cscore = csc;
+                best_sc = _best_cscore.get_score();
+                best_cpx = _best_cscore.get_complexity();
+                _best_atomese_candidates.clear();
+                logger().debug() << "New best score: " << _best_cscore
+                                 << "\n\tfor tree: " << cnd.get_tree();
+            }
+            _best_atomese_candidates.insert(cnd);
+        }
+    }
 }
 
 

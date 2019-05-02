@@ -38,10 +38,16 @@ using namespace moses;
 // For testing only
 struct dummy_bscore : public bscore_base
 {
-    behavioral_score operator()(const Handle& handle)
+    behavioral_score operator()(const Handle& handle) const
     {
         return behavioral_score();
     }
+
+    behavioral_score operator()(const combo_tree& tr) const
+    {
+        return behavioral_score();
+    }
+
     behavioral_score best_possible_bscore() const
     {
         return {0.0};
@@ -66,7 +72,7 @@ class metapopulationUTest : public CxxTest::TestSuite
 public:
     metapopulationUTest()
         : _dbsc(), _csc(_dbsc),
-          _metapopulation(Handle(), _csc)
+          _metapopulation(Handle(createLink(EVALUATION_LINK)), _csc)
     {
         logger().set_print_to_stdout_flag(true);
         logger().set_level(Logger::FINE);

@@ -69,13 +69,12 @@ size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 //atomese
 size_t scored_atomese_hash::operator()(const scored_atomese& sct) const
 {
-	OC_ASSERT(false, "Not Implemented Yet");
-//	size_t hash = 0;
-//	const combo::combo_tree& tr = sct.get_tree();
-//	for (combo::vertex vtx : tr) {
-//		boost::hash_combine(hash, combo::hash_value(vtx));
-//	}
-//	return hash;
+	size_t hash = 0;
+	const Handle& handle = sct.get_tree();
+	for (const Handle &vtx : handle->getOutgoingSet()) {
+		boost::hash_combine(hash, hash_value(vtx));
+	}
+	return hash;
 }
 
 
