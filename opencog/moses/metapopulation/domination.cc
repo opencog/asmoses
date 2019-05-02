@@ -449,6 +449,28 @@ void metapopulation::merge_nondominated(const scored_combo_tree_set& bcs, unsign
         _scored_trees.insert(new scored_combo_tree(*cnd));
 }
 
+void metapopulation::merge_nondominated(const scored_atomese_set& bcs, unsigned jobs)
+{
+    scored_atomese_ptr_vec bcv = random_access_view(bcs);
+    scored_atomese_ptr_vec bcv_mp;
+    for (const scored_atomese& cnd : *this)
+        bcv_mp.push_back(&cnd);
+    scored_atomese_ptr_vec_pair bcv_p =
+            get_nondominated_disjoint_rec(bcv, bcv_mp, jobs);
+
+    // remove the dominated ones from the metapopulation
+    boost::sort(bcv_mp);
+    boost::sort(bcv_p.second);
+    scored_atomese_ptr_vec diff_bcv_mp =
+            set_difference(bcv_mp, bcv_p.second);
+    for (const scored_atomese* cnd : diff_bcv_mp)
+        _scored_trees.erase(*cnd);
+
+    // add the nondominated ones from bsc
+    for (const scored_atomese* cnd : bcv_p.first)
+        _scored_trees.insert(new scored_atomese(*cnd));
+}
+
 } // ~namespace moses
 } // ~namespace opencog
 
