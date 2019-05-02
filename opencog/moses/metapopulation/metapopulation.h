@@ -492,6 +492,8 @@ private:
     // that bcs contains no dominated candidates within itself
     void merge_nondominated(const scored_combo_tree_set& bcs, unsigned jobs = 1);
 
+    void merge_nondominated(const scored_atomese_set& bcs, unsigned jobs = 1);
+
     static boost::logic::tribool dominates(const behavioral_score& x,
                                            const behavioral_score& y);
 
@@ -599,6 +601,8 @@ protected:
 
     // Trees with composite score equal to _best_cscore.
     scored_combo_tree_set _best_candidates;
+
+    scored_atomese_set _best_atomese_candidates;
 
     /// _visited_exemplars contains the exemplars of demes that have
     ///  been previously expanded. The count indicated the number of
