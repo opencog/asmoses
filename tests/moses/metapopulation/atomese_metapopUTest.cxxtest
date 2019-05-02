@@ -72,7 +72,7 @@ class metapopulationUTest : public CxxTest::TestSuite
 public:
     metapopulationUTest()
         : _dbsc(), _csc(_dbsc),
-          _metapopulation(Handle(), _csc)
+          _metapopulation(Handle(createLink(EVALUATION_LINK)), _csc)
     {
         logger().set_print_to_stdout_flag(true);
         logger().set_level(Logger::FINE);
