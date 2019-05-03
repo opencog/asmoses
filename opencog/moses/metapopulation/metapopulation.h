@@ -151,9 +151,11 @@ public:
     ~metapopulation() {}
 
     const scored_combo_tree_set& best_candidates() const;
+    const scored_atomese_set& best_atomese_candidates() const;
     const ensemble& get_ensemble() const { return _ensemble; }
     composite_score best_composite_score() const;
     const combo_tree& best_tree() const;
+    const Handle& best_atomese() const;
 
     /**
      * Return the best model score (either the score of the
