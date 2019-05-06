@@ -191,7 +191,7 @@ void metapopulation::merge_candidates(scored_atomese_set& candidates)
             std::stringstream ss;
             ss << "Candidates to merge with the metapopulation:" << std::endl;
             for (const auto& cnd : candidates)
-                ss << cnd;
+                ss << "cnd";
             logger().fine(ss.str());
         }
     }
@@ -204,7 +204,7 @@ void metapopulation::merge_candidates(scored_atomese_set& candidates)
     if (not _params.discard_dominated) {
         logger().debug("Insert all candidates in the metapopulation");
         for (const auto& cnd : candidates)
-            _scored_trees.insert(new scored_atomese(cnd));
+            _scored_atomeses.insert(new scored_atomese(cnd));
     } else {
         logger().debug("Insert non-dominated candidates in the metapopulation");
         unsigned old_size = size();
