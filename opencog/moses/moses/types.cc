@@ -69,12 +69,7 @@ size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 //atomese
 size_t scored_atomese_hash::operator()(const scored_atomese& sct) const
 {
-	size_t hash = 0;
-	const Handle& handle = sct.get_tree();
-	for (const Handle &vtx : handle->getOutgoingSet()) {
-		boost::hash_combine(hash, hash_value(vtx));
-	}
-	return hash;
+    return hash_value(sct.get_tree());
 }
 
 
@@ -88,8 +83,7 @@ bool scored_combo_tree_equal::operator()(const scored_combo_tree& tr1,
 bool scored_atomese_equal::operator()(const scored_atomese& h1,
                                          const scored_atomese& h2) const
 {
-	OC_ASSERT(false, "Not Implemented Yet");
-	// return h1.get_handle() == h2.get_handle();
+	 return h1.get_tree() == h2.get_tree();
 }
 
 
@@ -117,6 +111,31 @@ bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
 	// that size_tree_order uses tree size first, then the lexicographic
 	// order on the trees themselves, next.
 	return size_tree_order<vertex>()(bs_tr1.get_tree(), bs_tr2.get_tree());
+}
+
+bool sct_atomese_greater::operator()(const scored_atomese& bs_tr1,
+								   const scored_atomese& bs_tr2) const
+{
+    const composite_score csc1 = bs_tr1.get_composite_score();
+    const composite_score csc2 = bs_tr2.get_composite_score();
+
+    if (csc1 > csc2) return true;
+    if (csc1 < csc2) return false;
+
+    // If we are here, then they are equal.  We are desperate to break
+    // a tie, because otherwise, the scored_combo_tree_ptr_set will discard
+    // anything that compares equal, and we really don't want that.
+    score_t sc1 = csc1.get_score();
+    score_t sc2 = csc2.get_score();
+
+    if (sc1 > sc2) return true;
+    if (sc1 < sc2) return false;
+
+    // Arghh, still tied!  The above already used complexity to break
+    // the tie.  Lets look at how the size of the trees compare. Note
+    // that size_tree_order uses tree size first, then the lexicographic
+    // order on the trees themselves, next.
+//    return size_tree_order<vertex>()(bs_tr1.get_tree(), bs_tr2.get_tree());
 }
 
 // See header file for description.

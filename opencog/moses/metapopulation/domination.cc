@@ -114,13 +114,13 @@ void metapopulation::remove_dominated(scored_combo_tree_set& bcs, unsigned jobs)
 void metapopulation::remove_dominated(scored_atomese_set& bcs, unsigned jobs)
 {
 //    // get the nondominated candidates
-    scored_combo_tree_ptr_vec bcv = random_access_view(bcs);
-    scored_combo_tree_ptr_vec res = get_nondominated_rec(bcv, jobs);
+    scored_atomese_ptr_vec bcv = random_access_view(bcs);
+    scored_atomese_ptr_vec res = get_nondominated_rec(bcv, jobs);
     // get the dominated by set difference
     boost::sort(bcv); boost::sort(res);
-    scored_combo_tree_ptr_vec dif = set_difference(bcv, res);
+    scored_atomese_ptr_vec dif = set_difference(bcv, res);
     // remove the dominated ones
-    for (const scored_combo_tree* cnd_ptr : dif)
+    for (const scored_atomese* cnd_ptr : dif)
         bcs.erase(*cnd_ptr);
 }
 
@@ -452,7 +452,7 @@ void metapopulation::merge_nondominated(const scored_atomese_set& bcs, unsigned 
 {
     scored_atomese_ptr_vec bcv = random_access_view(bcs);
     scored_atomese_ptr_vec bcv_mp;
-    for (const scored_atomese& cnd : *this)
+    for (const scored_atomese& cnd : bcs)
         bcv_mp.push_back(&cnd);
     scored_atomese_ptr_vec_pair bcv_p =
             get_nondominated_disjoint_rec(bcv, bcv_mp, jobs);
@@ -463,11 +463,11 @@ void metapopulation::merge_nondominated(const scored_atomese_set& bcs, unsigned 
     scored_atomese_ptr_vec diff_bcv_mp =
             set_difference(bcv_mp, bcv_p.second);
     for (const scored_atomese* cnd : diff_bcv_mp)
-        _scored_atomese.erase(*cnd);
+        _scored_atomeses.erase(*cnd);
 
     // add the nondominated ones from bsc
     for (const scored_atomese* cnd : bcv_p.first)
-        _scored_atomese.insert(new scored_atomese(*cnd));
+        _scored_atomeses.insert(new scored_atomese(*cnd));
 }
 
 } // ~namespace moses
