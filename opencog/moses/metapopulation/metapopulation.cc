@@ -48,7 +48,6 @@ metapopulation::metapopulation(const combo_tree_seq& bases,
     init(bases);
 }
 
-//atomese
 metapopulation::metapopulation(const HandleSeq& bases,
                behave_cscore& sc,
                const metapop_parameters& pa,
@@ -63,7 +62,6 @@ metapopulation::metapopulation(const HandleSeq& bases,
 {
     init(bases);
 }
-
 
 metapopulation::metapopulation(const combo_tree& base,
                behave_cscore& sc,
@@ -80,8 +78,6 @@ metapopulation::metapopulation(const combo_tree& base,
     combo_tree_seq bases(1, base);
     init(bases);
 }
-
-//atomese
 
 metapopulation::metapopulation(const Handle& base,
                behave_cscore& sc,
@@ -118,7 +114,6 @@ void metapopulation::init(const combo_tree_seq& exemplars)
     update_best_candidates(candidates);
     merge_candidates(candidates);
 }
-
 
 void metapopulation::init(const HandleSeq& exemplars)
 {
