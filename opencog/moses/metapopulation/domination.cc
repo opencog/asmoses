@@ -113,7 +113,7 @@ void metapopulation::remove_dominated(scored_combo_tree_set& bcs, unsigned jobs)
 
 void metapopulation::remove_dominated(scored_atomese_set& bcs, unsigned jobs)
 {
-//    // get the nondominated candidates
+    // get the nondominated candidates
     scored_atomese_ptr_vec bcv = random_access_view(bcs);
     scored_atomese_ptr_vec res = get_nondominated_rec(bcv, jobs);
     // get the dominated by set difference
@@ -123,7 +123,6 @@ void metapopulation::remove_dominated(scored_atomese_set& bcs, unsigned jobs)
     for (const scored_atomese* cnd_ptr : dif)
         bcs.erase(*cnd_ptr);
 }
-
 
 scored_combo_tree_set
 metapopulation::get_nondominated_iter(const scored_combo_tree_set& bcs)
@@ -214,7 +213,6 @@ metapopulation::get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
     }
 }
 
-//
 scored_atomese_ptr_vec
 metapopulation::get_nondominated_rec(const scored_atomese_ptr_vec& bcv,
                      unsigned jobs)
@@ -364,7 +362,6 @@ metapopulation::get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& b
     }
 }
 
-//
 scored_atomese_ptr_vec_pair
 metapopulation::get_nondominated_disjoint_rec(const scored_atomese_ptr_vec& bcv1,
                               const scored_atomese_ptr_vec& bcv2,
