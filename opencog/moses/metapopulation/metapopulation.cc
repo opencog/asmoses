@@ -166,6 +166,8 @@ void metapopulation::log_selected_exemplar(scored_combo_tree_ptr_set::const_iter
     }
 }
 
+#define UNEVALUATED_SCORE -1.0e37
+
 scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
 {
     OC_ASSERT(!empty(), "Empty metapopulation in select_exemplar().");
@@ -188,7 +190,7 @@ scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
     std::vector<score_t> probs;
     // Set flag to true, when a suitable exemplar is found.
     bool found_exemplar = false;
-#define UNEVALUATED_SCORE -1.0e37
+
     score_t highest_score = UNEVALUATED_SCORE;
 
     // The exemplars are stored in order from best score to worst;
@@ -259,6 +261,98 @@ scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
     return selex;
 }
 
+scored_atomese_ptr_set::const_iterator metapopulation::select_atomese_exemplar()
+{
+    OC_ASSERT(!empty(), "Empty metapopulation in select_exemplar().");
+
+    logger().debug("Select exemplar");
+
+    // Shortcut for special case, as sometimes, the very first time
+    // though, the score is invalid.
+    if (size() == 1) {
+        scored_atomese_ptr_set::const_iterator selex = _scored_atomeses.cbegin();
+        if(_params.revisit < 0 or
+           (_params.revisit + 1 > (int)_visited_atomese_exemplars[*selex])) // not enough visited
+            _visited_atomese_exemplars[*selex]++;
+        else selex = _scored_atomeses.cend();    // enough visited
+
+        log_selected_exemplar(selex);
+        return selex;
+    }
+
+    std::vector<score_t> probs;
+    // Set flag to true, when a suitable exemplar is found.
+    bool found_exemplar = false;
+
+    score_t highest_score = UNEVALUATED_SCORE;
+
+    // The exemplars are stored in order from best score to worst;
+    // the iterator follows this order.
+    for (const scored_atomese& bsct : *this) {
+
+        score_t sc = bsct.get_penalized_score();
+
+        // Skip exemplars that have been visited enough
+        if (std::isfinite(sc) and
+            ((_params.revisit < 0) or
+             (_params.revisit + 1 > (int)_visited_atomese_exemplars[bsct])))
+        {
+            probs.push_back(sc);
+            found_exemplar = true;
+            if (highest_score < sc) highest_score = sc;
+        } else // If the tree is visited too often, then put a
+            // nan score so we know it must be ignored
+            probs.push_back(NAN);
+    }
+
+    // Nothing found, we've already tried them all.
+    if (!found_exemplar) {
+        log_selected_exemplar(_scored_atomeses.cend());
+        return _scored_atomeses.cend();
+    }
+
+    // Compute the probability normalization, needed for the
+    // roullete choice of exemplars with equal scores, but
+    // differing complexities. Empirical work on 4-parity suggests
+    // that a temperature of 3 or 4 works best.
+    score_t inv_temp = 100.0f / _params.complexity_temperature;
+    score_t sum = 0.0f;
+    // Convert scores into (non-normalized) probabilities
+    for (score_t& p : probs) {
+        // If p is invalid (or already visited, because it has nan)
+        // then it is skipped, i.e. assigned probability of 0.0f
+        if (std::isfinite(p))
+            p = expf((p - highest_score) * inv_temp);
+        else
+            p = 0.0;
+
+        sum += p;
+    }
+
+    // log the distribution probs
+    if (logger().is_fine_enabled())
+    {
+        std::stringstream ss;
+        ss << "Non-normalized probability distribution of candidate selection: ";
+        ostream_container(ss, probs);
+        logger().fine() << ss.str();
+    }
+
+    OC_ASSERT(sum > 0.0f, "There is an internal bug, please fix it");
+
+    size_t fwd = std::distance(probs.begin(), roulette_select(probs.begin(),
+                                                                      probs.end(),
+                                                                      sum, randGen()));
+    // cout << "select_exemplar(): sum=" << sum << " fwd =" << fwd
+    // << " size=" << probs.size() << " frac=" << fwd/((float)probs.size()) << endl;
+    scored_atomese_ptr_set::const_iterator selex = std::next(_scored_atomeses.begin(), fwd);
+
+    // We increment _visited_exemplar
+    _visited_atomese_exemplars[*selex]++;
+
+    log_selected_exemplar(selex);
+    return selex;
+}
 // -------------------------------------------------------------------
 // Search-termination-related routines.  The scores that are returned
 // are used by the main program to terminate the search.
@@ -308,7 +402,7 @@ const combo_tree& metapopulation::best_tree() const
  */
 const Handle& metapopulation::best_atomese() const
 {
-    return best_atomese_candidates().begin()->get_tree();
+    return best_atomese_candidates().begin()->get_handle();
 }
 
 std::ostream& metapopulation::ostream_metapop(std::ostream& out, int maxcnt) const

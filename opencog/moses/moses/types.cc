@@ -69,7 +69,7 @@ size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 //atomese
 size_t scored_atomese_hash::operator()(const scored_atomese& sct) const
 {
-    return hash_value(sct.get_tree());
+    return hash_value(sct.get_handle());
 }
 
 
@@ -83,7 +83,7 @@ bool scored_combo_tree_equal::operator()(const scored_combo_tree& tr1,
 bool scored_atomese_equal::operator()(const scored_atomese& h1,
                                          const scored_atomese& h2) const
 {
-	 return h1.get_tree() == h2.get_tree();
+	 return h1.get_handle() == h2.get_handle();
 }
 
 
@@ -130,12 +130,6 @@ bool sct_atomese_greater::operator()(const scored_atomese& bs_tr1,
 
     if (sc1 > sc2) return true;
     if (sc1 < sc2) return false;
-
-    // Arghh, still tied!  The above already used complexity to break
-    // the tie.  Lets look at how the size of the trees compare. Note
-    // that size_tree_order uses tree size first, then the lexicographic
-    // order on the trees themselves, next.
-//    return size_tree_order<vertex>()(bs_tr1.get_tree(), bs_tr2.get_tree());
 }
 
 // See header file for description.

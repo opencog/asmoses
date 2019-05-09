@@ -340,8 +340,8 @@ private:
 	double _weight;
 
 public:
-	const Handle& get_tree() const { return _atomese; }
-	Handle& get_tree() { return _atomese; }
+	const Handle& get_handle() const { return _atomese; }
+	Handle& get_handle() { return _atomese; }
 
 	const demeID_t get_demeID() const { return _deme_id; }
 	demeID_t get_demeID() { return _deme_id; }
