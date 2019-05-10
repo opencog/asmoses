@@ -672,7 +672,7 @@ void metapopulation::update_best_candidates(const scored_atomese_set& candidates
                 best_cpx = _best_cscore.get_complexity();
                 _best_atomese_candidates.clear();
                 logger().debug() << "New best score: " << _best_cscore
-                                 << "\n\tfor tree: " << cnd.get_tree();
+                                 << "\n\tfor handle: " << cnd.get_handle();
             }
             _best_atomese_candidates.insert(cnd);
         }
