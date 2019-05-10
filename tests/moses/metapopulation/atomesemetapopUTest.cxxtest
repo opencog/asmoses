@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2011 OpenCog Foundation
  *
- * Author: Nil Geisweiller
+ * Author: Yidnekachew Wondimu and Bitseat Tadesse
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -38,10 +38,16 @@ using namespace moses;
 // For testing only
 struct dummy_bscore : public bscore_base
 {
-    behavioral_score operator()(const Handle& handle)
+    behavioral_score operator()(const Handle& handle) const
     {
         return behavioral_score();
     }
+
+    behavioral_score operator()(const combo_tree& tr) const
+    {
+        return behavioral_score();
+    }
+
     behavioral_score best_possible_bscore() const
     {
         return {0.0};
@@ -62,17 +68,25 @@ class metapopulationUTest : public CxxTest::TestSuite
     dummy_bscore _dbsc;
     behave_cscore _csc;
     metapopulation _metapopulation;
+//    HandleSeq list_plus = {Handle(createNumberNode(1)), Handle(createNumberNode(2))};
+//    Handle times_link = createLink(list_plus, TIMES_LINK);
+//
+//    HandleSeq handleSeq = {times_link};
 
 public:
     metapopulationUTest()
         : _dbsc(), _csc(_dbsc),
-          _metapopulation(Handle(), _csc)
+          _metapopulation(Handle(createLink(LINK)), _csc)
     {
         logger().set_print_to_stdout_flag(true);
         logger().set_level(Logger::FINE);
         randGen().seed(1);
     }
-
+    // test metapopulation::select_exemplar
+    void test_select_atomese_exemplar()
+    {
+        _metapopulation.select_atomese_exemplar();
+    }
     // test metapopulation::remove_dominated
     void test_remove_dominated()
     {
@@ -82,35 +96,35 @@ public:
         // 1
         behavioral_score pbs1 = {-1, 0, -1, 0};
         composite_score csc1(-2, -1, 0);
-        //Handle h1(createNode(NUMBER_NODE, 1.0));
+
         Handle h1(createNumberNode(1.0));
         scored_atomese bct1(h1, demeID_t(), csc1, pbs1);
         bcs.insert(bct1);
         // 2
         behavioral_score pbs2 = {-1, -1, -1, 0};
         composite_score csc2(-3, -1, 0);
-        //Handle h2(createNode(NUMBER_NODE, 2.0));
+
         Handle h2(createNumberNode(2.0));
         scored_atomese bct2(h2, demeID_t(), csc2, pbs2);
         bcs.insert(bct2);
         // 3
         behavioral_score pbs3 = {-1, 0, -1, 0};
         composite_score csc3(-2, -1, 0);
-        //Handle h3(createNode(NUMBER_NODE, 3.0));
+
         Handle h3(createNumberNode(3.0));
         scored_atomese bct3(h3, demeID_t(), csc3, pbs3);
         bcs.insert(bct3);
         // 4
         behavioral_score pbs4 = {0, -1, 0, -1};
         composite_score csc4(-2, -1, 0);
-        //Handle h4(createNode(NUMBER_NODE, 4.0));
+
         Handle h4(createNumberNode(4.0));
         scored_atomese bct4(h4, demeID_t(), csc4, pbs4);
         bcs.insert(bct4);
         // 5
         behavioral_score pbs5 = {0, -1, -1, -1};
         composite_score csc5(-3, -1, 0);
-        //Handle h5(createNode(NUMBER_NODE, 5.0));
+
         Handle h5(createNumberNode(5.0));
         scored_atomese bct5(h5, demeID_t(), csc5, pbs5);
         bcs.insert(bct5);
@@ -132,21 +146,21 @@ public:
         // 4
         behavioral_score pbs4 = {0, -1, 0, -1};
         composite_score csc4(-2, -1, 0);
-        //Handle h4(createNode(NUMBER_NODE, 4.0));
+
         Handle h4(createNumberNode(4.0));
         scored_atomese bct4(h4, demeID_t(), csc4, pbs4);
         bcs1.insert(bct4);
         // 5
         behavioral_score pbs5 = {0, -1, -1, -1};
         composite_score csc5(-3, -1, 0);
-        //Handle h5(createNode(NUMBER_NODE, 5.0));
+
         Handle h5(createNumberNode(5.0));
         scored_atomese bct5(h5, demeID_t(), csc5, pbs5);
         bcs2.insert(bct5);
         // 2
         behavioral_score pbs2 = {-1, -1, -1, 0};
         composite_score csc2(-3, -1, 0);
-        //Handle h2(createNode(NUMBER_NODE, 2.0));
+
         Handle h2(createNumberNode(2.0));
         scored_atomese bct2(h2, demeID_t(), csc2, pbs2);
         bcs2.insert(bct2);

@@ -135,7 +135,6 @@ public:
                    const metapop_parameters& pa = metapop_parameters(),
                    const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
 
-
     // Like above but using a single base, and a single reduction rule.
     /// @todo use C++11 redirection
     metapopulation(const combo_tree& base,
@@ -151,9 +150,11 @@ public:
     ~metapopulation() {}
 
     const scored_combo_tree_set& best_candidates() const;
+    const scored_atomese_set& best_atomese_candidates() const;
     const ensemble& get_ensemble() const { return _ensemble; }
     composite_score best_composite_score() const;
     const combo_tree& best_tree() const;
+    const Handle& best_atomese() const;
 
     /**
      * Return the best model score (either the score of the
@@ -185,12 +186,22 @@ public:
      */
     scored_combo_tree_ptr_set::const_iterator select_exemplar();
 
+    scored_atomese_ptr_set::const_iterator select_atomese_exemplar();
+
     const scored_combo_tree_ptr_set& get_trees() const { return _scored_trees; }
     scored_combo_tree_ptr_set::const_iterator begin() const { return _scored_trees.begin(); }
     scored_combo_tree_ptr_set::const_iterator end() const { return _scored_trees.end(); }
     bool empty() const { return _scored_trees.empty(); }
+    bool empty_mp() const { return _scored_atomeses.empty(); }
     size_t size() const { return _scored_trees.size(); }
     void clear() { _scored_trees.clear(); }
+
+    const scored_atomese_ptr_set& get_handle() const { return _scored_atomeses; }
+    scored_atomese_ptr_set::const_iterator at_begin() const { return _scored_atomeses.begin(); }
+    scored_atomese_ptr_set::const_iterator at_end() const { return _scored_atomeses.end(); }
+    bool at_empty() const { return _scored_atomeses.empty(); }
+    size_t at_size() const { return _scored_atomeses.size(); }
+    void at_clear() { _scored_atomeses.clear(); }
 
     // -------------------------- Merge related ----------------------
 public:
@@ -492,6 +503,8 @@ private:
     // that bcs contains no dominated candidates within itself
     void merge_nondominated(const scored_combo_tree_set& bcs, unsigned jobs = 1);
 
+    void merge_nondominated(const scored_atomese_set& bcs, unsigned jobs = 1);
+
     static boost::logic::tribool dominates(const behavioral_score& x,
                                            const behavioral_score& y);
 
@@ -588,7 +601,7 @@ protected:
     behave_cscore& _cscorer;
 
     scored_combo_tree_ptr_set _scored_trees;
-    scored_atomese_ptr_set _scored_atomese;
+    scored_atomese_ptr_set _scored_atomeses;
 
     static const unsigned _min_pool_size = 250;
 
@@ -600,6 +613,8 @@ protected:
     // Trees with composite score equal to _best_cscore.
     scored_combo_tree_set _best_candidates;
 
+    scored_atomese_set _best_atomese_candidates;
+
     /// _visited_exemplars contains the exemplars of demes that have
     ///  been previously expanded. The count indicated the number of
     /// times that they've been expanded.
@@ -607,7 +622,13 @@ protected:
                                scored_combo_tree_hash,
                                scored_combo_tree_equal> scored_tree_counter;
 
+    typedef std::unordered_map<scored_atomese, unsigned,
+            scored_atomese_hash,
+            scored_atomese_equal> scored_atomese_counter;
+
     scored_tree_counter _visited_exemplars;
+
+    scored_atomese_counter _visited_atomese_exemplars;
 
     /// Return true iff the tree has already been visited; that is, if
     /// its in _visited_exemplars

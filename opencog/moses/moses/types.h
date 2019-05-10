@@ -325,7 +325,7 @@ public:
 class scored_atomese : public boost::equality_comparable<scored_atomese>
 {
 public:
-    scored_atomese(Handle h,
+    scored_atomese(const Handle &h,
 	                  demeID_t id=demeID_t(),
 	                  composite_score cs=composite_score(),
 	                  behavioral_score bs=behavioral_score())
@@ -340,8 +340,8 @@ private:
 	double _weight;
 
 public:
-	const Handle& get_tree() const { return _atomese; }
-	Handle& get_tree() { return _atomese; }
+	const Handle& get_handle() const { return _atomese; }
+	Handle& get_handle() { return _atomese; }
 
 	const demeID_t get_demeID() const { return _deme_id; }
 	demeID_t get_demeID() { return _deme_id; }
@@ -493,7 +493,7 @@ typedef scored_combo_tree_ptr_set::iterator scored_combo_tree_ptr_set_it;
 typedef scored_combo_tree_ptr_set::const_iterator scored_combo_tree_ptr_set_cit;
 
 typedef boost::ptr_set<scored_atomese,
-                       sct_score_greater> scored_atomese_ptr_set;
+		sct_atomese_greater> scored_atomese_ptr_set;
 typedef scored_atomese_ptr_set::iterator scored_atomese_ptr_set_it;
 typedef scored_atomese_ptr_set::const_iterator scored_atomese_ptr_set_cit;
 

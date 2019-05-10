@@ -63,13 +63,19 @@ class metapopulationUTest : public CxxTest::TestSuite
 public:
     metapopulationUTest()
         : _dbsc(), _csc(_dbsc),
-          _metapopulation(combo_tree(), _csc)
+          _metapopulation(combo_tree("and($1 $2 or($3 $4))"), _csc)
     {
         logger().set_print_to_stdout_flag(true);
         logger().set_level(Logger::FINE);
         randGen().seed(1);
     }
 
+    // test metapopulation::select_exemplar
+    void test_select_exemplar()
+    {
+        _metapopulation.select_exemplar();
+       // TS_ASSERT_EQUALS(bcs.size(), 3);
+    }
     // test metapopulation::remove_dominated
     void test_remove_dominated()
     {
