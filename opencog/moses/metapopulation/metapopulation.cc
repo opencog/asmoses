@@ -258,7 +258,7 @@ scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
 
 scored_atomese_ptr_set::const_iterator metapopulation::select_atomese_exemplar()
 {
-    OC_ASSERT(!empty(), "Empty metapopulation in select_exemplar().");
+    OC_ASSERT(!empty_mp(), "Empty metapopulation in select_atomese_exemplar().");
 
     logger().debug("Select exemplar");
 
@@ -283,7 +283,7 @@ scored_atomese_ptr_set::const_iterator metapopulation::select_atomese_exemplar()
 
     // The exemplars are stored in order from best score to worst;
     // the iterator follows this order.
-    for (const scored_atomese& bsct : *this) {
+    for (const scored_atomese& bsct : _scored_atomeses) {
 
         score_t sc = bsct.get_penalized_score();
 
@@ -338,8 +338,8 @@ scored_atomese_ptr_set::const_iterator metapopulation::select_atomese_exemplar()
     size_t fwd = std::distance(probs.begin(), roulette_select(probs.begin(),
                                                                       probs.end(),
                                                                       sum, randGen()));
-    // cout << "select_exemplar(): sum=" << sum << " fwd =" << fwd
-    // << " size=" << probs.size() << " frac=" << fwd/((float)probs.size()) << endl;
+    std::cout << "select_exemplar(): sum=" << sum << " fwd =" << fwd
+     << " size=" << probs.size() << " frac=" << fwd/((float)probs.size()) << std::endl;
     scored_atomese_ptr_set::const_iterator selex = std::next(_scored_atomeses.begin(), fwd);
 
     // We increment _visited_exemplar
