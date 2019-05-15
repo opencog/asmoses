@@ -25,6 +25,7 @@
 
 #include <opencog/util/oc_omp.h>
 #include <opencog/util/selection.h>
+#include <opencog/util/log_prog_name.h>
 
 #include "metapopulation.h"
 
@@ -141,6 +142,11 @@ bool metapopulation::has_been_visited(const scored_combo_tree& tr) const
     return _visited_exemplars.find(tr) != _visited_exemplars.cend();
 }
 
+bool metapopulation::has_been_visited(const scored_atomese& handle) const
+{
+    return _visited_atomese_exemplars.find(handle) != _visited_atomese_exemplars.cend();
+}
+
 void metapopulation::log_selected_exemplar(scored_combo_tree_ptr_set::const_iterator exemplar_it)
 {
     if (not logger().is_debug_enabled()) return;
@@ -156,6 +162,26 @@ void metapopulation::log_selected_exemplar(scored_combo_tree_ptr_set::const_iter
                          << "th exemplar, from deme " << xmplr.get_demeID()
                          << ", for the " << nth_vst << "th time(s)";
         logger().debug() << "Exemplar tree : " << xmplr.get_tree();
+        logger().debug() << "With composite score : "
+                         << xmplr.get_composite_score();
+    }
+}
+
+void metapopulation::log_selected_atomese_exemplar(scored_atomese_ptr_set::const_iterator exemplar_it)
+{
+    if (not logger().is_debug_enabled()) return;
+
+    if (exemplar_it == _scored_atomeses.cend()) {
+        logger().debug() << "No exemplar found";
+    } else {
+        const auto& xmplr = *exemplar_it;
+        unsigned pos = std::distance(_scored_atomeses.cbegin(), exemplar_it) + 1,
+            nth_vst = _visited_atomese_exemplars[xmplr];
+
+        logger().debug() << "Selected the " << pos
+                         << "th exemplar, from deme " << xmplr.get_demeID()
+                         << ", for the " << nth_vst << "th time(s)";
+        logger().debug() << "Exemplar program : " << oc_to_string(xmplr.get_handle());
         logger().debug() << "With composite score : "
                          << xmplr.get_composite_score();
     }
@@ -264,14 +290,14 @@ scored_atomese_ptr_set::const_iterator metapopulation::select_atomese_exemplar()
 
     // Shortcut for special case, as sometimes, the very first time
     // though, the score is invalid.
-    if (size() == 1) {
+    if (atomese_size() == 1) {
         scored_atomese_ptr_set::const_iterator selex = _scored_atomeses.cbegin();
         if(_params.revisit < 0 or
            (_params.revisit + 1 > (int)_visited_atomese_exemplars[*selex])) // not enough visited
             _visited_atomese_exemplars[*selex]++;
         else selex = _scored_atomeses.cend();    // enough visited
 
-        log_selected_exemplar(selex);
+        log_selected_atomese_exemplar(selex);
         return selex;
     }
 
