@@ -288,7 +288,7 @@ scored_atomese_ptr_set::const_iterator metapopulation::select_atomese_exemplar()
 
     // The exemplars are stored in order from best score to worst;
     // the iterator follows this order.
-    for (const scored_atomese& bsct : *this) {
+    for (const scored_atomese& bsct : _scored_atomeses) {
 
         score_t sc = bsct.get_penalized_score();
 

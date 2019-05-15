@@ -75,6 +75,8 @@ struct bscore_base
 	/// Return the behavioral score for the ensemble
 	virtual behavioral_score operator()(const scored_combo_tree_set &) const;
 
+	virtual behavioral_score operator()(const scored_atomese_set &) const;
+
 	/// Return the size (length) of the behavioral_score that operator()
 	/// above would return.
 	virtual size_t size() const
@@ -155,6 +157,8 @@ struct bscore_base
 	virtual score_t get_error(const behavioral_score &) const;
 
 	virtual score_t get_error(const combo_tree &) const;
+
+	virtual score_t get_error(const Handle &) const;
 
 	/// Indicate a set of features that should be ignored during scoring,
 	/// The features are indicated as indexes, starting from 0.
