@@ -73,6 +73,14 @@ public:
 
     score_t flat_score() const;
 
+    void add_candidates(scored_atomese_set&);
+
+    const scored_atomese_set& get_ensemble_atomese() const {
+        return _scored_atomeses;
+    }
+
+    const Handle& get_weighted_atomese() const;
+
 private:
     const ensemble_parameters& _params;
     bscore_base& _bscorer;
@@ -89,6 +97,16 @@ private:
     const combo::combo_tree& get_adaboost_tree() const;
     const combo::combo_tree& get_exact_tree() const;
     const combo::combo_tree& get_expert_tree() const;
+
+    scored_atomese_set _scored_atomeses;
+    mutable Handle _weighted_atomese;
+
+    void add_adaboost_atomese(scored_atomese_set&);
+    void add_expert_atomese(scored_atomese_set&);
+
+    const Handle& get_adaboost_atomese() const;
+    const Handle& get_exact_atomese() const;
+    const Handle& get_expert_atomese() const;
 };
 
 }}; // namespace opencog::moses
