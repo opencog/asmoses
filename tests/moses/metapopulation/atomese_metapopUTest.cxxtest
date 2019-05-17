@@ -74,6 +74,12 @@ public:
         randGen().seed(1);
     }
 
+    // test metapopulation::select_atomese_exemplar
+    void test_select_atomese_exemplar()
+    {
+        _metapopulation.select_atomese_exemplar();
+    }
+
     // test metapopulation::remove_dominated
     void test_remove_dominated()
     {
