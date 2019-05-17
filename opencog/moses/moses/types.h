@@ -44,6 +44,9 @@
 #include <opencog/combo/combo/combo.h>
 #include "complexity.h"
 
+#include <opencog/combo/combo/combo.h>
+#include <opencog/atoms/base/Handle.h>
+
 namespace opencog { namespace moses {
 
 using combo::vertex;
@@ -318,6 +321,67 @@ public:
 	bool operator==(const scored_combo_tree& r) const;
 };
 
+//scored_atomese
+class scored_atomese : public boost::equality_comparable<scored_atomese>
+{
+public:
+    scored_atomese(const Handle &h,
+	                  demeID_t id=demeID_t(),
+	                  composite_score cs=composite_score(),
+	                  behavioral_score bs=behavioral_score())
+		: _atomese(h), _deme_id(id), _cscore(cs), _bscore(bs), _weight(1.0)
+		{}
+
+private:
+	Handle _atomese;
+	demeID_t _deme_id;
+	composite_score _cscore;
+	behavioral_score _bscore;
+	double _weight;
+
+public:
+	const Handle& get_handle() const { return _atomese; }
+	Handle& get_handle() { return _atomese; }
+
+	const demeID_t get_demeID() const { return _deme_id; }
+	demeID_t get_demeID() { return _deme_id; }
+
+	const behavioral_score& get_bscore() const
+	{
+		return _bscore;
+	}
+	void set_bscore(const behavioral_score& bs)
+	{
+		_bscore = bs;
+	}
+	double get_weight() const
+	{
+		return _weight;
+	}
+	void set_weight(double w)
+	{
+		_weight = w;
+	}
+	const composite_score& get_composite_score() const
+	{
+		return _cscore;
+	}
+	composite_score& get_composite_score()
+	{
+		return _cscore;
+	}
+
+	/* Utility wrappers */
+	score_t get_score() const { return _cscore.get_score(); }
+	complexity_t get_complexity() const { return _cscore.get_complexity(); }
+	score_t get_penalized_score() const { return _cscore.get_penalized_score(); }
+	score_t get_complexity_penalty() const { return _cscore.get_complexity_penalty(); }
+	score_t get_uniformity_penalty() const { return _cscore.get_uniformity_penalty(); }
+	score_t get_penalty() const { return _cscore.get_penalty(); }
+
+	bool operator==(const scored_atomese& r) const;
+};
+
 // =======================================================================
 // collections of trees
 
@@ -366,6 +430,27 @@ struct scored_combo_tree_equal
 	                const scored_combo_tree&) const;
 };
 
+// atomese
+struct sct_atomese_greater
+	: public std::binary_function<scored_atomese, scored_atomese, bool>
+{
+	bool operator()(const scored_atomese&,
+	                const scored_atomese&) const;
+};
+
+struct scored_atomese_hash
+	: public std::unary_function<scored_atomese, size_t>
+{
+	size_t operator()(const scored_atomese&) const;
+};
+
+struct scored_atomese_equal
+	: public std::binary_function<scored_atomese, scored_atomese, bool>
+{
+	bool operator()(const scored_atomese&,
+	                const scored_atomese&) const;
+};
+
 /// scored_combo_tree_hash_set provides an O(1) way of determining if
 /// a combo tree is in the set, or not (and getting its score, if it is).
 /// Its O(1) in theory. In practice, it can be quite slow, for two
@@ -377,6 +462,11 @@ typedef std::unordered_set<scored_combo_tree,
                            scored_combo_tree_hash,
                            // scored_combo_tree_equal> scored_combo_tree_hash_set;
                            scored_combo_tree_equal> scored_combo_tree_set;
+
+typedef std::unordered_set<scored_atomese,
+                           scored_atomese_hash,
+                           // scored_combo_tree_equal> scored_combo_tree_hash_set;
+                           scored_atomese_equal> scored_atomese_set;
 
 /// scored_combo_tree_tset offers a fairly fast, mutable storage for
 /// combo trees, based on the combo tree itself, and not how its scored.
@@ -401,6 +491,11 @@ typedef boost::ptr_set<scored_combo_tree,
                        sct_score_greater> scored_combo_tree_ptr_set;
 typedef scored_combo_tree_ptr_set::iterator scored_combo_tree_ptr_set_it;
 typedef scored_combo_tree_ptr_set::const_iterator scored_combo_tree_ptr_set_cit;
+
+typedef boost::ptr_set<scored_atomese,
+		sct_atomese_greater> scored_atomese_ptr_set;
+typedef scored_atomese_ptr_set::iterator scored_atomese_ptr_set_it;
+typedef scored_atomese_ptr_set::const_iterator scored_atomese_ptr_set_cit;
 
 // =======================================================================
 // ostream functions

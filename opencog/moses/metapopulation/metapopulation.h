@@ -606,6 +606,8 @@ protected:
 
     scored_combo_tree_ptr_set _scored_trees;
 
+    scored_atomese_ptr_set _scored_atomeses;
+
     static const unsigned _min_pool_size = 250;
 
     size_t _merge_count;
