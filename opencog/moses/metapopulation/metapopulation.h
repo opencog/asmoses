@@ -617,6 +617,8 @@ protected:
 
     scored_atomese_set _best_atomese_candidates;
 
+    AtomSpace _as;
+
     /// _visited_exemplars contains the exemplars of demes that have
     ///  been previously expanded. The count indicated the number of
     /// times that they've been expanded.

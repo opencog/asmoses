@@ -204,7 +204,11 @@ void metapopulation::merge_candidates(scored_atomese_set& candidates)
     if (not _params.discard_dominated) {
         logger().debug("Insert all candidates in the metapopulation");
         for (const auto& cnd : candidates)
-            _scored_atomeses.insert(new scored_atomese(cnd));
+        {
+            scored_atomese *sa = new scored_atomese(cnd);
+            _scored_atomeses.insert(sa);
+            _as.add_atom(sa->as_scored_handle());
+        }
     } else {
         logger().debug("Insert non-dominated candidates in the metapopulation");
         unsigned old_size = size();

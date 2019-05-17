@@ -45,6 +45,8 @@
 #include "complexity.h"
 
 #include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/core/NumberNode.h>
 
 namespace opencog { namespace moses {
 
@@ -105,6 +107,17 @@ struct composite_score:
 	score_t get_score() const { return score; }
 	complexity_t get_complexity() const { return complexity; }
 	score_t get_penalized_score() const { return penalized_score; }
+
+	// returns the score as handle.
+	Handle as_handle() const {
+		HandleSeq seq;
+		seq.push_back(multiply_diversity? createLink(TRUE_LINK) : createLink(FALSE_LINK));
+		seq.push_back(createNode(NUMBER_NODE, std::to_string(score)));
+		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity)));
+		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity_penalty)));
+		seq.push_back(createNode(NUMBER_NODE, std::to_string(uniformity_penalty)));
+		return createLink(seq, SET_LINK);
+	}
 
 	// Use this only to over-ride the score, wehn re-scoring.
 	void set_score(score_t sc)
@@ -196,6 +209,10 @@ struct demeID_t : public std::string
 	demeID_t(unsigned expansion=0 /* default initial deme */);
 	demeID_t(unsigned expansion, unsigned breadth_first);
 	demeID_t(unsigned expansion, unsigned breadth_first, unsigned ss_deme);
+
+	Handle as_handle() const{
+		return createNode(CONCEPT_NODE, *this);
+	}
 };
 
 /// Behavioral scores record one score per row of input data.
@@ -232,6 +249,16 @@ struct behavioral_score : public std::vector<score_t>
 		}
 		return *this;
 	}
+
+	Handle as_handle() const {
+		HandleSeq scores;
+		for (size_t i=0; i<size(); i++) {
+			Handle h = createNode(NUMBER_NODE, std::to_string((*this)[i]));
+			scores.push_back(h);
+		}
+		return createLink(scores, SET_LINK);
+	}
+
 };
 
 static inline behavioral_score operator-(const behavioral_score& lhs,
@@ -342,6 +369,11 @@ private:
 public:
 	const Handle& get_handle() const { return _atomese; }
 	Handle& get_handle() { return _atomese; }
+	Handle as_scored_handle() const{
+		HandleSeq seq {_atomese, _deme_id.as_handle(), _cscore.as_handle(),
+					   _bscore.as_handle(), createNode(NUMBER_NODE, std::to_string(_weight))};
+		return createLink(seq, SET_LINK);
+	}
 
 	const demeID_t get_demeID() const { return _deme_id; }
 	demeID_t get_demeID() { return _deme_id; }
