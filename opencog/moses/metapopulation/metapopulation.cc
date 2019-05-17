@@ -436,6 +436,15 @@ std::ostream& metapopulation::ostream_metapop(std::ostream& out, int maxcnt) con
     return out;
 }
 
+std::ostream& metapopulation::ostream_metapop_atomese(std::ostream& out, int maxcnt) const
+{
+    int cnt = 0;
+    for (const scored_atomese& sct : _scored_atomeses) {
+        if (maxcnt < ++cnt) break;
+        out << sct;
+    }
+    return out;
+}
 } // ~namespace moses
 } // ~namespace opencog
 

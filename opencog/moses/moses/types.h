@@ -463,7 +463,7 @@ struct scored_combo_tree_equal
 	                const scored_combo_tree&) const;
 };
 /// atomese
-struct sct_atomese_greater
+struct sa_score_greater
 	: public std::binary_function<scored_atomese, scored_atomese, bool>
 {
 	bool operator()(const scored_atomese&,
@@ -525,7 +525,7 @@ typedef scored_combo_tree_ptr_set::iterator scored_combo_tree_ptr_set_it;
 typedef scored_combo_tree_ptr_set::const_iterator scored_combo_tree_ptr_set_cit;
 
 typedef boost::ptr_set<scored_atomese,
-		sct_atomese_greater> scored_atomese_ptr_set;
+		sa_score_greater> scored_atomese_ptr_set;
 typedef scored_atomese_ptr_set::iterator scored_atomese_ptr_set_it;
 typedef scored_atomese_ptr_set::const_iterator scored_atomese_ptr_set_cit;
 
@@ -547,6 +547,13 @@ std::ostream& ostream_scored_combo_tree(std::ostream& out,
                                         combo::output_format fmt
                                         = combo::output_format::combo);
 
+std::ostream& ostream_scored_atomese(std::ostream& out,
+									 const scored_atomese& sa,
+									 bool output_score=true,
+									 bool output_cscore=true,
+									 bool output_demeID=true,
+									 bool output_bscore=true);
+
 scored_combo_tree string_to_scored_combo_tree(const std::string& line);
 
 std::istream& istream_scored_combo_trees(std::istream& in,
@@ -556,6 +563,12 @@ inline std::ostream& operator<<(std::ostream& out,
                                 const moses::scored_combo_tree& sct)
 {
 	return moses::ostream_scored_combo_tree(out, sct);
+}
+
+inline std::ostream& operator<<(std::ostream& out,
+								const moses::scored_atomese& sa)
+{
+	return moses::ostream_scored_atomese(out, sa);
 }
 
 inline std::ostream& operator<<(std::ostream& out,
