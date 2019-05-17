@@ -57,6 +57,14 @@ bool scored_combo_tree::operator==(const scored_combo_tree& r) const {
 		and get_composite_score() == r.get_composite_score();
 }
 
+bool scored_atomese::operator==(const scored_atomese& r) const {
+	return get_handle() == r.get_handle()
+		   and get_demeID() == r.get_demeID()
+		   and get_bscore() == r.get_bscore()
+		   and get_weight() == r.get_weight()
+		   and get_composite_score() == r.get_composite_score();
+}
+
 size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 {
 	size_t hash = 0;
@@ -113,7 +121,7 @@ bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
 	return size_tree_order<vertex>()(bs_tr1.get_tree(), bs_tr2.get_tree());
 }
 
-bool sct_atomese_greater::operator()(const scored_atomese& bs_tr1,
+bool sa_score_greater::operator()(const scored_atomese& bs_tr1,
 								   const scored_atomese& bs_tr2) const
 {
     const composite_score csc1 = bs_tr1.get_composite_score();
@@ -231,6 +239,34 @@ std::ostream& ostream_scored_combo_tree(std::ostream& out,
 
 	if (output_bscore and sct.get_bscore().size() > 0)
 		ostream_behavioral_score(out << " ", sct.get_bscore());
+
+	return out << std::endl;
+}
+
+std::ostream& ostream_scored_atomese(std::ostream& out,
+									 const scored_atomese& sa,
+									 bool output_score,
+									 bool output_cscore,
+									 bool output_demeID,
+									 bool output_bscore)
+{
+	if (output_score)
+		out << sa.get_score() << " ";
+	oc_to_string(sa.get_handle());
+
+	// Is this really used?
+	static const bool output_weight = false;
+	if (output_weight)
+		out << " weight:" << sa.get_weight();
+
+	if (output_cscore)
+		out << " " << sa.get_composite_score();
+
+	if (output_demeID)
+		out << " demeID: " << sa.get_demeID();
+
+	if (output_bscore and sa.get_bscore().size() > 0)
+		ostream_behavioral_score(out << " ", sa.get_bscore());
 
 	return out << std::endl;
 }
