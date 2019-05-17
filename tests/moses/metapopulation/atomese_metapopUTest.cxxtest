@@ -100,6 +100,7 @@ public:
         Handle h1(createNumberNode(1.0));
         scored_atomese bct1(h1, demeID_t(), csc1, pbs1);
         bcs.insert(bct1);
+
         // 2
         behavioral_score pbs2 = {-1, -1, -1, 0};
         composite_score csc2(-3, -1, 0);
@@ -107,6 +108,7 @@ public:
         Handle h2(createNumberNode(2.0));
         scored_atomese bct2(h2, demeID_t(), csc2, pbs2);
         bcs.insert(bct2);
+
         // 3
         behavioral_score pbs3 = {-1, 0, -1, 0};
         composite_score csc3(-2, -1, 0);
@@ -114,6 +116,7 @@ public:
         Handle h3(createNumberNode(3.0));
         scored_atomese bct3(h3, demeID_t(), csc3, pbs3);
         bcs.insert(bct3);
+
         // 4
         behavioral_score pbs4 = {0, -1, 0, -1};
         composite_score csc4(-2, -1, 0);
@@ -121,6 +124,7 @@ public:
         Handle h4(createNumberNode(4.0));
         scored_atomese bct4(h4, demeID_t(), csc4, pbs4);
         bcs.insert(bct4);
+
         // 5
         behavioral_score pbs5 = {0, -1, -1, -1};
         composite_score csc5(-3, -1, 0);
@@ -150,6 +154,7 @@ public:
         Handle h4(createNumberNode(4.0));
         scored_atomese bct4(h4, demeID_t(), csc4, pbs4);
         bcs1.insert(bct4);
+
         // 5
         behavioral_score pbs5 = {0, -1, -1, -1};
         composite_score csc5(-3, -1, 0);
@@ -157,6 +162,7 @@ public:
         Handle h5(createNumberNode(5.0));
         scored_atomese bct5(h5, demeID_t(), csc5, pbs5);
         bcs2.insert(bct5);
+
         // 2
         behavioral_score pbs2 = {-1, -1, -1, 0};
         composite_score csc2(-3, -1, 0);

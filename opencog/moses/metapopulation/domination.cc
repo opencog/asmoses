@@ -113,7 +113,7 @@ void metapopulation::remove_dominated(scored_combo_tree_set& bcs, unsigned jobs)
 
 void metapopulation::remove_dominated(scored_atomese_set& bcs, unsigned jobs)
 {
-    // get the nondominated candidates
+//    // get the nondominated candidates
     scored_atomese_ptr_vec bcv = random_access_view(bcs);
     scored_atomese_ptr_vec res = get_nondominated_rec(bcv, jobs);
     // get the dominated by set difference
