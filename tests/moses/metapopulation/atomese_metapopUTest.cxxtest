@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2011 OpenCog Foundation
  *
- * Author: Nil Geisweiller
+ * Author: Yidnekachew Wondimu and Bitseat Tadesse
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -68,6 +68,10 @@ class metapopulationUTest : public CxxTest::TestSuite
     dummy_bscore _dbsc;
     behave_cscore _csc;
     metapopulation _metapopulation;
+//    HandleSeq list_plus = {Handle(createNumberNode(1)), Handle(createNumberNode(2))};
+//    Handle times_link = createLink(list_plus, TIMES_LINK);
+//
+//    HandleSeq handleSeq = {times_link};
 
 public:
     metapopulationUTest()
@@ -78,7 +82,11 @@ public:
         logger().set_level(Logger::FINE);
         randGen().seed(1);
     }
-
+    // test metapopulation::select_exemplar
+    void test_select_atomese_exemplar()
+    {
+        _metapopulation.select_atomese_exemplar();
+    }
     // test metapopulation::remove_dominated
     void test_remove_dominated()
     {

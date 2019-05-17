@@ -135,7 +135,6 @@ public:
                    const metapop_parameters& pa = metapop_parameters(),
                    const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
 
-
     // Like above but using a single base, and a single reduction rule.
     /// @todo use C++11 redirection
     metapopulation(const combo_tree& base,
@@ -193,7 +192,9 @@ public:
     scored_combo_tree_ptr_set::const_iterator begin() const { return _scored_trees.begin(); }
     scored_combo_tree_ptr_set::const_iterator end() const { return _scored_trees.end(); }
     bool empty() const { return _scored_trees.empty(); }
+    bool empty_mp() const { return _scored_atomeses.empty(); }
     size_t size() const { return _scored_trees.size(); }
+    size_t atomese_size() const { return _scored_atomeses.size(); }
     void clear() { _scored_trees.clear(); }
 
     const scored_atomese_ptr_set& get_handle() const { return _scored_atomeses; }
@@ -614,6 +615,7 @@ public:
 
 private:
     void log_selected_exemplar(scored_combo_tree_ptr_set::const_iterator);
+    void log_selected_atomese_exemplar(scored_atomese_ptr_set::const_iterator);
 
 protected:
     // --------------------- Internal state -----------------------
@@ -658,6 +660,8 @@ protected:
     /// Return true iff the tree has already been visited; that is, if
     /// its in _visited_exemplars
     bool has_been_visited(const scored_combo_tree&) const;
+
+    bool has_been_visited(const scored_atomese&) const;
 
     // lock to enable thread-safe deme merging.
     std::mutex _merge_mutex;

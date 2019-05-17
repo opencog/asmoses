@@ -816,7 +816,7 @@ void metapopulation::update_best_candidates(const scored_combo_tree_set& candida
         }
     }
 }
-///atomese
+
 void metapopulation::update_best_candidates(const scored_atomese_set& candidates)
 {
     if (candidates.empty())
