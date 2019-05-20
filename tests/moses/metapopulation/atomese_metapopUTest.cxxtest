@@ -43,6 +43,11 @@ struct dummy_bscore : public bscore_base
         return behavioral_score();
     }
 
+    behavioral_score operator()(const combo_tree& tr) const
+    {
+        return behavioral_score();
+    }
+
     behavioral_score best_possible_bscore() const
     {
         return {0.0};
