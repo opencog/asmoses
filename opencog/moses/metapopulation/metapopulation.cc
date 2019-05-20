@@ -25,6 +25,7 @@
 
 #include <opencog/util/oc_omp.h>
 #include <opencog/util/selection.h>
+#include <opencog/util/log_prog_name.h>
 
 #include "metapopulation.h"
 
@@ -187,6 +188,8 @@ void metapopulation::log_selected_atomese_exemplar(scored_atomese_ptr_set::const
     }
 }
 
+#define UNEVALUATED_SCORE -1.0e37
+
 scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
 {
     OC_ASSERT(!empty(), "Empty metapopulation in select_exemplar().");
@@ -209,7 +212,7 @@ scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
     std::vector<score_t> probs;
     // Set flag to true, when a suitable exemplar is found.
     bool found_exemplar = false;
-#define UNEVALUATED_SCORE -1.0e37
+
     score_t highest_score = UNEVALUATED_SCORE;
 
     // The exemplars are stored in order from best score to worst;
@@ -401,6 +404,11 @@ const scored_combo_tree_set& metapopulation::best_candidates() const
     return _best_candidates;
 }
 
+const scored_atomese_set& metapopulation::best_atomese_candidates() const
+{
+    return _best_atomese_candidates;
+}
+
 /**
  * Return the best combo tree (shortest best candidate).
  */
@@ -410,6 +418,14 @@ const combo_tree& metapopulation::best_tree() const
         return _ensemble.get_weighted_tree();
     }
     return best_candidates().begin()->get_tree();
+}
+
+/**
+ * Return the best Handle (shortest best candidate).
+ */
+const Handle& metapopulation::best_atomese() const
+{
+    return best_atomese_candidates().begin()->get_handle();
 }
 
 std::ostream& metapopulation::ostream_metapop(std::ostream& out, int maxcnt) const
@@ -422,6 +438,15 @@ std::ostream& metapopulation::ostream_metapop(std::ostream& out, int maxcnt) con
     return out;
 }
 
+std::ostream& metapopulation::ostream_metapop_atomese(std::ostream& out, int maxcnt) const
+{
+    int cnt = 0;
+    for (const scored_atomese& sct : _scored_atomeses) {
+        if (maxcnt < ++cnt) break;
+        out << sct;
+    }
+    return out;
+}
 } // ~namespace moses
 } // ~namespace opencog
 
