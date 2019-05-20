@@ -57,6 +57,14 @@ bool scored_combo_tree::operator==(const scored_combo_tree& r) const {
 		and get_composite_score() == r.get_composite_score();
 }
 
+bool scored_atomese::operator==(const scored_atomese& r) const {
+	return get_handle() == r.get_handle()
+		   and get_demeID() == r.get_demeID()
+		   and get_bscore() == r.get_bscore()
+		   and get_weight() == r.get_weight()
+		   and get_composite_score() == r.get_composite_score();
+}
+
 size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 {
 	size_t hash = 0;
@@ -66,12 +74,26 @@ size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 	}
 	return hash;
 }
+//atomese
+size_t scored_atomese_hash::operator()(const scored_atomese& sct) const
+{
+    return hash_value(sct.get_handle());
+}
+
+
 
 bool scored_combo_tree_equal::operator()(const scored_combo_tree& tr1,
                                          const scored_combo_tree& tr2) const
 {
 	return tr1.get_tree() == tr2.get_tree();
 }
+//atomese
+bool scored_atomese_equal::operator()(const scored_atomese& h1,
+                                         const scored_atomese& h2) const
+{
+	 return h1.get_handle() == h2.get_handle();
+}
+
 
 // See header file for description.
 bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
@@ -97,6 +119,25 @@ bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
 	// that size_tree_order uses tree size first, then the lexicographic
 	// order on the trees themselves, next.
 	return size_tree_order<vertex>()(bs_tr1.get_tree(), bs_tr2.get_tree());
+}
+
+bool sa_score_greater::operator()(const scored_atomese& bs_tr1,
+								   const scored_atomese& bs_tr2) const
+{
+    const composite_score csc1 = bs_tr1.get_composite_score();
+    const composite_score csc2 = bs_tr2.get_composite_score();
+
+    if (csc1 > csc2) return true;
+    if (csc1 < csc2) return false;
+
+    // If we are here, then they are equal.  We are desperate to break
+    // a tie, because otherwise, the scored_combo_tree_ptr_set will discard
+    // anything that compares equal, and we really don't want that.
+    score_t sc1 = csc1.get_score();
+    score_t sc2 = csc2.get_score();
+
+    if (sc1 > sc2) return true;
+    if (sc1 < sc2) return false;
 }
 
 // See header file for description.
@@ -198,6 +239,34 @@ std::ostream& ostream_scored_combo_tree(std::ostream& out,
 
 	if (output_bscore and sct.get_bscore().size() > 0)
 		ostream_behavioral_score(out << " ", sct.get_bscore());
+
+	return out << std::endl;
+}
+
+std::ostream& ostream_scored_atomese(std::ostream& out,
+									 const scored_atomese& sa,
+									 bool output_score,
+									 bool output_cscore,
+									 bool output_demeID,
+									 bool output_bscore)
+{
+	if (output_score)
+		out << sa.get_score() << " ";
+	oc_to_string(sa.get_handle());
+
+	// Is this really used?
+	static const bool output_weight = false;
+	if (output_weight)
+		out << " weight:" << sa.get_weight();
+
+	if (output_cscore)
+		out << " " << sa.get_composite_score();
+
+	if (output_demeID)
+		out << " demeID: " << sa.get_demeID();
+
+	if (output_bscore and sa.get_bscore().size() > 0)
+		ostream_behavioral_score(out << " ", sa.get_bscore());
 
 	return out << std::endl;
 }
