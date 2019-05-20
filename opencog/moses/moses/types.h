@@ -109,7 +109,7 @@ struct composite_score:
 	complexity_t get_complexity() const { return complexity; }
 	score_t get_penalized_score() const { return penalized_score; }
 
-	// returns the score as handle.
+	// returns the composite score as a handle.
 	Handle as_handle() const {
 		HandleSeq seq;
 		seq.push_back(multiply_diversity? createLink(TRUE_LINK) : createLink(FALSE_LINK));
@@ -117,7 +117,7 @@ struct composite_score:
 		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity)));
 		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity_penalty)));
 		seq.push_back(createNode(NUMBER_NODE, std::to_string(uniformity_penalty)));
-		return createLink(seq, SET_LINK);
+		return createLink(seq, LIST_LINK);
 	}
 
 	// Use this only to over-ride the score, wehn re-scoring.
@@ -257,7 +257,7 @@ struct behavioral_score : public std::vector<score_t>
 			Handle h = createNode(NUMBER_NODE, std::to_string((*this)[i]));
 			scores.push_back(h);
 		}
-		return createLink(scores, SET_LINK);
+		return createLink(scores, LIST_LINK);
 	}
 
 };
