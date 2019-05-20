@@ -87,7 +87,9 @@ public:
     // test metapopulation::select_atomese_exemplar
     void test_select_atomese_exemplar()
     {
-        _metapopulation.select_atomese_exemplar();
+        scored_atomese_ptr_set::const_iterator selex = _metapopulation.select_atomese_exemplar();
+        const auto& xmplr = *selex;
+        TS_ASSERT(content_eq(xmplr.get_handle(), Handle(createLink(LINK))));
     }
 
     // test metapopulation::remove_dominated
