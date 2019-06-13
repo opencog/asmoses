@@ -178,27 +178,27 @@ public:
         TS_ASSERT_EQUALS(res.find(bct5), res.end()); // bct5
     }
 
-    void test_composite_score_as_handle(){
-        composite_score score(-2, -1, 0);
-
-        Handle link = al(LIST_LINK, {al(FALSE_LINK),
-                                     an(NUMBER_NODE, std::to_string((float) -2)),
-                                     an(NUMBER_NODE, std::to_string((unsigned)-1)),
-                                     an(NUMBER_NODE, std::to_string((float) 0)),
-                                     an(NUMBER_NODE, std::to_string((float) 0))});
-
-        TS_ASSERT(content_eq(score.as_handle(), link));
-    }
-
-    void test_behavioral_score_as_handle(){
-        behavioral_score score = {-1, 0, -1, 0};
-
-        Handle link = al(LIST_LINK, {an(NUMBER_NODE, std::to_string((float)-1)),
-                                     an(NUMBER_NODE, std::to_string((float)0)),
-                                     an(NUMBER_NODE, std::to_string((float)-1)),
-                                     an(NUMBER_NODE, std::to_string((float)0))});
-
-        TS_ASSERT(content_eq(score.as_handle(), link));
-    }
+//    void test_composite_score_as_handle(){
+//        composite_score score(-2, -1, 0);
+//
+//        Handle link = al(LIST_LINK, {al(FALSE_LINK),
+//                                     an(NUMBER_NODE, std::to_string((float) -2)),
+//                                     an(NUMBER_NODE, std::to_string((unsigned)-1)),
+//                                     an(NUMBER_NODE, std::to_string((float) 0)),
+//                                     an(NUMBER_NODE, std::to_string((float) 0))});
+//
+//        TS_ASSERT(content_eq(score.as_handle(), link));
+//    }
+//
+//    void test_behavioral_score_as_handle(){
+//        behavioral_score score = {-1, 0, -1, 0};
+//
+//        Handle link = al(LIST_LINK, {an(NUMBER_NODE, std::to_string((float)-1)),
+//                                     an(NUMBER_NODE, std::to_string((float)0)),
+//                                     an(NUMBER_NODE, std::to_string((float)-1)),
+//                                     an(NUMBER_NODE, std::to_string((float)0))});
+//
+//        TS_ASSERT(content_eq(score.as_handle(), link));
+//    }
 
 };
