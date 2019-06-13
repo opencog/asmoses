@@ -121,23 +121,27 @@ bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
 	return size_tree_order<vertex>()(bs_tr1.get_tree(), bs_tr2.get_tree());
 }
 
-bool sa_score_greater::operator()(const scored_atomese& bs_tr1,
-								   const scored_atomese& bs_tr2) const
+bool sa_score_greater::operator()(const scored_atomese& bs_h1,
+								  const scored_atomese& bs_h2) const
 {
-    const composite_score csc1 = bs_tr1.get_composite_score();
-    const composite_score csc2 = bs_tr2.get_composite_score();
+    const composite_score csc1 = bs_h1.get_composite_score();
+    const composite_score csc2 = bs_h2.get_composite_score();
 
     if (csc1 > csc2) return true;
     if (csc1 < csc2) return false;
 
     // If we are here, then they are equal.  We are desperate to break
-    // a tie, because otherwise, the scored_combo_tree_ptr_set will discard
+    // a tie, because otherwise, the scored_atomese_ptr_set will discard
     // anything that compares equal, and we really don't want that.
     score_t sc1 = csc1.get_score();
     score_t sc2 = csc2.get_score();
 
     if (sc1 > sc2) return true;
     if (sc1 < sc2) return false;
+
+	// Arghh, still tied!  The above already used complexity to break
+	// the tie.  Lets compare them based on content of the handle.
+	return bs_h2.get_handle()->operator<(*bs_h1.get_handle());
 }
 
 // See header file for description.
