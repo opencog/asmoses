@@ -255,8 +255,7 @@ std::ostream& ostream_scored_atomese(std::ostream& out,
 									 bool output_bscore)
 {
 	if (output_score)
-		out << sa.get_score() << " ";
-	oc_to_string(sa.get_handle());
+		out << sa.get_score() << " " << oc_to_string(sa.get_handle());
 
 	// Is this really used?
 	static const bool output_weight = false;
@@ -390,6 +389,14 @@ std::string oc_to_string(const moses::scored_combo_tree &sct,
 {
 	std::stringstream ss;
 	moses::operator<<(ss, sct);
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::scored_atomese &sa,
+						 const std::string &indent)
+{
+	std::stringstream ss;
+	moses::operator<<(ss, sa);
 	return ss.str();
 }
 

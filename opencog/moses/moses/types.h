@@ -599,7 +599,8 @@ std::string oc_to_string(const moses::behavioral_score& bs,
                          const std::string &indent=empty_string);
 std::string oc_to_string(const moses::scored_combo_tree &sct,
                          const std::string &indent=empty_string);
-
+std::string oc_to_string(const moses::scored_atomese &sa,
+						 const std::string &indent=empty_string);
 } // ~namespace opencog
 
 #endif
