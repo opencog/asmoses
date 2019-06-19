@@ -600,7 +600,17 @@ std::string oc_to_string(const moses::behavioral_score& bs,
 std::string oc_to_string(const moses::scored_combo_tree &sct,
                          const std::string &indent=empty_string);
 std::string oc_to_string(const moses::scored_atomese &sa,
-						 const std::string &indent=empty_string);
+                         const std::string &indent=empty_string);
+std::string oc_to_string(const moses::scored_combo_tree_set& scts,
+                         const std::string &indent=empty_string);
+std::string oc_to_string(const moses::scored_atomese_set& sas,
+                         const std::string &indent=empty_string);
+std::string oc_to_string(const moses::scored_combo_tree_tset& sctts,
+                         const std::string &indent=empty_string);
+std::string oc_to_string(const moses::scored_combo_tree_ptr_set& sctps,
+                         const std::string &indent=empty_string);
+std::string oc_to_string(const moses::scored_atomese_ptr_set& saps,
+                         const std::string &indent=empty_string);
 } // ~namespace opencog
 
 #endif
