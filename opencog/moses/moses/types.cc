@@ -393,10 +393,80 @@ std::string oc_to_string(const moses::scored_combo_tree &sct,
 }
 
 std::string oc_to_string(const moses::scored_atomese &sa,
-						 const std::string &indent)
+                         const std::string &indent)
 {
 	std::stringstream ss;
 	moses::operator<<(ss, sa);
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::scored_combo_tree_set& scts,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	ss << indent << "size = " << scts.size() << std::endl;
+	size_t i = 0;
+	for (const auto& sct : scts) {
+		ss << indent << "scored_combo_tree[" << i << "]:" << std::endl
+		   << oc_to_string(sct, indent + oc_to_string_indent);
+		i++;
+	}
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::scored_atomese_set& sas,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	ss << indent << "size = " << sas.size() << std::endl;
+	size_t i = 0;
+	for (const auto& sa : sas) {
+		ss << indent << "scored_atomese[" << i << "]:" << std::endl
+		   << oc_to_string(sa, indent + oc_to_string_indent);
+		i++;
+	}
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::scored_combo_tree_tset& sctts,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	ss << indent << "size = " << sctts.size() << std::endl;
+	size_t i = 0;
+	for (const auto& sct : sctts) {
+		ss << indent << "scored_combo_tree[" << i << "]:" << std::endl
+		   << oc_to_string(sct, indent + oc_to_string_indent);
+		i++;
+	}
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::scored_combo_tree_ptr_set& sctps,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	ss << indent << "size = " << sctps.size() << std::endl;
+	size_t i = 0;
+	for (const auto& sct : sctps) {
+		ss << indent << "scored_combo_tree[" << i << "]:" << std::endl
+		   << oc_to_string(sct, indent + oc_to_string_indent);
+		i++;
+	}
+	return ss.str();
+}
+
+std::string oc_to_string(const moses::scored_atomese_ptr_set& saps,
+                         const std::string &indent)
+{
+	std::stringstream ss;
+	ss << indent << "size = " << saps.size() << std::endl;
+	size_t i = 0;
+	for (const auto& sa : saps) {
+		ss << indent << "scored_atomese[" << i << "]:" << std::endl
+		   << oc_to_string(sa, indent + oc_to_string_indent);
+		i++;
+	}
 	return ss.str();
 }
 
