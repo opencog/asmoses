@@ -4,7 +4,7 @@
  * Copyright (C) 2012 Poulin Holdings
  * Copyright (C) 2014 Aidyia Limited
  *
- * Authors: Nil Geisweiller, Moshe Looks, Linas Vepstas
+ * Authors: Nil Geisweiller, Moshe Looks, Linas Vepstas, Bitseat Tadesse, Yidnekachew Wondimu
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -106,6 +106,7 @@ class metapopulation
 {
     // Init the metapopulation with the following set of exemplars.
     void init(const combo_tree_seq& exemplars);
+    void init(const HandleSeq& exemplars);
 
 public:
     /**
@@ -129,9 +130,19 @@ public:
                    const metapop_parameters& pa = metapop_parameters(),
                    const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
 
+    metapopulation(const HandleSeq& bases,
+                   behave_cscore& sc,
+                   const metapop_parameters& pa = metapop_parameters(),
+                   const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
+
     // Like above but using a single base, and a single reduction rule.
     /// @todo use C++11 redirection
     metapopulation(const combo_tree& base,
+                   behave_cscore& sc,
+                   const metapop_parameters& pa = metapop_parameters(),
+                   const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
+
+    metapopulation(const Handle& base,
                    behave_cscore& sc,
                    const metapop_parameters& pa = metapop_parameters(),
                    const subsample_deme_filter_parameters& subp = subsample_deme_filter_parameters());
@@ -142,6 +153,8 @@ public:
     const ensemble& get_ensemble() const { return _ensemble; }
     composite_score best_composite_score() const;
     const combo_tree& best_tree() const;
+    const scored_atomese_set& best_atomese_candidates() const;
+    const Handle& best_atomese() const;
 
     /**
      * Return the best model score (either the score of the
@@ -173,12 +186,20 @@ public:
      */
     scored_combo_tree_ptr_set::const_iterator select_exemplar();
 
+    scored_atomese_ptr_set::const_iterator select_atomese_exemplar();
+
     const scored_combo_tree_ptr_set& get_trees() const { return _scored_trees; }
     scored_combo_tree_ptr_set::const_iterator begin() const { return _scored_trees.begin(); }
     scored_combo_tree_ptr_set::const_iterator end() const { return _scored_trees.end(); }
     bool empty() const { return _scored_trees.empty(); }
     size_t size() const { return _scored_trees.size(); }
     void clear() { _scored_trees.clear(); }
+
+    const scored_atomese_ptr_set& get_handles() const { return _scored_atomeses; }
+    scored_atomese_ptr_set::const_iterator at_begin() const { return _scored_atomeses.begin(); }
+    scored_atomese_ptr_set::const_iterator at_end() const { return _scored_atomeses.end(); }
+    bool at_empty() const { return _scored_atomeses.empty(); }
+    size_t at_size() const { return _scored_atomeses.size(); }
 
     // -------------------------- Merge related ----------------------
 public:
@@ -194,6 +215,8 @@ public:
     /// reallocate candidates once they are selected. It might be
     /// minor though in terms of performance gain. FIXME.
     void merge_candidates(scored_combo_tree_set& candidates);
+
+    void merge_candidates(scored_atomese_set& candidates);
 
     /**
      * merge demes -- convert instances to trees, and merge them
@@ -218,9 +241,14 @@ public:
     bool merge_demes(std::vector<std::vector<deme_t>>& demes,
                      const boost::ptr_vector<representation>& reps);
 
+    bool merge_demes_atomese(std::vector<std::vector<deme_t>>& demes,
+                     const boost::ptr_vector<representation>& reps);
+
     /// Update the record of the best score seen, and the associated tree.
     /// Safe to call in a multi-threaded context.
     void update_best_candidates(const scored_combo_tree_set& candidates);
+
+    void update_best_candidates(const scored_atomese_set& candidates);
 
 private:
     /**
@@ -233,6 +261,8 @@ private:
      * each bscore.
      */
     void rescore();
+
+    void rescore_atomese();
 
     /**
      * Weed out excessively bad scores. The select_exemplar() routine
@@ -257,10 +287,14 @@ private:
      */
     void resize_metapop();
 
+    void resize_metapop_atomese();
+
     // Return the set of candidates not present in the metapopulation.
     // This makes merging faster because it decreases the number of
     // calls of dominates.
     scored_combo_tree_set get_new_candidates(const scored_combo_tree_set&);
+
+    scored_atomese_set get_new_candidates(const scored_atomese_set&);
 
     // Trim down deme before merging based the scores
     void trim_down_deme(deme_t& deme) const;
@@ -268,6 +302,9 @@ private:
     // convert instances in deme to trees
     void deme_to_trees(deme_t&, const representation&,
                        scored_combo_tree_set&);
+
+    void deme_to_trees(deme_t&, const representation&,
+                       scored_atomese_set&);
 
     /// Given the current complexity temp, return the range of scores that
     /// are likely to be selected by the select_exemplar routine. Due to
@@ -322,6 +359,8 @@ private:
      */
     void set_diversity();
 
+    void set_diversity_atomese();
+
 public:
     // Structure holding stats about diversity
     struct diversity_stats
@@ -338,6 +377,8 @@ public:
      * (if n is negative then all candidates are included)
      */
     diversity_stats gather_diversity_stats(int n);
+
+    diversity_stats gather_diversity_stats_atomese(int n);
 
     /**
      * Return true if the diversity mechanism is enabled. This mechanism
@@ -371,10 +412,15 @@ private:
         dp_t operator()(const scored_combo_tree* cl,
                         const scored_combo_tree* cr);
 
+        dp_t operator()(const scored_atomese* cl,
+                        const scored_atomese* cr);
+
         /**
          * Remove all keys containing any element of ptr_seq
          */
         void erase_ptr_seq(std::vector<scored_combo_tree*> ptr_seq);
+
+        void erase_ptr_seq_atomese(std::vector<scored_atomese*> ptr_seq);
 
         /**
          * Gather some statistics about the diversity of the
@@ -409,10 +455,22 @@ private:
     typedef std::pair<scored_combo_tree_ptr_vec,
                       scored_combo_tree_ptr_vec> scored_combo_tree_ptr_vec_pair;
 
+    typedef std::pair<scored_atomese_set,
+            scored_atomese_set> scored_atomese_set_pair;
+    typedef std::vector<const scored_atomese*> scored_atomese_ptr_vec;
+    typedef scored_atomese_ptr_vec::iterator scored_atomese_ptr_vec_it;
+    typedef scored_atomese_ptr_vec::const_iterator scored_atomese_ptr_vec_cit;
+    typedef std::pair<scored_atomese_ptr_vec,
+            scored_atomese_ptr_vec> scored_atomese_ptr_vec_pair;
+
     // reciprocal of random_access_view
     static scored_combo_tree_set to_set(const scored_combo_tree_ptr_vec& bcv);
 
+    static scored_atomese_set to_set(const scored_atomese_ptr_vec& bcv);
+
     void remove_dominated(scored_combo_tree_set& bcs, unsigned jobs = 1);
+
+    void remove_dominated(scored_atomese_set& bcs, unsigned jobs = 1);
 
     // split in 2 of equal size
     static scored_combo_tree_ptr_vec_pair
@@ -423,11 +481,23 @@ private:
                          scored_combo_tree_ptr_vec(middle, bcv.end()));
     }
 
+    static scored_atomese_ptr_vec_pair
+    inline split(const scored_atomese_ptr_vec& bcv)
+    {
+        scored_atomese_ptr_vec_cit middle = bcv.begin() + bcv.size() / 2;
+        return make_pair(scored_atomese_ptr_vec(bcv.begin(), middle),
+                         scored_atomese_ptr_vec(middle, bcv.end()));
+    }
+
     static scored_combo_tree_set
     get_nondominated_iter(const scored_combo_tree_set& bcs);
 
     scored_combo_tree_ptr_vec
     get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
+                         unsigned jobs = 1);
+
+    scored_atomese_ptr_vec
+    get_nondominated_rec(const scored_atomese_ptr_vec& bcv,
                          unsigned jobs = 1);
 
     // return a pair of sets of nondominated candidates between bcs1
@@ -442,14 +512,26 @@ private:
                               const scored_combo_tree_set& bcs2,
                               unsigned jobs = 1);
 
+    scored_atomese_set_pair
+    get_nondominated_disjoint(const scored_atomese_set& bcs1,
+                              const scored_atomese_set& bcs2,
+                              unsigned jobs = 1);
+
     scored_combo_tree_ptr_vec_pair
     get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& bcv1,
                                   const scored_combo_tree_ptr_vec& bcv2,
                                   unsigned jobs = 1);
 
+    scored_atomese_ptr_vec_pair
+    get_nondominated_disjoint_rec(const scored_atomese_ptr_vec& bcv1,
+                                  const scored_atomese_ptr_vec& bcv2,
+                                  unsigned jobs = 1);
+
     // merge nondominated candidate to the metapopulation assuming
     // that bcs contains no dominated candidates within itself
     void merge_nondominated(const scored_combo_tree_set& bcs, unsigned jobs = 1);
+
+    void merge_nondominated(const scored_atomese_set& bcs, unsigned jobs = 1);
 
     static boost::logic::tribool dominates(const behavioral_score& x,
                                            const behavioral_score& y);
@@ -535,8 +617,12 @@ public:
     // TODO: we may want to output the visited status as well
     std::ostream& ostream_metapop(std::ostream&, int n = INT_MAX) const;
 
+    std::ostream& ostream_metapop_atomese(std::ostream&, int n = INT_MAX) const;
+
 private:
     void log_selected_exemplar(scored_combo_tree_ptr_set::const_iterator);
+
+    void log_selected_atomese_exemplar(scored_atomese_ptr_set::const_iterator);
 
 protected:
     // --------------------- Internal state -----------------------
@@ -548,6 +634,8 @@ protected:
 
     scored_combo_tree_ptr_set _scored_trees;
 
+    scored_atomese_ptr_set _scored_atomeses;
+
     static const unsigned _min_pool_size = 250;
 
     size_t _merge_count;
@@ -558,6 +646,10 @@ protected:
     // Trees with composite score equal to _best_cscore.
     scored_combo_tree_set _best_candidates;
 
+    scored_atomese_set _best_atomese_candidates;
+
+    AtomSpace _as;
+
     /// _visited_exemplars contains the exemplars of demes that have
     ///  been previously expanded. The count indicated the number of
     /// times that they've been expanded.
@@ -565,11 +657,19 @@ protected:
                                scored_combo_tree_hash,
                                scored_combo_tree_equal> scored_tree_counter;
 
+    typedef std::unordered_map<scored_atomese, unsigned,
+            scored_atomese_hash,
+            scored_atomese_equal> scored_atomese_counter;
+
     scored_tree_counter _visited_exemplars;
+
+    scored_atomese_counter _visited_atomese_exemplars;
 
     /// Return true iff the tree has already been visited; that is, if
     /// its in _visited_exemplars
     bool has_been_visited(const scored_combo_tree&) const;
+
+    bool has_been_visited(const scored_atomese&) const;
 
     // lock to enable thread-safe deme merging.
     std::mutex _merge_mutex;

@@ -124,12 +124,21 @@ void metapopulation::deme_to_trees(deme_t& deme,
     OMP_ALGO::for_each(deme.cbegin(), deme.cend(), select_candidates);
 }
 
+void metapopulation::deme_to_trees(deme_t& deme,
+                                   const representation& rep,
+                                   scored_atomese_set& pot_candidates)
+{
+    OC_ASSERT(false, "Not implemented yet");
+}
+
+#define SERIAL_RESCORING 1
+
 // Recompute the composite score for each member of the metapop.
 // Used only when boosting. See header file for additioal documentation.
 void metapopulation::rescore()
 {
     bscore_base& bscorer = _cscorer.get_bscorer();
-#define SERIAL_RESCORING 1
+
 #if SERIAL_RESCORING
     for (scored_combo_tree& sct : _scored_trees) {
         score_t new_score = bscorer.sum_bscore(sct.get_bscore());
@@ -141,6 +150,24 @@ void metapopulation::rescore()
         sct.get_composite_score().set_score(new_score);
     }
     OMP_ALGO::for_each(_scored_trees.begin(), _scored_trees.end(), rescore_sct);
+#endif
+}
+
+void metapopulation::rescore_atomese()
+{
+    bscore_base& bscorer = _cscorer.get_bscorer();
+
+#if SERIAL_RESCORING
+        for (scored_atomese& sct : _scored_atomeses) {
+            score_t new_score = bscorer.sum_bscore(sct.get_bscore());
+            sct.get_composite_score().set_score(new_score);
+        }
+#else
+        auto rescore_sct = [&](scored_atomese& sct) {
+        score_t new_score = bscorer.sum_bscore(sct.get_bscore());
+        sct.get_composite_score().set_score(new_score);
+    }
+    OMP_ALGO::for_each(_scored_atomeses.begin(), _scored_atomeses.end(), rescore_sct);
 #endif
 }
 
@@ -180,6 +207,43 @@ void metapopulation::merge_candidates(scored_combo_tree_set& candidates)
     }
 }
 
+//atomese
+void metapopulation::merge_candidates(scored_atomese_set& candidates)
+{
+
+    if (logger().is_debug_enabled()) {
+        logger().debug("Going to merge %u candidates with the metapopulation",
+                       candidates.size());
+        if (logger().is_fine_enabled()) {
+            std::stringstream ss;
+            ss << "Candidates to merge with the metapopulation:" << std::endl;
+            for (const auto& cnd : candidates)
+                ss << "cnd";
+            logger().fine(ss.str());
+        }
+    }
+
+    // Serialize access
+    std::lock_guard<std::mutex> lock(_merge_mutex);
+
+    // Note that merge_nondominated() is very cpu-expensive and
+    // complex...
+    if (not _params.discard_dominated) {
+        logger().debug("Insert all candidates in the metapopulation");
+        for (const auto& cnd : candidates)
+        {
+            scored_atomese *sa = new scored_atomese(cnd);
+            _scored_atomeses.insert(sa);
+//            _as.add_atom(sa->as_scored_handle());
+        }
+    } else {
+        logger().debug("Insert non-dominated candidates in the metapopulation");
+        unsigned old_size = size();
+        merge_nondominated(candidates, _params.jobs);
+        logger().debug("Inserted %u non-dominated candidates "
+                       "in the metapopulation", size() - old_size);
+    }
+}
 
 /// Given a vector of demes, and the corresponding representations for
 /// those demes, convert the instances in the demes into scored combo
@@ -349,6 +413,12 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
     return done;
 }
 
+bool metapopulation::merge_demes_atomese(std::vector<std::vector<deme_t>>& all_demes,
+                                         const boost::ptr_vector<representation>& reps)
+{
+    OC_ASSERT(false, "Not implemented yet");
+}
+
 
 // See header file for a desciption of this method.
 void metapopulation::resize_metapop()
@@ -447,6 +517,104 @@ void metapopulation::resize_metapop()
     }
 }
 
+void metapopulation::resize_metapop_atomese()
+{
+    if (size() <= _min_pool_size)
+        return;
+
+    unsigned old_size = size();
+    logger().debug("Resize the metapopulation (current size=%u), "
+                           "removing worst candidates",
+                   old_size);
+
+    // pointers to deallocate
+    std::vector<scored_atomese*> ptr_seq;
+
+    score_t top_score = _scored_atomeses.begin()->get_penalized_score();
+    score_t range = useful_score_range();
+    score_t worst_score = top_score - range;
+
+    // Erase all the lowest scores.  The metapop is in quasi-sorted
+    // order (since the deme was sorted before being appended), so
+    // this bulk remove mostly works "correctly". It is also 25%
+    // faster than above. I think this is because the erase() above
+    // causes the std::set to try to sort the contents, and this
+    // ends up costing a lot.  I think... not sure.
+
+    // Get the first score below worst_score (from begin() + min_pool_size)
+    scored_atomese_ptr_set::iterator it = std::next(_scored_atomeses.begin(), _min_pool_size);
+    while (it != _scored_atomeses.end()) {
+        score_t sc = it->get_penalized_score();
+        if (sc < worst_score) break;
+        ++it;
+    }
+
+    while (it != _scored_atomeses.end()) {
+        ptr_seq.push_back(&*it);
+        it = _scored_atomeses.erase(it);
+    }
+
+    // Is the population still too large?  Yes, it is, if it is more
+    // than cap as defined by the function of the number of
+    // generations defined below
+    //
+    // popsize cap =  _params.cap_coef*(x+250)*(1+2*exp(-x/500))
+    //
+    // when x is the number of generations so far. The goal of capping
+    // is to keep the metapop small enough that it does not blow out the
+    // available RAM on the machine, but large enough that deme expansion
+    // can always find some suitable exemplar to explore.  The above
+    // formula was arrived at via some ad-hoc experimentation.  A default
+    // value of _params.cap_coef=50 seems to work well.
+    //
+    // XXX TODO fix the cap so its more sensitive to the size of
+    // each exemplar, right!? So if the exemplars are huges, then the
+    // population size has to be smaller.  ... On the other hand, if
+    // the exemplars are huge, then MOSES has probably wandered into
+    // a bad corner, and is failing to explore a big enough space.
+    //
+    // size_t nbelts = get_bscore(*begin()).size();
+    // double cap = 1.0e6 / double(nbelts);
+    _merge_count++;
+    double cap = _params.cap_coef;
+    cap *= _merge_count + 250.0;
+    cap *= 1 + 2.0*exp(- double(_merge_count) / 500.0);
+    size_t popsz_cap = cap;
+    size_t popsz = size();
+    while (popsz_cap < popsz)
+    {
+        // Leave the first 50 alone.
+        static const int offset = 50;
+        int which = offset + randGen().randint(popsz-offset);
+        // using std is necessary to break the ambiguity between
+        // boost::next and std::next. Weirdly enough this appears
+        // only 32bit arch
+        scored_atomese_ptr_set::iterator it = std::next(_scored_atomeses.begin(), which);
+        ptr_seq.push_back(&*it);
+        _scored_atomeses.erase(it);
+        popsz --;
+    }
+
+    // remove them from _cached_dst
+    std::sort(ptr_seq.begin(), ptr_seq.end());
+    _cached_dst.erase_ptr_seq_atomese(ptr_seq);
+
+    if (logger().is_debug_enabled()) {
+        logger().debug("Removed %u candidates from the metapopulation",
+                       old_size - size());
+
+        logger().debug("Metapopulation size is %u", at_size());
+        if (logger().is_fine_enabled()) {
+            std::stringstream ss;
+            ss << "Metapopulation:" << std::endl;
+            ostream_metapop_atomese(ss);
+            logger().fine(ss.str());
+        }
+    }
+}
+
+#define PARALLEL_INSERT 1
+
 /// Given a set of candidates, return the set of candidates not already
 /// present in the metapopulation.  This usually makes merging faster;
 /// for example, if domination is enabled, this will result in fewer
@@ -454,7 +622,6 @@ void metapopulation::resize_metapop()
 scored_combo_tree_set metapopulation::get_new_candidates(const scored_combo_tree_set& mcs)
 {
 
-#define PARALLEL_INSERT 1
 #ifdef PARALLEL_INSERT
     // Parallel insert, uses locking to avoid corruption.
     // This is probably faster than the lock-free version below,
@@ -488,6 +655,48 @@ scored_combo_tree_set metapopulation::get_new_candidates(const scored_combo_tree
                               [&](const scored_combo_tree& v) {
                     return tr == v.get_tree(); });
         if (fcnd == _scored_trees.end())
+            res.insert(cnd);
+    }
+    return res;
+#endif
+}
+
+scored_atomese_set metapopulation::get_new_candidates(const scored_atomese_set& mcs)
+{
+
+#ifdef PARALLEL_INSERT
+    // Parallel insert, uses locking to avoid corruption.
+    // This is probably faster than the lock-free version below,
+    // but who knows ... (the version below is also parallel, just
+    // that it's finer-grained than this one, which means its probably
+    // slower!?)
+    scored_atomese_set res;
+    std::mutex insert_cnd_mutex;
+
+    scored_atomese_ptr_set::const_iterator cbeg = _scored_atomeses.begin();
+    scored_atomese_ptr_set::const_iterator cend = _scored_atomeses.end();
+    auto insert_new_candidate = [&](const scored_atomese& cnd) {
+        const Handle& h = cnd.get_handle();
+        scored_atomese_ptr_set::const_iterator fcnd =
+                std::find_if(cbeg, cend,
+                             [&](const scored_atomese& v) { return h == v.get_handle(); });
+        if (fcnd == cend) {
+            std::lock_guard<std::mutex> lock(insert_cnd_mutex);
+            res.insert(cnd);
+        }
+    };
+    OMP_ALGO::for_each(mcs.begin(), mcs.end(), insert_new_candidate);
+    return res;
+
+#else
+    scored_atomese res;
+    for (const auto& cnd : mcs) {
+        const Handle& h = cnd.get_handle();
+        scored_atomese_ptr_set::const_iterator fcnd =
+            OMP_ALGO::find_if(_scored_atomeses.begin(), _scored_atomeses.end(),
+                              [&](const scored_atomese& v) {
+                    return h == v.get_handle(); });
+        if (fcnd == _scored_atomeses.end())
             res.insert(cnd);
     }
     return res;
@@ -607,6 +816,45 @@ void metapopulation::update_best_candidates(const scored_combo_tree_set& candida
         }
     }
 }
+
+void metapopulation::update_best_candidates(const scored_atomese_set& candidates)
+{
+    if (candidates.empty())
+        return;
+
+    // Make this routine thread-safe.
+    // XXX this lock probably doesn't have to be the same one
+    // that merge uses.  I think.
+    std::lock_guard<std::mutex> lock(_merge_mutex);
+
+    // Candidates are kept in penalized score order, not in
+    // absolute score order.  Thus, we need to search through
+    // the first few to find the true best score.  Also, there
+    // may be several candidates with the best score.
+    score_t best_sc = _best_cscore.get_score();
+    complexity_t best_cpx = _best_cscore.get_complexity();
+
+    for (const scored_atomese& cnd : candidates)
+    {
+        const composite_score& csc = cnd.get_composite_score();
+        score_t sc = csc.get_score();
+        complexity_t cpx = csc.get_complexity();
+        if ((sc > best_sc) || ((sc == best_sc) && (cpx <= best_cpx)))
+        {
+            if ((sc > best_sc) || ((sc == best_sc) && (cpx < best_cpx)))
+            {
+                _best_cscore = csc;
+                best_sc = _best_cscore.get_score();
+                best_cpx = _best_cscore.get_complexity();
+                _best_atomese_candidates.clear();
+                logger().debug() << "New best score: " << _best_cscore
+                                 << "\n\tfor handle: " << cnd.get_handle();
+            }
+            _best_atomese_candidates.insert(cnd);
+        }
+    }
+}
+
 
 // log the best candidates
 void metapopulation::log_best_candidates() const

@@ -44,6 +44,11 @@
 #include <opencog/combo/combo/combo.h>
 #include "complexity.h"
 
+#include <opencog/combo/combo/combo.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/core/NumberNode.h>
+
 namespace opencog { namespace moses {
 
 using combo::vertex;
@@ -103,6 +108,17 @@ struct composite_score:
 	score_t get_score() const { return score; }
 	complexity_t get_complexity() const { return complexity; }
 	score_t get_penalized_score() const { return penalized_score; }
+
+	// returns the composite score as a handle.
+//	Handle as_handle() const {
+//		HandleSeq seq;
+//		seq.push_back(multiply_diversity? createLink(TRUE_LINK) : createLink(FALSE_LINK));
+//		seq.push_back(createNode(NUMBER_NODE, std::to_string(score)));
+//		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity)));
+//		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity_penalty)));
+//		seq.push_back(createNode(NUMBER_NODE, std::to_string(uniformity_penalty)));
+//		return createLink(seq, LIST_LINK);
+//	}
 
 	// Use this only to over-ride the score, wehn re-scoring.
 	void set_score(score_t sc)
@@ -194,6 +210,10 @@ struct demeID_t : public std::string
 	demeID_t(unsigned expansion=0 /* default initial deme */);
 	demeID_t(unsigned expansion, unsigned breadth_first);
 	demeID_t(unsigned expansion, unsigned breadth_first, unsigned ss_deme);
+
+//	Handle as_handle() const{
+//		return createNode(CONCEPT_NODE, *this);
+//	}
 };
 
 /// Behavioral scores record one score per row of input data.
@@ -230,6 +250,16 @@ struct behavioral_score : public std::vector<score_t>
 		}
 		return *this;
 	}
+
+//	Handle as_handle() const {
+//		HandleSeq scores;
+//		for (size_t i=0; i<size(); i++) {
+//			Handle h = createNode(NUMBER_NODE, std::to_string((*this)[i]));
+//			scores.push_back(h);
+//		}
+//		return createLink(scores, LIST_LINK);
+//	}
+
 };
 
 static inline behavioral_score operator-(const behavioral_score& lhs,
@@ -318,6 +348,72 @@ public:
 	bool operator==(const scored_combo_tree& r) const;
 };
 
+//scored_atomese
+class scored_atomese : public boost::equality_comparable<scored_atomese>
+{
+public:
+    scored_atomese(const Handle &h,
+	                  demeID_t id=demeID_t(),
+	                  composite_score cs=composite_score(),
+	                  behavioral_score bs=behavioral_score())
+		: _atomese(h), _deme_id(id), _cscore(cs), _bscore(bs), _weight(1.0)
+		{}
+
+private:
+	Handle _atomese;
+	demeID_t _deme_id;
+	composite_score _cscore;
+	behavioral_score _bscore;
+	double _weight;
+
+public:
+	const Handle& get_handle() const { return _atomese; }
+	Handle& get_handle() { return _atomese; }
+//	Handle as_scored_handle() const{
+//		HandleSeq seq {_atomese, _deme_id.as_handle(), _cscore.as_handle(),
+//					   _bscore.as_handle(), createNode(NUMBER_NODE, std::to_string(_weight))};
+//		return createLink(seq, LIST_LINK);
+//	}
+
+	const demeID_t get_demeID() const { return _deme_id; }
+	demeID_t get_demeID() { return _deme_id; }
+
+	const behavioral_score& get_bscore() const
+	{
+		return _bscore;
+	}
+	void set_bscore(const behavioral_score& bs)
+	{
+		_bscore = bs;
+	}
+	double get_weight() const
+	{
+		return _weight;
+	}
+	void set_weight(double w)
+	{
+		_weight = w;
+	}
+	const composite_score& get_composite_score() const
+	{
+		return _cscore;
+	}
+	composite_score& get_composite_score()
+	{
+		return _cscore;
+	}
+
+	/* Utility wrappers */
+	score_t get_score() const { return _cscore.get_score(); }
+	complexity_t get_complexity() const { return _cscore.get_complexity(); }
+	score_t get_penalized_score() const { return _cscore.get_penalized_score(); }
+	score_t get_complexity_penalty() const { return _cscore.get_complexity_penalty(); }
+	score_t get_uniformity_penalty() const { return _cscore.get_uniformity_penalty(); }
+	score_t get_penalty() const { return _cscore.get_penalty(); }
+
+	bool operator==(const scored_atomese& r) const;
+};
+
 // =======================================================================
 // collections of trees
 
@@ -366,6 +462,27 @@ struct scored_combo_tree_equal
 	                const scored_combo_tree&) const;
 };
 
+/// atomese
+struct sa_score_greater
+	: public std::binary_function<scored_atomese, scored_atomese, bool>
+{
+	bool operator()(const scored_atomese&,
+	                const scored_atomese&) const;
+};
+
+struct scored_atomese_hash
+	: public std::unary_function<scored_atomese, size_t>
+{
+	size_t operator()(const scored_atomese&) const;
+};
+
+struct scored_atomese_equal
+	: public std::binary_function<scored_atomese, scored_atomese, bool>
+{
+	bool operator()(const scored_atomese&,
+	                const scored_atomese&) const;
+};
+
 /// scored_combo_tree_hash_set provides an O(1) way of determining if
 /// a combo tree is in the set, or not (and getting its score, if it is).
 /// Its O(1) in theory. In practice, it can be quite slow, for two
@@ -377,6 +494,11 @@ typedef std::unordered_set<scored_combo_tree,
                            scored_combo_tree_hash,
                            // scored_combo_tree_equal> scored_combo_tree_hash_set;
                            scored_combo_tree_equal> scored_combo_tree_set;
+
+typedef std::unordered_set<scored_atomese,
+                           scored_atomese_hash,
+                           // scored_combo_tree_equal> scored_combo_tree_hash_set;
+                           scored_atomese_equal> scored_atomese_set;
 
 /// scored_combo_tree_tset offers a fairly fast, mutable storage for
 /// combo trees, based on the combo tree itself, and not how its scored.
@@ -402,6 +524,11 @@ typedef boost::ptr_set<scored_combo_tree,
 typedef scored_combo_tree_ptr_set::iterator scored_combo_tree_ptr_set_it;
 typedef scored_combo_tree_ptr_set::const_iterator scored_combo_tree_ptr_set_cit;
 
+typedef boost::ptr_set<scored_atomese,
+		sa_score_greater> scored_atomese_ptr_set;
+typedef scored_atomese_ptr_set::iterator scored_atomese_ptr_set_it;
+typedef scored_atomese_ptr_set::const_iterator scored_atomese_ptr_set_cit;
+
 // =======================================================================
 // ostream functions
 
@@ -419,6 +546,13 @@ std::ostream& ostream_scored_combo_tree(std::ostream& out,
                                         combo::output_format fmt
                                         = combo::output_format::combo);
 
+std::ostream& ostream_scored_atomese(std::ostream& out,
+									 const scored_atomese& sa,
+									 bool output_score=true,
+									 bool output_cscore=true,
+									 bool output_demeID=true,
+									 bool output_bscore=true);
+
 scored_combo_tree string_to_scored_combo_tree(const std::string& line);
 
 std::istream& istream_scored_combo_trees(std::istream& in,
@@ -428,6 +562,12 @@ inline std::ostream& operator<<(std::ostream& out,
                                 const moses::scored_combo_tree& sct)
 {
 	return moses::ostream_scored_combo_tree(out, sct);
+}
+
+inline std::ostream& operator<<(std::ostream& out,
+								const moses::scored_atomese& sa)
+{
+	return moses::ostream_scored_atomese(out, sa);
 }
 
 inline std::ostream& operator<<(std::ostream& out,
@@ -459,7 +599,8 @@ std::string oc_to_string(const moses::behavioral_score& bs,
                          const std::string &indent=empty_string);
 std::string oc_to_string(const moses::scored_combo_tree &sct,
                          const std::string &indent=empty_string);
-
+std::string oc_to_string(const moses::scored_atomese &sa,
+						 const std::string &indent=empty_string);
 } // ~namespace opencog
 
 #endif
