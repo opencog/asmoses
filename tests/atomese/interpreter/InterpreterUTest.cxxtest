@@ -166,4 +166,46 @@ public:
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
 	}
 
+    void test_interpret_condlink(void)
+    {
+        // Atomese program to be evaluated over the condlink interpreter
+        HandleSeq seq1 = {p2, p3};
+        Handle predcte1 = createLink(seq1, OR_LINK);
+        HandleSeq seq2 = {p1, p2, createLink(TRUE_LINK)};
+        Handle exp1 = createLink(seq2, AND_LINK);
+        Handle program = createLink(COND_LINK, predcte1, exp1, p3);
+
+        // expected out put vector
+        ValueSeq exp_value = {f_link, t_link, f_link};
+        ValuePtr expected(new LinkValue(exp_value));
+
+        // interpret
+        atomese::Interpreter interpreter(moses::value_key);
+        ValuePtr result = interpreter(program);
+
+        TS_ASSERT(atomese::condlink_compare(LinkValueCast(result), LinkValueCast(expected)));
+    }
+
+    void test_interpret_condlink2(void) {
+
+        // Atomese program to be evaluated over the condlink interpreter
+        Handle c(createNumberNode(5.0));
+        HandleSeq seq1 = {f1, c};
+        Handle plu1 = createLink(seq1, PLUS_LINK);
+        HandleSeq seq2 = {plu1, f2};
+        Handle tim1 = createLink(seq2, TIMES_LINK);
+        Handle program = createLink(COND_LINK, p1, tim1, f3);
+
+        // expected out put vector
+        std::vector<double> exp_value = {0.0, 5.0, 0.0};
+
+
+        // interpret
+        atomese::Interpreter interpreter(moses::value_key);
+        ValuePtr _result = interpreter(program);
+        std::vector<double> result = FloatValueCast(_result)->value();
+
+        TS_ASSERT(exp_value == result);
+    }
+
 };
