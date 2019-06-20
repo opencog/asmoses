@@ -27,6 +27,7 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atomese/interpreter/logical_interpreter.h>
+#include <opencog/atomese/interpreter/condlink_interpreter.h>
 
 #include "Interpreter.h"
 
@@ -139,7 +140,52 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq& params)
 		result = logical_not( LinkValueCast(params[0]));
 		return ValuePtr(result);
 	}
-	return ValuePtr();
+
+	if (t == COND_LINK) {
+        ValueSeq result, conds, exps, default_exp, res2;
+        std::vector<double> result2, res;
+        if (params.size() == 0)
+            throw SyntaxException(TRACE_INFO,
+                                  "CondLink is expected to be arity greater-than 0!");
+
+        if (params.size() == 1) {
+            default_exp.push_back(params[0]);
+        }
+
+        // If the conditions and expressions are flattened in even and odd
+        // positions respectively.
+        for(unsigned i = 0; i < params.size(); ++i) {
+
+            if(i % 2 == 0) {
+                if(i == params.size() - 1){
+                    default_exp.push_back(params[i]);
+                    break;
+                }
+                conds.push_back(params[i]);
+            }
+            else {
+                exps.push_back(params[i]);
+            }
+        }
+
+        for( int i = 0; i < conds.size(); i++) {
+            auto f_value = FloatValueCast(exps[i]);
+            if(f_value){
+                res = condlink_exec_floatvalue(LinkValueCast(conds[i]), FloatValueCast(exps[i]), FloatValueCast(default_exp[i]));
+                result2.insert(result2.end(), res.begin(), res.end());
+            }
+            else {
+                res2 = condlink_exec_linkvalue(LinkValueCast(conds[i]), LinkValueCast(exps[i]), LinkValueCast(default_exp[i]));
+                result.insert(result.end(), res2.begin(), res2.end());
+            }
+        }
+        if(result.empty()) {
+            return ValuePtr(new FloatValue(result2));
+        }
+        else {
+            return ValuePtr(new LinkValue(result));
+        }
+    }
 }
 
 value_size Interpreter::extract_output_size(const Handle &program, const Handle &key)

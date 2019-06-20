@@ -28,6 +28,7 @@
 #include <opencog/atomese/interpreter/logical_interpreter.h>
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/value/LinkValue.h>
+#include <opencog/atomese/interpreter/condlink_interpreter.h>
 
 #include "opencog/utils/value_key.h"
 
@@ -164,4 +165,5 @@ public:
 
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
 	}
+
 };
