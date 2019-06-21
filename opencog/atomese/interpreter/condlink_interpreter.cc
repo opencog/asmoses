@@ -22,80 +22,77 @@
 
 #include "condlink_interpreter.h"
 
-namespace opencog { namespace atomese {
-
-ValueSeq condlink_exec_linkvalue(const LinkValuePtr &conds, const LinkValuePtr &exps, const LinkValuePtr &default_exp)
+namespace opencog
 {
-    ValueSeq cond = conds -> value();
-    ValueSeq exp = LinkValueCast(exps) -> value();
-    ValueSeq default_ex  = LinkValueCast(default_exp) -> value();
+namespace atomese
+{
 
-    zip_cond _cond = std::for_each(
-            boost::make_zip_iterator(
-                    boost::make_tuple(cond.begin(), exp.begin(), default_ex.begin())
-            ),
-            boost::make_zip_iterator(
-                    boost::make_tuple(cond.end(), exp.end(), default_ex.end())
-            ),
-            zip_cond()
+ValueSeq condlink_exec_linkvalue(const LinkValuePtr &conds,
+                                 const LinkValuePtr &exps,
+                                 const LinkValuePtr &default_exp)
+{
+	ValueSeq cond = conds->value();
+	ValueSeq exp = LinkValueCast(exps)->value();
+	ValueSeq default_ex = LinkValueCast(default_exp)->value();
 
-    );
-    ValueSeq _result = _cond._result;
-    return _result;
+	zip_cond _cond = std::for_each(
+			boost::make_zip_iterator(
+					boost::make_tuple(cond.begin(),
+					                  exp.begin(), default_ex.begin())
+			),
+			boost::make_zip_iterator(
+					boost::make_tuple(cond.end(),
+					                  exp.end(), default_ex.end())
+			),
+			zip_cond()
+
+	);
+	ValueSeq _result = _cond._result;
+	return _result;
 }
 
-void zip_cond::operator()(const boost::tuple<const ValuePtr &, const ValuePtr &, const ValuePtr &> &t)
+void zip_cond::operator()(const boost::tuple<const ValuePtr &,
+		const ValuePtr &, const ValuePtr &> &t)
 {
-    if (bool_value_to_bool(t.get<0>())) {
-        _result.push_back(t.get<1>());
-    }
-    else {
-        _result.push_back(t.get<2>());
-    }
+	if (bool_value_to_bool(t.get<0>())) {
+		_result.push_back(t.get<1>());
+	} else {
+		_result.push_back(t.get<2>());
+	}
 
 }
 
-void  zip_cond2::operator()(const boost::tuple<const ValuePtr &, const double &, const double &> &t)
+void zip_cond2::operator()(const boost::tuple<const ValuePtr &,
+		const double &, const double &> &t)
 {
-    if (bool_value_to_bool(t.get<0>())) {
-        _result.push_back(t.get<1>());
-    }
-    else {
-        _result.push_back(t.get<2>());
-    }
+	if (bool_value_to_bool(t.get<0>())) {
+		_result.push_back(t.get<1>());
+	} else {
+		_result.push_back(t.get<2>());
+	}
 }
 
-std::vector<double> condlink_exec_floatvalue(const LinkValuePtr &conds, const FloatValuePtr &exps, const FloatValuePtr &default_exp)
+std::vector<double> condlink_exec_floatvalue(const LinkValuePtr &conds,
+                                             const FloatValuePtr &exps,
+                                             const FloatValuePtr &default_exp)
 {
-    ValueSeq cond = conds -> value();
-    std::vector<double> exp = exps -> value();
-    std::vector<double> default_ex  = default_exp -> value();
-    zip_cond2 _cond = std::for_each(
-            boost::make_zip_iterator(
-                    boost::make_tuple(cond.begin(), exp.begin(), default_ex.begin())
-            ),
-            boost::make_zip_iterator(
-                    boost::make_tuple(cond.end(), exp.end(), default_ex.end())
-            ),
-            zip_cond2()
+	ValueSeq cond = conds->value();
+	std::vector<double> exp = exps->value();
+	std::vector<double> default_ex = default_exp->value();
+	zip_cond2 _cond = std::for_each(
+			boost::make_zip_iterator(
+					boost::make_tuple(cond.begin(),
+					                  exp.begin(), default_ex.begin())
+			),
+			boost::make_zip_iterator(
+					boost::make_tuple(cond.end(), exp.end(), default_ex.end())
+			),
+			zip_cond2()
 
-    );
-    std::vector<double> _result = _cond._result;
-    return _result;
+	);
+	std::vector<double> _result = _cond._result;
+	return _result;
 }
 
-bool condlink_compare(const LinkValuePtr &p1, const LinkValuePtr &p2)
-{
-    ValueSeq p1_value = p1 -> value();
-    ValueSeq p2_value = p2 -> value();
-
-    std::function<bool (const ValuePtr&, const ValuePtr&)> comparator = []
-            (const ValuePtr& left, const ValuePtr& right)
-    {
-        return HandleCast(left)->get_type()==HandleCast(right)->get_type();
-    };
-
-    return std::equal(p1_value.begin(), p1_value.end(), p2_value.begin(), comparator);
-
 }
-	}}
+}

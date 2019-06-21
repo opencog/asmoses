@@ -183,7 +183,7 @@ public:
         atomese::Interpreter interpreter(moses::value_key);
         ValuePtr result = interpreter(program);
 
-        TS_ASSERT(atomese::condlink_compare(LinkValueCast(result), LinkValueCast(expected)));
+        TS_ASSERT(atomese::logical_compare(LinkValueCast(result), LinkValueCast(expected)));
     }
 
     void test_interpret_condlink2(void) {
