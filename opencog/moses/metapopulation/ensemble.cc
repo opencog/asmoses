@@ -31,13 +31,15 @@
 #include  <opencog/moses/moses/complexity.h>
 #include "ensemble.h"
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace combo;
 
 ensemble::ensemble(behave_cscore& cs, const ensemble_parameters& ep) :
-	_params(ep), _bscorer(cs.get_bscorer())
+		_params(ep), _bscorer(cs.get_bscorer())
 {
 	// Don't mess with the scorer weights if not doing boosting.
 	if (not ep.do_boosting) return;
@@ -96,9 +98,10 @@ void ensemble::add_adaboost(scored_combo_tree_set& cands)
 		// Find the element (the combo tree) with the least error. This is
 		// the element with the highest score.
 		scored_combo_tree_set::iterator best_p =
-			std::min_element(cands.begin(), cands.end(),
-				[](const scored_combo_tree& a, const scored_combo_tree& b) {
-					return a.get_score() > b.get_score(); });
+				std::min_element(cands.begin(), cands.end(),
+				                 [](const scored_combo_tree& a, const scored_combo_tree& b) {
+					                 return a.get_score() > b.get_score();
+				                 });
 
 		logger().info() << "Boosting: candidate score=" << best_p->get_score();
 		double err = _bscorer.get_error(best_p->get_bscore());
@@ -130,11 +133,11 @@ void ensemble::add_adaboost(scored_combo_tree_set& cands)
 		}
 
 		// Compute alpha
-		double alpha = 0.5 * log ((1.0 - err) / err);
+		double alpha = 0.5 * log((1.0 - err) / err);
 		double expalpha = exp(alpha);
 		double rcpalpha = 1.0 / expalpha;
-		logger().info() << "Boosting: add to ensemble " << *best_p  << std::endl
-			<< "With err=" << err << " alpha=" << alpha <<" exp(alpha)=" << expalpha;
+		logger().info() << "Boosting: add to ensemble " << *best_p << std::endl
+		                << "With err=" << err << " alpha=" << alpha << " exp(alpha)=" << expalpha;
 
 		// Set the weight for the tree, and stick it in the ensemble
 		scored_combo_tree best = *best_p;
@@ -145,17 +148,16 @@ void ensemble::add_adaboost(scored_combo_tree_set& cands)
 		const behavioral_score& bs = best_p->get_bscore();
 		size_t bslen = _bscorer.size();
 		std::vector<double> weights(bslen);
-		for (size_t i=0; i<bslen; i++)
-		{
+		for (size_t i = 0; i < bslen; i++) {
 			weights[i] = is_correct(bs[i]) ? rcpalpha : expalpha;
 		}
-      _bscorer.update_weights(weights);
+		_bscorer.update_weights(weights);
 
 		// Remove from the set of candidates.
 		cands.erase(best_p);
 
 		// Are we done yet?
-		promoted ++;
+		promoted++;
 		if (_params.num_to_promote <= promoted) break;
 		if (cands.empty()) break;
 	}
@@ -186,7 +188,7 @@ void ensemble::add_expert(scored_combo_tree_set& cands)
 		// a good-enough score.
 		double err = _bscorer.get_error(sct.get_tree());
 
-		OC_ASSERT(0.0 <= err+_tolerance and err-_tolerance <= 1.0,
+		OC_ASSERT(0.0 <= err + _tolerance and err - _tolerance <= 1.0,
 		          "boosting score out of range; got %g", err);
 
 		// Set the weight for the tree, and stick it in the ensemble
@@ -210,12 +212,11 @@ void ensemble::add_expert(scored_combo_tree_set& cands)
 			// Trick the scorer into using the flat scorer.  Do this by
 			// sticking the single tree into a tree set.
 			scored_combo_tree_set treeset;
-         treeset.insert(sct);
+			treeset.insert(sct);
 			behavioral_score bs(_bscorer.operator()(treeset));
 			size_t bslen = _bscorer.size();
 			std::vector<double> weights(bslen);
-			for (size_t i=0; i<bslen; i++)
-			{
+			for (size_t i = 0; i < bslen; i++) {
 				// Again, here we explicitly assume the pre scorer: A row is
 				// correctly selected if its score is strictly positive.
 				// The weights of positive and selected rows must decrease.
@@ -237,15 +238,15 @@ void ensemble::add_expert(scored_combo_tree_set& cands)
 			// More than half gives negative weights, which wreaks things.
 			if (0.5 <= err) {
 				logger().debug() <<
-				    "Expert: terrible precision, ensemble not expanded: " << err;
+				                 "Expert: terrible precision, ensemble not expanded: " << err;
 				continue;
 			}
 			// AdaBoost-style alpha; except we allow perfect scorers.
 			if (err < _tolerance) err = _tolerance;
-			double alpha = 0.5 * log ((1.0 - err) / err);
+			double alpha = 0.5 * log((1.0 - err) / err);
 			double expalpha = exp(alpha);
 			logger().info() << "Expert: add to ensemble; err=" << err
-			                << " alpha=" << alpha <<" exp(alpha)=" << expalpha
+			                << " alpha=" << alpha << " exp(alpha)=" << expalpha
 			                << std::endl << sct;
 
 			scored_combo_tree kopy(sct);
@@ -268,7 +269,7 @@ void ensemble::add_expert(scored_combo_tree_set& cands)
 			// Thus, the ensemble will incorrectly pick a row if it picks
 			// the row, and the weight isn't at least _bias.  (Keep in mind
 			// that alpha is the weight of the current tree.)
-			for (size_t i=0; i<bslen; i++) {
+			for (size_t i=0; i < bslen; i++) {
 				if (bs[i] >= 0.0) continue;
 				// -2.0 to cancel the -0.5 for bad row.
 				_row_bias[i] += -2.0 * alpha * bs[i];
@@ -279,8 +280,7 @@ void ensemble::add_expert(scored_combo_tree_set& cands)
 			// Increase the importance of all remaining, unselected rows.
 			double rcpalpha = 1.0 / expalpha;
 			std::vector<double> weights(bslen);
-			for (size_t i=0; i<bslen; i++)
-			{
+			for (size_t i=0; i < bslen; i++) {
 				// Again, here we explicitly assume the pre scorer: A row is
 				// correctly selected if its score is strictly positive.
 				// The weights of unselected rows must increase.
@@ -290,7 +290,7 @@ void ensemble::add_expert(scored_combo_tree_set& cands)
 		}
 
 		// Are we done yet?
-		promoted ++;
+		promoted++;
 		if (_params.num_to_promote <= promoted) break;
 	}
 }
@@ -331,8 +331,7 @@ const combo::combo_tree& ensemble::get_adaboost_tree() const
 	head = _weighted_tree.set_head(combo::id::greater_than_zero);
 	plus = _weighted_tree.append_child(head, combo::id::plus);
 
-	for (const scored_combo_tree& sct : _scored_trees)
-	{
+	for (const scored_combo_tree& sct : _scored_trees) {
 		combo::combo_tree::pre_order_iterator times, minus, impulse;
 
 		// times is (weight * (tree - 0.5))
@@ -405,8 +404,7 @@ const combo::combo_tree& ensemble::get_expert_tree() const
 	vertex bias = -_bias * _params.bias_scale;
 	_weighted_tree.append_child(plus, bias);
 
-	for (const scored_combo_tree& sct : _scored_trees)
-	{
+	for (const scored_combo_tree& sct : _scored_trees) {
 		combo::combo_tree::pre_order_iterator times, impulse;
 
 		// times is (weight * tree)
@@ -434,5 +432,6 @@ score_t ensemble::flat_score() const
 }
 
 
-}}; // namespace opencog::moses
+}
+}; // namespace opencog::moses
 
