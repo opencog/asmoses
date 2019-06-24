@@ -27,6 +27,7 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atomese/interpreter/logical_interpreter.h>
+#include <opencog/atomese/interpreter/condlink_interpreter.h>
 
 #include "Interpreter.h"
 
@@ -61,7 +62,7 @@ opencog::ValuePtr Interpreter::operator()(const opencog::Handle &program)
 	}
 
 	ValueSeq params;
-	for (const Handle& h : program->getOutgoingSet()) {
+	for (const Handle &h : program->getOutgoingSet()) {
 		params.push_back((*this)(h));
 	}
 
@@ -93,7 +94,7 @@ ValuePtr Interpreter::unwrap_constant(const Handle &handle)
 	return ValuePtr();
 }
 
-ValuePtr Interpreter::execute(const Type t, const ValueSeq& params)
+ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 {
 	if (t == PLUS_LINK) {
 		std::vector<double> _result(_problem_data_size, 0.0);
@@ -139,7 +140,57 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq& params)
 		result = logical_not( LinkValueCast(params[0]));
 		return ValuePtr(result);
 	}
-	return ValuePtr();
+
+	if (t == COND_LINK) {
+		ValueSeq l_result, conds, exps, default_exp, l_result2;
+		std::vector<double> f_result, f_result2;
+		if (params.size() == 0) {
+			throw SyntaxException(TRACE_INFO,
+			                      "CondLink is expected to be arity greater-than 0!");
+		}
+		if (params.size() == 1) {
+			default_exp.push_back(params[0]);
+		}
+
+		// If the conditions and expressions are flattened in even and odd
+		// positions respectively.
+		for (unsigned i = 0; i < params.size(); ++i) {
+
+			if (i % 2 == 0) {
+				if (i == params.size() - 1) {
+					default_exp.push_back(params[i]);
+					break;
+				}
+				conds.push_back(params[i]);
+			} else {
+				exps.push_back(params[i]);
+			}
+		}
+
+		for (int i = 0; i < conds.size(); i++) {
+			auto f_value = FloatValueCast(exps[i]);
+			if (f_value) {
+				f_result2 = condlink_exec_floatvalue(LinkValueCast(conds[i]),
+				                                     FloatValueCast(exps[i]),
+				                                     FloatValueCast
+						                                     (default_exp[i]));
+				f_result.insert(f_result.end(),
+				                f_result2.begin(), f_result2.end());
+			} else {
+				l_result2 = condlink_exec_linkvalue(LinkValueCast(conds[i]),
+				                                    LinkValueCast(exps[i]),
+				                                    LinkValueCast
+						                                    (default_exp[i]));
+				l_result.insert(l_result.end(),
+				                l_result2.begin(), l_result2.end());
+			}
+		}
+		if (l_result.empty()) {
+			return ValuePtr(new FloatValue(f_result));
+		} else {
+			return ValuePtr(new LinkValue(l_result));
+		}
+	}
 }
 
 value_size Interpreter::extract_output_size(const Handle &program, const Handle &key)
