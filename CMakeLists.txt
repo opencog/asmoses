@@ -232,6 +232,14 @@ ELSE (ATOMSPACE_FOUND)
 	MESSAGE(FATAL_ERROR "AtomSpace missing: it is needed to build this package!")
 ENDIF (ATOMSPACE_FOUND)
 
+# Macros that define how atom types get declared.
+IF (NOT DEFINED ATOMSPACE_DATA_DIR)
+	SET (ATOMSPACE_DATA_DIR "${COGUTIL_DATA_DIR}")
+ENDIF (NOT DEFINED ATOMSPACE_DATA_DIR)
+
+INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogMacros.cmake")
+INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogFunctions.cmake")
+
 # ----------------------------------------------------------
 # MPI is needed for MOSES on compute clusters.
 FIND_PACKAGE(MPI)
@@ -389,8 +397,12 @@ IF (NOT DEFINED CONFDIR)
 	SET (CONFDIR "${CMAKE_INSTALL_PREFIX}/etc")
 ENDIF (NOT DEFINED CONFDIR)
 
+# DATADIR was "${CMAKE_INSTALL_PREFIX}/share/moses" but since OpenCogMacros.cmake
+# in atomspace expects DATADIR to conatain "OpenCogAtomTypes.cmake" I am changing
+# it to "../opencog" at least for now.
 IF (NOT DEFINED DATADIR)
-	SET (DATADIR "${CMAKE_INSTALL_PREFIX}/share/moses")
+	#SET (DATADIR "${CMAKE_INSTALL_PREFIX}/share/moses")
+	SET (DATADIR "${CMAKE_INSTALL_PREFIX}/share/opencog")
 ENDIF (NOT DEFINED DATADIR)
 
 ADD_DEFINITIONS(-DCONFDIR="${CONFDIR}")
