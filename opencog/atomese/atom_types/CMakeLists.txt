@@ -38,3 +38,9 @@ INSTALL(FILES
 
 	DESTINATION "include/opencog/${PROJECT_NAME}/atomese/atom_types"
 	)
+
+ADD_GUILE_MODULE (FILES
+	${CMAKE_CURRENT_BINARY_DIR}/atom_types.scm
+	MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/asmoses/types"
+	DEPENDS asmoses_atom_types
+	)

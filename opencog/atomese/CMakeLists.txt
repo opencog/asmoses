@@ -1,11 +1,12 @@
 ADD_SUBDIRECTORY(interpreter)
 ADD_SUBDIRECTORY(atom_types)
+ADD_SUBDIRECTORY(scm)
 
 ADD_LIBRARY(atomese SHARED
 		interpreter/Interpreter
 		interpreter/logical_interpreter
         interpreter/condlink_interpreter
-		atom_types/ImpulseLink
+		atom_types
 		)
 
 TARGET_LINK_LIBRARIES (atomese

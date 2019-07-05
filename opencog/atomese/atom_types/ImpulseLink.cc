@@ -22,6 +22,7 @@
 #include <opencog/atoms/base/ClassServer.h>
 #include <opencog/atoms/execution/EvaluationLink.h>
 #include <opencog/atoms/core/NumberNode.h>
+#include <opencog/atomese/atom_types/atom_types.h>
 
 #include "ImpulseLink.h"
 
