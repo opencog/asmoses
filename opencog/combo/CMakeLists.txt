@@ -64,7 +64,7 @@ TARGET_LINK_LIBRARIES (ascomboant
 
 #install library
 IF (WIN32)
-	INSTALL(TARGETS ascombo ascomboant
+	INSTALL(TARGETS ascombo ascomboant asmoses_types
 	        EXPORT ASMosesTargets
 	        DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
 ELSE (WIN32)

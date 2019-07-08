@@ -10,4 +10,6 @@
 // ====================================================================
 // asmoses atoms:
 //
-IMPULSE_LINK <- FUNCTION_LINK,NUMERIC_OUTPUT_LINK,BOOLEAN_LINK
+EXP_LINK <- ARITHMETIC_LINK
+SIN_LINK <- ARITHMETIC_LINK
+INFINITY_NODE <- NODE

@@ -27,6 +27,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atoms/base/Link.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 
 
 namespace opencog
