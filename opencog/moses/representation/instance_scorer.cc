@@ -76,10 +76,12 @@ composite_score atomese_based_scorer::operator()(const instance &inst) const
 	}
 
 	combo_tree tr = _rep.get_candidate(inst, _reduce);
+    cout<< oc_to_string(tr, empty_string) << endl;
 	Handle handle = _to_atomese(tr);
-	if(_as) {
-		handle = _as->add_atom(handle);
-	}
+	//if(_as) {
+	//	handle = _as->add_atom(handle);
+	//}
+	cout<< oc_to_string(handle, empty_string) << endl;
 	return _cscorer.get_cscore(handle);
 }
 

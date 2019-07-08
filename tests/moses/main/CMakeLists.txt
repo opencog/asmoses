@@ -23,6 +23,7 @@ TARGET_LINK_LIBRARIES(ASMOSESUTest
         moses
         moses-framework
         ascombo
+        asmoses_types
         ${COGUTIL_LIBRARY}
         )
 

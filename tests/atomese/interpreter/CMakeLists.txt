@@ -4,6 +4,7 @@ TARGET_LINK_LIBRARIES(InterpreterUTest
 	atomese
 	moses
 	ascombo
+	asmoses_types
 	${ATOMSPACE_LIBRARIES}
 	${COGUTIL_LIBRARY}
 )

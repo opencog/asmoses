@@ -114,6 +114,15 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		}
 		return result;
 	}
+	if (t == DIVIDE_LINK) {
+		std::vector<double> _result(FloatValueCast(params[0])->value().size(), 1.0);
+		ValuePtr result(new FloatValue(_result));
+
+		for (const ValuePtr & p : params) {
+			result = divide(FloatValueCast(result), FloatValueCast(p));
+		}
+		return result;
+	}
 	if (t == AND_LINK) {
 		ValueSeq _result(_problem_data_size,
 		                              ValuePtr(createLink(TRUE_LINK)));
