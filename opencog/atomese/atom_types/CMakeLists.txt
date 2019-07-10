@@ -23,13 +23,6 @@ ADD_DEPENDENCIES(asmoses_types asmoses_atom_types)
 INSTALL(TARGETS  asmoses_types
         EXPORT ASMosesTargets
         DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
-IF (WIN32)
-    INSTALL (TARGETS asmoses_types
-            DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
-ELSE (WIN32)
-    INSTALL (TARGETS asmoses_types
-            LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
-ENDIF (WIN32)
 
 ADD_GUILE_MODULE (FILES
         ${CMAKE_CURRENT_BINARY_DIR}/atom_types.scm
