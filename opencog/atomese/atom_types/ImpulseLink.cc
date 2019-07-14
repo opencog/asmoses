@@ -22,7 +22,6 @@
 #include <opencog/atoms/base/ClassServer.h>
 #include <opencog/atoms/execution/EvaluationLink.h>
 #include <opencog/atoms/core/NumberNode.h>
-#include <opencog/atomese/atom_types/atom_types.h>
 
 #include "ImpulseLink.h"
 
@@ -41,11 +40,6 @@ ImpulseLink::ImpulseLink(const HandleSeq& oset, Type t)
 	if (1 != oset.size())
 		throw SyntaxException(TRACE_INFO,
 		                      "ImpulseLink expects only one argument.");
-
-	Type tf = oset[0]->get_type();
-	if (nameserver().isA(tf, BOOLEAN_LINK))
-		throw SyntaxException(TRACE_INFO,
-		                      "Expecting a boolean input.");
 }
 
 ValuePtr ImpulseLink::execute(AtomSpace* scratch, bool silent)

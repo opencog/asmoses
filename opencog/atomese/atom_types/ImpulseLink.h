@@ -27,6 +27,7 @@
 #include <opencog/atoms/core/FunctionLink.h>
 #include <opencog/atoms/core/ScopeLink.h>
 #include <opencog/atoms/core/Quotation.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 
 namespace opencog
 {
@@ -38,6 +39,8 @@ public:
 	virtual ValuePtr execute(AtomSpace*, bool);
 
 	static Handle factory(const Handle&);
+
+	void init(void);
 };
 
 typedef std::shared_ptr<ImpulseLink> ImpulseLinkPtr;

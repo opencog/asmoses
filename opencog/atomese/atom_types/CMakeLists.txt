@@ -17,10 +17,15 @@ ADD_LIBRARY(asmoses_types SHARED
 
 TARGET_LINK_LIBRARIES(asmoses_types
 	${ATOMSPACE_LIBRARIES}
+	${COGUTIL_LIBRARY}
 	)
 
 # Without this, parallel make will race and crap up the generated files.
 ADD_DEPENDENCIES(asmoses_types asmoses_atom_types)
+
+INSTALL(TARGETS asmoses_types
+	EXPORT ASMosesTargets
+	DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
 
 IF (WIN32)
 	INSTALL (TARGETS asmoses_types

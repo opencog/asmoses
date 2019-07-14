@@ -1,0 +1,9 @@
+ADD_CXXTEST(ImpulseLinkUTest)
+TARGET_LINK_LIBRARIES(ImpulseLinkUTest
+		asmoses_types
+		atomese
+		execution
+		smob
+		${ATOMSPACE_LIBRARIES}
+		${COGUTIL_LIBRARY}
+	)
