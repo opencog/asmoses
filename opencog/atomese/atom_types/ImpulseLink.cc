@@ -47,9 +47,9 @@ ValuePtr ImpulseLink::execute(AtomSpace* scratch, bool silent)
 	TruthValuePtr tvp(EvaluationLink::do_evaluate(scratch, _outgoing.at(0)));
 
 	if (tvp->get_mean() > 0.5)
-		return createNumberNode(1);
+		return ValuePtr(createNumberNode(1));
 	else
-		return createNumberNode(0);
+		return ValuePtr(createNumberNode(0));
 }
 
 DEFINE_LINK_FACTORY(ImpulseLink, IMPULSE_LINK)

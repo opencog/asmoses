@@ -26,7 +26,7 @@
 #include <opencog/atoms/execution/Instantiator.h>
 #include <opencog/util/Logger.h>
 #include <opencog/asmoses/atomese/atom_types/atom_types.h>
-#include "opencog/asmoses/atomese/atom_types/ImpulseLink.h"
+#include <opencog/asmoses/atomese/atom_types/ImpulseLink.h>
 
 using namespace opencog;
 using namespace std;
@@ -115,11 +115,3 @@ void ImpulseLinkUTest::test_and_link()
 
 	TS_ASSERT(result == expected);
 }
-
-//	Handle A = an(CONCEPT_NODE, "X"),
-//			one = al(IMPULSE_LINK),
-//			c = al(PLUS_LINK, an(NUMBER_NODE, "4"), an(NUMBER_NODE, "5"));
-//
-//	c->execute();
-//
-//	one->execute();

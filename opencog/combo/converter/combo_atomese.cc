@@ -28,6 +28,7 @@
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/combo/combo/iostream_combo.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 #include "combo_atomese.h"
 
 
@@ -139,6 +140,10 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			*_parent = id::predicate;
 			type = FALSE_LINK;
 			break;
+		case id::impulse:
+			*_parent = id::schema;
+			type = IMPULSE_LINK;
+			break;
 		default: OC_ASSERT(false, "unsupported");
 	}
 	return std::make_pair(type, Handle());
@@ -208,6 +213,10 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 	}
 	if (OR_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::logical_or) : tr.append_child(iter, id::logical_or);
+		return;
+	}
+	if (IMPULSE_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::impulse) : tr.append_child(iter, id::impulse);
 		return;
 	} else {
 		OC_ASSERT(false, "unsupported type");

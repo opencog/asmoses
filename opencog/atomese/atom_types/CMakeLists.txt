@@ -23,15 +23,11 @@ TARGET_LINK_LIBRARIES(asmoses_types
 # Without this, parallel make will race and crap up the generated files.
 ADD_DEPENDENCIES(asmoses_types asmoses_atom_types)
 
-INSTALL(TARGETS asmoses_types
-	EXPORT ASMosesTargets
-	DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
-
 IF (WIN32)
-	INSTALL (TARGETS asmoses_types
+	INSTALL(TARGETS asmoses_types
 		DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
 ELSE (WIN32)
-	INSTALL (TARGETS asmoses_types
+	INSTALL(TARGETS asmoses_types
 		LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
 ENDIF (WIN32)
 
@@ -44,7 +40,7 @@ INSTALL(FILES
 	DESTINATION "include/opencog/${PROJECT_NAME}/atomese/atom_types"
 	)
 
-ADD_GUILE_MODULE (FILES
+ADD_GUILE_MODULE(FILES
 	${CMAKE_CURRENT_BINARY_DIR}/atom_types.scm
 	MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/asmoses/types"
 	DEPENDS asmoses_atom_types
