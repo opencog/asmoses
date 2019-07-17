@@ -27,7 +27,7 @@
 #include <opencog/atoms/core/FunctionLink.h>
 #include <opencog/atoms/core/ScopeLink.h>
 #include <opencog/atoms/core/Quotation.h>
-#include <opencog/asmoses/atomese/atom_types/atom_types.h>
+#include <opencog/atomese/atom_types/atom_types.h>
 
 namespace opencog
 {

@@ -40,6 +40,7 @@ ADD_LIBRARY(ascombo SHARED
 
 TARGET_LINK_LIBRARIES (ascombo
 	atomese
+	asmoses_types
 	${ATOMSPACE_LIBRARIES}
 	${COGUTIL_LIBRARY}
 	${Boost_DATE_TIME_LIBRARY}
