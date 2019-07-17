@@ -1,13 +1,13 @@
 version: 2.0
 
 jobs:
-  as-moses:
+  asmoses:
     docker:
       - image: opencog/opencog-deps
         user: root
         environment:
           CCACHE_DIR: /ws/ccache
-    working_directory: /ws/as-moses
+    working_directory: /ws/asmoses
     steps:
       - attach_workspace:
           at: /ws
@@ -55,13 +55,14 @@ jobs:
       - persist_to_workspace:
           root: /ws/
           paths:
+            - asmoses
             - ccache
 
   package: #Place holder
     docker:
       - image: opencog/opencog-deps
         user: root
-    working_directory: /ws/opencog
+    working_directory: /ws/asmoses
     steps:
       - attach_workspace:
           at: /ws/
@@ -77,10 +78,10 @@ workflows:
   version: 2
   build-test-package:
     jobs:
-      - as-moses
+      - asmoses
       - package:
           requires:
-            - as-moses
+            - asmoses
           filters:
             branches:
               only: master
