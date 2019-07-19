@@ -1,0 +1,5 @@
+target,f1,f2,f3,f4
+high,1,1,high,low
+mid,0,1,mid,high
+low,1,1,mid,high
+high,0,0,high,low

@@ -529,9 +529,7 @@ behavioral_score enum_table_bscore::operator()(const Handle &handle) const
 		                 const CTable::counter_t &c = vct.second;
 		                 // The number that are wrong  equals
 		                 // total minus num correct.
-		                 score_t sc = score_t(c.get
-				                 (bool_value_to_bool(res) ?
-				                  id::logical_true : id::logical_false));
+		                 score_t sc = score_t(c.get(value_to_enum(res)));
 		                 sc -= score_t(c.total_count());
 		                 return sc;
 	                 }

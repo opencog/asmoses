@@ -20,6 +20,9 @@ inline ValuePtr bool_vertex_to_value (const vertex &v)
 	static const ValuePtr f_value(createLink(FALSE_LINK));
 	return vertex_to_bool(v) ? t_value : f_value;
 }
+inline enum_t value_to_enum(const ValuePtr &valuePtr) {
+	return HandleCast(valuePtr)->get_name();
+}
 } // ~namespace opencog
 
 #endif

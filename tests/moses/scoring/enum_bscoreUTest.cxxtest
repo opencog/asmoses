@@ -35,6 +35,11 @@ using namespace combo;
 using namespace moses;
 using namespace std;
 
+#define GET_ENUM [](const vertex &ver) { \
+    auto en = get_enum_type(ver); \
+    return ValuePtr(createNode(CONCEPT_NODE, en.getContent())); \
+    }
+
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
 
 class enum_bscoreUTest : public CxxTest::TestSuite
@@ -43,21 +48,24 @@ public:
 
 	void test_enum_bscore(void)
 	{
-		string input_file = utest_dir + "dataset2.ctable";
-		CTable ct = loadCTable(input_file);
-		enum_table_bscore et_bscore(ct);
+		Table table = loadTable(utest_dir + "enum.ctable");
+		CTable ctt = table.compressed();
+		enum_table_bscore et_bscore(ctt);
 
 		Handle f1 = createNode(PREDICATE_NODE, "f1");
 		Handle f2 = createNode(PREDICATE_NODE, "f2");
-		Handle f3 = createNode(PREDICATE_NODE, "f3");
-		ValueSeq _f1_values, _f2_values, _f3_values;
+		Handle f3 = createNode(CONCEPT_NODE, "f3");
+		Handle f4 = createNode(CONCEPT_NODE, "f4");
+		ValueSeq _f1_values, _f2_values, _f3_values, _f4_values;
 
-		boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values),
+		boost::transform(ctt.get_input_col_data(0), back_inserter(_f1_values),
 		                 bool_vertex_to_value);
-		boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values),
+		boost::transform(ctt.get_input_col_data(1), back_inserter(_f2_values),
 		                 bool_vertex_to_value);
-		boost::transform(ct.get_input_col_data(2), back_inserter(_f3_values),
-		                 bool_vertex_to_value);
+		boost::transform(ctt.get_input_col_data(2), back_inserter(_f3_values),
+		                 GET_ENUM);
+		boost::transform(ctt.get_input_col_data(3), back_inserter(_f4_values),
+						 GET_ENUM);
 
 		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
 		f1->setValue(moses::compressed_value_key, f1_proto_atom);
@@ -65,16 +73,21 @@ public:
 		f2->setValue(moses::compressed_value_key, f2_proto_atom);
 		ValuePtr f3_proto_atom(new LinkValue(_f3_values));
 		f3->setValue(moses::compressed_value_key, f3_proto_atom);
+		ValuePtr f4_proto_atom(new LinkValue(_f4_values));
+		f4->setValue(moses::compressed_value_key, f4_proto_atom);
 
-		HandleSeq handleSeq = {f1, f2, f3};
-		Handle program = createLink(handleSeq, COND_LINK);
+		HandleSeq handleSeq = {f1, f2};
+		Handle program1 = createLink(handleSeq, OR_LINK);
+		HandleSeq handleSeq1 = {program1,f3, f4};
+		Handle program = createLink(handleSeq1, COND_LINK);
 
 		behavioral_score bs = et_bscore(program);
 		// note that the compressed table might get reordered in this case the
-		// fourth row will come at the first, first row will come at the second
-		// , third row will come at  the Since the population of the input data
-		// to atomspace is called after the reorder this should have no problem.
-		behavioral_score expected_bs = {-7, -4, -1, -8};
+		// first row will come at the first, third row will come at the second,
+		// second row will come at the third, and the fourth row will come at
+		// fourth. Since the population of the input data to atomspace is
+		// called after the reorder this should have no problem.
+		behavioral_score expected_bs = {0, -1, 0, -1};
 
 		TS_ASSERT_EQUALS(bs, expected_bs);
 	}
