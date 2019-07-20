@@ -31,6 +31,7 @@
 #include <opencog/atomese/interpreter/condlink_interpreter.h>
 
 #include "opencog/utils/value_key.h"
+#include <opencog/atomese/atom_types/atom_types.h>
 
 using namespace std;
 using namespace opencog;
@@ -40,6 +41,7 @@ private:
 	Handle f1;
 	Handle f2;
 	Handle f3;
+	Handle f4;
 	Handle p1;
 	Handle p2;
 	Handle p3;
@@ -53,10 +55,11 @@ public:
 		f1 = createNode(SCHEMA_NODE, "f1");
 		f2 = createNode(SCHEMA_NODE, "f2");
 		f3 = createNode(SCHEMA_NODE, "f3");
-
+		f4 = createNode(SCHEMA_NODE, "f4");
 		std::vector<double> _f1_values = {1.0, 0.0, 0.0};
 		std::vector<double> _f2_values = {0.0, 1.0, 0.0};
 		std::vector<double> _f3_values = {0.0, 0.0, 0.0};
+		std::vector<double> _f4_values = {2.0, 5.0,3.6};
 		std::vector<double> _size_value = {3};
 
 		ValuePtr f1_proto_atom(new FloatValue(_f1_values));
@@ -67,6 +70,9 @@ public:
 
 		ValuePtr f3_proto_atom(new FloatValue(_f3_values));
 		f3->setValue(moses::value_key, f3_proto_atom);
+
+		ValuePtr f4_proto_atom(new FloatValue(_f4_values));
+		f4->setValue(moses::value_key, f4_proto_atom);
 
 		// initialization of program [Boolean]
 		p1 = createNode(PREDICATE_NODE, "p1");
@@ -207,5 +213,55 @@ public:
 
         TS_ASSERT(exp_value == result);
     }
+	void test_interpreter_explink1(void){
+		HandleSeq seq = {f1};
+		Handle program = createLink(seq, EXP_LINK);
+		std::vector<double> expected = {floorf(exp(1.0)*10000)/10000,exp(0.0), exp(0.0)};
 
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> interout = FloatValueCast(_result)->value();
+		std::vector<double> result = {};
+		for (float value:interout) result.push_back (floorf(value*10000)/10000);
+
+		TS_ASSERT(expected==result);
+	}
+
+	void test_interpreter_explink2(void){
+		HandleSeq seq = {f4};
+		Handle program = createLink(seq, EXP_LINK);
+		std::vector<double> expected = {floorf(exp(2.0)*10000)/10000, floorf(exp(5.0)*10000)/10000,floorf(exp(3.6)*10000)/10000};
+
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> interout = FloatValueCast(_result)->value();
+		std::vector<double> result = {};
+		for (float value:interout) result.push_back (floorf(value*10000)/10000);
+		TS_ASSERT(expected==result)
+	}
+
+	void test_interpreter_sinlink1(void){
+		HandleSeq seq = {f4};
+		Handle program = createLink(seq, SIN_LINK);
+		std::vector<double> expected = {floorf(sin(2.0)*10000)/10000, floorf(sin(5.0)*10000)/10000,floorf(sin(3.6)*10000)/10000};
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> interout = FloatValueCast(_result)->value();
+		std::vector<double> result = {};
+		for (float value:interout) result.push_back (floorf(value*10000)/10000);
+		TS_ASSERT(expected==result)
+	}
+
+	void test_interpreter_loglink1(void) {
+		HandleSeq seq = {f4};
+		Handle program = createLink(seq, LOG_LINK);
+		std::vector<double> expected = {floorf(log(2.0) * 10000) / 10000, floorf(log(5.0) * 10000) / 10000,
+		                                floorf(log(3.6) * 10000) / 10000};
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> interout = FloatValueCast(_result)->value();
+		std::vector<double> result = {};
+		for (float value:interout) result.push_back(floorf(value * 10000) / 10000);
+		TS_ASSERT(expected == result);
+	}
 };
