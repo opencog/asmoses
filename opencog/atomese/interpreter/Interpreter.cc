@@ -28,6 +28,7 @@
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atomese/interpreter/logical_interpreter.h>
 #include <opencog/atomese/interpreter/condlink_interpreter.h>
+#include <opencog/atomese/atom_types/atom_types.h>
 
 #include "Interpreter.h"
 
@@ -148,6 +149,21 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		LinkValuePtr result;
 		result = logical_not( LinkValueCast(params[0]));
 		return ValuePtr(result);
+	}
+	if (t == EXP_LINK) {
+		std::vector<double> _result = {};
+		for (float value :FloatValueCast(params[0])->value() )_result.push_back(exp(value));
+		return  ValuePtr(new FloatValue(_result));
+	}
+	if(t == SIN_LINK){
+		std::vector<double> _result = {};
+		for (float value :FloatValueCast(params[0])->value() )_result.push_back(sin(value));
+		return  ValuePtr(new FloatValue(_result));
+	}
+	if(t == LOG_LINK){
+		std::vector<double> _result = {};
+		for (float value :FloatValueCast(params[0])->value() )_result.push_back(log(value));
+		return  ValuePtr(new FloatValue(_result));
 	}
 
 	if (t == COND_LINK) {
