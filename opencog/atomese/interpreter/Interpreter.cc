@@ -150,6 +150,21 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		result = logical_not( LinkValueCast(params[0]));
 		return ValuePtr(result);
 	}
+	if (t == EXP_LINK) {
+		std::vector<double> _result = {};
+		for (float value :FloatValueCast(params[0])->value() )_result.push_back(exp(value));
+		return  ValuePtr(new FloatValue(_result));
+	}
+	if(t == SIN_LINK){
+		std::vector<double> _result = {};
+		for (float value :FloatValueCast(params[0])->value() )_result.push_back(sin(value));
+		return  ValuePtr(new FloatValue(_result));
+	}
+	if(t == LOG_LINK){
+		std::vector<double> _result = {};
+		for (float value :FloatValueCast(params[0])->value() )_result.push_back(log(value));
+		return  ValuePtr(new FloatValue(_result));
+	}
 
 	if (t == COND_LINK) {
 		ValueSeq l_result, conds, exps, default_exp, l_result2;
