@@ -214,10 +214,6 @@ public:
 
         TS_ASSERT(exp_value == result);
     }
-	void test_interpreter_explink1(void){
-		HandleSeq seq = {f1};
-		Handle program = createLink(seq, EXP_LINK);
-		std::vector<double> expected = {floorf(exp(1.0)*10000)/10000,exp(0.0), exp(0.0)};
 
 	void test_interpret_impulse(void)
 	{
@@ -258,16 +254,18 @@ public:
 
 		TS_ASSERT(exp_value == result);
 	}
-
+	void test_interpreter_explink1(void) {
+		HandleSeq seq = {f1};
+		Handle program = createLink(seq, EXP_LINK);
+		std::vector<double> expected = {floorf(exp(1.0) * 10000) / 10000, exp(0.0), exp(0.0)};
 		atomese::Interpreter interpreter(moses::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> interout = FloatValueCast(_result)->value();
 		std::vector<double> result = {};
 		for (float value:interout) result.push_back (floorf(value*10000)/10000);
-
 		TS_ASSERT(expected==result);
 	}
-
+	
 	void test_interpreter_explink2(void){
 		HandleSeq seq = {f4};
 		Handle program = createLink(seq, EXP_LINK);
