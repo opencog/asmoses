@@ -29,6 +29,7 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/value/LinkValue.h>
 #include <opencog/atomese/interpreter/condlink_interpreter.h>
+#include <opencog/atomese/atom_types/atom_types.h>
 
 #include "opencog/utils/value_key.h"
 
@@ -207,5 +208,45 @@ public:
 
         TS_ASSERT(exp_value == result);
     }
+
+	void test_interpret_impulse(void)
+	{
+		// Atomese program to be evaluated over the problem_data
+		HandleSeq seq = {p1};
+		Handle program = createLink(seq, IMPULSE_LINK);
+
+		// expected out put vector
+		std::vector<double> exp_value = {1.0, 1.0, 0.0};
+
+		// interpret
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> result = FloatValueCast(_result)->value();
+
+		TS_ASSERT(exp_value == result);
+	}
+
+	void test_interpret_impulse2(void)
+	{
+		// Atomese program to be evaluated over the problem_data
+		HandleSeq seq1 = {p1, p2};
+		Handle sub_program1 = createLink(seq1, AND_LINK);
+		HandleSeq seq2 = {p3};
+		Handle sub_program2 = createLink(seq2, NOT_LINK);
+		HandleSeq seq3 = {sub_program1, sub_program2};
+		Handle sub_program3 = createLink(seq3, OR_LINK);
+		HandleSeq seq4 = {sub_program3};
+		Handle program = createLink(seq4, IMPULSE_LINK);
+
+		// expected out put vector
+		std::vector<double> exp_value = {1.0, 1.0, 0.0};
+
+		// interpret
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> result = FloatValueCast(_result)->value();
+
+		TS_ASSERT(exp_value == result);
+	}
 
 };

@@ -1,6 +1,7 @@
 LINK_LIBRARIES(
 	-Wl,--no-as-needed
 	ascombo
+	asmoses_types
 	${ATOMSPACE_LIBRARIES}
 	${COGUTIL_LIBRARY}
 )

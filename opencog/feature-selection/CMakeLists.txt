@@ -14,6 +14,7 @@ ADD_LIBRARY(asfeature_selection SHARED
 
 TARGET_LINK_LIBRARIES(asfeature_selection
     INTERFACE moses
+	asmoses_types
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
