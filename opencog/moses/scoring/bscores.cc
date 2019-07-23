@@ -517,6 +517,27 @@ behavioral_score enum_table_bscore::operator()(const combo_tree &tr) const
 	return bs;
 }
 
+behavioral_score enum_table_bscore::operator()(const Handle &handle) const
+{
+	behavioral_score bs;
+
+	atomese::Interpreter interpreter(compressed_value_key);
+	const ValuePtr result = interpreter(handle);
+	boost::transform(LinkValueCast(result)->value(),
+	                 _ctable, back_inserter(bs),
+	                 [&](ValuePtr res, const CTable::value_type &vct) {
+		                 const CTable::counter_t &c = vct.second;
+		                 // The number that are wrong  equals
+		                 // total minus num correct.
+		                 score_t sc = score_t(c.get(value_to_enum(res)));
+		                 sc -= score_t(c.total_count());
+		                 return sc;
+	                 }
+	);
+
+	return bs;
+}
+
 behavioral_score enum_table_bscore::best_possible_bscore() const
 {
 	behavioral_score bs;
