@@ -149,12 +149,12 @@ void moses_test_score(vector<string> arguments, score_t expected_sc)
 	// parse the result
 	auto result = parse_result(cmd_tmp.second);
 	// check that the result is the expected one
-	TS_ASSERT_LESS_THAN(fabs(result.first - expected_sc), 1.0e-8);
+	TS_ASSERT_LESS_THAN(fabs(result.first - expected_sc), 1.0e-3);
 	auto t2 = microsec_clock::local_time();
 	std::cout << "Wallclock time: " << (t2 - t1) << std::endl;
 
 	// Unlink only if test passed.
-	if (fabs(result.first - expected_sc) < 1.0e-8)
+	if (fabs(result.first - expected_sc) < 1.0e-3)
 		unlink(cmd_tmp.second.c_str());
 }
 

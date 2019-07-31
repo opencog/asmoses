@@ -99,7 +99,7 @@ public:
 	}
 	void test_atomese_sr_3() {
 		cout << BOOST_CURRENT_FUNCTION << endl;
-		moses_test_score({"-Hsr", "-k3", "-m100000", "-L1", "--atomspace-port=1"});
+		moses_test_score({"-Hsr", "-k3", "-m1000", "-L1", "--atomspace-port=1"});
 	}
 //    // test for moses_test_atomese
 //	void test_atomese_cp_simple() {

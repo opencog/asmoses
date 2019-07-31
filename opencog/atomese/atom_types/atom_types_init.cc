@@ -1,7 +1,7 @@
 /*
  * attention/atom_types_init.cc
  *
- * Copyright (C) 2014 Linas Vepstas
+ * Copyright (C) 2014 Bitseat Tadesse
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
