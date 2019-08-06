@@ -40,6 +40,9 @@ void set_depth(int new_depth);
  * determine the initial exemplar given its output type
  */
 combo_tree type_to_exemplar(type_node type);
+
+type_node type_to_type_node(const Type& type);
+
         
 /**
  * Do the representation-building, create a field_set

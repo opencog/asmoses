@@ -103,6 +103,26 @@ combo_tree type_to_exemplar(type_node type)
     return combo_tree();
 }
 
+type_node type_to_type_node(const Type& type) {
+	if (type == AND_LINK || type == OR_LINK
+	    || type == TRUE_LINK || type == FALSE_LINK
+	    || type == PREDICATE_NODE || type == NOT_LINK)
+	{
+		return id::boolean_type;
+	}
+	else if (type == PLUS_LINK || type == TIMES_LINK
+	         || type == DIVIDE_LINK || type == MINUS_LINK
+	         || type == SCHEMA_NODE)
+	{
+		return id::contin_type;
+	}
+	else {
+		std::stringstream ss;
+		ss << "Error: type \"" << type << "\" not supported";
+		OC_ASSERT(false, ss.str());
+	}
+}
+
 representation::representation(const reduct::rule& simplify_candidate,
                                const reduct::rule& simplify_knob_building,
                                const combo_tree& exemplar_,
