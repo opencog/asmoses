@@ -53,6 +53,9 @@ struct representation : public knob_mapper, boost::noncopyable
     typedef std::set<combo::combo_tree, size_tree_order<combo::vertex>>
     combo_tree_ns_set;
 
+    typedef HandleSet handle_operator_set;
+    typedef HandleSeqSet handle_ns_set;
+
     // Optional arguments are used only for actions/Petbrain
     representation(const reduct::rule& simplify_candidate,
                    const reduct::rule& simplify_knob_building,
@@ -61,6 +64,16 @@ struct representation : public knob_mapper, boost::noncopyable
                    const operator_set& ignore_ops = operator_set(),
                    const combo_tree_ns_set* perceptions = NULL,
                    const combo_tree_ns_set* actions = NULL,
+                   bool linear_contin = true,
+                   float perm_ratio = 0.0);
+
+    representation(const reduct::rule& simplify_candidate,
+                   const reduct::rule& simplify_knob_building,
+                   const Handle& exemplar_,
+                   const Type& t,
+                   const HandleSet& ignore_ops,
+                   const HandleSeqSet* perceptions ,
+                   const HandleSeqSet* actions,
                    bool linear_contin = true,
                    float perm_ratio = 0.0);
 
@@ -90,6 +103,9 @@ struct representation : public knob_mapper, boost::noncopyable
      */
     void clean_combo_tree(combo_tree &tr, bool reduce,
                           bool knob_building = false) const;
+
+    void clean_atomese(Handle &handle, bool reduce,
+    		           bool knob_building = false) const;
 
     /**
      * Thread safe composition of transform and
@@ -188,6 +204,7 @@ struct representation : public knob_mapper, boost::noncopyable
     }
 
 protected:
+    Handle _atomese_exemplar;
     combo_tree _exemplar;     // contains the prototype of the
                               // exemplar used to generate the deme
 
