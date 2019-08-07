@@ -249,6 +249,32 @@ representation::representation(const reduct::rule& simplify_candidate,
 #endif // EXEMPLAR_INST_IS_UNDEAD
 }
 
+representation::representation(const reduct::rule& simplify_candidate,
+                               const reduct::rule& simplify_knob_building,
+                               const Handle& exemplar_,
+                               const Type& tt,
+                               const HandleSet& ignore_ops,
+                               const HandleSeqSet* perceptions,
+                               const HandleSeqSet* actions,
+                               bool linear_contin,
+                               float perm_ratio)
+        : _atomese_exemplar(exemplar_),
+          _simplify_candidate(&simplify_candidate),
+          _simplify_knob_building(&simplify_knob_building)
+{
+	logger().info() <<" Start knob building, rep size="
+					<< _atomese_exemplar->size()
+					<<" Complexity= "
+					<<atomese_complexity(_atomese_exemplar);
+
+	// Build knobs from atomese exemplar
+
+	build_knobs(_atomese_exemplar, tt, *this, ignore_ops,
+			perceptions, actions, linear_contin,stepsize,
+			expansion, depth, perm_ratio);
+}
+
+
 /// Turn the knobs on the representation, so that the knob settings match
 /// the instance supplied as the argument.
 void representation::transform(const instance& inst)
@@ -316,6 +342,37 @@ void representation::clean_combo_tree(combo_tree &tr,
 #endif
     }
 }
+
+void representation::clean_atomese(opencog::Handle &handle,
+								   bool reduce,
+								   bool knob_building) const
+{
+	using namespace reduct;
+
+	// Remove null vertices.
+	clean_reduce(handle);
+
+    if (reduce) { //reduce
+#ifdef __FINE_LOG_CND_REDUCED__
+        // Save some cpu time by not even running this if-test.
+        if (logger().isFineEnabled()) {
+            logger().fine() << "Reduce "
+                            << (knob_building? "(knob_building)" : "")
+                            << " candidate: " << tr;
+        }
+#endif
+        if (knob_building)
+            (*get_simplify_knob_building())(handle);
+        else
+            (*get_simplify_candidate())(handle);
+#ifdef __FINE_LOG_CND_REDUCED
+        if (logger().isFineEnabled()) {
+            logger().fine() << "Reduced candidate: " << tr;
+        }
+#endif
+    }
+}
+
 
 /// Create a combo tree that corresponds to the instance inst.
 ///
