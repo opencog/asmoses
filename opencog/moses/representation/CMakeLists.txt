@@ -1,6 +1,7 @@
 #install header files
 INSTALL(FILES
 
+	atomese_rewrite.h
 	field_set.h    
 	instance.h
 	scored_instance.h
