@@ -162,6 +162,58 @@ discriminator::d_counts discriminator::count(const combo_tree& tr) const
     return ctr;
 }
 
+discriminator::d_counts discriminator::count(const Handle& program) const
+{
+    d_counts ctr;
+    atomese::Interpreter interpreter(moses::compressed_value_key);
+    ValuePtr _result = interpreter(program);
+    auto link_result = LinkValueCast(_result)->value();
+
+
+    int i = 0;
+    for (const CTable::value_type& vct : _ctable) {
+        // vct.first = input vector
+        // vct.second = counter of outputs
+
+        double pos = sum_true(vct.second);
+        double neg = sum_false(vct.second);
+        unsigned totalc = vct.second.total_count();
+
+        if (HandleCast(link_result.at(i))->get_type() == TRUE_LINK)
+        {
+            ctr.true_positive_sum += pos;
+            ctr.false_positive_sum += neg;
+            ctr.positive_count += totalc;
+            i+=1;
+        }
+        else
+        {
+            ctr.true_negative_sum += neg;
+            ctr.false_negative_sum += pos;
+            ctr.negative_count += totalc;
+            i+=1;
+        }
+    }
+
+    if (logger().is_fine_enabled()) {
+        logger().fine("counter: tp = %f  fp = %f  tp+fp = %f pos = %f",
+                      ctr.true_positive_sum, ctr.false_positive_sum,
+                      ctr.true_positive_sum + ctr.false_positive_sum,
+                      ctr.positive_count);
+
+        logger().fine("counter: fn = %f  tn = %f  fn+tn = %f neg=%f",
+                      ctr.false_negative_sum, ctr.true_negative_sum,
+                      ctr.false_negative_sum + ctr.true_negative_sum,
+                      ctr.negative_count);
+
+        logger().fine("counter: tp+fn = %f  fp+tn = %f  total = %f",
+                      ctr.true_positive_sum + ctr.false_negative_sum,
+                      ctr.false_positive_sum + ctr.true_negative_sum,
+                      ctr.positive_count + ctr.negative_count);
+    }
+    return ctr;
+}
+
 vector<discriminator::d_counts> discriminator::counts(const combo_tree& tr) const
 {
     std::vector<d_counts> ctr_seq;
@@ -440,6 +492,32 @@ behavioral_score recall_bscore::operator()(const combo_tree& tr) const
                      precision, recall, precision_penalty);
     }
     log_candidate_bscore(tr, bs);
+    return bs;
+}
+
+
+behavioral_score recall_bscore::operator()(const Handle& program) const
+{
+    d_counts ctr = count(program);
+
+    // Compute normalized precision and recall.
+    score_t tp_fp = ctr.true_positive_sum + ctr.false_positive_sum;
+    score_t precision = (0.0 < tp_fp) ? ctr.true_positive_sum / tp_fp : 0.0;
+
+    score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
+    score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
+
+    // We are maximizing recall, so that is the first part of the score.
+    behavioral_score bs;
+    bs.push_back(recall);
+
+    score_t precision_penalty = get_threshold_penalty(precision);
+    bs.push_back(precision_penalty);
+    if (logger().is_fine_enabled()) {
+        logger().fine("recall_bcore: precision = %f  recall=%f  precision penalty=%e",
+                      precision, recall, precision_penalty);
+    }
+    log_candidate_bscore(program, bs);
     return bs;
 }
 

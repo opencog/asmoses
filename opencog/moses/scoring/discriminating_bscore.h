@@ -26,8 +26,9 @@
 #define _DISCRIMINATING_BSCORE_H
 
 #include <opencog/data/table/table.h>
-
+#include <opencog/atomese/interpreter/Interpreter.h>
 #include "scoring_base.h"
+#include "opencog/utils/value_key.h"
 
 namespace opencog { namespace moses {
 
@@ -63,6 +64,7 @@ struct discriminator
         score_t negative_count;
     };
     d_counts count(const combo_tree&) const;
+    d_counts count(const Handle&) const;
 
     // Like count but do the counting for each datapoint (each row of
     // the ctable). This is useful for finer grain bscore (see
@@ -172,6 +174,7 @@ struct recall_bscore : public discriminating_bscore
                   float hardness = 1.0f);
 
     behavioral_score operator()(const combo_tree& tr) const;
+    behavioral_score operator()(const Handle& program) const;
 
 protected:
     virtual score_t get_fixed(score_t pos, score_t neg, unsigned cnt) const;
