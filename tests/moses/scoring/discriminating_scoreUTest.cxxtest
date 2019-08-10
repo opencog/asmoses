@@ -1,0 +1,94 @@
+/** discretize_contin_bscore_UTest.cxxtest ---
+ *
+ * Copyright (C) 2019 OpenCog Foundation
+ *
+ * Authors: Kasim Ebrahim <se.kasim.ebrahim@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <cxxtest/TestSuite.h>
+#include <opencog/moses/scoring/bscores.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/data/table/table.h>
+#include <opencog/data/table/table_io.h>
+#include <opencog/utils/valueUtils.h>
+
+#include "opencog/utils/value_key.h"
+#include "opencog/moses/scoring/discriminating_bscore.h"
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+const string scoringUTest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+const string target_feature = "target";
+
+class discriminating_scoreUTest: public CxxTest::TestSuite
+{
+public:
+    Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
+    CTable ct = tt.compressed();
+    Handle f1 = createNode(PREDICATE_NODE, "f1");
+    Handle f2 = createNode(PREDICATE_NODE, "f2");
+    ValueSeq _f1_values;
+    ValueSeq _f2_values;
+
+	void test_recall_bscore1(void)
+	{
+        recall_bscore recall(ct);
+
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+
+        HandleSeq handleSeq = {f1, f2};
+        Handle program = createLink(handleSeq, AND_LINK);
+        behavioral_score bs =  recall(program);
+
+		double expected_bs = 0.0;
+
+		TS_ASSERT_EQUALS(bs[0], expected_bs);
+	}
+    void test_recall_bscore2(void)
+    {
+        recall_bscore recall(ct);
+
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+
+        HandleSeq handleSeq = {f1, f2};
+        Handle program = createLink(handleSeq, OR_LINK);
+        behavioral_score bs =  recall(program);
+        double bs_score = bs[0];
+        double result = round(bs_score * 100000 )/100000;
+        double expected_bs = 0.6;
+
+        TS_ASSERT_EQUALS(result, expected_bs);
+    }
+
+};
