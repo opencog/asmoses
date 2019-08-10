@@ -11,6 +11,13 @@ TARGET_LINK_LIBRARIES(atomese_LBS_UTest
 		ascombo
 		${COGUTIL_LIBRARY}
 		)
+ADD_CXXTEST(discriminating_scoreUTest)
+TARGET_LINK_LIBRARIES(discriminating_scoreUTest
+		moses
+		ascombo
+		${COGUTIL_LIBRARY}
+		)
+
 
 ADD_CXXTEST(contin_bscoreUTest)
 TARGET_LINK_LIBRARIES(contin_bscoreUTest
