@@ -42,12 +42,12 @@ const string target_feature = "target";
 class discriminating_scoreUTest: public CxxTest::TestSuite
 {
 public:
-    Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
-    CTable ct = tt.compressed();
-    Handle f1 = createNode(PREDICATE_NODE, "f1");
-    Handle f2 = createNode(PREDICATE_NODE, "f2");
-    ValueSeq _f1_values;
-    ValueSeq _f2_values;
+        Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
+        CTable ct = tt.compressed();
+        Handle f1 = createNode(PREDICATE_NODE, "f1");
+        Handle f2 = createNode(PREDICATE_NODE, "f2");
+        ValueSeq _f1_values;
+        ValueSeq _f2_values;
 
 	void test_recall_bscore1(void)
 	{

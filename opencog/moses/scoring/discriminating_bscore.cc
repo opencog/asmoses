@@ -169,7 +169,6 @@ discriminator::d_counts discriminator::count(const Handle& program) const
     ValuePtr _result = interpreter(program);
     auto link_result = LinkValueCast(_result)->value();
 
-
     int i = 0;
     for (const CTable::value_type& vct : _ctable) {
         // vct.first = input vector
