@@ -214,11 +214,12 @@ protected:
 struct bep_bscore : public discriminating_bscore
 {
     bep_bscore(const CTable& _ctable,
-               float min_diff = 0.0f,
+               float min_diff = 0.5f,
                float max_diff = 0.5f,
                float hardness = 1.0f);
 
     behavioral_score operator()(const combo_tree& tr) const;
+    behavioral_score operator()(const Handle& program) const;
 
 protected:
     virtual score_t get_fixed(score_t pos, score_t neg, unsigned cnt) const;

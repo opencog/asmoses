@@ -810,6 +810,33 @@ behavioral_score bep_bscore::operator()(const combo_tree& tr) const
     return bs;
 }
 
+behavioral_score bep_bscore::operator()(const Handle& program) const
+{
+    d_counts ctr = count(program);
+
+    // Compute normalized precision and recall.
+    score_t tp_fp = ctr.true_positive_sum + ctr.false_positive_sum;
+    score_t precision = (0.0 < tp_fp) ? ctr.true_positive_sum / tp_fp : 0.0;
+
+    score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
+    score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
+
+    score_t bep = (precision + recall) / 2;
+    // We are maximizing bep, so that is the first part of the score.
+    behavioral_score bs;
+    bs.push_back(bep);
+
+    score_t bep_diff = fabs(precision - recall);
+    score_t bep_penalty = get_threshold_penalty(bep_diff);
+    bs.push_back(bep_penalty);
+    if (logger().is_fine_enabled())
+        logger().fine("bep = %f  diff=%f  bep penalty=%e",
+                      bep, bep_diff, bep_penalty);
+
+    log_candidate_bscore(program, bs);
+    return bs;
+}
+
 /// Return the break-even-point for this ctable row.
 score_t bep_bscore::get_variable(score_t pos, score_t neg, unsigned cnt) const
 {
