@@ -30,6 +30,7 @@
 
 #include "opencog/utils/value_key.h"
 #include "opencog/moses/scoring/discriminating_bscore.h"
+#include <boost/phoenix/phoenix.hpp>
 
 using namespace opencog;
 using namespace combo;
@@ -90,5 +91,43 @@ public:
 
         TS_ASSERT_EQUALS(result, expected_bs);
     }
+    void test_prerec_bscore1(void){
+	    prerec_bscore prerec(ct);
+        combo::combo_tree tr = combo::str2combo_tree("or($1 $2)", {});
+        behavioral_score expected_bs = prerec(tr);
+
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+
+        HandleSeq handleSeq = {f1, f2};
+        Handle program = createLink(handleSeq, OR_LINK);
+        behavioral_score ported_bs = prerec(program);
+
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+	}
+	void test_prerec_bscore2(void){
+        prerec_bscore prerec(ct);
+        combo::combo_tree tr = combo::str2combo_tree("and($1 $2)", {});
+        behavioral_score expected_bs = prerec(tr);
+
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+
+        HandleSeq handleSeq = {f1, f2};
+        Handle program = createLink(handleSeq, AND_LINK);
+        behavioral_score ported_bs = prerec(program);
+
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+	}
 
 };
