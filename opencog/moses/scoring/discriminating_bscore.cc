@@ -866,7 +866,7 @@ score_t bep_bscore::get_fixed(score_t pos, score_t neg, unsigned cnt) const
 /// within some given thresholds, this turns out to be complicated,
 /// so we are not going to bother.
 f_one_bscore::f_one_bscore(const CTable& ct)
-    : discriminating_bscore(ct, 0.0, 1.0, 1.0e-20)
+    : discriminating_bscore(ct, 0.5, 1.0, 1.0e-20)
 {
     // XXX Currently, this scorer does not return a true behavioral score
     _size = 1;
@@ -883,7 +883,7 @@ behavioral_score f_one_bscore::operator()(const combo_tree& tr) const
     score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
     score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
 
-    score_t f_one = 2 * precision * recall / (precision + recall);
+    score_t f_one = (precision + recall == 0) ? 0 :  2 * precision * recall / (precision + recall);
 
     // We are maximizing f_one, so that is the first part of the score.
     behavioral_score bs;
@@ -894,6 +894,31 @@ behavioral_score f_one_bscore::operator()(const combo_tree& tr) const
                      precision, recall, f_one);
 
     log_candidate_bscore(tr, bs);
+    return bs;
+}
+
+behavioral_score f_one_bscore::operator()(const Handle& program) const
+{
+    d_counts ctr = count(program);
+
+    // Compute normalized precision and recall.
+    score_t tp_fp = ctr.true_positive_sum + ctr.false_positive_sum;
+    score_t precision = (0.0 < tp_fp) ? ctr.true_positive_sum / tp_fp : 0.0;
+
+    score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
+    score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
+
+    score_t f_one = (precision + recall == 0) ? 0 :  2 * precision * recall / (precision + recall);
+
+    // We are maximizing f_one, so that is the first part of the score.
+    behavioral_score bs;
+    bs.push_back(f_one);
+
+    if (logger().is_fine_enabled())
+        logger().fine("f_one_bscore: precision = %f recall = %f f_one=%f",
+                      precision, recall, f_one);
+
+    log_candidate_bscore(program, bs);
     return bs;
 }
 

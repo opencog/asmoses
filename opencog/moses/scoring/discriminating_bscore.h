@@ -234,6 +234,7 @@ struct f_one_bscore : public discriminating_bscore
 {
     f_one_bscore(const CTable& _ctable);
     behavioral_score operator()(const combo_tree& tr) const;
+    behavioral_score operator()(const Handle& program) const;
 
 protected:
     virtual score_t get_fixed(score_t pos, score_t neg, unsigned cnt) const;
