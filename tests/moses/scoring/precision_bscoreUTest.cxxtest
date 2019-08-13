@@ -65,11 +65,11 @@ public:
 		f2->setValue(moses::compressed_value_key, f2_proto_atom);
 
 		HandleSeq handleSeq = {f1, f2};
-		Handle program = createLink(handleSeq, AND_LINK);
+		Handle program = createLink(handleSeq, OR_LINK);
 
 		behavioral_score bs = p_bscore(program);
 
-		behavioral_score expected_bs = {-0.15, 0.15, 0, 0.5, 0};
+		behavioral_score expected_bs = {-0.25, 0.25, 0, 0.5, 0};
 
 		std::cout << "bs = " << bs << std::endl
 				  << "expected_bs = " << expected_bs << std::endl;

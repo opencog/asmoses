@@ -374,14 +374,16 @@ behavioral_score precision_bscore::operator()(const Handle& handle) const
 	behavioral_score bs;
 	behavioral_score ac;
 
-	score_t active = 0.0;  // total weight of active outputs by tr
-	score_t sao = 0.0;
+	score_t active = 0.0;  // total weight of active outputs by handle
+	score_t sao = 0.0;     // sum of all active outputs
 
 	atomese::Interpreter interpreter(moses::compressed_value_key);
 
 	const ValuePtr result = interpreter(handle);
+    auto link_result = LinkValueCast(result)->value();
 	map<TTable::value_type, Counter<bool, count_t>> time2res;
 	CTable ctable_res;
+    int i = 0;
 	for (const CTable::value_type& io_row : _wrk_ctable) {
 
 		const multi_type_seq& irow = io_row.first;
@@ -389,16 +391,19 @@ behavioral_score precision_bscore::operator()(const Handle& handle) const
 
 		score_t sumo = 0.0;  // (tp-fp)/2 if active, else 0 if not active
 		score_t acto = 0.0;  // fp + tp if active, else 0 if not active
-		sumo = sum_outputs(orow);
-		sao += sumo;
-		acto = orow.total_count();
-		active += acto;
+        if (HandleCast(link_result.at(i))->get_type() == TRUE_LINK){
+            sumo = sum_outputs(orow);
+            sao += sumo;
+            acto = orow.total_count();
+            active += acto;
+        }
 
 		if (time_bscore) {
 			for (const CTable::counter_t::value_type& tcv : orow) {
 				bool target = vertex_to_bool(tcv.first.value);
 				if (!positive) target = !target;
-				count_t count = tcv.second;
+				count_t count = (HandleCast(link_result.at(i))->get_type() == TRUE_LINK) ?
+								 tcv.second : 0.0;
 				time2res[tcv.first.timestamp][target] += count;
 			}
 
@@ -412,11 +417,14 @@ behavioral_score precision_bscore::operator()(const Handle& handle) const
 			CTable::key_type dummy_input;
 			for (const CTable::counter_t::value_type& tcv : orow) {
 				auto tclass = get_timestamp_class(tcv.first.timestamp);
-				vertex result = id::logical_true;
+				vertex result = HandleCast(link_result.at(i))->get_type() == TRUE_LINK ?
+								id::logical_true : id::logical_false;
 				TimedValue timed_result({result, tclass});
 				ctable_res[dummy_input][timed_result] += tcv.second;
 			}
 		}
+
+		i+=1;
 	}
 
 	if (time_bscore) {
