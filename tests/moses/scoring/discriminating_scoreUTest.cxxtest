@@ -37,174 +37,119 @@ using namespace combo;
 using namespace moses;
 using namespace std;
 
-const string scoringUTest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+const string scoringUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
 const string target_feature = "target";
 
-class discriminating_scoreUTest: public CxxTest::TestSuite
-{
+class discriminating_scoreUTest : public CxxTest::TestSuite {
 public:
-        Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
-        CTable ct = tt.compressed();
-        Handle f1 = createNode(PREDICATE_NODE, "f1");
-        Handle f2 = createNode(PREDICATE_NODE, "f2");
-        ValueSeq _f1_values;
-        ValueSeq _f2_values;
-
-	void test_recall_bscore1(void)
-	{
+    Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
+    CTable ct = tt.compressed();
+    Handle f1 = createNode(PREDICATE_NODE, "f1");
+    Handle f2 = createNode(PREDICATE_NODE, "f2");
+    ValueSeq _f1_values;
+    ValueSeq _f2_values;
+    combo::combo_tree tr_or = combo::str2combo_tree("or($1 $2)", {});
+    combo::combo_tree tr_and = combo::str2combo_tree("and($1 $2)", {});
+    HandleSeq handleSeq = {f1, f2};
+    Handle and_program = createLink(handleSeq, AND_LINK);
+    Handle or_program = createLink(handleSeq, OR_LINK);
+    
+    void test_recall_bscore1(void) {
         recall_bscore recall(ct);
-
+        behavioral_score expected_bs = recall(tr_and);
         boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
         boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
         ValuePtr f1_proto_atom(new LinkValue(_f1_values));
         f1->setValue(moses::compressed_value_key, f1_proto_atom);
         ValuePtr f2_proto_atom(new LinkValue(_f2_values));
         f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, AND_LINK);
-        behavioral_score bs =  recall(program);
-
-		double expected_bs = 0.0;
-
-		TS_ASSERT_EQUALS(bs[0], expected_bs);
-	}
-    void test_recall_bscore2(void)
-    {
-        recall_bscore recall(ct);
-
-        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
-        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
-        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
-        f1->setValue(moses::compressed_value_key, f1_proto_atom);
-        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
-        f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, OR_LINK);
-        behavioral_score bs =  recall(program);
-        double bs_score = bs[0];
-        double result = round(bs_score * 100000 )/100000;
-        double expected_bs = 0.6;
-
-        TS_ASSERT_EQUALS(result, expected_bs);
+        behavioral_score ported_bs = recall(and_program);
+        TS_ASSERT_EQUALS(ported_bs, expected_bs);
     }
-    void test_prerec_bscore1(void){
-	    prerec_bscore prerec(ct);
-        combo::combo_tree tr = combo::str2combo_tree("or($1 $2)", {});
-        behavioral_score expected_bs = prerec(tr);
-
+    void test_recall_bscore2(void) {
+        recall_bscore recall(ct);
+        behavioral_score expected_bs = recall(tr_or);
         boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
         boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
         ValuePtr f1_proto_atom(new LinkValue(_f1_values));
         f1->setValue(moses::compressed_value_key, f1_proto_atom);
         ValuePtr f2_proto_atom(new LinkValue(_f2_values));
         f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, OR_LINK);
-        behavioral_score ported_bs = prerec(program);
-
-        TS_ASSERT_EQUALS(expected_bs, ported_bs);
-	}
-	void test_prerec_bscore2(void){
+        behavioral_score ported_bs = recall(or_program);
+        TS_ASSERT_EQUALS(ported_bs, expected_bs);
+    }
+    
+    void test_prerec_bscore1(void) {
         prerec_bscore prerec(ct);
-        combo::combo_tree tr = combo::str2combo_tree("and($1 $2)", {});
-        behavioral_score expected_bs = prerec(tr);
-
+        behavioral_score expected_bs = prerec(tr_or);
         boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
         boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
         ValuePtr f1_proto_atom(new LinkValue(_f1_values));
         f1->setValue(moses::compressed_value_key, f1_proto_atom);
         ValuePtr f2_proto_atom(new LinkValue(_f2_values));
         f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, AND_LINK);
-        behavioral_score ported_bs = prerec(program);
-
+        behavioral_score ported_bs = prerec(or_program);
         TS_ASSERT_EQUALS(expected_bs, ported_bs);
-	}
+    }
+    void test_prerec_bscore2(void) {
+        prerec_bscore prerec(ct);
+        behavioral_score expected_bs = prerec(tr_and);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = prerec(and_program);
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+    }
     void test_bep_bscore1(void) {
         bep_bscore bep(ct);
-        combo::combo_tree tr = combo::str2combo_tree("and($1 $2)", {});
-        behavioral_score expected_bs = bep(tr);
-
+        behavioral_score expected_bs = bep(tr_and);
         boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
         boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
         ValuePtr f1_proto_atom(new LinkValue(_f1_values));
         f1->setValue(moses::compressed_value_key, f1_proto_atom);
         ValuePtr f2_proto_atom(new LinkValue(_f2_values));
         f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, AND_LINK);
-        behavioral_score ported_bs = bep(program);
-
+        behavioral_score ported_bs = bep(and_program);
         TS_ASSERT_EQUALS(expected_bs, ported_bs);
     }
-    void test_bep_bscore2(void){
+    void test_bep_bscore2(void) {
         bep_bscore bep(ct);
-        combo::combo_tree tr = combo::str2combo_tree("or($1 $2)", {});
-        behavioral_score expected_bs = bep(tr);
-
+        behavioral_score expected_bs = bep(tr_or);
         boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
         boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
         ValuePtr f1_proto_atom(new LinkValue(_f1_values));
         f1->setValue(moses::compressed_value_key, f1_proto_atom);
         ValuePtr f2_proto_atom(new LinkValue(_f2_values));
         f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, OR_LINK);
-        behavioral_score ported_bs = bep(program);
-
+        behavioral_score ported_bs = bep(or_program);
         TS_ASSERT_EQUALS(expected_bs, ported_bs);
     }
-    void test_f1_bscore1(void){
+    void test_f1_bscore1(void) {
         f_one_bscore f_one(ct);
-        combo::combo_tree tr = combo::str2combo_tree("or($1 $2)", {});
-        behavioral_score expected_bs = f_one(tr);
-
+        behavioral_score expected_bs = f_one(tr_or);
         boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
         boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
         ValuePtr f1_proto_atom(new LinkValue(_f1_values));
         f1->setValue(moses::compressed_value_key, f1_proto_atom);
         ValuePtr f2_proto_atom(new LinkValue(_f2_values));
         f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, OR_LINK);
-        behavioral_score ported_bs = f_one(program);
-
+        behavioral_score ported_bs = f_one(or_program);
         TS_ASSERT_EQUALS(expected_bs, ported_bs);
     }
-
-    void test_f1_bscore2(void){
+    void test_f1_bscore2(void) {
         f_one_bscore f_one(ct);
-        combo::combo_tree tr = combo::str2combo_tree("and($1 $2)", {});
-        behavioral_score expected_bs = f_one(tr);
-
+        behavioral_score expected_bs = f_one(tr_and);
         boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
         boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
         ValuePtr f1_proto_atom(new LinkValue(_f1_values));
         f1->setValue(moses::compressed_value_key, f1_proto_atom);
         ValuePtr f2_proto_atom(new LinkValue(_f2_values));
         f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
-        HandleSeq handleSeq = {f1, f2};
-        Handle program = createLink(handleSeq, AND_LINK);
-        behavioral_score ported_bs = f_one(program);
-
+        behavioral_score ported_bs = f_one(and_program);
         TS_ASSERT_EQUALS(expected_bs, ported_bs);
     }
-
+    
 };
