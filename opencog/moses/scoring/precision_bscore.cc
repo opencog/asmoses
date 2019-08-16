@@ -27,6 +27,9 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <opencog/data/table/table_io.h>
+#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/utils/valueUtils.h>
+#include <opencog/utils/value_key.h>
 
 #include <opencog/atomese/interpreter/Interpreter.h>
 #include <opencog/utils/valueUtils.h>
@@ -860,6 +863,58 @@ behavioral_score precision_conj_bscore::operator()(const combo_tree &tr) const
 		              precision, conj_n, conj_n_penalty);
 
 	log_candidate_bscore(tr, bs);
+	return bs;
+}
+
+behavioral_score precision_conj_bscore::operator()(const Handle &handle) const
+{
+	behavioral_score bs;
+
+	// compute active and sum of all active outputs
+	count_t active = 0.0;  // total weight of active outputs by tr
+	score_t sao = 0.0;     // sum of all active outputs (in the boolean case)
+
+	atomese::Interpreter interpreter(moses::compressed_value_key);
+	const ValuePtr result = interpreter(handle);
+	auto link_result = LinkValueCast(result)->value();
+	int i = 0;
+	for (const CTable::value_type &vct : ctable) {
+		// vct.first = input vector
+		// vct.second = counter of outputs
+		if (HandleCast(link_result.at(i))->get_type() == TRUE_LINK) {
+			double sumo = sum_outputs(vct.second);
+			count_t totalc = vct.second.total_count();
+			// For boolean tables, sao == sum of all true positives,
+			// and active == sum of true+false positives.
+			sao += sumo;
+			active += totalc;
+		}
+		i += 1;
+	}
+
+	// Compute normalized precision.  No hits means perfect precision :)
+	// Yes, zero hits is common, early on.
+	score_t precision = 1.0;
+	if (0 < active)
+		precision = sao / active;
+	bs.push_back(precision);
+
+	// Count the number of conjunctions (up to depth 2)
+	unsigned conj_n = 0;
+	if (handle->get_type() == AND_LINK)
+		++conj_n;
+	for (Handle h : handle->getOutgoingSet()) {
+		if (h->get_type() == AND_LINK)
+			++conj_n;
+	}
+	score_t conj_n_penalty = hardness * (-1.0 / (1.0 + conj_n));
+	bs.push_back(conj_n_penalty);
+
+	if (logger().is_fine_enabled())
+		logger().fine("precision = %f  conj_n=%u  conj_n penalty=%e",
+		              precision, conj_n, conj_n_penalty);
+
+	log_candidate_bscore(handle, bs);
 	return bs;
 }
 
