@@ -24,6 +24,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/utils/valueUtils.h>
+#include <opencog/utils/value_key.h>
+
 #include "select_bscore.h"
 
 namespace opencog { namespace moses {
@@ -179,6 +183,41 @@ behavioral_score select_bscore::operator()(const combo_tree& tr) const
                 fail += weight;
         }
         bs.push_back(-fail);
+    }
+
+    // Report the score only relative to the best-possible score.
+    bs -= _best_possible_score;
+
+    return bs;
+}
+
+behavioral_score select_bscore::operator()(const Handle& handle) const
+{
+	behavioral_score bs;
+
+	atomese::Interpreter interpreter(moses::value_key);
+
+	const ValuePtr result = interpreter(handle);
+	auto link_result = FloatValueCast(result)->value();
+	int i = 0;
+
+    for (const CTable::value_type& io_row : _wrk_ctable) {
+        // io_row.first = input vector
+        // io_row.second = counter of outputs
+	    bool predict_inside = io_row.second.get(link_result.at(i) ?
+	          id::logical_false : id::logical_true);
+        score_t fail = 0.0;
+        const CTable::counter_t& orow = io_row.second;
+        for (const CTable::counter_t::value_type& tcv : orow) {
+            score_t val = get_contin(tcv.first.value);
+            if (not _positive) val = -val;
+            score_t weight = tcv.second;
+            bool inside = (_lower_bound <= val and val <= _upper_bound);
+            if ((predict_inside and not inside) or (not predict_inside and inside))
+                fail += weight;
+        }
+        bs.push_back(-fail);
+	    i+=1;
     }
 
     // Report the score only relative to the best-possible score.
