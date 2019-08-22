@@ -46,17 +46,17 @@ namespace opencog { namespace moses {
 typedef combo_tree::sibling_iterator sib_it;
 typedef combo_tree::pre_order_iterator pre_it;
 
-build_knobs::build_knobs(combo_tree& exemplar,
-                         const combo::type_tree& tt,
-                         representation& rep,
-                         const operator_set& ignore_ops,
-                         const combo_tree_ns_set* perceptions,
-                         const combo_tree_ns_set* actions,
-                         bool linear_regression,
-                         contin_t step_size,
-                         contin_t expansion,
-                         field_set::width_t depth,
-                         float perm_ratio)
+build_knobs_combo::build_knobs_combo(combo_tree& exemplar,
+                                     const combo::type_tree& tt,
+                                     representation& rep,
+                                     const operator_set& ignore_ops,
+                                     const combo_tree_ns_set* perceptions,
+                                     const combo_tree_ns_set* actions,
+                                     bool linear_regression,
+                                     contin_t step_size,
+                                     contin_t expansion,
+                                     field_set::width_t depth,
+                                     float perm_ratio)
     : _exemplar(exemplar), _rep(rep), _skip_disc_probe(true),
       _arity(tt.begin().number_of_children() - 1), _signature(tt),
       _linear_contin(linear_regression),
@@ -137,9 +137,13 @@ build_knobs::build_knobs(combo_tree& exemplar,
  * An operator is permitted, if it is not one of those that we were
  * told to ignore, i.e. that should be omitted from the tree.
  */
-bool build_knobs::permitted_op(const vertex& v) const
+bool build_knobs_combo::permitted_op(const vertex& v) const
 {
     return _ignore_ops.find(v) == _ignore_ops.end();
+}
+
+bool build_knobs_atomese::permitted_op(const Handle &h) {
+    return _atomese_ignore_ops.find(h) == _atomese_ignore_ops.end();
 }
 
 // ***********************************************************************
@@ -224,7 +228,7 @@ void build_knobs::logical_canonize(pre_it it)
  */
 template<typename It>
 boost::ptr_vector<logical_subtree_knob>
-build_knobs::logical_probe_rec(pre_it subtree,
+build_knobs_combo::logical_probe_rec(pre_it subtree,
                                combo_tree& exemplr, pre_it it,
                                It from, It to,
                                bool add_if_in_exemplar,
@@ -325,8 +329,7 @@ void build_knobs::logical_cleanup()
 // Ineed: setting _skip_disc_probe to true reduces runtime by more than
 // half (12 minutes to 5 minutes) for one problem (but maybe not realistic...)
 //
-bool build_knobs::disc_probe(pre_it subtree, disc_knob_base& kb) const
-{
+bool build_knobs_combo::disc_probe(pre_it subtree, disc_knob_base &kb) const {
     using namespace reduct;
 
     // Probing is expensive, see comments above. Skip if at all possible.
@@ -392,8 +395,8 @@ bool build_knobs::disc_probe(pre_it subtree, disc_knob_base& kb) const
  * If it is of contin type, wrap it up into a predicate, and insert that.
  *
  * If negate is true the argument or the predicate if any is negated.
- */
-void build_knobs::insert_typed_arg(combo_tree &tr,
+*/
+void build_knobs_combo::insert_typed_arg(combo_tree &tr,
                                    type_tree_sib_it arg_type,
                                    const argument &arg,
                                    bool negate)
@@ -431,7 +434,7 @@ void build_knobs::insert_typed_arg(combo_tree &tr,
  * positive literal choosen randomly and $j is a positive or negative
  * literal choosen randomly.
  */
-void build_knobs::sample_logical_perms(pre_it it, combo_tree_seq& perms)
+void build_knobs_combo::sample_logical_perms(pre_it it, combo_tree_seq& perms)
 {
     // An argument can be a subtree if it's boolean.
     // If its a contin, then wrap it with "greater_than_zero".
@@ -549,7 +552,7 @@ void build_knobs::sample_logical_perms(pre_it it, combo_tree_seq& perms)
  * arguments, and knobs for predicates (which are functions that return
  * a boolean value).
  */
-void build_knobs::add_logical_knobs(pre_it subtree,
+void build_knobs_combo::add_logical_knobs(pre_it subtree,
                                     pre_it it, bool add_if_in_exemplar)
 {
     // If the node is not a logic op, then bail.  That is, we don't want
@@ -617,7 +620,7 @@ void build_knobs::add_logical_knobs(pre_it subtree,
  *             logical elements.
  * @it -- an iterator pointing into the the subtree
  */
-void build_knobs::build_logical(pre_it subtree, pre_it it)
+void build_knobs_combo::build_logical(pre_it subtree, pre_it it)
 {
     id::builtin flip = id::null_vertex;
 
@@ -720,7 +723,7 @@ void build_knobs::build_logical(pre_it subtree, pre_it it)
 ///
 /// If there are multiple divisors, they will be transformed into separate terms
 /// (???)
-void build_knobs::contin_canonize(pre_it it)
+void build_knobs_combo::contin_canonize(pre_it it)
 {
     if (is_contin(*it) && get_contin(*it) == 0) {
         *it = id::plus;
@@ -772,7 +775,7 @@ void build_knobs::contin_canonize(pre_it it)
 /// contin-valued constants.  These constants are turned into knobs,
 /// and added to the field set for the representation.
 //
-void build_knobs::build_contin(pre_it it)
+void build_knobs_combo::build_contin(pre_it it)
 {
     pre_it end = it;
     end.skip_children();
@@ -789,13 +792,13 @@ void build_knobs::build_contin(pre_it it)
     }
 }
 
-void build_knobs::canonize_div(pre_it it)
+void build_knobs_combo::canonize_div(pre_it it)
 {
     linear_canonize_times(it.begin());
     linear_canonize(it.last_child());
 }
 
-void build_knobs::add_constant_child(pre_it it, contin_t v)
+void build_knobs_combo::add_constant_child(pre_it it, contin_t v)
 {
     sib_it sib = find_if(it.begin(), it.end(), is_contin);
     if (sib == it.end())
@@ -805,7 +808,7 @@ void build_knobs::add_constant_child(pre_it it, contin_t v)
 }
 
 /// canonize_times: turn 'it' into a  binary * with second arg a constant.
-pre_it build_knobs::canonize_times(pre_it it)
+pre_it build_knobs_combo::canonize_times(pre_it it)
 {
     // get contin child of 'it', if 'it' == 'times' and such contin
     // child exists
@@ -826,7 +829,7 @@ pre_it build_knobs::canonize_times(pre_it it)
     }
 }
 
-void build_knobs::linear_canonize_times(pre_it it)
+void build_knobs_combo::linear_canonize_times(pre_it it)
 {
     linear_canonize(canonize_times(it).begin());
 }
@@ -848,7 +851,7 @@ void build_knobs::linear_canonize_times(pre_it it)
 /// the function impulse() returns contin but take a boolean expr: in
 /// this case, we call logical_canonize on it's arg.
 //
-void build_knobs::linear_canonize(pre_it it)
+void build_knobs_combo::linear_canonize(pre_it it)
 {
     // If we're not appending to plus, then insert one.
     if (*it != id::plus)
@@ -859,7 +862,7 @@ void build_knobs::linear_canonize(pre_it it)
     rec_canonize(it);
 }
 
-void build_knobs::rec_canonize(pre_it it)
+void build_knobs_combo::rec_canonize(pre_it it)
 {
     // cout << "X " << _exemplar << " | " << combo_tree(it) << endl;
     // Recurse on whatever's already present, and create a multiplicand for it.
@@ -959,13 +962,13 @@ void build_knobs::rec_canonize(pre_it it)
 /// If you really want to raise the degree, on purpose, do it elsewhere,
 /// and do it explicitly, and not here, by quasi-accident.
 //
-void build_knobs::append_linear_combination(pre_it it)
+void build_knobs_combo::append_linear_combination(pre_it it)
 {
     // Do NOT append to times! See notes above, explaining why.
     if (*it == id::times)
         return;
 
-    // If its not times, and not plus, then its probably sin, exp, log, etc. 
+    // If its not times, and not plus, then its probably sin, exp, log, etc.
     if (*it != id::plus)
         it = _exemplar.append_child(it, id::plus);
 
@@ -996,7 +999,7 @@ void build_knobs::append_linear_combination(pre_it it)
     }
 }
 
-pre_it build_knobs::mult_add(pre_it it, const vertex& v)
+pre_it build_knobs_combo::mult_add(pre_it it, const vertex& v)
 {
     pre_it times_it =
         _exemplar.insert_above(_exemplar.append_child(it, contin_t(0)), id::times);
@@ -1015,7 +1018,7 @@ pre_it build_knobs::mult_add(pre_it it, const vertex& v)
 /// consequents xk (or the else clause y).  Also, each of the predicates pk
 /// are also in canonical form.
 
-void build_knobs::enum_canonize(pre_it it)
+void build_knobs_combo::enum_canonize(pre_it it)
 {
     // If the tree is just a bare enum, put a cond up above it.
     if (is_enum_type(*it)) {
@@ -1066,7 +1069,7 @@ void build_knobs::enum_canonize(pre_it it)
 // Anyway, what this routine does is to insert knobs for each of the
 // predicates that appear in the cond.
 //
-void build_knobs::build_enum(pre_it it)
+void build_knobs_combo::build_enum(pre_it it)
 {
     // Look for all the predicates, and make sure they get knobs.
     // This loop is strangely structured because the replace()
@@ -1094,7 +1097,7 @@ void build_knobs::build_enum(pre_it it)
 // ***********************************************************************
 // Actions for the PetBrain
 
-void build_knobs::action_canonize(pre_it it)
+void build_knobs_combo::action_canonize(pre_it it)
 {
     if (*it != id::sequential_and)
         it = _exemplar.insert_above(it, id::sequential_and);
@@ -1111,7 +1114,7 @@ void build_knobs::action_canonize(pre_it it)
 }
 
 
-void build_knobs::build_action(pre_it it)
+void build_knobs_combo::build_action(pre_it it)
 {
 
     int p = 80; // probability that controls representational building
@@ -1152,7 +1155,7 @@ void build_knobs::build_action(pre_it it)
 
 
 
-void build_knobs::add_action_knobs(pre_it it, bool add_if_in_exemplar)
+void build_knobs_combo::add_action_knobs(pre_it it, bool add_if_in_exemplar)
 {
     combo_tree_seq perms;
     sample_action_perms(it, perms);
@@ -1161,13 +1164,13 @@ void build_knobs::add_action_knobs(pre_it it, bool add_if_in_exemplar)
 }
 
 
-void build_knobs::add_simple_action_knobs(pre_it it, bool add_if_in_exemplar)
+void build_knobs_combo::add_simple_action_knobs(pre_it it, bool add_if_in_exemplar)
 {
     simple_action_probe(it, add_if_in_exemplar);
 }
 
 
-void build_knobs::sample_action_perms(pre_it it, combo_tree_seq& perms)
+void build_knobs_combo::sample_action_perms(pre_it it, combo_tree_seq& perms)
 {
     const int number_of_actions = _actions->size();
     int n = number_of_actions; // controls the number of perms
@@ -1205,7 +1208,7 @@ void build_knobs::sample_action_perms(pre_it it, combo_tree_seq& perms)
 }
 
 
-void build_knobs::simple_action_probe(pre_it it, bool add_if_in_exemplar)
+void build_knobs_combo::simple_action_probe(pre_it it, bool add_if_in_exemplar)
 {
     simple_action_subtree_knob kb(_exemplar, it);
 
@@ -1214,7 +1217,7 @@ void build_knobs::simple_action_probe(pre_it it, bool add_if_in_exemplar)
 }
 
 
-void build_knobs::action_probe(combo_tree_seq& perms, pre_it it,
+void build_knobs_combo::action_probe(combo_tree_seq& perms, pre_it it,
                                bool add_if_in_exemplar)
 {
     action_subtree_knob kb(_exemplar, it, perms);
@@ -1224,7 +1227,7 @@ void build_knobs::action_probe(combo_tree_seq& perms, pre_it it,
 }
 
 
-void build_knobs::action_cleanup()
+void build_knobs_combo::action_cleanup()
 {
     combo_tree::post_order_iterator it = _exemplar.begin_post();
     while (it != _exemplar.end_post())
@@ -1280,7 +1283,7 @@ static void enumerate_nodes(sib_it it, vector<ann_type>& nodes)
 
 // XXX TODO this below is clearly unfinished, broken, etc.
 // and can't possibly work ... 
-void build_knobs::ann_canonize(pre_it it)
+void build_knobs_combo::ann_canonize(pre_it it)
 {
     using namespace std;
     combo::tree_transform trans;
