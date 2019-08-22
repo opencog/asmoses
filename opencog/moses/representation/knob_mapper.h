@@ -46,6 +46,7 @@ namespace opencog { namespace moses {
 struct knob_mapper
 {
     typedef combo_tree::iterator pre_it;
+    typedef Handle handle_it;
     
     // Important: knobs are kept sorted in an order consistant with
     // that of the field_set _fields that is constructed according to
@@ -73,10 +74,19 @@ struct knob_mapper
     typedef std::map<pre_it, int, obj_ptr_cmp<pre_it>> it_disc_idx_map;
     typedef std::map<pre_it, int, obj_ptr_cmp<pre_it>> it_contin_idx_map;
 
+    // map the address of the handle to its corresponding knob.
+    typedef std::map<pre_it, disc_map_cit, obj_ptr_cmp<handle_it>>
+        handle_disc_knob_map;
+    typedef std::map<handle_it, int, obj_ptr_cmp<handle_it>>
+        handle_disc_idx_map;
+
     it_disc_knob_map it_disc_knob;
     it_contin_knob_map it_contin_knob;
     it_disc_idx_map it_disc_idx;
     it_contin_idx_map it_contin_idx;
+
+    handle_disc_knob_map handle_disc_knob;
+    handle_disc_idx_map handle_disc_idx;
     
     // find the disc knob corresponding to 'it'. Return disc.end() if
     // none found
@@ -84,6 +94,11 @@ struct knob_mapper
         it_disc_knob_map::const_iterator res = it_disc_knob.find(it);
         return res == it_disc_knob.end() ? disc.cend() : res->second;
     }
+
+//    disc_map_cit find_disc_knob(const Handle& handle) const{
+//        handle_disc_knob_map::const_iterator res = handle_disc_knob.find(handle);
+//        return res == handle_disc_knob.end() ? disc.cend() : res->second;
+//    }
     // find the contin knob corresponding to 'it'. Return contin.end()
     // if none found
     contin_map_cit find_contin_knob(const pre_it& it) const {
