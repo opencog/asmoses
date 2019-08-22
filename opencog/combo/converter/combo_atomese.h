@@ -164,6 +164,34 @@ public:
      * @return handle    corresponding to each  type_node
      */
     Handle convert_type_node(const type_node& tt);
+
+protected:
+
+	/**
+	 * Convert a type_tree to atomese type from a head of the type_tree.
+	 *
+	 * @param type_tree::iterator   the iterater to the head of a type_tree
+	 * @return                 the Handle containing the atomese type
+	 */
+	template <typename Iter>
+	opencog::Handle type_tree_to_atomese_type(Iter it)
+	{
+		type_tree::iterator head = it;
+		Handle atomeseType = convert_type_node(*head);
+
+		if (atomeseType->get_type() == ARROW_LINK) {
+			HandleSeq handleSeq;
+
+			for (auto sib = head.begin(); sib != head.end(); ++sib)
+				handleSeq.push_back(type_tree_to_atomese_type(sib));
+
+			Handle lst = createLink(HandleSeq(handleSeq.begin(), handleSeq.end()-1), LIST_LINK);
+			atomeseType = createLink(HandleSeq{lst, handleSeq.back()}, ARROW_LINK);
+		}
+
+		return atomeseType;
+	}
+
 };
 }
 }  // ~namespaces combo opencog
