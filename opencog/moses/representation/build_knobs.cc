@@ -121,9 +121,51 @@ build_knobs_combo::build_knobs_combo(combo_tree& exemplar,
         // ANN  XXX This is calling unfinished, broken code, below.
         ann_canonize(_exemplar.begin());
         build_contin(_exemplar.begin());
+    } else {
+        std::stringstream ss;
+        ss << output_type;
+        OC_ASSERT(0, "Unsupported output type, got '%s'",
+                  ss.str().c_str());
     }
-    else
-    {
+}
+
+build_knobs_atomese::build_knobs_atomese(Handle &exemplar,
+                                         const Type &tt,
+                                         representation &rep,
+                                         const HandleSet &ignore_ops,
+                                         const HandleSeqSet* perceptions,
+                                         const HandleSeqSet* actions,
+                                         bool linear_regression,
+                                         contin_t step_size,
+                                         contin_t expansion,
+                                         field_set::width_t depth,
+                                         float perm_ratio)
+        : _atomese_exemplar(exemplar), _rep(rep), _skip_disc_probe(true),
+          _arity(rep.predicateNode_store.size()),
+          _predicateNode_store(rep.predicateNode_store),
+          _linear_contin(linear_regression),
+          _step_size(step_size), _expansion(expansion), _depth(depth),
+          _perm_ratio(perm_ratio)
+{
+    type_node output_type = type_to_type_node(tt);
+
+    if ((perceptions != NULL || actions != NULL) &&
+        (output_type != id::action_result_type)) {
+        std::stringstream ss;
+        ss << output_type;
+        std::stringstream art_ss;
+        art_ss << id::action_result_type;
+        OC_ASSERT(0, "ERROR: During representation building")
+    }
+
+    if (output_type == id::boolean_type) {
+
+        _skip_disc_probe = false;
+
+        logical_canonize(_atomese_exemplar);
+        build_logical(_atomese_exemplar, _atomese_exemplar);
+//        atomese_logical_cleanup();
+    } else {
         std::stringstream ss;
         ss << output_type;
         OC_ASSERT(0, "Unsupported output type, got '%s'",
@@ -161,7 +203,7 @@ bool build_knobs_atomese::permitted_op(const Handle &h) {
  * The canonization proceeds recursively if the top node is a predicate.
  * That is, if its a predicate, its argument is canonized as well.
  */
-void build_knobs::logical_canonize(pre_it it)
+void build_knobs_combo::logical_canonize(pre_it it)
 {
     if (*it == id::logical_and) {
         _exemplar.insert_above(it, id::logical_or);
@@ -189,10 +231,36 @@ void build_knobs::logical_canonize(pre_it it)
 
         it = _exemplar.insert_above(it, id::logical_and);
         _exemplar.insert_above(it, id::logical_or);
-    }
-    else {
+    } else {
         OC_ASSERT(0, "Error: during logical_canonize, got unexpected "
-             " type in logical expression.");
+                     " type in logical expression.");
+    }
+}
+
+void build_knobs_atomese::logical_canonize(opencog::Handle &handle) {
+    Type type = handle->get_type();
+    if (type == AND_LINK) {
+        atomese_rewrite.insert_atom_above(_atomese_exemplar, handle, OR_LINK);
+    } else if (type == OR_LINK) {
+        atomese_rewrite.insert_atom_above(_atomese_exemplar, handle, AND_LINK);
+    } else if (type == TRUE_LINK || type == FALSE_LINK) {
+        Handle andlink = createLink(AND_LINK);
+        atomese_rewrite.insert_atom_above(_atomese_exemplar, andlink, OR_LINK);
+    } else if (type == PREDICATE_NODE) {
+        Handle handle_it = handle;
+        if (handle->get_type() == NOT_LINK) {
+            HandleSeq handleSeq = handle->getOutgoingSet();
+            handle_it = createLink(handleSeq, LINK);
+        }
+        // linear canonize;
+
+        // insert above logical_and and logical_or
+        atomese_rewrite.insert_atom_above(_atomese_exemplar, handle, AND_LINK);
+        handle = createLink(AND_LINK, handle);
+        atomese_rewrite.insert_atom_above(_atomese_exemplar, handle, AND_LINK);
+    } else {
+        OC_ASSERT(0, "Error: during logical_canonize, got unexpected "
+                     " type in logical expression.");
     }
 }
 
@@ -286,8 +354,89 @@ build_knobs_combo::logical_probe_rec(pre_it subtree,
     }
 }
 
-void build_knobs::logical_cleanup()
-{
+
+boost::ptr_vector<logical_subtree_knob>
+build_knobs_atomese::atomese_logical_probe_rec(Handle sub_handle,
+                                       Handle &exemplar, Handle handle_it,
+                                       HandleSeq perms,
+                                       bool add_if_in_exemplar,
+                                       unsigned n_jobs) const {
+    if (n_jobs > 1) {
+//        auto s_jobs = split_jobs(n_jobs);
+//
+//        It mid = perms.size() / 2;
+//
+//        Handle exemplr_cp(exemplar);
+//
+//        atomeseRewriting atomese_rewrite;
+//
+//        atomese_rewrite.search_handle(exemplr_cp, handle_it);
+//	    Handle handle_it_cp;
+//	    HandleSeq handleSeq = atomese_rewrite.get_handle_seq();
+//	    std::map<Type, int> type_store = atomese_rewrite.get_type_store();
+//
+//	    Handle handle_sub_cp;
+//	    if (handleSeq.size() > 1) {
+//        	handleSeq[handleSeq.size() - 1];
+//        	type_store[type_store.size()-1].second -= 1;
+//
+//        	handle_sub_cp = atomese_rewrite.atom_rebuild(exemplr_cp);
+//        } else {
+//        	handle_sub_cp = exemplr_cp;
+//        }
+//
+//
+//	    search_handle(exemplr_cp, sub_handle);
+//	    Handle handle_sub_cp;
+//	    if (_handle_seq.size() > 1) {
+//		    _handle_seq[_handle_seq.size() - 1] = {};
+//		    _type_store[_type_store.size()-1].second -= 1;
+//		    handle_sub_cp = hypergraph_rebuild();
+//	    } else {
+//		    handle_sub_cp = exemplr_cp;
+//	    }
+//
+//	    // asynchronous recursive call for [from, mid)
+//
+//	    std::future<boost::ptr_vector<logical_subtree_knob>> f_async =
+//			    async(std::launch::async,
+//			          [&]() {return this->logical_probe_rec(sub_handle, exemplar, handle_it,
+//			                                                add_if_in_exemplar,
+//			                                                s_jobs.first);});
+//
+//	    // synchronous recursive call for [mid, to) on the copy
+//	    boost::ptr_vector<logical_subtree_knob> kb_copy_v =
+//			    logical_probe_rec(handle_sub_cp, exemplr_cp, handle_it_cp, mid, to,
+//			                      add_if_in_exemplar, s_jobs.second);
+
+//	    // append kb_copy_v to kb_v
+//	    auto kb_v = f_async.get();
+//	    for (const logical_subtree_knob& kb_copy : kb_copy_v) {
+//		    kb_v.push_back(new logical_subtree_knob(exemplar, handle_it, kb_copy));
+//	    }
+//	    return kb_v;
+    } else {
+        boost::ptr_vector<logical_subtree_knob> kb_v;
+        for (int i = 0; i < perms.size(); i++) {
+            Handle perm = perms[i]->get_handle();
+            auto kb = new logical_subtree_knob(exemplar, handle_it, perm,
+                                               sub_handle);
+//            logger().debug()<<"_handle: " << oc_to_string(_handle, empty_string);
+            if ((add_if_in_exemplar || !kb->in_exemplar())
+                && disc_probe(sub_handle, *kb)) {
+
+                kb_v.push_back(kb);
+            } else {
+                // gahh. Memory leak if not pushed back!
+                delete kb;
+            }
+        }
+        return kb_v;
+    }
+}
+
+
+void build_knobs_combo::logical_cleanup() {
     combo_tree::post_order_iterator it = _exemplar.begin_post();
     while (it != _exemplar.end_post())
         if (is_logical_operator(*it) && it.is_childless())
