@@ -24,6 +24,7 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/combo/combo/combo.h>
 #include <opencog/atoms/core/NumberNode.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 
 #include "complexity.h"
 
@@ -126,6 +127,16 @@ complexity_t tree_complexity(const combo_tree &tr,
 complexity_t atomese_complexity(const Handle &handle,
                                 bool (*stopper)(const Handle &))
 {
+	// If the stopper function is defined, and it returns true, we halt
+	// recursion.  This is needed for knob-probing across boundaries
+	// between logical and contin expressions.
+	Type handle_type = handle->get_type();
+	if (handle_type == TRUE_LINK
+		|| handle_type == FALSE_LINK
+		|| handle_type == KNOB_LINK)
+	    return 0;
+
+
 	if (stopper && stopper(handle))
 		return 0;
 
