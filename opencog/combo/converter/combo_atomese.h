@@ -147,6 +147,27 @@ protected:
 
 };
 
+class TypetreeToAtomese
+{
+public:
+    /**
+     * converts the type tree to corresponding atomese type
+     * @param tt              type tree of the combo program
+     * @return handle       atomese type converted from typetree
+     */
+    Handle operator()(const type_tree& tt);
+
+    /**
+     * convert each type node to corresponding atomese type
+     * @param tt        takes type node as argument then change
+     *                  to the corresponding to atomese type
+     * @return handle    corresponding to each  type_node
+     */
+    Handle convert_type_node(const type_node& tt);
+};
+}
+}  // ~namespaces combo opencog
+
 } // ~namespace combo
 
 // For pretty printing OpenCog objects while debugging, see
