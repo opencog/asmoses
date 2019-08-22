@@ -33,24 +33,25 @@ class atomeseRewriting {
 
 public:
     HandleSeq _handle_seq;
-    std::map<Type, int> _type_store;
+    std::vector<std::pair<Type, int>> _type_store;
+    bool is_found = false;
 
 public:
-    void insert_atom_above(Handle &source, Handle &target,
+    Handle insert_atom_above(Handle &source, Handle target,
                            Type insert_type);
 
-    void append_atom_below(Handle &source, Handle &target,
+    Handle append_atom_below(Handle &source, Handle target,
                            Handle &append_atom);
 
-    void erase_atom(Handle &source, Handle &target);
+    Handle erase_atom(Handle &source, Handle target);
 
-    int search_erase_atom(Handle& source, Handle& target,
-                          bool is_first = true);
+    Handle flatten_atom(Handle &source, Handle target);
 
-    void flatten_atom(Handle &source, Handle &target);
-
-    int search_handle(Handle &source, Handle &target,
+    bool search_handle(Handle &source, Handle target,
                       bool is_first = true);
+
+    Handle handle_replace(Handle& source, Handle target,
+                        Handle &replace);
 
     Handle atom_rebuild(Handle& handle);
 

@@ -41,49 +41,60 @@ using namespace std;
 namespace opencog { namespace moses {
 
 
-int atomeseRewriting::search_handle(Handle &source, Handle &target,
+bool atomeseRewriting::search_handle(Handle &source, Handle target,
                                     bool is_first) {
+
     if (is_first) {
         _handle_seq.clear();
         _type_store.clear();
+        is_found = false;
     }
-    if (content_eq(source, target)) {
-        return 0;
-    } else {
-        if (source->is_link()) {
-            HandleSeq handleSeq = source->getOutgoingSet();
-            _type_store.insert(make_pair(source->get_type(), handleSeq.size()));
-            for (auto sib: handleSeq) {
-                _handle_seq.push_back(sib);
+
+    if (source->is_link()) {
+        HandleSeq handleSeq = source->getOutgoingSet();
+        _type_store.push_back(make_pair(source->get_type(), handleSeq.size()));
+        for (auto sib: handleSeq) {
+            if (content_eq(sib, target)){
+                is_found = true;
             }
-            for (auto sib: handleSeq) {
-                search_handle(sib, target, false);
+            _handle_seq.push_back(sib);
+        }
+
+        for (auto sib: handleSeq) {
+            if (is_found) {
                 break;
+            } else {
+                search_handle(sib, target, false);
             }
-        } else {
+        }
+
+    } else {
+        if (content_eq(source, target)) {
+            is_found = true;
             _handle_seq.push_back(source);
         }
     }
-    return _handle_seq.size() > 0 ? 1 : -1;
+
+    return is_found;
 }
 
 Handle atomeseRewriting::atom_rebuild(opencog::Handle &handle) {
 
-    std::map<Type, int>::iterator it;
+    std::vector<pair<Type, int>>::reverse_iterator rit;
     int handleSeq_size = _handle_seq.size();
     HandleSeq handle_seq;
 
-    for (it = _type_store.begin(); it != _type_store.end(); ++it) {
-        int limit = handleSeq_size - it->second - 1;
+    for (rit = _type_store.rbegin(); rit != _type_store.rend(); ++rit) {
+        int limit = handleSeq_size - rit->second - 1;
         if (handleSeq_size > -1) {
             for (int j = handleSeq_size - 1; j > limit; --j) {
                 handle_seq.push_back(_handle_seq[j]);
             }
             handleSeq_size = limit + 1;
             if (limit >= 0) {
-                _handle_seq[limit] = createLink(handle_seq, it->first);
+                _handle_seq[limit] = createLink(handle_seq, rit->first);
             } else {
-                handle = createLink(handle_seq, it->first);
+                handle = createLink(handle_seq, rit->first);
                 return handle;
             }
             handle_seq.clear();
@@ -92,107 +103,165 @@ Handle atomeseRewriting::atom_rebuild(opencog::Handle &handle) {
 }
 
 
-void atomeseRewriting::insert_atom_above(opencog::Handle &handle, opencog::Handle &find,
-                                         opencog::Type type) {
-    if (search_handle(handle, find) == 1) {
-        for (int i = 0; i < _handle_seq.size(); ++i) {
-            if (content_eq(_handle_seq[i], find)) {
-                HandleSeq handleSeq;
-                handleSeq.push_back(_handle_seq[i]);
+Handle atomeseRewriting::handle_replace(opencog::Handle &source, opencog::Handle target,
+                                      Handle& replace) {
+    Handle result;
+    if (search_handle(source, target)) {
+        for (int i = 0; i < _handle_seq.size(); i++) {
+            if(content_eq(target, _handle_seq[i])) {
+                HandleSeq handleSeq = _handle_seq[i]->getOutgoingSet();
+                Type type = replace->get_type();
                 _handle_seq[i] = createLink(handleSeq, type);
+                result = _handle_seq[i];
                 break;
             }
         }
-        handle = atom_rebuild(handle);
+        atom_rebuild(source);
     } else {
-        HandleSeq handleSeq;
-        handleSeq.push_back(handle);
-        handle = createLink(handleSeq, type);
+        OC_ASSERT(false, "Unable to find handle");
     }
+    return result;
 }
 
-void atomeseRewriting::append_atom_below(opencog::Handle &handle, opencog::Handle &find,
-                                         opencog::Handle &atom) {
-    if (search_handle(handle, find) == 1) {
-        for (int i = 0; i < _handle_seq.size(); ++i) {
-            logger().debug() << "handle_seq: " << oc_to_string(_handle_seq[i]->get_handle(), empty_string);
-            logger().debug() << "find: " << oc_to_string(find, empty_string);
-            if (content_eq(_handle_seq[i], find)) {
-                HandleSeq handleSeq = _handle_seq[i]->getOutgoingSet();
-                handleSeq.push_back(atom);
-                _handle_seq[i] = createLink(handleSeq, _handle_seq[i]->get_type());
-                find = _handle_seq[i];
+Handle atomeseRewriting::insert_atom_above(opencog::Handle &source, opencog::Handle target,
+                                           opencog::Type insert_type) {
+    Handle result;
+    if (content_eq(source, target)) {
+        source = createLink(insert_type, source);
+        result = source;
+        return result;
+    }
+    if (search_handle(source, target)) {
+        for (int i=0; i < _handle_seq.size(); i++) {
+            if (content_eq(_handle_seq[i], target)) {
+                _handle_seq[i] = createLink(insert_type, _handle_seq[i]);
+                result = _handle_seq[i];
                 break;
             }
         }
-        handle = atom_rebuild(handle);
+        atom_rebuild(source);
     } else {
+        OC_ASSERT(false, "Unable to find handle");
+    }
+    return result;
+}
+
+Handle atomeseRewriting::append_atom_below(opencog::Handle &handle, opencog::Handle target,
+                                         opencog::Handle &atom) {
+    Handle result;
+    if (content_eq(handle, target)) {
         HandleSeq handleSeq = handle->getOutgoingSet();
         handleSeq.push_back(atom);
         handle = createLink(handleSeq, handle->get_type());
-    }
-}
-
-int atomeseRewriting::search_erase_atom(opencog::Handle &source, opencog::Handle &target,
-                                        bool is_first) {
-    int target_value;
-    if (is_first) {
-        _handle_seq.clear();
-        _type_store.clear();
-    }
-    bool is_found = false;
-    if (content_eq(source, target)) {
-        return 0;
+        result = atom;
     } else {
-        if (source->is_link()) {
-            HandleSeq handleSeq = source->getOutgoingSet();
-            _type_store.insert(make_pair(source->get_type(), handleSeq.size()));
-            for (int j=0; j < handleSeq.size(); j++) {
-                if (!content_eq(handleSeq[j], target)) {
-                    _handle_seq.push_back(handleSeq[j]);
-                } else{
-                    target_value = j+1;
-                    is_found = true;
-                    (--_type_store.end())->second -= 1;
-                }
-            }
-            if (!is_found) {
-                for (auto sib: handleSeq) {
-                    search_erase_atom(sib, target, false);
+        if (search_handle(handle, target)) {
+            for (int i = 0; i < _handle_seq.size(); ++i) {
+                if (content_eq(_handle_seq[i], target)) {
+                    HandleSeq handleSeq = _handle_seq[i]->getOutgoingSet();
+                    handleSeq.push_back(atom);
+                    _handle_seq[i] = createLink(handleSeq, _handle_seq[i]->get_type());
+                    result = _handle_seq[i];
                     break;
                 }
             }
+            if (!_handle_seq.empty()) {
+                handle = atom_rebuild(handle);
+            } else {
+                OC_ASSERT(false, "Unable to find handle");
+            }
+
         } else {
-            _handle_seq.push_back(source);
+            OC_ASSERT(false, "Unable to find handle");
         }
     }
-    target = _handle_seq[target_value];
-    return _handle_seq.size() > 0 ? 1 : -1;
+
+    return result;
 }
 
-void atomeseRewriting::erase_atom(Handle &source, Handle &target) {
-    if (search_erase_atom(source, target) == 1) {
+
+
+Handle atomeseRewriting::erase_atom(Handle &source, Handle target) {
+    bool erased = false;
+    bool removed = true;
+    Handle result;
+    if (search_handle(source, target)) {
+        for (int i = 0; i < _handle_seq.size(); i++) {
+            if(content_eq(target, _handle_seq[i])) {
+                erased = true;
+                std::vector<pair<Type, int>>::iterator it;
+                int value = 0;
+                for (it = _type_store.begin(); it != _type_store.end(); ++it) {
+                    value += it->second;
+                    if (value > i) {
+                        it->second -= 1;
+                        removed = true;
+                    }
+                }
+            }
+            if (i == _handle_seq.size()-1) {
+                _handle_seq.erase(_handle_seq.begin() + i);
+            }
+            else {
+                if (erased ) {
+                    if (removed) {
+                        if (_handle_seq[i]->is_link()){
+                            HandleSeq handleSeq = _handle_seq[i]->getOutgoingSet();
+                            if (!handleSeq.empty()) {
+                                result = handleSeq[0]->get_handle();
+                            } else if (i >= 1) {
+                                result = _handle_seq[i-1];
+                            } else {
+                                result = _handle_seq[i+1];
+                            }
+                        } else {
+                            result = _handle_seq[i];
+                        }
+                        removed = false;
+                    }
+                    _handle_seq[i] = _handle_seq[i+1];
+                }
+            }
+
+        }
         atom_rebuild(source);
+    } else {
+        OC_ASSERT(false, "Unable to find handle");
     }
+    return result;
 }
 
-void atomeseRewriting::flatten_atom(Handle &source, Handle &target) {
+Handle atomeseRewriting::flatten_atom(Handle &source, Handle target) {
+    Handle result;
+
     HandleSeq handleSeq;
-    if (search_handle(source, target) == 1) {
-        for (int i=0; i < _handle_seq.size(); ++i) {
-            if (content_eq(_handle_seq[i], target)) {
-                HandleSeq sib = _handle_seq[i]->getOutgoingSet();
-                for (int j=0; j < sib.size(); j++) {
-                    _handle_seq.push_back(sib[j]);
+
+    if (search_handle(source, target)) {
+        for (int i = 0; i < _handle_seq.size(); i++) {
+            if(content_eq(target, _handle_seq[i])) {
+                HandleSeq outgoing = _handle_seq[i]->getOutgoingSet();
+                for (auto sib: outgoing) {
+                    _handle_seq.push_back(sib);
                 }
                 _handle_seq[i] = createLink(handleSeq, _handle_seq[i]->get_type());
-                target = _handle_seq[i];
-                (--_type_store.end())->second += sib.size();
+                result = _handle_seq[i];
+                std::vector<pair<Type, int>>::iterator it;
+                int value = 0;
+                for (it = _type_store.begin(); it != _type_store.end(); ++it) {
+                    value += it->second;
+                    if (value > i) {
+                        it->second += outgoing.size();
+                        break;
+                    }
+                }
                 break;
             }
         }
         source = atom_rebuild(source);
-    }
+    } else {
+        OC_ASSERT(false, "Unable to find handle");
+        }
+    return result;
 }
 
 } // ~namespace moses
