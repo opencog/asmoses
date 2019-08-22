@@ -1,0 +1,88 @@
+/*
+ * tests/moses/representationUTest.cxxtest
+ *
+ * Copyright (C) 2019 OpenCog Foundation
+ * All Rights Reserved
+ *
+ * Written by Behailu Dereje
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+#include <sstream>
+#include <string>
+
+#include <opencog/moses/representation/representation.h>
+#include <opencog/reduct/reduct/reduct.h>
+#include <opencog/util/mt19937ar.h>
+#include <opencog/util/Logger.h>
+
+#include <opencog/combo/converter/combo_atomese.h>
+#include <opencog/combo/combo/combo.h>
+#include <opencog/atoms/atom_types/atom_types.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/core/NumberNode.h>
+
+using namespace opencog;
+using namespace moses;
+using namespace reduct;
+using namespace combo;
+using namespace std;
+
+class AtomeseRepresentationUTest : public CxxTest::TestSuite {
+private:
+    MT19937RandGen rng;
+
+public:
+    AtomeseRepresentationUTest() : rng(1)
+    {
+        logger().set_print_to_stdout_flag(true);
+        logger().set_level(Logger::DEBUG);
+    }
+
+    void test_boolean_atomese_rep1() {
+        typedef HandleSet handle_operator_set;
+        typedef HandleSeqSet handle_ns_set;
+
+        HandleSeq list_or = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
+        Handle and_link = createLink(list_or, AND_LINK);
+
+        Type type = and_link->get_type();
+
+        combo::AtomeseToCombo to_combo;
+
+        const HandleSet ignore_ops;
+        logical_reduction r(ignore_ops);
+        const rule &r2 = r.operator()(2);
+        const HandleSeqSet perceptions;
+        const HandleSeqSet actions;
+
+        representation rep(r2, r2, and_link, type, ignore_ops,
+                           {}, {}, false,
+                           1.0);
+
+        TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
+
+        rep.ostream_prototype(std::cout << "Prototype = ") << std::endl;
+
+        std::stringstream ss;
+
+        rep.ostream_prototype(ss);
+    }
+};
