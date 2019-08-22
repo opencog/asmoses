@@ -37,6 +37,7 @@
 
 #include "../moses/complexity.h"
 #include "field_set.h"
+#include "atomese_rewrite.h"
 
 namespace opencog { namespace moses {
 
@@ -62,6 +63,11 @@ struct knob_base
     knob_base(combo_tree& tr) : _tr(tr), _loc(tr.end()) {}
     virtual ~knob_base() { }
 
+    knob_base(Handle& handle, Handle& handle_loc)
+        : _handle(handle), _handle_loc(handle_loc) {}
+    knob_base(Handle& handle) : _handle(handle) {}
+
+
     // Is the feature nonzero by default? i.e., is it present in the exemplar?
     virtual bool in_exemplar() const = 0;
 
@@ -69,16 +75,33 @@ struct knob_base
     // (deleting any null vertices if present).
     virtual void clear_exemplar() = 0;
 
+    virtual void clear_exemplar_atomese(Handle& sub_handle) = 0;
+
     combo_tree::iterator get_loc() const
     {
         return _loc;
     }
 
+    Handle get_handle_loc() const
+    {
+        return _handle_loc;
+    }
+
+//    Handle get_handle_loc() const
+//    {
+//        return _handle_loc;
+//    }
+
     virtual std::string toStr() const = 0;
 
 protected:
-    combo_tree& _tr;
-    combo_tree::iterator _loc; // location of the knob in the combo_tree
+    atomeseRewriting _atomese_rewrite;
+    Handle handle_;
+    Handle& _handle = handle_;
+    Handle& _handle_loc = handle_;
+    combo_tree tr_ = combo_tree();
+    combo_tree& _tr = tr_;
+    combo_tree::iterator _loc = tr_.begin(); // location of the knob in the combo_tree
 };
 
 struct disc_knob_base : public knob_base
@@ -89,7 +112,13 @@ struct disc_knob_base : public knob_base
         : knob_base(tr) {}
     virtual ~disc_knob_base() {}
 
+    disc_knob_base(Handle& handle, Handle& tgt)
+        : knob_base(handle, tgt) {}
+    disc_knob_base(Handle& handle)
+        : knob_base(handle) {}
+
     virtual void turn(int) = 0;
+    virtual void turn_atomese(int, Handle& handle) = 0;
     virtual void disallow(int) = 0;
     virtual void allow(int) = 0;
 
@@ -112,6 +141,9 @@ struct disc_knob_base : public knob_base
     virtual combo_tree::iterator append_to(combo_tree& candidate,
                                            combo_tree::iterator& parent_dst,
                                            int idx) const = 0;
+//    virtual Handle append_to(Handle& candidate,
+//                             Handle& parent_dst,
+//                             int idx) const = 0;
 
     // Create a spec describing the space spanned by the knob.
     virtual field_set::disc_spec spec() const = 0;
@@ -130,13 +162,21 @@ struct contin_knob : public knob_base
     contin_knob(combo_tree& tr, combo_tree::iterator tgt,
                 contin_t step_size, contin_t expansion,
                 field_set::width_t depth);
+//
+//    contin_knob(Handle& handle, Handle tgt,
+//                contin_t step_size, contin_t expansion,
+//                field_set::width_t depth);
 
     bool in_exemplar() const;
 
     // @todo: it does not go back to the initiale state
     void clear_exemplar();
 
+    void clear_exemplar_atomese(Handle& sub_handle);
+
     void turn(contin_t x);
+
+//    void turn_atomese(contin_t x);
 
     /**
      * Append the content (a contin value) as child of parent_dst. If
@@ -149,6 +189,10 @@ struct contin_knob : public knob_base
      */
     void append_to(combo_tree& candidate, combo_tree::iterator parent_dst,
                    contin_t c) const;
+
+//    void append_to(Handle& candidate, Handle parent_dst,
+//                   contin_t c) const;
+
 
     // Return the spec describing the space spanned by the knob
     // Note that this spec is *not* a part of the field set that is
@@ -175,6 +219,10 @@ struct discrete_knob : public disc_knob_base
         : disc_knob_base(tr, tgt), _default(0), _current(0) {}
     discrete_knob(combo_tree& tr)
         : disc_knob_base(tr), _default(0), _current(0) {}
+    discrete_knob(Handle& handle, Handle tgt)
+        : disc_knob_base(handle, tgt), _default(0), _current(0) {}
+    discrete_knob(Handle& handle)
+        : disc_knob_base(handle), _default(0), _current(0) {}
 
     /// Do not allow setting to be set.
     void disallow(int setting) {
@@ -242,19 +290,33 @@ struct logical_subtree_knob : public discrete_knob<3>
     // copy lsk on tr at position tgt
     logical_subtree_knob(combo_tree& tr, combo_tree::iterator tgt,
                          const logical_subtree_knob& lsk);
-
     logical_subtree_knob(combo_tree& tr, combo_tree::iterator tgt,
                          combo_tree::iterator subtree);
 
+    logical_subtree_knob(Handle& handle, Handle tgt,
+                         const logical_subtree_knob& lsk);
+    logical_subtree_knob(Handle handle, Handle tgt,
+                         Handle &subhandle, Handle&  handle_sub);
+
+
     complexity_t complexity_bound() const;
+
+    complexity_t atomese_complexity_bound() const;
 
     void clear_exemplar();
 
+    void clear_exemplar_atomese(Handle& sub_handle);
+
     void turn(int idx);
+
+     void turn_atomese(int idx, Handle& handle);
 
     combo_tree::iterator append_to(combo_tree& candidate,
                                    combo_tree::iterator& parent_dst,
                                    int idx) const;
+//    Handle append_to(Handle& candidate,
+//                     Handle& parent_dst,
+//                     int idx) const;
 
     field_set::disc_spec spec() const;
 
@@ -285,11 +347,19 @@ struct action_subtree_knob : public discrete_knob<MAX_PERM_ACTIONS>
 
     void clear_exemplar();
 
+    void clear_exemplar_atomese(Handle& sub_handle);
+
     void turn(int idx);
+
+    void turn_atomese(int idx, Handle& handle);
 
     combo_tree::iterator append_to(combo_tree& candidate,
                                    combo_tree::iterator& parent_dst,
                                    int idx) const;
+//
+//	Handle append_to(Handle& candidate,
+//	                 Handle& parent_dst,
+//	                 int idx) const;
 
     field_set::disc_spec spec() const;
 
@@ -310,12 +380,19 @@ struct simple_action_subtree_knob : public discrete_knob<2>
 
     void clear_exemplar();
 
+    void clear_exemplar_atomese(Handle& handle);
+
     void turn(int idx);
+
+    void turn_atomese(int idx, Handle& handle);
 
     combo_tree::iterator append_to(combo_tree& candidate,
                                    combo_tree::iterator& parent_dst,
                                    int idx) const;
 
+//	Handle append_to(Handle& candidate,
+//	                 Handle& parent_dst,
+//	                 int idx) const;
     field_set::disc_spec spec() const;
 
     std::string toStr() const;
