@@ -38,6 +38,7 @@
 #include <opencog/reduct/rules/general_rules.h>
 
 #include "build_knobs.h"
+#include "atomese_rewrite.h"
 
 using namespace std;
 
@@ -447,6 +448,28 @@ void build_knobs_combo::logical_cleanup() {
         _exemplar.set_head(id::logical_and);
 }
 
+//void build_knobs_atomese::atomese_logical_cleanup() {
+//    atomeseRewriting _atomese_rewrite;
+//    _atomese_rewrite.store_cleanup_handle(_atomese_exemplar);
+//
+//    std::map<Type, int>::reverse_iterator rit;
+//    atomeseRewriting atomese_rewrite;
+//    HandleSeq handleSeq = atomese_rewrite.get_handle_seq();
+//    std::map<Type, int> type_store = atomese_rewrite.get_type_store();
+//    int handleSeq_size = handleSeq.size();
+//    HandleSeq handleSeq1;
+//    for (rit = type_store.rbegin(); rit != type_store.rend(); ++rit) {
+//        int limit = handleSeq_size - rit->second;
+//        for (int j = handleSeq_size - 1; j >= limit; --j) {
+//            handleSeq1.push_back(handleSeq[j]);
+//        }
+//        handleSeq_size = limit;
+//        handleSeq[limit] = createLink(handleSeq1, rit->first);
+//    }
+//    _atomese_exemplar = handleSeq[0];
+//}
+
+
 /// disc_probe: determine if a discrete knob is worth creating.
 ///
 /// The general idea is to minimize the number of 'pointless' knobs
@@ -535,6 +558,41 @@ bool build_knobs_combo::disc_probe(pre_it subtree, disc_knob_base &kb) const {
     }
 }
 
+bool build_knobs_atomese::disc_probe(Handle &sub_handle, disc_knob_base &kb) const {
+    using namespace reduct;
+
+    if (_skip_disc_probe) return true;
+
+    vector<int> to_disallow;
+
+    for (int idx : boost::irange(1, kb.multiplicity())) {
+        kb.turn_atomese(idx, sub_handle);
+
+        complexity_t initial_c = atomese_complexity(sub_handle);
+
+        Handle handle_tmp(sub_handle);
+
+        _rep.clean_atomese(handle_tmp, true, true);
+
+        complexity_t handle_tmp_cmp = atomese_complexity(handle_tmp);
+
+        if (initial_c > handle_tmp_cmp) {
+            to_disallow.push_back(idx);
+        }
+    }
+
+    kb.turn_atomese(0, sub_handle);
+
+    if(int(to_disallow.size()) < kb.multiplicity() -1) {
+        for(int idx: to_disallow)
+            kb.disallow(idx);
+        return true;
+    } else {
+        kb.clear_exemplar_atomese(sub_handle);
+        return false;
+    }
+}
+
 // ***********************************************************************
 // Predicate (mixed) trees: mixture of logical and predicate terms.
 
@@ -565,6 +623,24 @@ void build_knobs_combo::insert_typed_arg(combo_tree &tr,
             root = tr.append_child(root, id::logical_not);
         pre_it gt = tr.append_child(root, id::greater_than_zero);
         tr.append_child(gt, arg);
+    }
+}
+
+void build_knobs_atomese::insert_handle_arg(opencog::Handle &handle,
+                                    opencog::Handle &handle_arg,
+                                    bool negate) {
+    Type type = handle->get_type();
+    type_node arg_type = type_to_type_node(type);
+    if (arg_type == id::boolean_type) {
+        if (negate) {
+            HandleSeq handleSeq = {handle_arg};
+            handle_arg = createLink(handleSeq, NOT_LINK);
+        }
+        HandleSeq handleSeq1 = {handle->getOutgoingSet()};
+        handleSeq1.push_back(handle_arg);
+        handle = createLink(handleSeq1, type);
+    } else if (arg_type == id::contin_type) {
+        OC_ASSERT(false, " Not Implemented Yet!");
     }
 }
 
@@ -658,14 +734,14 @@ void build_knobs_combo::sample_logical_perms(pre_it it, combo_tree_seq& perms)
     if (logger().is_debug_enabled()) {
         logger().debug() << "perms.size: " << ps
                          << " max_pairs: " << max_pairs
-                         << " logical knob pairs to create: "<< n_pairs;
+                         << " logical knob pairs to create: " << n_pairs;
     }
 
     lazy_random_selector randpair(max_pairs);
     dorepeat (n_pairs) {
         size_t i = randpair();
 
-        const pair<arity_t, arity_t>& ppr = permitted_perms[i];
+        const pair<arity_t, arity_t> &ppr = permitted_perms[i];
         arity_t a = ppr.first;
         arity_t b = ppr.second;
 
@@ -694,6 +770,96 @@ void build_knobs_combo::sample_logical_perms(pre_it it, combo_tree_seq& perms)
     if (logger().is_fine_enabled())
         ostream_container(logger().fine() << "Perms:" << std::endl, perms, "\n");
 }
+
+void build_knobs_atomese::sample_logical_perms(Handle perm, HandleSeq &perms) {
+
+    perms = _predicateNode_store;
+
+    if (_perm_ratio <= -1.0)
+        return;
+
+    vector<pair<arity_t, arity_t>> permitted_perms;
+    Handle arg_a;
+    Handle arg_b;
+    for (int a = 0; a < _arity; a++) {
+        arg_a = perms[a];
+        for (int b = 0; b < _arity; b++) {
+            arg_b = perms[b];
+            if (permitted_op(arg_b) and a != b) {
+                permitted_perms.push_back({a, b});
+            }
+        }
+    }
+    unsigned max_pairs = permitted_perms.size();
+    if (max_pairs == 0)
+        return;
+
+    unsigned ps = perms.size();
+    size_t n_pairs = 0;
+    if (0.0 < _perm_ratio)
+        n_pairs = static_cast<size_t>(floor(ps + _perm_ratio * (max_pairs - ps)));
+    else {
+        n_pairs = static_cast<size_t>(floor((1.0 + _perm_ratio) * ps));
+    }
+
+//    if (logger().is_debug_enabled()) {
+//        logger().debug() << "perms.size: " << ps
+//                         << " max_pairs: " << max_pairs
+//                         << " logical knob pairs to create: " << n_pairs;
+//    }
+
+    lazy_random_selector randpair(max_pairs);
+    HandleSeq handleSeq;
+    Type type = perm->get_type();
+    OC_ASSERT(type == AND_LINK || type == OR_LINK);
+    perm = (type == AND_LINK ? createLink(handleSeq, OR_LINK) :
+            createLink(handleSeq, AND_LINK));
+    dorepeat(n_pairs) {
+        size_t i = randpair();
+
+        const pair<arity_t, arity_t> &ppr = permitted_perms[i];
+        arity_t a = ppr.first;
+        arity_t b = ppr.second;
+        Handle handle_arg_a = _predicateNode_store[a];
+        Handle handle_arg_b = _predicateNode_store[b];
+        if (b < a) {
+            insert_handle_arg(perm, handle_arg_b);
+            insert_handle_arg(perm, handle_arg_a);
+        } else {
+            insert_handle_arg(perm, handle_arg_a, true);
+            insert_handle_arg(perm, handle_arg_b);
+        }
+        perms.push_back(perm);
+    }
+    for (int i = 0; i < perms.size() ; i++) {
+        logger().debug() << "Perms:" << oc_to_string(perms[i]->get_handle(), empty_string);
+    }
+    if (logger().is_fine_enabled())
+        ostream_container(logger().fine() << "Perms:" << std::endl, perms, "\n");
+}
+
+//void atomeseRewriting::store_cleanup_handle(opencog::Handle &handle, int num, bool is_first) {
+//    if (is_first) {
+//        _handle_seq.clear();
+//        _type_store.clear();
+//    }
+//    if (handle->is_link()) {
+//        if (handle->get_arity() > 0) {
+//            HandleSeq handleSeq_handle = handle->getOutgoingSet();
+//            _type_store.insert(make_pair(handle->get_type(), handleSeq_handle.size()));
+//            for (auto sib: handleSeq_handle) {
+//                _handle_seq.push_back(sib);
+//            }
+//            for (auto sib: handleSeq_handle) {
+//                store_cleanup_handle(sib, ++num, false);
+//            }
+//        } else {
+//            _type_store[_handle_seq[num - 1]->get_type()] = 1;
+//        }
+//    } else {
+//        _handle_seq.push_back(handle);
+//    }
+//}
 
 /**
  * Add logical and predicate knobs.  The knobs are all boolean valued,
@@ -758,6 +924,46 @@ void build_knobs_combo::add_logical_knobs(pre_it subtree,
     for (const logical_subtree_knob& kb : kb_v) {
         _rep.disc.insert(make_pair(kb.spec(), kb));
     }
+}
+
+void build_knobs_atomese::add_logical_knobs(Handle &sub, Handle &handle,
+                                    bool add_if_in_exemplar) {
+    // check is logical
+//    if (logger().is_debug_enabled()) {
+//        logger().debug() << "Adding logical knobs to subtree of size="
+//                         << sub->get_arity()
+//                         << " at location of size="
+//                         << handle->get_arity();
+//        if (logger().is_fine_enabled()) {
+//            logger().fine() << "sub handle = " << oc_to_string(sub, opencog::empty_string);
+//            logger().fine() << "handle = " << oc_to_string(handle, opencog::empty_string);
+//        }
+//    }
+    HandleSeq perms;
+    sample_logical_perms(handle, perms);
+#define BREAKEVEN 30000
+    size_t np = perms.size();
+    int nthr = 1 + np / BREAKEVEN;
+    int maxth = num_threads();
+    if (nthr > maxth) nthr = maxth;
+
+    if (logger().is_debug_enabled()) {
+        logger().debug("Created %d logical knob subtrees", np);
+        if (_skip_disc_probe)
+            logger().debug("Will skip expensive disc_probe()");
+        else
+            logger().debug("Will perform expensive disc_probe()");
+    }
+    // knob probing.
+    boost::ptr_vector<logical_subtree_knob> kb_v =
+            build_knobs_atomese::atomese_logical_probe_rec(sub, _atomese_exemplar, handle, perms,
+                                                   add_if_in_exemplar, nthr);
+
+    logger().debug("Adding %d logical knobs", kb_v.size());
+    for (const logical_subtree_knob &kb : kb_v) {
+        _rep.disc.insert(make_pair(kb.spec(), kb));
+    }
+    _atomese_exemplar = sub;
 }
 
 /**
@@ -850,6 +1056,54 @@ void build_knobs_combo::build_logical(pre_it subtree, pre_it it)
     // worth the cost?
     logger().debug("Call add_logical_knobs for flipped subtree");
     add_logical_knobs(subtree, _exemplar.append_child(it, flip));
+}
+
+void build_knobs_atomese::build_logical(Handle sub_handle, Handle handle) {
+
+    Type flip = KNOB_LINK;
+    Handle handle_it = handle;
+
+    Type tt = handle->get_type();
+    if (tt == NOT_LINK) {
+        OC_ASSERT(false,
+                  "Error: the tree is supposed to be in normal form,"
+                  " and thus must not contain NOT_LINK nodes")
+    } else if (tt == AND_LINK) {
+        flip = OR_LINK;
+    } else if (tt == OR_LINK) {
+        flip = AND_LINK;
+    }
+
+    if (flip == KNOB_LINK)
+        return;
+
+    logger().debug("First call to add_logical_knobs");
+    // add_logical_knobs
+    add_logical_knobs(sub_handle, handle);
+    if (handle->is_link()) {
+        HandleSeq sib = handle->getOutgoingSet();
+        for (auto handle_sib: sib) {
+            if (handle_sib->get_type() == KNOB_LINK) {
+                break;
+            } else if (handle_sib->is_link()) {
+                logger().debug("Recursive call to build_logical");
+                build_logical(sub_handle, handle_sib);
+                logger().debug("Return from recursive call to build_logical");
+            } else {
+                logger().debug("Call add_logical_knobs for node");
+                handle_it = atomese_rewrite.insert_atom_above(_atomese_exemplar,
+                        handle_sib, flip);
+                add_logical_knobs(sub_handle, handle_it, false);
+                break;
+            }
+        }
+    }
+    logger().debug("call add_logical_knobs for flipped sub program");
+    Handle handle_flip = createLink(flip);
+    handle_it = atomese_rewrite.append_atom_below(sub_handle,
+            handle_it, handle_flip);
+    add_logical_knobs(sub_handle, handle_it);
+
 }
 
 // ***********************************************************************

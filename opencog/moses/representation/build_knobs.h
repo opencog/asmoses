@@ -35,29 +35,26 @@
 
 #include "field_set.h"
 #include "representation.h"
+#include "atomese_rewrite.h"
 
 namespace opencog { namespace moses {
 
 using namespace combo;
 
-// need to call a generator method... (dispatched based on type
-
-// build knobs on a reduced combo tree
-struct build_knobs : boost::noncopyable
+class build_knobs_combo
 {
-    // used to be stepsize = 1.0, expansion = 2, depth = 4
-    // Optional arguments used only for Petbrain and actions
-    build_knobs(combo_tree& exemplar,
-                const type_tree& tt,
-                representation& rep,
-                const operator_set& ignore_ops = operator_set(),
-                const combo_tree_ns_set* perceptions = NULL,
-                const combo_tree_ns_set* actions = NULL,
-                bool linear_regression = true,
-                contin_t step_size = 1.0,
-                contin_t expansion = 1.0,
-                field_set::width_t depth = 4,
-                float perm_ratio = 0.0);
+public:
+    build_knobs_combo(combo_tree& exemplar,
+                      const type_tree& tt,
+                      representation& rep,
+                      const operator_set& ignore_ops = operator_set(),
+                      const combo_tree_ns_set* perceptions = NULL,
+                      const combo_tree_ns_set* actions = NULL,
+                      bool linear_regression = true,
+                      contin_t step_size = 1.0,
+                      contin_t expansion = 1.0,
+                      field_set::width_t depth = 4,
+                      float perm_ratio = 0.0);
 
 protected:
     void build_logical(combo_tree::iterator sub,
@@ -134,6 +131,7 @@ protected:
                           const argument &arg,
                           bool negate = false);
 
+public:
     // ------------------------------------------------------
     /**
      * Disallow settings of kb that result in a shorter candidate if
@@ -198,6 +196,108 @@ protected:
     mutable shared_mutex lp_mutex; // used in logical_probe_thread_safe
 
 };
+
+class build_knobs_atomese
+{
+public:
+    build_knobs_atomese(Handle &exemplar,
+                        const Type& tt,
+                        representation &rep,
+                        const HandleSet &ignore_ops,
+                        const HandleSeqSet* perceptions,
+                        const HandleSeqSet* actions,
+                        bool linear_regression,
+                        contin_t step_size,
+                        contin_t expansion,
+                        field_set::width_t depth,
+                        float perm_ratio);
+
+protected:
+    void build_logical(Handle sub_handle, Handle it_handle);
+
+protected:
+    atomeseRewriting atomese_rewrite;
+
+    HandleSeq _predicateNode_store;
+
+    Handle &_atomese_exemplar;
+
+    representation &_rep;
+
+        // knob probing is expensive, skip if possible.
+    bool _skip_disc_probe;
+
+    // Number of arguments of the combo program.
+    const combo::arity_t _arity;
+
+    // Type signature of the argument literals.
+    const type_tree _signature;
+
+    // If true, then contin knob-building only generates linear
+    // expressions (i.e. so that moses performs only linear
+    // regression).  This greatly reduces the number of contin knobs
+    // that get created (and thus smaller and faster field sets) but
+    // it also makes fitting weaker.  However, some real-life problems
+    // want linear solutions.
+    bool _linear_contin;
+
+    contin_t _step_size, _expansion;
+    field_set::width_t _depth;
+
+    // perm_ratio ranges from 0 to 1 and defines the number of perms
+    // to consider, 0 means _arity positive literals and _arity pairs
+    // of literals, 1 means _arity positive literals and
+    // _arity*(_arity-1) pairs of literals
+    float _perm_ratio;
+
+    // The set of operators to ignore during representation building.
+    const HandleSet _atomese_ignore_ops;
+
+    const HandleSeqSet _atomese_perceptions;
+    const HandleSeqSet _atomese_actions;
+
+
+
+protected:
+    bool disc_probe(Handle &sub_handle, disc_knob_base &kb) const;
+    // Misc protected methods
+    // Return true if the operator is allowed for knob building.
+    bool permitted_op(const Handle &h);
+
+    // ------------------------------------------------------
+    // logical knob building
+
+    void logical_canonize(Handle &handle);
+
+    boost::ptr_vector<logical_subtree_knob> atomese_logical_probe_rec(
+            Handle sub_handle,
+            Handle &exemplar,
+            Handle handle_it,
+            HandleSeq perms,
+            bool add_if_in_exemplar,
+            unsigned n_jobs = 1) const;
+
+//    void atomese_logical_cleanup();
+
+    void add_logical_knobs(Handle &sub_handle,
+                           Handle &handle,
+                           bool add_if_in_exemplar = true);
+
+    void sample_logical_perms(Handle perm, HandleSeq &perms);
+
+    void insert_handle_arg(Handle &handle,
+                           Handle &handle_arg,
+                           bool negate = false);
+
+
+
+//    void store_handle(Handle source, Handle &target,
+//                      bool is_first = true);
+
+
+
+};
+
 
 } //~namespace moses
 } //~namespace opencog
