@@ -241,7 +241,11 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 	if (IMPULSE_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::impulse) : tr.append_child(iter, id::impulse);
 		return;
-	} else {
+	}
+	if (KNOB_LINK == t) {
+	    iter = tr.empty() ? tr.set_head(id::null_vertex) : tr.append_child(iter, id::null_vertex);
+	}
+	else {
 		OC_ASSERT(false, "unsupported type");
 	}
 }
