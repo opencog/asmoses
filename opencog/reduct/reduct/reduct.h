@@ -275,6 +275,11 @@ inline void clean_reduce(combo_tree &tr)
 	clean_reduction()(tr);
 }
 
+inline void clean_reduce(Handle &h)
+{
+	clean_reduction()(h);
+}
+
 inline void clean_and_full_reduce(combo_tree &tr,
                                   combo_tree::iterator it)
 {
