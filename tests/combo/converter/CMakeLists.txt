@@ -3,6 +3,7 @@ TARGET_LINK_LIBRARIES(combo_atomeseUTest
     ascombo
     ascomboant
     asmoses_types
+    atom_types
     ${ATOMSPACE_LIBRARIES}
     ${COGUTIL_LIBRARY}
 )
