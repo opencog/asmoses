@@ -148,7 +148,7 @@ representation::representation(const reduct::rule& simplify_candidate,
     }
 
     // Build the knobs.
-    build_knobs(_exemplar, tt, *this, ignore_ops,
+    build_knobs_combo(_exemplar, tt, *this, ignore_ops,
                 perceptions, actions, linear_contin,
                 stepsize, expansion, depth, perm_ratio);
 
@@ -241,13 +241,14 @@ representation::representation(const reduct::rule& simplify_candidate,
 #ifdef EXEMPLAR_INST_IS_UNDEAD
     set_exemplar_inst();
 
-    {
-        std::stringstream ss;
-        ss << "Exemplar instance: " << _fields.to_string(_exemplar_inst);
-        logger().debug(ss.str());
-    }
+{
+std::stringstream ss;
+ss << "Exemplar instance: " << _fields.to_string(_exemplar_inst);
+logger().debug(ss.str());
+}
 #endif // EXEMPLAR_INST_IS_UNDEAD
 }
+
 
 representation::representation(const reduct::rule& simplify_candidate,
                                const reduct::rule& simplify_knob_building,
@@ -267,12 +268,112 @@ representation::representation(const reduct::rule& simplify_candidate,
 					<<" Complexity= "
 					<<atomese_complexity(_atomese_exemplar);
 
+	// store predicate nodes for boolean type.
+    sample_store_nodes(_atomese_exemplar);
+
 	// Build knobs from atomese exemplar
 
-	build_knobs(_atomese_exemplar, tt, *this, ignore_ops,
+	build_knobs_atomese(_atomese_exemplar, tt, *this, ignore_ops,
 			perceptions, actions, linear_contin,stepsize,
 			expansion, depth, perm_ratio);
+
+    // Convert the knobs into a field set.
+    knob_to_fieldset_converter(true);
+
+    logger().info() << "Field set, in bytes: " << _fields.byte_size();
+    size_t is = sizeof(instance) + sizeof(packed_t) * _fields.packed_width();
+    logger().info() << "One instance, in bytes: " << is;
+
+    if (logger().is_debug_enabled()) {
+        std::stringstream ss;
+        ostream_prototype(ss << "Created prototype: ");
+        logger().debug(ss.str());
+    }
+
+#ifdef EXEMPLAR_INST_IS_UNDEAD
+    set_exemplar_inst();
+
+    {
+        std::stringstream ss;
+        ss << "Exemplar instance: " << _fields.to_string(_exemplar_inst);
+        logger().debug(ss.str());
+    }
+#endif // EXEMPLAR_INST_IS_UNDEAD
 }
+
+void representation::sample_store_nodes(opencog::Handle exemplar, bool is_first) {
+    if (is_first) {
+        predicateNode_store.clear();
+    }
+    if (exemplar->is_link()) {
+        HandleSeq handleSeq = exemplar->getOutgoingSet();
+        for (auto sib : handleSeq) {
+            if (sib->is_link()) {
+                sample_store_nodes(sib, false);
+            } else {
+                predicateNode_store.push_back(sib);
+            }
+        }
+    } else {
+        predicateNode_store.push_back(exemplar);
+    }
+}
+
+void representation::knob_to_fieldset_converter(bool is_atomese) {
+    std::multiset<field_set::spec> tmp;
+    for (const disc_v& v : disc)
+        tmp.insert(v.first);
+
+    size_t offset = 0;
+    if (is_atomese) {
+        _fields = field_set(tmp.begin(), tmp.end());
+        logger().info()<< "Total number of field specs: " << tmp.size();
+        for (disc_map_cit dit = disc.cbegin(); dit != disc.cend(); dit++) {
+            const disc_v& v = *dit;
+
+            Handle handle_it = v.second->get_handle_loc();
+//            handle_disc_knob[handle_it] = dit;
+//
+//            handle_disc_idx[handle_it] = _fields.begin_disc_raw_idx() + offset;
+            offset++;
+        }
+    } else {
+        for (const contin_v& v : contin)
+            tmp.insert(v.first);
+        _fields = field_set(tmp.begin(), tmp.end());
+
+        logger().info() << "Total number of field specs: " << tmp.size();
+
+        // Build a reversed-lookup table for disc and contin knobs.
+        // That is, given an iterator pointing into the exemplar, fetch the
+        // correspinding knob (if any).
+        size_t offset = 0;
+        for (disc_map_cit dit = disc.cbegin(); dit != disc.cend(); dit++) {
+            const disc_v& v = *dit;
+            pre_it pit = v.second->get_loc();
+            it_disc_knob[pit] = dit;
+            // offset used to be calculated like this:
+            // size_t offset = distance(disc.cbegin(), dit);
+            // but distance() is 3000x slower!! The trick here is that the
+            // knobs and fields are in exactly the same order, so this works.
+            it_disc_idx[pit] = _fields.begin_disc_raw_idx() + offset;
+            offset ++;
+        }
+        logger().info() << "Number of disc knobs mapped: " << disc.size();
+
+        offset = 0;
+        for (contin_map_cit cit = contin.cbegin(); cit != contin.cend(); cit++) {
+            const contin_v& v = *cit;
+            pre_it pit = v.second.get_loc();
+            it_contin_knob[pit] = cit;
+            // size_t offset = distance(contin.cbegin(), cit); per comments above.
+            it_contin_idx[pit] = _fields.begin_contin_raw_idx() + offset;
+            offset++;
+        }
+        logger().info() << "Number of contin knobs mapped: " << contin.size();
+    }
+}
+
 
 
 /// Turn the knobs on the representation, so that the knob settings match

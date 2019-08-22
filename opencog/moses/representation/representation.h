@@ -124,7 +124,18 @@ struct representation : public knob_mapper, boost::noncopyable
                            combo_tree::iterator src,
                            combo_tree::iterator parent_dst,
                            combo_tree& candidate) const;
-    
+
+    HandleSeq predicateNode_store;
+
+    void sample_store_nodes(Handle exemplar, bool is_first = true);
+
+    /*
+     *  Knob to field set converter
+     *
+     */
+//
+    void knob_to_fieldset_converter(bool is_atomese = false);
+
     //* return _simplify_candidate
     const reduct::rule* get_simplify_candidate() const {
         return _simplify_candidate;
