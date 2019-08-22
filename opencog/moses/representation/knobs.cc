@@ -25,6 +25,9 @@
 #include <opencog/reduct/reduct/reduct.h>
 
 #include "knobs.h"
+#include "atomese_rewrite.h"
+#include <opencog/atoms/core/NumberNode.h>
+#include <boost/lexical_cast.hpp>
 
 namespace opencog { namespace moses {
 
@@ -38,6 +41,12 @@ contin_knob::contin_knob(combo_tree& tr, combo_tree::iterator tgt,
     : knob_base(tr, tgt), _spec(combo::get_contin(*tgt),
                                 step_size, expansion, depth) { }
 
+//contin_knob::contin_knob(opencog::Handle &handle, opencog::Handle tgt,
+//                         opencog::moses::contin_t step_size,
+//                         opencog::moses::contin_t expansion,
+//                         opencog::moses::field_set::width_t depth)
+//    : knob_base(handle, tgt), _spec(0, step_size, expansion,
+//                                    depth) {}
 bool contin_knob::in_exemplar() const
 {
     return true;
@@ -45,10 +54,16 @@ bool contin_knob::in_exemplar() const
 
 void contin_knob::clear_exemplar() { }
 
+void contin_knob::clear_exemplar_atomese(Handle& sub_handle) { }
+
 void contin_knob::turn(contin_t x)
 {
     *_loc = x;
 }
+
+//void contin_knob::turn_handle(opencog::moses::contin_t x) {
+//    _handle_loc = _handle->getOutgoingAtom(boost::lexical_cast<Arity>(x));
+//}
 
 void contin_knob::append_to(combo_tree& candidate, combo_tree::iterator parent_dst,
                             contin_t c) const
@@ -58,6 +73,18 @@ void contin_knob::append_to(combo_tree& candidate, combo_tree::iterator parent_d
     else
         candidate.append_child(parent_dst, c);
 }
+
+//void contin_knob::append_to(opencog::Handle &candidate, opencog::Handle parent_dst,
+//        opencog::moses::contin_t c) const {
+//    if (candidate->get_arity() == 0) {
+//	    candidate = HandleCast(createNumberNode(c));
+//    }
+//    else {
+//    	atomeseRewriting _atomese_rewrite;
+//    	Handle h = HandleCast(createNumberNode(c));
+//    	_atomese_rewrite.append_atom_below(candidate, parent_dst, h);
+//    }
+//}
 
 const field_set::contin_spec& contin_knob::spec() const
 {
@@ -93,6 +120,39 @@ logical_subtree_knob::logical_subtree_knob(combo_tree& tr, combo_tree::iterator 
     _current = lsk._current;
 }
 
+//logical_subtree_knob::logical_subtree_knob(opencog::Handle &handle, opencog::Handle tgt,
+//                                           const logical_subtree_knob& lsk)
+//     : discrete_knob<3>(handle)
+//{
+//	atomeseRewriting atomese_rewrite;
+//
+//	if (lsk.in_exemplar())
+//
+//
+//
+//	atomese_rewrite.store_cleanup_handle(lsk._handle);
+//
+//	HandleSeq handleSeq = atomese_rewrite.get_handle_seq();
+//
+//	if (lsk.in_exemplar()) {
+//	    int index = 0;
+//	    for (int i=0; i < handleSeq.size() - 1 ; i ++) {
+//	        if (content_eq(handleSeq[i]->get_handle(), lsk._handle_loc)) {
+//	            _handle_loc = tgt->getOutgoingAtom(index);
+//	        } else {
+//	            index++;
+//	        }
+//	    }
+//	} else {
+//	    atomese_rewrite.append_atom_below(_handle, tgt, lsk._handle);
+//	    atomese_rewrite.append_atom_below(_handle_loc, tgt, lsk._handle);
+//	}
+//	_disallowed = lsk._disallowed;
+//	_default = lsk._default;
+//	_current = lsk._current;
+//}
+
+
 logical_subtree_knob::logical_subtree_knob(combo_tree& tr, combo_tree::iterator tgt,
                                            combo_tree::iterator subtree)
     : discrete_knob<3>(tr)
@@ -121,9 +181,46 @@ logical_subtree_knob::logical_subtree_knob(combo_tree& tr, combo_tree::iterator 
     _tr.append_child(_loc, subtree);
 }
 
+
+logical_subtree_knob::logical_subtree_knob(opencog::Handle handle, opencog::Handle tgt,
+                                           opencog::Handle &subhandle, Handle &handle_sub)
+		: discrete_knob<3>(handle)
+{
+
+	logger().debug()<<"tgt: " << oc_to_string(tgt, empty_string);
+	Handle negated_subhandle = createLink(NOT_LINK, subhandle);
+
+	reduct::logical_reduction r;
+	r(1)(negated_subhandle);
+
+	HandleSeq handleSeq = tgt->getOutgoingSet();
+    for (auto sib: handleSeq) {
+    	logger().debug()<<oc_to_string(sib->get_handle(), empty_string);
+        if (content_eq(sib->get_handle(), subhandle) ||
+            content_eq(sib->get_handle(), negated_subhandle)) {
+            _handle_loc = sib;
+            _current = present;
+            _default = present;
+            return;
+        }
+    }
+    HandleSeq handleSeq1 = {};
+    Handle link_handle = createLink(handleSeq1, KNOB_LINK);
+
+    _handle_loc = _atomese_rewrite.append_atom_below(_handle, tgt, link_handle);
+
+    _handle_loc = _atomese_rewrite.append_atom_below(_handle, _handle_loc, subhandle);
+    handle_sub = _handle;
+}
+
 complexity_t logical_subtree_knob::complexity_bound() const
 {
     return (_current == absent ? 0 : tree_complexity(_loc));
+}
+
+complexity_t logical_subtree_knob::atomese_complexity_bound() const
+{
+	return (_current == absent ? 0 : atomese_complexity(_handle_loc));
 }
 
 void logical_subtree_knob::clear_exemplar()
@@ -132,6 +229,15 @@ void logical_subtree_knob::clear_exemplar()
         turn(0);
     else
         _tr.erase(_loc);
+}
+
+void logical_subtree_knob::clear_exemplar_atomese(opencog::Handle &sub_handle) {
+    if (in_exemplar())
+        turn_atomese(0, sub_handle);
+    else {
+        _handle_loc =_atomese_rewrite.erase_atom(_handle, _handle_loc);
+        sub_handle = _handle;
+    }
 }
 
 void logical_subtree_knob::turn(int idx)
@@ -162,6 +268,46 @@ void logical_subtree_knob::turn(int idx)
         break;
     }
 
+    _current = idx;
+}
+
+void logical_subtree_knob::turn_atomese(int idx, Handle& sub_handle) {
+
+    idx = map_idx(idx);
+    OC_ASSERT((idx < 3), "INVALID SETTING: Index greater than 2. ");
+
+    if (idx == _current)
+        return;
+
+    HandleSeq handleSeq;
+    switch (idx) {
+        case absent:
+            if (_current == negated) {
+                if (_handle_loc->is_link()) {
+                    handleSeq = _handle_loc->getOutgoingSet();
+                }
+                Handle handle_replace =  createLink(handleSeq, KNOB_LINK);
+                _handle_loc = _atomese_rewrite.handle_replace(_handle, _handle_loc, handle_replace);
+            }
+            else {
+                _handle_loc = _atomese_rewrite.insert_atom_above(_handle, _handle_loc, KNOB_LINK);
+            }
+            break;
+        case present:
+            _handle_loc = _atomese_rewrite.flatten_atom(_handle, _handle_loc);
+            _handle_loc = _atomese_rewrite.erase_atom(_handle, _handle_loc);
+            break;
+        case negated:
+            if (_current == present) {
+                _handle_loc = _atomese_rewrite.insert_atom_above(_handle, _handle_loc, NOT_LINK);
+            }
+            else {
+                Handle not_link = createLink(handleSeq, NOT_LINK);
+                _handle_loc = _atomese_rewrite.handle_replace(_handle, _handle_loc, not_link);
+            }
+            break;
+    }
+    sub_handle = _handle;
     _current = idx;
 }
 
@@ -280,6 +426,13 @@ void action_subtree_knob::clear_exemplar() {
         _tr.erase(_loc);
 }
 
+void action_subtree_knob::clear_exemplar_atomese(opencog::Handle &sub_handle) {
+    if (in_exemplar())
+        turn_atomese(0, sub_handle);
+    else
+        _atomese_rewrite.erase_atom(_handle, sub_handle);
+}
+
 void action_subtree_knob::turn(int idx)
 {
     idx = map_idx(idx);
@@ -298,6 +451,10 @@ void action_subtree_knob::turn(int idx)
         _loc = _tr.replace(_loc, ite);
     }
     _current = idx;
+}
+
+void action_subtree_knob::turn_atomese(int idx, Handle& handle) {
+    OC_ASSERT(false, "Not Implemented_yet");
 }
 
 
@@ -364,6 +521,10 @@ void simple_action_subtree_knob::clear_exemplar() {
     // _tr.erase(_loc);
 }
 
+void simple_action_subtree_knob::clear_exemplar_atomese(Handle& sub_handle) {
+    turn_atomese(0, sub_handle);
+}
+
 void simple_action_subtree_knob::turn(int idx)
 {
     idx = map_idx(idx);
@@ -382,6 +543,10 @@ void simple_action_subtree_knob::turn(int idx)
     }
 
     _current = idx;
+}
+
+void simple_action_subtree_knob::turn_atomese(int idx, Handle& handle) {
+    OC_ASSERT(false, "Not Implemented yet!");
 }
 
 combo_tree::iterator simple_action_subtree_knob::append_to(combo_tree& candidate,
