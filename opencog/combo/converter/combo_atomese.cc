@@ -271,6 +271,12 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 	} else OC_ASSERT(false, "unsupported type");
 }
 
+Handle TypetreeToAtomese::operator()(const type_tree &tt)
+{
+	Handle handle;
+	type_tree_pre_it it = tt.begin();
+	handle = TypetreeToAtomese::type_tree_to_atomese_type(it);
+	return handle;
 } // ~namespace combo
 
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
@@ -302,5 +308,24 @@ std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::str
 		ss << " " << label;
 	return ss.str();
 }
+
+Handle TypetreeToAtomese::convert_type_node(const opencog::combo::type_node &tt)
+{
+	Handle handle;
+
+	if (tt == id::boolean_type)
+		return handle = createNode(BOOLEAN_NODE, "b1");
+
+	else if (tt == id::contin_type)
+		return handle = createNode(SCHEMA_NODE, "s1");
+
+	else if (tt == id::lambda_type)
+		return createLink(HandleSeq{}, ARROW_LINK);
+
+	else OC_ASSERT(false, "unsupported type");
+}
+
+}
+}  // ~namespaces combo opencog
 
 }  // ~namespace opencog
