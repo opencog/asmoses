@@ -2,7 +2,7 @@
 Wrapper for MOSES. Uses the C++ moses_exec function to access MOSES
 functionality.
 
-Options for using the pymoses wrapper:
+Options for using the pyasmoses wrapper:
 1. Within the CogServer, from an embedded MindAgent
 2. Within the CogServer, from the interactive Python shell
 3. In your Python IDE or interpreter. You need to ensure that
@@ -10,7 +10,7 @@ Options for using the pymoses wrapper:
 
 Loading the module:
 
-from opencog.pymoses import moses
+from opencog.pyasmoses import moses
 moses = moses()
 
 Example usage of run:

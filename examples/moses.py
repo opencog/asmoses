@@ -19,7 +19,7 @@ http://wiki.opencog.org/w/Meta-Optimizing_Semantic_Evolutionary_Search
 
 __author__ = 'Cosmo Harrigan'
 
-from opencog.pymoses import *
+from opencog.pyasmoses import *
 
 moses = moses()
 

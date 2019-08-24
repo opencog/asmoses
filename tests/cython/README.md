@@ -18,4 +18,4 @@ some build files to get a clean rebuild.  Basically, the CMakefiles
 for cython/python are buggy, and fail to rebuild when changes are made.
 So, for example:
 
-rm build/moses/cython/opencog/pymoses.cpp
+rm build/moses/cython/opencog/pyasmoses.cpp

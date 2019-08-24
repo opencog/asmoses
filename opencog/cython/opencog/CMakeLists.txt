@@ -42,13 +42,13 @@ ENDMACRO(CYTHON_ADD_MODULE_PYX)
 # Use this as a guide:
 # https://github.com/OpenKinect/libfreenect/blob/master/wrappers/python/CMakeLists.txt
 IF (HAVE_MOSES)
-	CYTHON_ADD_MODULE_PYX(pymoses
+	CYTHON_ADD_MODULE_PYX(pyasmoses
 		# "<opencog/moses/main/moses_exec.h>"
 	)
 
-	# opencog.pymoses Python bindings
+	# opencog.pyasmoses Python bindings
 	ADD_LIBRARY(moses_cython SHARED
-		pymoses.cpp
+		pyasmoses.cpp
 	)
 
 	# Don't reverse the order of moses_exec and moses, if reversed will give
@@ -69,7 +69,7 @@ IF (HAVE_MOSES)
 
 	SET_TARGET_PROPERTIES(moses_cython PROPERTIES
 		PREFIX ""
-		OUTPUT_NAME pymoses)
+		OUTPUT_NAME pyasmoses)
 
 	INSTALL (TARGETS moses_cython
 		EXPORT ASMosesTargets
