@@ -314,10 +314,10 @@ Handle TypetreeToAtomese::convert_type_node(const opencog::combo::type_node &tt)
 	Handle handle;
 
 	if (tt == id::boolean_type)
-		return handle = createNode(BOOLEAN_NODE, "b1");
+		return handle = createNode(TYPE_NODE, "BooleanNode");
 
 	else if (tt == id::contin_type)
-		return handle = createNode(SCHEMA_NODE, "s1");
+		return handle = createNode(TYPE_NODE, "NumberNode");
 
 	else if (tt == id::lambda_type)
 		return createLink(HandleSeq{}, ARROW_LINK);

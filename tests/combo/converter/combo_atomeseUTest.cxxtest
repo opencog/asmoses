@@ -250,10 +250,10 @@ public:
 		auto result = typetreeToAtomese(type_result);
 
 		// expected output
-		Handle b1 = createNode(BOOLEAN_NODE, "b1");
-		Handle b2 = createNode(BOOLEAN_NODE, "b1");
-		Handle b3 = createNode(BOOLEAN_NODE, "b1");
-		Handle b4 = createNode(BOOLEAN_NODE, "b1");
+		Handle b1 = createNode(TYPE_NODE, "BooleanNode");
+		Handle b2 = createNode(TYPE_NODE, "BooleanNode");
+		Handle b3 = createNode(TYPE_NODE, "BooleanNode");
+		Handle b4 = createNode(TYPE_NODE, "BooleanNode");
 
 		HandleSeq handleSeq4 = {b1, b2, b3};
 		Handle listlink = createLink(handleSeq4, LIST_LINK);
@@ -283,9 +283,9 @@ public:
 		auto result = typetreeToAtomese(type_result);
 
 		// expected output
-		Handle c3 = createNode(SCHEMA_NODE, "s1");
-		Handle c4 = createNode(SCHEMA_NODE, "s1");
-		Handle c5 = createNode(SCHEMA_NODE, "s1");
+		Handle c3 = createNode(TYPE_NODE, "NumberNode");
+		Handle c4 = createNode(TYPE_NODE, "NumberNode");
+		Handle c5 = createNode(TYPE_NODE, "NumberNode");
 
 		HandleSeq handleSeq2 = {c3, c4};
 		Handle listlink = createLink(handleSeq2, LIST_LINK);
