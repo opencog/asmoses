@@ -24,6 +24,8 @@
 #ifndef MOSES_COMBO_ATOMESE_H
 #define MOSES_COMBO_ATOMESE_H
 
+#include <opencog/util/empty_string.h>
+
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/atoms/base/Link.h>
@@ -144,7 +146,14 @@ protected:
 	                combo_tree::iterator &iter);
 
 };
-}
-}  // ~namespaces combo opencog
+
+} // ~namespace combo
+
+// For pretty printing OpenCog objects while debugging, see
+// https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
+std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
+                         const std::string& indent=empty_string);
+
+}  // ~namespace opencog
 
 #endif //MOSES_COMBO_ATOMESE_H
