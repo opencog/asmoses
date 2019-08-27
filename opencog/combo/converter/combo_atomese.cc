@@ -277,7 +277,7 @@ Handle TypetreeToAtomese::operator()(const type_tree &tt)
 	type_tree_pre_it it = tt.begin();
 	handle = TypetreeToAtomese::type_tree_to_atomese_type(it);
 	return handle;
-} // ~namespace combo
+} 
 
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
                          const std::string& indent)
@@ -325,7 +325,5 @@ Handle TypetreeToAtomese::convert_type_node(const opencog::combo::type_node &tt)
 	else OC_ASSERT(false, "unsupported type");
 }
 
-}
-}  // ~namespaces combo opencog
-
-}  // ~namespace opencog
+}  // ~namespaces combo
+}  // ~namespace opencog 

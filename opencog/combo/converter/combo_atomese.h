@@ -193,16 +193,13 @@ protected:
 	}
 
 };
-}
-}  // ~namespaces combo opencog
-
-} // ~namespace combo
 
 // For pretty printing OpenCog objects while debugging, see
 // https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
                          const std::string& indent=empty_string);
 
-}  // ~namespace opencog
+}  // ~namespace combo
+}  // ~namespaces opencog
 
 #endif //MOSES_COMBO_ATOMESE_H
