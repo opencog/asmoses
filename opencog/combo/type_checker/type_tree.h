@@ -29,6 +29,7 @@
 #include <opencog/util/tree.h>
 #include <opencog/util/numeric.h>
 #include <opencog/util/exceptions.h>
+#include <opencog/util/empty_string.h>
 
 #include <opencog/combo/type_checker/type_tree_def.h>
 #include <opencog/combo/crutil/exception.h>
@@ -428,6 +429,12 @@ type_tree gen_signature(const type_tree& iotype, arity_t arity);
 
 
 } // ~namespace combo
+
+// For pretty printing OpenCog objects while debugging, see
+// https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
+std::string oc_to_string(const combo::type_tree& tt,
+                         const std::string& indent=empty_string);
+
 } // ~namespace opencog
 
 namespace std {
