@@ -30,7 +30,7 @@
 #include <boost/phoenix/core/argument.hpp>
 #include "scoring_base.h"
 #include "opencog/utils/value_key.h"
-
+#include "opencog/utils/valueUtils.h"
 namespace opencog { namespace moses {
 
 using combo::CTable;
