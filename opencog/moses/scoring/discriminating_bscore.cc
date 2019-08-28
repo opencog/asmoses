@@ -264,7 +264,7 @@ vector<discriminator::d_counts> discriminator::counts(const Handle& program) con
         unsigned totalc = vct.second.total_count();
 
         d_counts ctr;
-        if (HandleCast(link_result.at(i))->get_type() == TRUE_LINK)
+        if (bool_value_to_bool(link_result.at(i)))
         {
             ctr.true_positive_sum = pos;
             ctr.false_positive_sum = neg;
@@ -604,9 +604,6 @@ prerec_bscore::prerec_bscore(const CTable& ct,
 
 // Nearly identical to recall_bscore, except that the roles of precision
 // and recall are switched.
-
-
-
 behavioral_score prerec_bscore::operator()(const combo_tree& tr) const
 {
     behavioral_score bs;
@@ -628,11 +625,7 @@ behavioral_score prerec_bscore::operator()(const combo_tree& tr) const
         }
         // divide all element by pos_total (so it sums up to precision - 1/2)
 
-        boost::transform(bs, bs.begin(),[pos_total](score_t x){
-                                        score_t zero = 0;
-                                        if(pos_total==0) return zero;
-                                        return x/pos_total;
-                                        });
+        boost::transform(bs, bs.begin(),[pos_total](score_t x){ return 0.0 < pos_total ? x/pos_total : 0.0; });
 
         // By using (tp-fp)/2 the sum of all the per-row contributions
         // is offset by -1/2 from the precision, as proved below
@@ -702,11 +695,7 @@ behavioral_score prerec_bscore::operator()(const Handle& program) const
             pos_total += ctr.positive_count;
         }
         // divide all element by pos_total (so it sums up to precision - 1/2)
-        boost::transform(bs, bs.begin(),[pos_total](score_t x){
-                                        score_t zero = 0;
-                                        if(pos_total==0) return zero;
-                                        return x/pos_total;
-        });
+        boost::transform(bs, bs.begin(),[pos_total](score_t x){ return 0.0 < pos_total ? x/pos_total : 0.0; });
 
         // By using (tp-fp)/2 the sum of all the per-row contributions
         // is offset by -1/2 from the precision, as proved below
