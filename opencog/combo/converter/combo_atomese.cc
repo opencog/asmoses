@@ -277,7 +277,25 @@ Handle TypetreeToAtomese::operator()(const type_tree &tt)
 	type_tree_pre_it it = tt.begin();
 	handle = TypetreeToAtomese::type_tree_to_atomese_type(it);
 	return handle;
-} 
+}
+
+Handle TypetreeToAtomese::convert_type_node(const opencog::combo::type_node &tt)
+{
+	Handle handle;
+
+	if (tt == id::boolean_type)
+		return handle = createNode(TYPE_NODE, "BooleanNode");
+
+	else if (tt == id::contin_type)
+		return handle = createNode(TYPE_NODE, "NumberNode");
+
+	else if (tt == id::lambda_type)
+		return createLink(HandleSeq{}, ARROW_LINK);
+
+	else OC_ASSERT(false, "unsupported type");
+}
+
+}  // ~namespaces combo
 
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
                          const std::string& indent)
@@ -309,21 +327,4 @@ std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::str
 	return ss.str();
 }
 
-Handle TypetreeToAtomese::convert_type_node(const opencog::combo::type_node &tt)
-{
-	Handle handle;
-
-	if (tt == id::boolean_type)
-		return handle = createNode(TYPE_NODE, "BooleanNode");
-
-	else if (tt == id::contin_type)
-		return handle = createNode(TYPE_NODE, "NumberNode");
-
-	else if (tt == id::lambda_type)
-		return createLink(HandleSeq{}, ARROW_LINK);
-
-	else OC_ASSERT(false, "unsupported type");
-}
-
-}  // ~namespaces combo
-}  // ~namespace opencog 
+}  // ~namespace opencog

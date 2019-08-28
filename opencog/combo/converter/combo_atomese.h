@@ -41,7 +41,7 @@ namespace id
 //    Atomese procedure types
 enum __attribute__((packed)) procedure_type
 {
-	unknown=0,
+	unknown = 0,
 	predicate,
 	schema
 };
@@ -51,8 +51,8 @@ enum __attribute__((packed)) procedure_type
 struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 {
 public:
-	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr,
-	              const std::vector<std::string> &labels={});
+	vertex_2_atom(id::procedure_type *parent, AtomSpace *as = nullptr,
+	              const std::vector<std::string> &labels = {});
 
 	std::pair<Type, Handle> operator()(const argument &a) const;
 
@@ -78,7 +78,7 @@ private:
 class ComboToAtomese
 {
 public:
-	ComboToAtomese(AtomSpace *as=nullptr);
+	ComboToAtomese(AtomSpace *as = nullptr);
 
 	/**
 	 * Convert a combo_tree to atomese program.
@@ -86,7 +86,7 @@ public:
 	 * @param combo_tree   the combo_tree containing the combo program
 	 * @return                 the Handle containing the atomese program
 	 */
-	Handle operator()(const combo_tree &tr, const std::vector<std::string> &labels={});
+	Handle operator()(const combo_tree &tr, const std::vector<std::string> &labels = {});
 
 private:
 	AtomSpace *_as;
@@ -150,20 +150,20 @@ protected:
 class TypetreeToAtomese
 {
 public:
-    /**
-     * converts the type tree to corresponding atomese type
-     * @param tt              type tree of the combo program
-     * @return handle       atomese type converted from typetree
-     */
-    Handle operator()(const type_tree& tt);
+	/**
+	 * converts the type tree to corresponding atomese type
+	 * @param tt              type tree of the combo program
+	 * @return handle       atomese type converted from typetree
+	 */
+	Handle operator()(const type_tree &tt);
 
-    /**
-     * convert each type node to corresponding atomese type
-     * @param tt        takes type node as argument then change
-     *                  to the corresponding to atomese type
-     * @return handle    corresponding to each  type_node
-     */
-    Handle convert_type_node(const type_node& tt);
+	/**
+	 * convert each type node to corresponding atomese type
+	 * @param tt        takes type node as argument then change
+	 *                  to the corresponding to atomese type
+	 * @return handle    corresponding to each  type_node
+	 */
+	Handle convert_type_node(const type_node &tt);
 
 protected:
 
@@ -173,7 +173,7 @@ protected:
 	 * @param type_tree::iterator   the iterater to the head of a type_tree
 	 * @return                 the Handle containing the atomese type
 	 */
-	template <typename Iter>
+	template<typename Iter>
 	opencog::Handle type_tree_to_atomese_type(Iter it)
 	{
 		type_tree::iterator head = it;
@@ -185,7 +185,7 @@ protected:
 			for (auto sib = head.begin(); sib != head.end(); ++sib)
 				handleSeq.push_back(type_tree_to_atomese_type(sib));
 
-			Handle lst = createLink(HandleSeq(handleSeq.begin(), handleSeq.end()-1), LIST_LINK);
+			Handle lst = createLink(HandleSeq(handleSeq.begin(), handleSeq.end() - 1), LIST_LINK);
 			atomeseType = createLink(HandleSeq{lst, handleSeq.back()}, ARROW_LINK);
 		}
 
@@ -194,12 +194,12 @@ protected:
 
 };
 
+}  // ~namespace combo
+
 // For pretty printing OpenCog objects while debugging, see
 // https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
                          const std::string& indent=empty_string);
-
-}  // ~namespace combo
 }  // ~namespaces opencog
 
 #endif //MOSES_COMBO_ATOMESE_H
