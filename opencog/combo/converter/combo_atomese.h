@@ -51,9 +51,8 @@ enum __attribute__((packed)) procedure_type
 struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 {
 public:
-	vertex_2_atom(id::procedure_type *parent, AtomSpace *as = nullptr,
-	              const std::vector<std::string> &labels = {});
-
+	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr,
+	              const std::vector<std::string> &labels={});
 	std::pair<Type, Handle> operator()(const argument &a) const;
 
 	std::pair<Type, Handle> operator()(const builtin &b) const;
