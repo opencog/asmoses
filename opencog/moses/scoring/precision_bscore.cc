@@ -881,7 +881,7 @@ behavioral_score precision_conj_bscore::operator()(const Handle &handle) const
 	for (const CTable::value_type &vct : ctable) {
 		// vct.first = input vector
 		// vct.second = counter of outputs
-		if (HandleCast(link_result.at(i))->get_type() == TRUE_LINK) {
+		if (bool_value_to_bool(link_result.at(i))) {
 			double sumo = sum_outputs(vct.second);
 			count_t totalc = vct.second.total_count();
 			// For boolean tables, sao == sum of all true positives,
