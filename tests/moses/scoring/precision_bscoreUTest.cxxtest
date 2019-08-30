@@ -36,8 +36,8 @@ using namespace std;
 
 #define GET_PRECISION [](const vertex &ver){ return get_precision(ver); }
 
-const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
-const string target_feature="target";
+const string utest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+const string target_feature = "target";
 
 class precision_bscoreUTest : public CxxTest::TestSuite
 {
@@ -57,9 +57,9 @@ public:
 		ValueSeq _f1_values, _f2_values;
 
 		boost::transform(ctt.get_input_col_data(0), back_inserter(_f1_values),
-						 bool_vertex_to_value);
+		                 bool_vertex_to_value);
 		boost::transform(ctt.get_input_col_data(1), back_inserter(_f2_values),
-						 bool_vertex_to_value);
+		                 bool_vertex_to_value);
 
 		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
 		f1->setValue(moses::compressed_value_key, f1_proto_atom);
@@ -71,7 +71,7 @@ public:
 		behavioral_score bs = p_bscore(program);
 
 		std::cout << "bs = " << bs << std::endl
-				  << "expected_bs = " << expected_bs << std::endl;
+		          << "expected_bs = " << expected_bs << std::endl;
 		TS_ASSERT_EQUALS(bs, expected_bs);
 	}
 };

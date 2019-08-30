@@ -34,7 +34,10 @@
 
 #include "precision_bscore.h"
 
-namespace opencog { namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace std;
 using namespace combo;
@@ -115,28 +118,28 @@ using namespace combo;
 /// set to false.  TBD XXX document that someday.
 
 
-precision_bscore::precision_bscore(const CTable& ctable_,
-								   float activation_pressure_,
-								   float min_activation_,
-								   float max_activation_,
-								   bool positive_,
-								   float dispersion_pressure,
-								   float dispersion_exponent,
-								   bool exact_experts_,
-								   double bias_scale_,
-								   bool time_bscore_,
-								   TemporalGranularity granularity,
-								   bool disable_debug_log)
-	: bscore_ctable_time_dispersion(ctable_, dispersion_pressure,
-									dispersion_exponent, granularity),
-	min_activation(clamp(min_activation_, 0.0f, 1.0f)),
-	max_activation(clamp(max_activation_, 0.0f, 1.0f)),
-	activation_pressure(activation_pressure_),
-	positive(positive_),
-	bias_scale(bias_scale_),
-	exact_experts(exact_experts_),
-	time_bscore(time_bscore_),
-	_disable_debug_log(disable_debug_log)
+precision_bscore::precision_bscore(const CTable &ctable_,
+                                   float activation_pressure_,
+                                   float min_activation_,
+                                   float max_activation_,
+                                   bool positive_,
+                                   float dispersion_pressure,
+                                   float dispersion_exponent,
+                                   bool exact_experts_,
+                                   double bias_scale_,
+                                   bool time_bscore_,
+                                   TemporalGranularity granularity,
+                                   bool disable_debug_log)
+		: bscore_ctable_time_dispersion(ctable_, dispersion_pressure,
+		                                dispersion_exponent, granularity),
+		  min_activation(clamp(min_activation_, 0.0f, 1.0f)),
+		  max_activation(clamp(max_activation_, 0.0f, 1.0f)),
+		  activation_pressure(activation_pressure_),
+		  positive(positive_),
+		  bias_scale(bias_scale_),
+		  exact_experts(exact_experts_),
+		  time_bscore(time_bscore_),
+		  _disable_debug_log(disable_debug_log)
 {
 	reset_weights();
 
@@ -146,29 +149,29 @@ precision_bscore::precision_bscore(const CTable& ctable_,
 
 	output_type = _wrk_ctable.get_output_type();
 	OC_ASSERT(output_type == id::boolean_type,
-			  "Error: Precision scorer: output type must be boolean!");
+	          "Error: Precision scorer: output type must be boolean!");
 
 	if (logger().get_level() != Logger::DEBUG or !_disable_debug_log) {
 		logger().debug("Precision scorer, "
-					   "total table weight = %f, "
-					   "activation_pressure = %f, "
-					   "min_activation = %f, "
-					   "max_activation = %f, "
-					   "dispersion_pressure = %f",
-					   _ctable_weight,
-					   activation_pressure, min_activation, max_activation,
-					   dispersion_pressure);
+				               "total table weight = %f, "
+				               "activation_pressure = %f, "
+				               "min_activation = %f, "
+				               "max_activation = %f, "
+				               "dispersion_pressure = %f",
+		               _ctable_weight,
+		               activation_pressure, min_activation, max_activation,
+		               dispersion_pressure);
 	}
 
 	// Verify that the activation parameters are sane
 	OC_ASSERT(0.0 <= activation_pressure,
-			  "activation pressure must be non-negative");
+	          "activation pressure must be non-negative");
 	if (0.0 < activation_pressure) {
 		OC_ASSERT((0.0 < min_activation) && (min_activation <= max_activation),
-				  "Precision scorer, invalid activation bounds.  "
-				  "The minimum activation must be greater than zero, "
-				  "and the maximum activation must be greater "
-				  "than or equal to the minimum activation.\n");
+		          "Precision scorer, invalid activation bounds.  "
+				          "The minimum activation must be greater than zero, "
+				          "and the maximum activation must be greater "
+				          "than or equal to the minimum activation.\n");
 	}
 }
 
@@ -176,7 +179,7 @@ precision_bscore::precision_bscore(const CTable& ctable_,
 /// in the output.  This sum represents the best possible score
 /// i.e. we found all of the true values correcty.  The 'F's are 
 /// false positives.
-score_t precision_bscore::sum_outputs(const CTable::counter_t& c) const
+score_t precision_bscore::sum_outputs(const CTable::counter_t &c) const
 {
 	return 0.5 * (c.get(_target) - c.get(_neg_target));
 }
@@ -189,13 +192,13 @@ void precision_bscore::set_complexity_coef(unsigned alphabet_size, float p)
 	// comment above ctruth_table_bscore)
 	if (p > 0.0f and p < 0.5f)
 		_complexity_coef = discrete_complexity_coef(alphabet_size, p)
-			/ _ctable_weight;   // normalized by the size of the table
-								// because the precision is normalized
-								// as well
+		                   / _ctable_weight;   // normalized by the size of the table
+	// because the precision is normalized
+	// as well
 
 	logger().info() << "Precision scorer, noise = " << p
-					<< " alphabest size = " << alphabet_size
-					<< " complexity ratio = " << 1.0/_complexity_coef;
+	                << " alphabest size = " << alphabet_size
+	                << " complexity ratio = " << 1.0 / _complexity_coef;
 }
 
 void precision_bscore::set_complexity_coef(score_t ratio)
@@ -204,11 +207,11 @@ void precision_bscore::set_complexity_coef(score_t ratio)
 	if (ratio > 0)
 		_complexity_coef = 1.0 / ratio;
 
-	logger().info() << "Precision scorer, complexity ratio = " << 1.0f/_complexity_coef;
+	logger().info() << "Precision scorer, complexity ratio = " << 1.0f / _complexity_coef;
 }
 
 /// scorer, the workhorse that does the actual scoring.
-behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_seq&)> select) const
+behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_seq &)> select) const
 {
 	behavioral_score bs;
 	behavioral_score ac;
@@ -228,10 +231,10 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 	// penalty
 	map<TTable::value_type, Counter<bool, count_t>> time2res;
 	CTable ctable_res;
-	for (const CTable::value_type& io_row : _wrk_ctable) {
+	for (const CTable::value_type &io_row : _wrk_ctable) {
 		// const auto& irow = io_row.first;
-		const multi_type_seq& irow = io_row.first;
-		const auto& orow = io_row.second;
+		const multi_type_seq &irow = io_row.first;
+		const auto &orow = io_row.second;
 
 		score_t sumo = 0.0;  // (tp-fp)/2 if active, else 0 if not active
 		score_t acto = 0.0;  // fp + tp if active, else 0 if not active
@@ -244,7 +247,7 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 		}
 
 		if (time_bscore) {
-			for (const CTable::counter_t::value_type& tcv : orow) {
+			for (const CTable::counter_t::value_type &tcv : orow) {
 				bool target = vertex_to_bool(tcv.first.value);
 				if (!positive) target = !target;
 				count_t count = selected ? tcv.second : 0.0;
@@ -258,9 +261,9 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 		// Build CTable of results
 		if (_pressure > 0.0) {
 			CTable::key_type dummy_input;
-			for (const CTable::counter_t::value_type& tcv : orow) {
+			for (const CTable::counter_t::value_type &tcv : orow) {
 				auto tclass = get_timestamp_class(tcv.first.timestamp);
-				vertex result = selected? id::logical_true : id::logical_false;
+				vertex result = selected ? id::logical_true : id::logical_false;
 				TimedValue timed_result({result, tclass});
 				ctable_res[dummy_input][timed_result] += tcv.second;
 			}
@@ -269,12 +272,12 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 
 	// Fill un-normalized bscore spread over the temporal axis
 	if (time_bscore) {
-		for (const auto& v : time2res) {
+		for (const auto &v : time2res) {
 			count_t tp = v.second.get(true);
 			count_t fp = v.second.get(false);
 			score_t contribution = 0.5 * (tp - fp);
 			bs.push_back(contribution);
-			ac.push_back(tp+fp);
+			ac.push_back(tp + fp);
 		}
 	}
 
@@ -286,14 +289,14 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 		// Its still tp+fp, except that the bscore for fp are negative...
 		if (_return_weighted_score) {
 			double wactive = 0.0;
-			for (size_t i=0; i< _size; i++) {
+			for (size_t i = 0; i < _size; i++) {
 				wactive += _weights[i] * ac[i];
 			}
 			iac = 1.0 / wactive;
 		}
 
 		// Normalize all components by active, where active = tp+fp
-		for (auto& v : bs) v *= iac;
+		for (auto &v : bs) v *= iac;
 
 		// tp = true positive
 		// fp = false positive
@@ -310,8 +313,7 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 		// So before adding the recall penalty we add +1/2 to
 		// compensate for that
 		bs.push_back(0.5);
-	}
-	else // Add 0.0 to ensure the bscore has the same size
+	} else // Add 0.0 to ensure the bscore has the same size
 		bs.push_back(0.0);
 
 	// Append the activation penalty only if we are not performing
@@ -337,13 +339,13 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 				precision = sao / active + 0.5;
 			}
 			logger().fine("precision = %f  activation=%f  activation penalty=%e",
-						  precision, activation, activation_penalty);
+			              precision, activation, activation_penalty);
 		}
 
 		// Add time dispersion penalty
 		if (_pressure > 0.0) {
 			score_t dispersion_penalty =
-				get_time_dispersion_penalty(ctable_res.ordered_by_time());
+					get_time_dispersion_penalty(ctable_res.ordered_by_time());
 			bs.push_back(dispersion_penalty);
 			logger().fine("dispersion_penalty = %f", dispersion_penalty);
 		}
@@ -353,14 +355,13 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 }
 
 /// scorer, for use with individual combo trees
-behavioral_score precision_bscore::operator()(const combo_tree& tr) const
+behavioral_score precision_bscore::operator()(const combo_tree &tr) const
 {
 	interpreter_visitor iv(tr);
 	auto interpret_tr = boost::apply_visitor(iv);
 
-	std::function<bool(const multi_type_seq&)> selector;
-	selector = [&](const multi_type_seq& irow)->bool
-	{
+	std::function<bool(const multi_type_seq &)> selector;
+	selector = [&](const multi_type_seq &irow) -> bool {
 		return id::logical_true == interpret_tr(irow.get_variant());
 	};
 
@@ -369,18 +370,17 @@ behavioral_score precision_bscore::operator()(const combo_tree& tr) const
 	return bs;
 }
 
-behavioral_score precision_bscore::operator()(const Handle& handle) const
+behavioral_score precision_bscore::operator()(const Handle &handle) const
 {
 	atomese::Interpreter interpreter(moses::compressed_value_key);
 	const ValuePtr result = interpreter(handle);
 	auto link_result = LinkValueCast(result)->value();
 	int i = 0;
 
-	std::function<bool(const multi_type_seq&)> selector;
-	selector = [&](const multi_type_seq& irow)->bool
-	{
+	std::function<bool(const multi_type_seq &)> selector;
+	selector = [&](const multi_type_seq &irow) -> bool {
 		bool result = bool_value_to_bool(link_result.at(i));
-		i+=1;
+		i += 1;
 		return result;
 	};
 
@@ -389,7 +389,7 @@ behavioral_score precision_bscore::operator()(const Handle& handle) const
 	return bs;
 }
 
-behavioral_score precision_bscore::operator()(const scored_combo_tree_set& ensemble) const
+behavioral_score precision_bscore::operator()(const scored_combo_tree_set &ensemble) const
 {
 	// The ensemble score must not use weights, but must be give the
 	// result that the ensemble would give on regular data.  Thus,
@@ -400,8 +400,7 @@ behavioral_score precision_bscore::operator()(const scored_combo_tree_set& ensem
 		behavioral_score bs(exact_selection(ensemble));
 		_return_weighted_score = true;
 		return bs;
-	}
-	else {
+	} else {
 		_return_weighted_score = false;
 		behavioral_score bs(bias_selection(ensemble));
 		_return_weighted_score = true;
@@ -412,7 +411,7 @@ behavioral_score precision_bscore::operator()(const scored_combo_tree_set& ensem
 /// scorer, suitable for use with boosting, where the members of the
 /// boosted ensemble are always correct in their selections. That is,
 /// they are "exact" scorers.
-behavioral_score precision_bscore::exact_selection(const scored_combo_tree_set& ensemble) const
+behavioral_score precision_bscore::exact_selection(const scored_combo_tree_set &ensemble) const
 {
 	// For large tables, it is much more efficient to convert the
 	// ensemble into a single tree, and just iterate on that, instead
@@ -462,7 +461,7 @@ behavioral_score precision_bscore::exact_selection(const scored_combo_tree_set& 
 	combo_tree::pre_order_iterator head;
 	head = tr.set_head(combo::id::logical_or);
 
-	for (const scored_combo_tree& sct : ensemble)
+	for (const scored_combo_tree &sct : ensemble)
 		tr.append_child(head, sct.get_tree().begin());
 
 	return this->operator()(tr);
@@ -474,22 +473,22 @@ behavioral_score precision_bscore::exact_selection(const scored_combo_tree_set& 
 /// requiring the ensemble to cast a minimum vote, before a row is
 /// truely considered to be selected.  The minimum vote is called the
 /// "bias" in the code below.
-behavioral_score precision_bscore::bias_selection(const scored_combo_tree_set& ensemble) const
+behavioral_score precision_bscore::bias_selection(const scored_combo_tree_set &ensemble) const
 {
 	// Step 1: If any tree in the ensemble picks a row, that row is
 	// picked with appropriate weight.
 	std::vector<double> hypoth(_size, 0.0);
-	for (const scored_combo_tree& sct: ensemble) {
-		const combo_tree& tr = sct.get_tree();
+	for (const scored_combo_tree &sct: ensemble) {
+		const combo_tree &tr = sct.get_tree();
 		score_t trweight = sct.get_weight();
 
 		interpreter_visitor iv(tr);
 		auto interpret_tr = boost::apply_visitor(iv);
 
-		size_t i=0;
-		for (const CTable::value_type& io_row : _wrk_ctable) {
+		size_t i = 0;
+		for (const CTable::value_type &io_row : _wrk_ctable) {
 			// io_row.first = input vector
-			const auto& irow = io_row.first;
+			const auto &irow = io_row.first;
 
 			if (interpret_tr(irow.get_variant()) == id::logical_true) {
 				hypoth[i] += trweight;
@@ -499,10 +498,10 @@ behavioral_score precision_bscore::bias_selection(const scored_combo_tree_set& e
 	}
 
 	// Step 2: find the worst wrong answer; that is our bias.
-	size_t i=0;
+	size_t i = 0;
 	double bias = 0.0;
-	for (const CTable::value_type& io_row : _wrk_ctable) {
-		const CTable::counter_t& orow = io_row.second;
+	for (const CTable::value_type &io_row : _wrk_ctable) {
+		const CTable::counter_t &orow = io_row.second;
 
 		// sumo will be negative if it should not be selected.
 		// We look at the negative ones, because they are wrong...
@@ -514,18 +513,17 @@ behavioral_score precision_bscore::bias_selection(const scored_combo_tree_set& e
 
 	// Step 3: tot up the active rows.
 	i = 0;
-	std::function<bool(const multi_type_seq&)> selector;
-	selector = [&](const multi_type_seq& irow)->bool
-	{
+	std::function<bool(const multi_type_seq &)> selector;
+	selector = [&](const multi_type_seq &irow) -> bool {
 		return bias_scale * bias < hypoth[i++];
 	};
 	return do_score(selector);
 }
 
-score_t precision_bscore::get_error(const combo_tree& tr) const
+score_t precision_bscore::get_error(const combo_tree &tr) const
 {
 	OC_ASSERT (exact_experts,
-		"Precision scorer: inexact experts not yet supported!");
+	           "Precision scorer: inexact experts not yet supported!");
 
 	// We want the flat, unweighted score!
 	_return_weighted_score = false;
@@ -535,16 +533,16 @@ score_t precision_bscore::get_error(const combo_tree& tr) const
 	// We only accumulate up to the _size, and ignore the penalties on
 	// the end!
 	double accum = 0.0;
-	for (size_t i=0; i<_size; i++) accum += bs[i];
+	for (size_t i = 0; i < _size; i++) accum += bs[i];
 
 	// perfect score has accum = 0.5.
 	return 0.5 - accum;
 }
 
-score_t precision_bscore::get_error(const Handle& handle) const
+score_t precision_bscore::get_error(const Handle &handle) const
 {
 	OC_ASSERT (exact_experts,
-               "Precision scorer: inexact experts not yet supported!");
+	           "Precision scorer: inexact experts not yet supported!");
 
 	// We want the flat, unweighted score!
 	_return_weighted_score = false;
@@ -554,7 +552,7 @@ score_t precision_bscore::get_error(const Handle& handle) const
 	// We only accumulate up to the _size, and ignore the penalties on
 	// the end!
 	double accum = 0.0;
-	for (size_t i=0; i<_size; i++) accum += bs[i];
+	for (size_t i = 0; i < _size; i++) accum += bs[i];
 
 	// perfect score has accum = 0.5.
 	return 0.5 - accum;
@@ -569,14 +567,13 @@ behavioral_score precision_bscore::best_possible_bscore() const
 	// critical if used as a fitness function for feature selection
 	// (which is the case).
 	typedef std::multimap<contin_t,           // precision
-						  std::pair<contin_t, // sum_outputs
-									count_t>  // total count
-						  > max_precisions_t;
+			std::pair<contin_t, // sum_outputs
+					count_t>  // total count
+	> max_precisions_t;
 	max_precisions_t max_precisions;
 	for (CTable::const_iterator it = _wrk_ctable.begin();
-		 it != _wrk_ctable.end(); ++it)
-	{
-		const CTable::counter_t& c = it->second;
+	     it != _wrk_ctable.end(); ++it) {
+		const CTable::counter_t &c = it->second;
 		count_t sumo = sum_outputs(c);
 		count_t total = c.total_count();
 		double precision = sumo / total;
@@ -602,7 +599,7 @@ behavioral_score precision_bscore::best_possible_bscore() const
 	score_t best_activation = 0.0;
 	score_t best_activation_penalty = 0.0;
 
-	for (const auto& mpv : boost::adaptors::reverse(max_precisions)) {
+	for (const auto &mpv : boost::adaptors::reverse(max_precisions)) {
 		sao += mpv.second.first;
 		active += mpv.second.second;
 
@@ -695,14 +692,13 @@ combo_tree precision_bscore::gen_canonical_best_candidate() const
 	// critical if used as a fitness function for feature selection
 	// (which is planned).
 	typedef std::multimap<double, // precision
-						  std::pair<CTable::const_iterator,
-									count_t> // total count
-						  > precision_to_count_t;
+			std::pair<CTable::const_iterator,
+					count_t> // total count
+	> precision_to_count_t;
 	precision_to_count_t ptc;
 	for (CTable::const_iterator it = _wrk_ctable.begin();
-		 it != _wrk_ctable.end(); ++it)
-	{
-		const CTable::counter_t& c = it->second;
+	     it != _wrk_ctable.end(); ++it) {
+		const CTable::counter_t &c = it->second;
 		count_t total = c.total_count();
 		double precision = sum_outputs(c) / total;
 		ptc.insert(std::make_pair(precision, std::make_pair(it, total)));
@@ -720,14 +716,14 @@ combo_tree precision_bscore::gen_canonical_best_candidate() const
 	count_t active = 0.0;
 	combo_tree tr;
 	auto head = tr.set_head(id::logical_or);
-	for (const auto& v : boost::adaptors::reverse(ptc)) {
+	for (const auto &v : boost::adaptors::reverse(ptc)) {
 		active += v.second.second;
 
 		// build the disjunctive clause
 		auto dch = tr.append_child(head, id::logical_and);
 		arity_t idx = 1;
-		for (const auto& input : v.second.first->first.get_seq<builtin>()) {
-			argument arg(input == id::logical_true? idx++ : -idx++);
+		for (const auto &input : v.second.first->first.get_seq<builtin>()) {
+			argument arg(input == id::logical_true ? idx++ : -idx++);
 			tr.append_child(dch, arg);
 		}
 
@@ -747,13 +743,13 @@ void precision_bscore::reset_weights()
 		_weights = std::vector<double>();
 }
 
-void precision_bscore::update_weights(const std::vector<double>& rew)
+void precision_bscore::update_weights(const std::vector<double> &rew)
 {
 	OC_ASSERT(_return_weighted_score,
-		"Unexpected use of weights in the bscorer!");
+	          "Unexpected use of weights in the bscorer!");
 
 	OC_ASSERT(rew.size() == _size,
-		"Unexpected size of weight array!");
+	          "Unexpected size of weight array!");
 
 	double znorm = 0.0;
 	for (size_t i = 0; i < _size; i++) {
@@ -772,22 +768,23 @@ void precision_bscore::update_weights(const std::vector<double>& rew)
 	// area of having each row have an average weight of 1.0.
 	znorm = ((double) _size) / znorm;
 	wnorm = 1.0 / znorm;
-	for (size_t i=0; i<_size; i++) _weights[i] *= znorm;
+	for (size_t i = 0; i < _size; i++) _weights[i] *= znorm;
 }
 
 ///////////////////////////
 // precision_conj_bscore //
 ///////////////////////////
 
-precision_conj_bscore::precision_conj_bscore(const CTable& _ctable,
-											 float hardness_,
-											 bool positive_)
-	: ctable(_ctable), ctable_usize(ctable.uncompressed_size()),
-	  hardness(hardness_), positive(positive_)
+precision_conj_bscore::precision_conj_bscore(const CTable &_ctable,
+                                             float hardness_,
+                                             bool positive_)
+		: ctable(_ctable), ctable_usize(ctable.uncompressed_size()),
+		  hardness(hardness_), positive(positive_)
 {
 	vertex target = bool_to_vertex(positive);
-	sum_outputs = [target](const CTable::counter_t& c)->score_t {
-		return c.get(target); };
+	sum_outputs = [target](const CTable::counter_t &c) -> score_t {
+		return c.get(target);
+	};
 }
 
 void precision_conj_bscore::set_complexity_coef(unsigned alphabet_size, float p)
@@ -798,13 +795,13 @@ void precision_conj_bscore::set_complexity_coef(unsigned alphabet_size, float p)
 	// comment above ctruth_table_bscore)
 	if (p > 0.0f and p < 0.5f)
 		_complexity_coef = discrete_complexity_coef(alphabet_size, p)
-			/ ctable_usize;     // normalized by the size of the table
-								// because the precision is normalized
-								// as well
+		                   / ctable_usize;     // normalized by the size of the table
+	// because the precision is normalized
+	// as well
 
 	logger().info() << "Precision scorer, noise = " << p
-					<< " alphabest size = " << alphabet_size
-					<< " complexity ratio = " << 1.0/_complexity_coef;
+	                << " alphabest size = " << alphabet_size
+	                << " complexity ratio = " << 1.0 / _complexity_coef;
 }
 
 void precision_conj_bscore::set_complexity_coef(score_t ratio)
@@ -813,10 +810,10 @@ void precision_conj_bscore::set_complexity_coef(score_t ratio)
 	if (ratio > 0)
 		_complexity_coef = 1.0 / ratio;
 
-	logger().info() << "Precision scorer, complexity ratio = " << 1.0f/_complexity_coef;
+	logger().info() << "Precision scorer, complexity ratio = " << 1.0f / _complexity_coef;
 }
 
-behavioral_score precision_conj_bscore::operator()(const combo_tree& tr) const
+behavioral_score precision_conj_bscore::operator()(const combo_tree &tr) const
 {
 	behavioral_score bs;
 
@@ -825,7 +822,7 @@ behavioral_score precision_conj_bscore::operator()(const combo_tree& tr) const
 	score_t sao = 0.0;     // sum of all active outputs (in the boolean case)
 	interpreter_visitor iv(tr);
 	auto interpret_tr = boost::apply_visitor(iv);
-	for (const CTable::value_type& vct : ctable) {
+	for (const CTable::value_type &vct : ctable) {
 		// vct.first = input vector
 		// vct.second = counter of outputs
 		if (interpret_tr(vct.first.get_variant()) == id::logical_true) {
@@ -860,7 +857,7 @@ behavioral_score precision_conj_bscore::operator()(const combo_tree& tr) const
 
 	if (logger().is_fine_enabled())
 		logger().fine("precision = %f  conj_n=%u  conj_n penalty=%e",
-					 precision, conj_n, conj_n_penalty);
+		              precision, conj_n, conj_n_penalty);
 
 	log_candidate_bscore(tr, bs);
 	return bs;
