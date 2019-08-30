@@ -371,143 +371,21 @@ behavioral_score precision_bscore::operator()(const combo_tree& tr) const
 
 behavioral_score precision_bscore::operator()(const Handle& handle) const
 {
-	behavioral_score bs;
-	behavioral_score ac;
-
-	score_t active = 0.0;  // total weight of active outputs by handle
-	score_t sao = 0.0;     // sum of all active outputs
-
 	atomese::Interpreter interpreter(moses::compressed_value_key);
-
 	const ValuePtr result = interpreter(handle);
-    auto link_result = LinkValueCast(result)->value();
-	map<TTable::value_type, Counter<bool, count_t>> time2res;
-	CTable ctable_res;
-    int i = 0;
-	for (const CTable::value_type& io_row : _wrk_ctable) {
+	auto link_result = LinkValueCast(result)->value();
+	int i = 0;
 
-		const multi_type_seq& irow = io_row.first;
-		const auto& orow = io_row.second;
-
-		score_t sumo = 0.0;  // (tp-fp)/2 if active, else 0 if not active
-		score_t acto = 0.0;  // fp + tp if active, else 0 if not active
-        if (HandleCast(link_result.at(i))->get_type() == TRUE_LINK){
-            sumo = sum_outputs(orow);
-            sao += sumo;
-            acto = orow.total_count();
-            active += acto;
-        }
-
-		if (time_bscore) {
-			for (const CTable::counter_t::value_type& tcv : orow) {
-				bool target = vertex_to_bool(tcv.first.value);
-				if (!positive) target = !target;
-				count_t count = (HandleCast(link_result.at(i))->get_type() == TRUE_LINK) ?
-								 tcv.second : 0.0;
-				time2res[tcv.first.timestamp][target] += count;
-			}
-
-		} else {
-			bs.push_back(sumo);
-			ac.push_back(acto);
-		}
-
-		// Build CTable of results
-		if (_pressure > 0.0) {
-			CTable::key_type dummy_input;
-			for (const CTable::counter_t::value_type& tcv : orow) {
-				auto tclass = get_timestamp_class(tcv.first.timestamp);
-				vertex result = HandleCast(link_result.at(i))->get_type() == TRUE_LINK ?
-								id::logical_true : id::logical_false;
-				TimedValue timed_result({result, tclass});
-				ctable_res[dummy_input][timed_result] += tcv.second;
-			}
-		}
-
+	std::function<bool(const multi_type_seq&)> selector;
+	selector = [&](const multi_type_seq& irow)->bool
+	{
+		bool result = bool_value_to_bool(link_result.at(i));
 		i+=1;
-	}
+		return result;
+	};
 
-	if (time_bscore) {
-		for (const auto& v : time2res) {
-			count_t tp = v.second.get(true);
-			count_t fp = v.second.get(false);
-			score_t contribution = 0.5 * (tp - fp);
-			bs.push_back(contribution);
-			ac.push_back(tp+fp);
-		}
-	}
-
-	if (0.0 < active) {
-		// normalization is the inverse of activity
-		score_t iac = 1.0 / active;
-
-		// For the boosted scorer, the active rows are weighted too.
-		// Its still tp+fp, except that the bscore for fp are negative...
-		if (_return_weighted_score) {
-			double wactive = 0.0;
-			for (size_t i=0; i< _size; i++) {
-				wactive += _weights[i] * ac[i];
-			}
-			iac = 1.0 / wactive;
-		}
-
-		// Normalize all components by active, where active = tp+fp
-		for (auto& v : bs) v *= iac;
-
-		// tp = true positive
-		// fp = false positive
-		//
-		// By using (tp-fp)/2, the sum of all the per-row contributions
-		// is offset by -1/2 from the precision, as proved below.
-		//
-		// 1/2 * (tp - fp) / (tp + fp)
-		// = 1/2 * (tp - tp + tp - fp) / (tp + fp)
-		// = 1/2 * [(tp + tp) / (tp + fp) - (tp + fp) / (tp + fp)]
-		// = 1/2 * [2*tp / (tp + fp) - 1]
-		// = precision - 1/2
-		//
-		// So before adding the recall penalty we add +1/2 to
-		// compensate for that
-		bs.push_back(0.5);
-	}
-	else // Add 0.0 to ensure the bscore has the same size
-		bs.push_back(0.0);
-
-	// Append the activation penalty only if we are not performing
-	// boosting. Why? Because the boosted scorer only wants those
-	// selectors that are exactly correct, even if they have a terrible
-	// activation.  It will patch these together in the ensemble.  If
-	// these perfect scorers were penalized, they'd be discarded in the
-	// metapop, and we don't want that.  The member "_return_weighted_score"
-	// is a synonym for "we're doing boosting now".
-	if (not _return_weighted_score) {
-		// For boolean tables, activation sum of true and false positives
-		// i.e. the sum of all positives.   For contin tables, the activation
-		// is likewise: the number of rows for which the combo tree returned
-		// true (positive).
-		score_t activation = active / _ctable_weight;
-		score_t activation_penalty = get_activation_penalty(activation);
-		bs.push_back(activation_penalty);
-
-		if (logger().is_fine_enabled()) {
-			score_t precision = 0.0;
-			if (0 < active) {
-				// See above for explanation for the extra 0.5
-				precision = sao / active + 0.5;
-			}
-			logger().fine("precision = %f  activation=%f  activation penalty=%e",
-						  precision, activation, activation_penalty);
-		}
-
-		// Add time dispersion penalty
-		if (_pressure > 0.0) {
-			score_t dispersion_penalty =
-					get_time_dispersion_penalty(ctable_res.ordered_by_time());
-			bs.push_back(dispersion_penalty);
-			logger().fine("dispersion_penalty = %f", dispersion_penalty);
-		}
-	}
-
+	behavioral_score bs(do_score(selector));
+	log_candidate_bscore(handle, bs);
 	return bs;
 }
 
