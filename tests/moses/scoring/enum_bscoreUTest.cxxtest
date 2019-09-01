@@ -29,6 +29,7 @@
 
 #include <opencog/utils/value_key.h>
 #include <opencog/utils/valueUtils.h>
+#include <opencog/moses/main/populate_atomspace.h>
 
 using namespace opencog;
 using namespace combo;
@@ -56,26 +57,7 @@ public:
 		Handle f2 = createNode(PREDICATE_NODE, "f2");
 		Handle f3 = createNode(CONCEPT_NODE, "f3");
 		Handle f4 = createNode(CONCEPT_NODE, "f4");
-		ValueSeq _f1_values, _f2_values, _f3_values, _f4_values;
-
-		boost::transform(ctt.get_input_col_data(0), back_inserter(_f1_values),
-		                 bool_vertex_to_value);
-		boost::transform(ctt.get_input_col_data(1), back_inserter(_f2_values),
-		                 bool_vertex_to_value);
-		boost::transform(ctt.get_input_col_data(2), back_inserter(_f3_values),
-		                 GET_ENUM);
-		boost::transform(ctt.get_input_col_data(3), back_inserter(_f4_values),
-						 GET_ENUM);
-
-		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
-		f1->setValue(moses::compressed_value_key, f1_proto_atom);
-		ValuePtr f2_proto_atom(new LinkValue(_f2_values));
-		f2->setValue(moses::compressed_value_key, f2_proto_atom);
-		ValuePtr f3_proto_atom(new LinkValue(_f3_values));
-		f3->setValue(moses::compressed_value_key, f3_proto_atom);
-		ValuePtr f4_proto_atom(new LinkValue(_f4_values));
-		f4->setValue(moses::compressed_value_key, f4_proto_atom);
-
+		populate_frm_ctable(ctt, f1, f2, f3, f4);
 		HandleSeq handleSeq = {f1, f2};
 		Handle program1 = createLink(handleSeq, OR_LINK);
 		HandleSeq handleSeq1 = {program1,f3, f4};
