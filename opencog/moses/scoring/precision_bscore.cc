@@ -153,11 +153,11 @@ precision_bscore::precision_bscore(const CTable &ctable_,
 
 	if (logger().get_level() != Logger::DEBUG or !_disable_debug_log) {
 		logger().debug("Precision scorer, "
-				               "total table weight = %f, "
-				               "activation_pressure = %f, "
-				               "min_activation = %f, "
-				               "max_activation = %f, "
-				               "dispersion_pressure = %f",
+		               "total table weight = %f, "
+		               "activation_pressure = %f, "
+		               "min_activation = %f, "
+		               "max_activation = %f, "
+		               "dispersion_pressure = %f",
 		               _ctable_weight,
 		               activation_pressure, min_activation, max_activation,
 		               dispersion_pressure);
