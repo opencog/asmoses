@@ -146,59 +146,12 @@ protected:
 
 };
 
-class TypetreeToAtomese
-{
-public:
-	/**
-	 * converts the type tree to corresponding atomese type
-	 * @param tt              type tree of the combo program
-	 * @return handle       atomese type converted from typetree
-	 */
-	Handle operator()(const type_tree &tt);
-
-	/**
-	 * convert each type node to corresponding atomese type
-	 * @param tt        takes type node as argument then change
-	 *                  to the corresponding to atomese type
-	 * @return handle    corresponding to each  type_node
-	 */
-	Handle convert_type_node(const type_node &tt);
-
-protected:
-
-	/**
-	 * Convert a type_tree to atomese type from a head of the type_tree.
-	 *
-	 * @param type_tree::iterator   the iterater to the head of a type_tree
-	 * @return                 the Handle containing the atomese type
-	 */
-	template<typename Iter>
-	opencog::Handle type_tree_to_atomese_type(Iter it)
-	{
-		type_tree::iterator head = it;
-		Handle atomeseType = convert_type_node(*head);
-
-		if (atomeseType->get_type() == ARROW_LINK) {
-			HandleSeq handleSeq;
-
-			for (auto sib = head.begin(); sib != head.end(); ++sib)
-				handleSeq.push_back(type_tree_to_atomese_type(sib));
-
-			Handle lst = createLink(HandleSeq(handleSeq.begin(), handleSeq.end() - 1), LIST_LINK);
-			atomeseType = createLink(HandleSeq{lst, handleSeq.back()}, ARROW_LINK);
-		}
-
-		return atomeseType;
-	}
-
-};
-
 }  // ~namespace combo
 
 // For pretty printing OpenCog objects while debugging, see
 // https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
                          const std::string& indent=empty_string);
-}  // ~namespaces opencog
+}  // ~namespace opencog
 
 #endif //MOSES_COMBO_ATOMESE_H

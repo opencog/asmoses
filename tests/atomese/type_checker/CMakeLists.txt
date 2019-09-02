@@ -1,0 +1,10 @@
+ADD_CXXTEST(TypetreeToAtomeseTypeUTest)
+TARGET_LINK_LIBRARIES(TypetreeToAtomeseTypeUTest
+    atomese
+    moses
+    ascombo
+    asmoses_types
+    atom_types
+    ${ATOMSPACE_LIBRARIES}
+    ${COGUTIL_LIBRARY}
+)

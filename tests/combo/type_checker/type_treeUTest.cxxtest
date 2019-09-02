@@ -1,9 +1,5 @@
 #include <opencog/combo/combo/combo.h>
 #include <opencog/combo/type_checker/type_tree.h>
-#include <opencog/atoms/base/Node.h>
-#include <opencog/atoms/base/Link.h>
-#include <opencog/atoms/base/Handle.h>
-#include <opencog/atomese/atom_types/atom_types.h>
 
 using namespace opencog;
 using namespace opencog::combo;
@@ -491,60 +487,5 @@ public:
         arity_t a = explicit_arity(tr);
         TS_ASSERT_EQUALS(a, 5);
     }
-
-	void test_infer_atomese_type1()
-	{
-		Handle p1 = createNode(PREDICATE_NODE, "$x");
-		Handle p2 = createNode(PREDICATE_NODE, "$y");
-		Handle p3 = createNode(PREDICATE_NODE, "$z");
-
-		HandleSeq handleSeq1 = {p1, p2};
-		Handle program1 = createLink(handleSeq1, AND_LINK);
-
-		HandleSeq handleSeq2 = {program1, p3};
-		Handle program = createLink(handleSeq2, OR_LINK);
-
-		// infer atomese type tree
-		auto result = infer_atomese_type(program);
-
-		// expected output
-		Handle b1 = createNode(TYPE_NODE, "BooleanNode");
-		Handle b2 = createNode(TYPE_NODE, "BooleanNode");
-		Handle b3 = createNode(TYPE_NODE, "BooleanNode");
-		Handle b4 = createNode(TYPE_NODE, "BooleanNode");
-
-		HandleSeq handleSeq4 = {b1, b2, b3};
-		Handle listlink = createLink(handleSeq4, LIST_LINK);
-		HandleSeq handleSeq5 = {listlink, b4};
-		Handle expected = createLink(handleSeq5, ARROW_LINK);
-
-		TS_ASSERT(content_eq(result, expected));
-	}
-
-	void test_infer_atomese_type2()
-	{
-		Handle c1 = createNode(SCHEMA_NODE, "$c1");
-		Handle c2 = createNode(SCHEMA_NODE, "$c2");
-
-		HandleSeq handleSeq = {c1, c2};
-		Handle program = createLink(handleSeq, PLUS_LINK);
-
-		// infer atomese type
-		auto result = infer_atomese_type(program);
-
-
-		// expected output
-		Handle c3 = createNode(TYPE_NODE, "NumberNode");
-		Handle c4 = createNode(TYPE_NODE, "NumberNode");
-		Handle c5 = createNode(TYPE_NODE, "NumberNode");
-
-		HandleSeq handleSeq2 = {c3, c4};
-		Handle listlink = createLink(handleSeq2, LIST_LINK);
-		HandleSeq handleSeq4 = {listlink, c5};
-		Handle expected = createLink(handleSeq4, ARROW_LINK);
-
-		TS_ASSERT(content_eq(result, expected));
-
-	}
 
 };
