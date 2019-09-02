@@ -217,8 +217,8 @@ struct precision_conj_bscore : public bscore_base
 	precision_conj_bscore(const CTable &_ctable, float hardness,
 	                      bool positive = true);
 
-    behavioral_score operator()(const combo_tree& tr) const;
-    behavioral_score operator()(const Handle& handle) const;
+	behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const Handle& handle) const;
 
 	// Return the best possible bscore. Used as one of the
 	// termination conditions (when the best bscore is reached).
