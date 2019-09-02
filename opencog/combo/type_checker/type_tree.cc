@@ -1353,6 +1353,15 @@ type_tree gen_signature(type_node iotype, arity_t arity)
 }
 
 } // ~namespace combo
+
+std::string oc_to_string(const combo::type_tree& tt,
+                         const std::string& indent)
+{
+	std::stringstream ss;
+	ss << indent << tt;
+	return ss.str();
+}
+
 } // ~namespace opencog
 
 namespace std {
