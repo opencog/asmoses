@@ -51,3 +51,10 @@ TARGET_LINK_LIBRARIES(select_bscoreUTest
 	atomese
 	${COGUTIL_LIBRARY}
 	)
+ADD_CXXTEST(precision_bscoreUTest)
+TARGET_LINK_LIBRARIES(precision_bscoreUTest
+		moses
+		ascombo
+		atomese
+		${COGUTIL_LIBRARY}
+		)
