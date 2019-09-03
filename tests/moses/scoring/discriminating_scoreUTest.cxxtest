@@ -1,0 +1,155 @@
+/** discriminating_scoreUTest.cxxtest ---
+ *
+ * Copyright (C) 2019 OpenCog Foundation
+ *
+ * Authors: Eman Shemsu
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <cxxtest/TestSuite.h>
+#include <opencog/moses/scoring/bscores.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/data/table/table.h>
+#include <opencog/data/table/table_io.h>
+#include <opencog/utils/valueUtils.h>
+
+#include "opencog/utils/value_key.h"
+#include "opencog/moses/scoring/discriminating_bscore.h"
+#include <boost/phoenix/phoenix.hpp>
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+const string scoringUTest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+const string target_feature = "target";
+
+class discriminating_scoreUTest : public CxxTest::TestSuite {
+public:
+    Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
+    CTable ct = tt.compressed();
+    Handle f1 = createNode(PREDICATE_NODE, "f1");
+    Handle f2 = createNode(PREDICATE_NODE, "f2");
+    ValueSeq _f1_values;
+    ValueSeq _f2_values;
+    combo::combo_tree tr_or = combo::str2combo_tree("or($1 $2)", {});
+    combo::combo_tree tr_and = combo::str2combo_tree("and($1 $2)", {});
+    HandleSeq handleSeq = {f1, f2};
+    Handle and_program = createLink(handleSeq, AND_LINK);
+    Handle or_program = createLink(handleSeq, OR_LINK);
+    
+    void test_recall_bscore1(void) {
+        recall_bscore recall(ct);
+        behavioral_score expected_bs = recall(tr_and);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = recall(and_program);
+        TS_ASSERT_EQUALS(ported_bs, expected_bs);
+    }
+    void test_recall_bscore2(void) {
+        recall_bscore recall(ct);
+        behavioral_score expected_bs = recall(tr_or);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = recall(or_program);
+        TS_ASSERT_EQUALS(ported_bs, expected_bs);
+    }
+    
+    void test_prerec_bscore1(void) {
+        prerec_bscore prerec(ct);
+        behavioral_score expected_bs = prerec(tr_or);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = prerec(or_program);
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+    }
+    void test_prerec_bscore2(void) {
+        prerec_bscore prerec(ct);
+        behavioral_score expected_bs = prerec(tr_and);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = prerec(and_program);
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+    }
+    void test_bep_bscore1(void) {
+        bep_bscore bep(ct);
+        behavioral_score expected_bs = bep(tr_and);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = bep(and_program);
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+    }
+    void test_bep_bscore2(void) {
+        bep_bscore bep(ct);
+        behavioral_score expected_bs = bep(tr_or);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = bep(or_program);
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+    }
+    void test_f1_bscore1(void) {
+        f_one_bscore f_one(ct);
+        behavioral_score expected_bs = f_one(tr_or);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = f_one(or_program);
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+    }
+    void test_f1_bscore2(void) {
+        f_one_bscore f_one(ct);
+        behavioral_score expected_bs = f_one(tr_and);
+        boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
+        boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
+        ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+        f1->setValue(moses::compressed_value_key, f1_proto_atom);
+        ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+        f2->setValue(moses::compressed_value_key, f2_proto_atom);
+        behavioral_score ported_bs = f_one(and_program);
+        TS_ASSERT_EQUALS(expected_bs, ported_bs);
+    }
+    
+};
