@@ -72,21 +72,5 @@ ValuePtr vertex_seq_to_value(const vertex_seq &col, id::type_node col_type) {
 	return nullptr;
 }
 
-HandleSeq populate(const CTable &ctable) {
-	HandleSeq seq;
-	const string_seq &labels = ctable.get_input_labels();
-	const type_tree_seq &types = get_signature_inputs(ctable.get_signature());
-	for (int j = 0; j < labels.size(); ++j) {
-		const vertex_seq &col = ctable.get_input_col_data(j);
-		type_node col_type = get_type_node(types[j]);
-		const Handle &feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE,
-		                                   labels[j]);
-		const ValuePtr &vtr = vertex_seq_to_value(col, get_type_node(types[j]));
-		feature->setValue(compressed_value_key, vtr);
-		seq.push_back(feature);
-	}
-	return seq;
-}
-		
 	}
 }

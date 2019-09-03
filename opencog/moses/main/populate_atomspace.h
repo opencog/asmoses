@@ -115,8 +115,6 @@ inline void populate_frm_table(Table _table, HandleArgs &&... handleArgs) {
 	}
 }
 
-HandleSeq populate(const CTable& ctable);
-
 
 } // ~namespace moses
 } // ~namespace opencog
