@@ -31,7 +31,6 @@
 #include <opencog/atomese/atom_types/atom_types.h>
 #include "combo_atomese.h"
 
-
 namespace opencog
 {
 namespace combo
@@ -272,5 +271,36 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 	} else OC_ASSERT(false, "unsupported type");
 }
 
+} // ~namespace combo
+
+std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
+                         const std::string& indent)
+{
+	std::stringstream ss;
+
+	// Due to what is apparently a gcc bug, we need to pass the combo
+	// tree by copy, otherwise, if passed by const reference we get the following error
+	//
+	// 	error: call of overloaded ‘oc_to_string(const combo_tree&)’ is ambiguous
+	//      << oc_to_string(ctr) << std::endl;
+	//                         ^
+	// In file included from /home/nilg/OpenCog/asmoses/opencog/combo/converter/combo_atomese.cc:24:
+	// Handle.h:321:13: note: candidate: ‘std::__cxx11::string opencog::oc_to_string(const HandleCounter&, const string&)’
+	//  std::string oc_to_string(const HandleCounter& hc,
+	//              ^~~~~~~~~~~~
+	// Handle.h:323:13: note: candidate: ‘std::__cxx11::string opencog::oc_to_string(const HandleUCounter&, const string&)’
+	//  std::string oc_to_string(const HandleUCounter& huc,
+	//              ^~~~~~~~~~~~
+	//
+	// Copying by const also gives the same error.
+	combo::combo_tree ctr = ctr_labels.first;
+	ss << indent << "combo tree:" << std::endl;
+	std::string header = indent + oc_to_string_indent;
+	ss << header << oc_to_string(ctr) << std::endl;
+	ss << indent << "labels:";
+	for (const std::string& label : ctr_labels.second)
+		ss << " " << label;
+	return ss.str();
 }
-}  // ~namespaces combo opencog
+
+}  // ~namespace opencog

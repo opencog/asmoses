@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 #
-# moses.py
+# asmoses.py
 #
 """
 Example usage of the Python wrapper for the MOSES evolutionary program
@@ -19,7 +19,7 @@ http://wiki.opencog.org/w/Meta-Optimizing_Semantic_Evolutionary_Search
 
 __author__ = 'Cosmo Harrigan'
 
-from opencog.pymoses import *
+from opencog.pyasmoses import *
 
 moses = moses()
 
