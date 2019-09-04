@@ -49,7 +49,7 @@ public:
 
 		Handle f1 = createNode(PREDICATE_NODE, "f1");
 		Handle f2 = createNode(PREDICATE_NODE, "f2");
-		populate_frm_ctable(ct,f1, f2);
+		populate_frm_ctable(ct, f1, f2);
 		HandleSeq handleSeq = {f1, f2};
 		Handle program = createLink(handleSeq, AND_LINK);
 
