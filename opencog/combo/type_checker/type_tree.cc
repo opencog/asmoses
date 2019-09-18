@@ -26,7 +26,7 @@
 #include <opencog/util/Logger.h>
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/combo/converter/combo_atomese.h>
-#include <opencog/atomese/type_checker/TypetreeToAtomeseType.h>
+#include <opencog/atomese/type_checker/AtomeseTypeChecker.h>
 
 #include "type_tree.h"
 #include "../combo/descriptions.h"
@@ -1221,7 +1221,7 @@ Handle infer_atomese_type(const Handle& handle)
 	auto type_result = infer_type_tree(combo_result.first);
 
 	// infer the atomese type from the type tree
-	atomese::TypetreeToAtomeseType typetreeToAtomese;
+	atomese::AtomeseTypeChecker typetreeToAtomese;
 	auto result = typetreeToAtomese(type_result);
 	return result;
 

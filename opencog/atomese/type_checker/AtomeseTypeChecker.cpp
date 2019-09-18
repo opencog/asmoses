@@ -1,4 +1,4 @@
-/** TypetreeToAtomeseType.cpp ---
+/** AtomeseTypeChecker.cpp ---
  *
  * Copyright (C) 2019 OpenCog Foundation
  *
@@ -21,7 +21,7 @@
  */
 
 
-#include "TypetreeToAtomeseType.h"
+#include "AtomeseTypeChecker.h"
 
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Link.h>
@@ -37,28 +37,28 @@ namespace opencog
 namespace atomese
 {
 
-Handle TypetreeToAtomeseType::operator()(const type_tree &tt)
+Handle AtomeseTypeChecker::operator()(const type_tree &tt)
 {
-    Handle handle;
-    type_tree_pre_it it = tt.begin();
-    handle = TypetreeToAtomeseType::type_tree_to_atomese_type(it);
-    return handle;
+	Handle handle;
+	type_tree_pre_it it = tt.begin();
+	handle = AtomeseTypeChecker::type_tree_to_atomese_type(it);
+	return handle;
 }
 
-Handle TypetreeToAtomeseType::convert_type_node(const type_node &tt)
+Handle AtomeseTypeChecker::convert_type_node(const type_node &tt)
 {
-    Handle handle;
-    
-    if (tt == id::boolean_type)
-        return handle = createNode(TYPE_NODE, "BooleanNode");
-    
-    else if (tt == id::contin_type)
-        return handle = createNode(TYPE_NODE, "NumberNode");
-    
-    else if (tt == id::lambda_type)
-        return createLink(HandleSeq{}, ARROW_LINK);
-    
-    else OC_ASSERT(false, "unsupported type");
+	Handle handle;
+
+	if (tt == id::boolean_type)
+		return handle = createNode(TYPE_NODE, "BooleanNode");
+
+	else if (tt == id::contin_type)
+		return handle = createNode(TYPE_NODE, "NumberNode");
+
+	else if (tt == id::lambda_type)
+		return createLink(HandleSeq{}, ARROW_LINK);
+
+	else OC_ASSERT(false, "unsupported type");
 }
 
 }

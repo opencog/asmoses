@@ -6,7 +6,7 @@ ADD_LIBRARY(atomese SHARED
 		interpreter/logical_interpreter
 		interpreter/condlink_interpreter
 		atom_types
-		type_checker/TypetreeToAtomeseType)
+		type_checker/AtomeseTypeChecker)
 
 TARGET_LINK_LIBRARIES(atomese
 	${ATOMSPACE_LIBRARIES}
