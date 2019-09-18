@@ -24,6 +24,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include <opencog/util/Logger.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/combo/converter/combo_atomese.h>
+#include <opencog/atomese/type_checker/AtomeseTypeChecker.h>
 
 #include "type_tree.h"
 #include "../combo/descriptions.h"
@@ -1207,6 +1210,22 @@ type_tree infer_type_tree(const combo_tree& tr)
     return tt;
 }
 
+// port infer type tree for atomese type
+Handle infer_atomese_type(const Handle& handle)
+{
+	// convert the atomese to combo tree
+	combo::AtomeseToCombo toCombo;
+	auto combo_result = toCombo(handle);
+
+	// infer the type tree of the combo tree
+	auto type_result = infer_type_tree(combo_result.first);
+
+	// infer the atomese type from the type tree
+	atomese::AtomeseTypeChecker typetreeToAtomese;
+	auto result = typetreeToAtomese(type_result);
+	return result;
+
+}
 bool is_well_formed(const type_tree& tt)
 {
     if (tt.empty())

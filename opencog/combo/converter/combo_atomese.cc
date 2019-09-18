@@ -271,7 +271,7 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 	} else OC_ASSERT(false, "unsupported type");
 }
 
-} // ~namespace combo
+}  // ~namespace combo
 
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
                          const std::string& indent)

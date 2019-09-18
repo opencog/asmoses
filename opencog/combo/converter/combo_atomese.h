@@ -41,7 +41,7 @@ namespace id
 //    Atomese procedure types
 enum __attribute__((packed)) procedure_type
 {
-	unknown=0,
+	unknown = 0,
 	predicate,
 	schema
 };
@@ -53,7 +53,6 @@ struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 public:
 	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr,
 	              const std::vector<std::string> &labels={});
-
 	std::pair<Type, Handle> operator()(const argument &a) const;
 
 	std::pair<Type, Handle> operator()(const builtin &b) const;
@@ -147,13 +146,12 @@ protected:
 
 };
 
-} // ~namespace combo
+}  // ~namespace combo
 
 // For pretty printing OpenCog objects while debugging, see
 // https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
 std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
                          const std::string& indent=empty_string);
-
 }  // ~namespace opencog
 
 #endif //MOSES_COMBO_ATOMESE_H

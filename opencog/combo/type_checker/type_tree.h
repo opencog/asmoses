@@ -31,6 +31,7 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/util/empty_string.h>
 
+#include <opencog/atoms/base/Handle.h>
 #include <opencog/combo/type_checker/type_tree_def.h>
 #include <opencog/combo/crutil/exception.h>
 #include <opencog/combo/combo/vertex.h>
@@ -299,6 +300,8 @@ type_tree get_type_tree(const combo_tree& tr, combo_tree::iterator it);
 /// ill_formed_type
 type_tree infer_type_tree(const combo_tree& tr);
 
+// port infer type tree for atomese
+Handle infer_atomese_type(const Handle& handle);
 // ----------------------------------------------------------
 // Arity-related functions
 
