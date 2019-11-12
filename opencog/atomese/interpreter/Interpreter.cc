@@ -223,6 +223,13 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 			_result.push_back(bool_value_to_bool(HandleCast(*it)) ? 1 : 0);
 		return ValuePtr(new FloatValue(_result));
 	}
+	if (t == GREATER_THAN_LINK) {
+		OC_ASSERT(params.size() == 2)
+
+		ValuePtr result = greater_than(FloatValueCast(params[0]),
+		                               FloatValueCast(params[1]));
+		return result;
+	}
 }
 
 value_size Interpreter::extract_output_size(const Handle &program, const Handle &key)

@@ -47,6 +47,11 @@ void zip_or::operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
 	}
 }
 
+void zip_greater_than::operator()(const boost::tuple<const double&, const double&>& t)
+{
+	_result.push_back(t.get<0>() > t.get<1>() ? true_value: false_value);
+}
+
 LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2)
 {
 	ValueSeq p1_value = p1->value();
@@ -104,6 +109,25 @@ LinkValuePtr logical_not(const LinkValuePtr& p) {
 	for(it = p_value.begin(); it != p_value.end(); ++it)
 		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
 		atomese::false_value: atomese::true_value);
+	return LinkValuePtr(new LinkValue(_result));
+}
+
+LinkValuePtr greater_than(const FloatValuePtr& p1, const FloatValuePtr& p2)
+{
+	std::vector<double> p1_value = p1->value();
+	std::vector<double> p2_value = p2->value();
+
+	zip_greater_than g_than = std::for_each(
+			boost::make_zip_iterator(
+					boost::make_tuple(p1_value.begin(), p2_value.begin())
+			),
+			boost::make_zip_iterator(
+					boost::make_tuple(p1_value.end(), p2_value.end())
+			),
+			zip_greater_than()
+	);
+
+	ValueSeq _result = g_than._result;
 	return LinkValuePtr(new LinkValue(_result));
 }
 
