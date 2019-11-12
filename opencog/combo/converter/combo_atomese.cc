@@ -155,6 +155,10 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			*_parent = id::schema;
 			type = IMPULSE_LINK;
 			break;
+		case id::greater_than_zero:
+			*_parent = id::schema;
+			type = GREATER_THAN_LINK;
+			break;
 		default: OC_ASSERT(false, "unsupported");
 	}
 	return std::make_pair(type, Handle());

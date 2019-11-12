@@ -28,6 +28,7 @@
 
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/combo/combo/vertex.h>
+#include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atomese/atom_types/atom_types.h>
 
@@ -114,6 +115,10 @@ protected:
 			for (auto sib = head.begin(); sib != head.end(); ++sib) {
 				handle_seq.push_back(atomese_combo_it(sib, procedure_type, labels));
 			}
+			// Combos that are converted to the atomese GreaterThanLink are actually
+			// greater_than_zero combo_vertices. So we need to add a NumberNode zero
+			// to the atomese GreaterThanLink to keep the semantix.
+			if (link_type == GREATER_THAN_LINK) handle_seq.push_back(createNode(NUMBER_NODE, "0.0"));
 			handle = createLink(handle_seq, link_type);
 		}
 		return handle;
