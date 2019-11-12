@@ -920,8 +920,8 @@ void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 		for (int j = 0; j < _arity; ++j) {
 			ValuePtr v;
 			if ((i >> j) % 2)
-				v = ValuePtr(createLink(TRUE_LINK));
-			else v = ValuePtr(createLink(FALSE_LINK));
+				v = moses::true_value;
+			else v = moses::false_value;
 			features[j].push_back(v);
 		}
 	}

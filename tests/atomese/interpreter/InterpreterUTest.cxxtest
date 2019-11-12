@@ -80,8 +80,8 @@ public:
 		p2 = createNode(PREDICATE_NODE, "p2");
 		p3 = createNode(PREDICATE_NODE, "p3");
 
-		t_link = ValuePtr(createLink(TRUE_LINK));
-		f_link = ValuePtr(createLink(FALSE_LINK));
+		t_link = moses::true_value;
+		f_link = moses::false_value;
 
 		ValueSeq _p1 = {t_link, t_link, f_link};
 		ValueSeq _p2 = {f_link, t_link, f_link};

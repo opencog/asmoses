@@ -51,7 +51,7 @@ ValuePtr vertex_seq_to_value(const vertex_seq &col, id::type_node col_type)
 			ValueSeq col_values = {};
 			for (int j = 0; j < n_rows; j++) {
 				bool col_data = vertex_to_bool(col.at(j));
-				col_values.push_back(ValuePtr(createLink(col_data ? TRUE_LINK : FALSE_LINK)));
+				col_values.push_back(col_data ? moses::true_value : moses::false_value);
 			}
 			return ValuePtr(new LinkValue(col_values));
 		}

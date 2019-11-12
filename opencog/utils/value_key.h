@@ -2,6 +2,8 @@
 #define _OPENCOG_VALUE_KEY_H_
 
 #include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/base/Link.h>
+
 namespace opencog
 {
 namespace moses

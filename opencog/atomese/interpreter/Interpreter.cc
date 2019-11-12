@@ -125,8 +125,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		return result;
 	}
 	if (t == AND_LINK) {
-		ValueSeq _result(_problem_data_size,
-		                              ValuePtr(createLink(TRUE_LINK)));
+		ValueSeq _result(_problem_data_size, moses::true_value);
 		LinkValuePtr result(new LinkValue(_result));
 
 		for (const ValuePtr &p : params) {
@@ -135,8 +134,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		return ValuePtr(result);
 	}
 	if (t == OR_LINK) {
-		ValueSeq _result(_problem_data_size,
-		                                  ValuePtr(createLink(FALSE_LINK)));
+		ValueSeq _result(_problem_data_size, moses::false_value);
 		LinkValuePtr result(new LinkValue(_result));
 
 		for (const ValuePtr &p : params) {
