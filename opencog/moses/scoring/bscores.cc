@@ -47,7 +47,7 @@
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomese/interpreter/Interpreter.h>
 #include <opencog/utils/valueUtils.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 #include "bscores.h"
 
 namespace opencog
@@ -65,6 +65,8 @@ using boost::transform;
 using namespace boost::phoenix;
 using boost::phoenix::arg_names::arg1;
 using namespace boost::accumulators;
+
+using namespace atomese;
 
 ////////////////////
 // logical_bscore //
@@ -185,7 +187,7 @@ behavioral_score contin_bscore::operator()(const combo_tree &tr) const
 behavioral_score contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(moses::value_key);
+	atomese::Interpreter interpreter(atomese::value_key);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), target, back_inserter(bs),
@@ -311,7 +313,7 @@ behavioral_score discretize_contin_bscore::operator()(const combo_tree &tr) cons
 behavioral_score discretize_contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(moses::value_key);
+	atomese::Interpreter interpreter(atomese::value_key);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), classes, back_inserter(bs),
@@ -352,7 +354,7 @@ behavioral_score ctruth_table_bscore::operator()(const combo_tree &tr) const
 behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(moses::compressed_value_key);
+	atomese::Interpreter interpreter(atomese::compressed_value_key);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(LinkValueCast(result)->value(), _wrk_ctable, back_inserter(bs),

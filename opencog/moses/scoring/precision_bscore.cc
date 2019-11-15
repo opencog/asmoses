@@ -29,11 +29,11 @@
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomese/interpreter/Interpreter.h>
 #include <opencog/utils/valueUtils.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 
 #include <opencog/atomese/interpreter/Interpreter.h>
 #include <opencog/utils/valueUtils.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 
 #include "precision_bscore.h"
 
@@ -375,7 +375,7 @@ behavioral_score precision_bscore::operator()(const combo_tree &tr) const
 
 behavioral_score precision_bscore::operator()(const Handle &handle) const
 {
-	atomese::Interpreter interpreter(moses::compressed_value_key);
+	atomese::Interpreter interpreter(atomese::compressed_value_key);
 	const ValuePtr result = interpreter(handle);
 	auto link_result = LinkValueCast(result)->value();
 	int i = 0;
@@ -874,7 +874,7 @@ behavioral_score precision_conj_bscore::operator()(const Handle &handle) const
 	count_t active = 0.0;  // total weight of active outputs by tr
 	score_t sao = 0.0;     // sum of all active outputs (in the boolean case)
 
-	atomese::Interpreter interpreter(moses::compressed_value_key);
+	atomese::Interpreter interpreter(atomese::compressed_value_key);
 	const ValuePtr result = interpreter(handle);
 	auto link_result = LinkValueCast(result)->value();
 	int i = 0;
