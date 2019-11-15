@@ -1,5 +1,5 @@
 INSTALL (FILES
-		value_key.h
+		valueUtils.h
 		DESTINATION
 		"include/opencog/${PROJECT_NAME}/utils"
 		)

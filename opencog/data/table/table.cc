@@ -43,7 +43,7 @@
 #include <opencog/combo/combo/ann.h>
 #include <opencog/combo/combo/simple_nn.h>
 #include <opencog/combo/combo/convert_ann_combo.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 #include <opencog/utils/valueUtils.h>
 
 #include "table.h"
@@ -900,7 +900,7 @@ void complete_truth_table::populate(const Handle &handle)
 	// map the values of inputs to the program.
 	setup_features(handle, features);
 
-	atomese::Interpreter interpreter(moses::value_key);
+	atomese::Interpreter interpreter(atomese::value_key);
 	ValueSeq result = LinkValueCast(interpreter(handle))->value();
 
 	// This happens if the program[handle] is a constant [i:e TRUE_LINK or NUMBER_NODE]
@@ -920,8 +920,8 @@ void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 		for (int j = 0; j < _arity; ++j) {
 			ValuePtr v;
 			if ((i >> j) % 2)
-				v = ValuePtr(createLink(TRUE_LINK));
-			else v = ValuePtr(createLink(FALSE_LINK));
+				v = atomese::true_value;
+			else v = atomese::false_value;
 			features[j].push_back(v);
 		}
 	}
@@ -936,7 +936,7 @@ void complete_truth_table::setup_features(const Handle &handle, const std::vecto
 		const std::string h_name = handle->get_name();
 		ValueSeq value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
 
-		handle->setValue(moses::value_key, ValuePtr(new LinkValue(value)));
+		handle->setValue(atomese::value_key, ValuePtr(new LinkValue(value)));
 		return;
 	}
 

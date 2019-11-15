@@ -26,7 +26,7 @@
 
 #include <opencog/atomese/interpreter/Interpreter.h>
 #include <opencog/utils/valueUtils.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 
 #include "select_bscore.h"
 
@@ -198,7 +198,7 @@ behavioral_score select_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
 
-	atomese::Interpreter interpreter(moses::value_key);
+	atomese::Interpreter interpreter(atomese::value_key);
 
 	const ValuePtr result = interpreter(handle);
 	auto link_result = FloatValueCast(result)->value();

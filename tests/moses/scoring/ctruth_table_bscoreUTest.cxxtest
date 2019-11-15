@@ -27,7 +27,7 @@
 #include <opencog/data/table/table.h>
 #include <opencog/data/table/table_io.h>
 
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 #include <opencog/utils/valueUtils.h>
 #include <opencog/moses/main/populate_atomspace.h>
 

@@ -5,6 +5,8 @@
 #include <opencog/atoms/base/Link.h>
 #include <opencog/combo/combo/vertex.h>
 
+#include "opencog/atomese/atomese_utils/constants.h"
+
 namespace opencog
 {
 using namespace combo;
@@ -16,9 +18,7 @@ inline bool bool_value_to_bool (const ValuePtr &valuePtr)
 
 inline ValuePtr bool_vertex_to_value (const vertex &v)
 {
-	static const ValuePtr t_value(createLink(TRUE_LINK));
-	static const ValuePtr f_value(createLink(FALSE_LINK));
-	return vertex_to_bool(v) ? t_value : f_value;
+	return vertex_to_bool(v) ? atomese::true_value : atomese::false_value;
 }
 inline enum_t value_to_enum(const ValuePtr &valuePtr) {
 	return HandleCast(valuePtr)->get_name();

@@ -1,7 +1,7 @@
 #include <opencog/data/table/table.h>
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomspace/AtomSpace.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 #include <opencog/atoms/base/Link.h>
 #include "populate_atomspace.h"
 
@@ -21,7 +21,7 @@ void populate(AtomSpace *as, const ITable &itable)
 		Handle feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE,
 		                            itable.get_labels().at(i));
 		ValuePtr vtr = vertex_seq_to_value(col, col_type);
-		feature->setValue(value_key, vtr);
+		feature->setValue(atomese::value_key, vtr);
 		as->add_atom(feature);
 	}
 }
@@ -36,7 +36,7 @@ void populate(AtomSpace *as, const CTable &ctable)
 		const Handle &feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE,
 		                                   labels[j]);
 		const ValuePtr &vtr = vertex_seq_to_value(col, get_type_node(types[j]));
-		feature->setValue(compressed_value_key, vtr);
+		feature->setValue(atomese::compressed_value_key, vtr);
 		as->add_atom(feature);
 	}
 }
@@ -51,7 +51,7 @@ ValuePtr vertex_seq_to_value(const vertex_seq &col, id::type_node col_type)
 			ValueSeq col_values = {};
 			for (int j = 0; j < n_rows; j++) {
 				bool col_data = vertex_to_bool(col.at(j));
-				col_values.push_back(ValuePtr(createLink(col_data ? TRUE_LINK : FALSE_LINK)));
+				col_values.push_back(col_data ? atomese::true_value : atomese::false_value);
 			}
 			return ValuePtr(new LinkValue(col_values));
 		}

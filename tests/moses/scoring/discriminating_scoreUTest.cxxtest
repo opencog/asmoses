@@ -28,7 +28,7 @@
 #include <opencog/data/table/table_io.h>
 #include <opencog/utils/valueUtils.h>
 
-#include "opencog/utils/value_key.h"
+#include "opencog/atomese/atomese_utils/constants.h"
 #include "opencog/moses/scoring/discriminating_bscore.h"
 #include <boost/phoenix/phoenix.hpp>
 #include <opencog/moses/main/populate_atomspace.h>
