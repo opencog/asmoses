@@ -1,12 +1,12 @@
-#ifndef _OPENCOG_VALUE_KEY_H_
-#define _OPENCOG_VALUE_KEY_H_
+#ifndef _OPENCOG_CONSTANTS_H_
+#define _OPENCOG_CONSTANTS_H_
 
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 
 namespace opencog
 {
-namespace moses
+namespace atomese
 {
 
 const static Handle value_key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
@@ -15,7 +15,7 @@ const static Handle compressed_value_key = createNode(NODE, "*-AS-MOSES:SchemaCo
 const static ValuePtr true_value(createLink(TRUE_LINK));
 const static ValuePtr false_value(createLink(FALSE_LINK));
 
-} // ~namespace moses
+} // ~namespace atomese
 } // ~namespace opencog
 
 #endif
