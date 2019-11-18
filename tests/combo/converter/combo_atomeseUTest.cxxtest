@@ -124,6 +124,21 @@ public:
 		TS_ASSERT(content_eq(h, times_link));
 	}
 
+	void test_atomese_combo_greater_than(void)
+	{
+		combo_tree prog;
+		combo_tree::iterator it = prog.set_head(id::greater_than_zero);
+		prog.append_child(it, 1.0);
+
+		combo::ComboToAtomese to_atomese;
+		Handle result = to_atomese(prog);
+
+		HandleSeq seq = {Handle(createNumberNode(1)), Handle(createNumberNode(0))};
+		Handle exp = createLink(seq, GREATER_THAN_LINK);
+
+		TS_ASSERT(content_eq(result, exp));
+	}
+
 	void test_atomese_combo_labeled(void)
 	{
 		combo::combo_tree tr = combo::str2combo_tree("+($1 +($2 $3))", {});
@@ -202,6 +217,23 @@ public:
 
 		const std::vector<string> exp_labels = {"f"};
 		auto expected = std::make_pair(combo::str2combo_tree("+(5 $1)", {}), exp_labels);
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
+
+	void test_combo_atomese_greater_than(void)
+	{
+		HandleSeq seq = {Handle(createNumberNode(1)), Handle(createNumberNode(0))};
+		Handle g = createLink(seq, GREATER_THAN_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(g);
+
+		combo_tree exp;
+		combo_tree::iterator it = exp.set_head(id::greater_than_zero);
+		exp.append_child(it, 1.0);
+
+		auto expected = std::make_pair(exp, std::vector<string>{});
 
 		TS_ASSERT_EQUALS(result, expected);
 	}

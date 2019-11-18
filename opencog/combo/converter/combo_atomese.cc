@@ -155,6 +155,10 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			*_parent = id::schema;
 			type = IMPULSE_LINK;
 			break;
+		case id::greater_than_zero:
+			*_parent = id::schema;
+			type = GREATER_THAN_LINK;
+			break;
 		default: OC_ASSERT(false, "unsupported");
 	}
 	return std::make_pair(type, Handle());
@@ -188,6 +192,7 @@ void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &label
 		link2combo(h, labels, tr, iter);
 		for (auto child : h->getOutgoingSet()) {
 			atom2combo(child, labels, tr, iter);
+			if (h->get_type() == GREATER_THAN_LINK) break;
 		}
 	} else {
 		node2combo(h, labels, tr, iter);
@@ -240,6 +245,14 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 	}
 	if (IMPULSE_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::impulse) : tr.append_child(iter, id::impulse);
+		return;
+	}
+	if (GREATER_THAN_LINK == t) {
+		OC_ASSERT(h->getOutgoingSet().size() == 2)
+		OC_ASSERT(content_eq(h->getOutgoingSet().at(1), Handle(createNumberNode(0.0))),
+		          "Only greater_than_zero is supported in combo!")
+		iter = tr.empty() ? tr.set_head(id::greater_than_zero) :
+		       tr.append_child(iter, id::greater_than_zero);
 		return;
 	} else {
 		OC_ASSERT(false, "unsupported type");

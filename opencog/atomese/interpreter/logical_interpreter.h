@@ -60,6 +60,18 @@ struct zip_or :
 };
 
 /**
+ * Performs greater_than comparison of two doubles.
+ */
+struct zip_greater_than :
+		public std::unary_function<const boost::tuple
+				<const double&, const double&>&, void>
+{
+	ValueSeq _result;
+
+	void operator()(const boost::tuple<const double&, const double&>& t);
+};
+
+/**
  * Compute logical_and.
  * it expects the values of the LinkValues to be TRUE_LINK and FALSE_LINK
  * @param LinkValuePtr&     p1
@@ -96,6 +108,16 @@ bool logical_compare(const LinkValuePtr& p1, const LinkValuePtr& p2);
  * @return                 LinkValue pointer containing the logical_not.
  */
 LinkValuePtr logical_not(const LinkValuePtr& p);
+
+/**
+ * Evaluate Greater_than.
+ *
+ * @param FloatValuePtr&     p1
+ * @param FloatValuePtr&     p2
+ *
+ * @return                 LinkValue pointer containing the comparisions.
+ */
+LinkValuePtr greater_than(const FloatValuePtr& p1, const FloatValuePtr& p2);
 
 }}
 

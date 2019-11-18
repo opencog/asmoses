@@ -303,4 +303,34 @@ public:
 		for (float value:interout) result.push_back(floorf(value * 10000) / 10000);
 		TS_ASSERT(expected == result);
 	}
+
+	void test_interpreter_greater_than_link(void) {
+		HandleSeq seq = {f1, f2};
+		Handle program = createLink(seq, GREATER_THAN_LINK);
+
+		// expected out put vector
+		ValueSeq exp_value = {t_link, f_link, f_link};
+		ValuePtr expected(new LinkValue(exp_value));
+
+		// interpret
+		atomese::Interpreter interpreter(atomese::value_key);
+		ValuePtr result = interpreter(program);
+
+		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
+	}
+
+	void test_interpreter_greater_than_link2(void) {
+		HandleSeq seq = {Handle(createNumberNode(5.0)), f4};
+		Handle program = createLink(seq, GREATER_THAN_LINK);
+
+		// expected out put vector
+		ValueSeq exp_value = {t_link, f_link, t_link};
+		ValuePtr expected(new LinkValue(exp_value));
+
+		// interpret
+		atomese::Interpreter interpreter(atomese::value_key);
+		ValuePtr result = interpreter(program);
+
+		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
+	}
 };
