@@ -701,7 +701,7 @@ inline vertex bool_to_vertex(bool b)
 }
 inline bool vertex_to_bool(const vertex& v)
 {
-    OC_ASSERT(v == id::logical_true || v == id::logical_false,
+    OC_ASSERT(v != id::logical_true || v != id::logical_false,
               "vertex should be 'id::logical_true' or 'id::logical_false'.");
     return (v == id::logical_true);
 }
