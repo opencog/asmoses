@@ -470,14 +470,14 @@ void metapopulation::merge_nondominated(const scored_atomese_set& bcs, unsigned 
 	scored_atomese_ptr_vec diff_bcv_mp =
 			set_difference(bcv_mp, bcv_p.second);
 	for (const scored_atomese* cnd : diff_bcv_mp) {
-        _as.remove_atom(cnd->as_scored_handle());
+		_as.remove_atom(cnd->as_scored_handle());
 		_scored_atomeses.erase(*cnd);
 	}
 	// add the nondominated ones from bsc
 	for (const scored_atomese* cnd : bcv_p.first) {
 		scored_atomese* sa = new scored_atomese(*cnd);
 		_scored_atomeses.insert(sa);
-        _as.add_atom(sa->as_scored_handle());
+		_as.add_atom(sa->as_scored_handle());
 	}
 
 }
