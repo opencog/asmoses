@@ -4,7 +4,7 @@ INCLUDE_DIRECTORIES(
 		${CMAKE_CURRENT_BINARY_DIR}
 		${CMAKE_BINARY_DIR}
 )
-
+DECLARE_GUILE_CONFIG_TARGET(SCM_CONFIG "opencog asmoses-config" "ASMOSES_TEST")
 ADD_SUBDIRECTORY (combo)
 ADD_SUBDIRECTORY (moses)
 ADD_SUBDIRECTORY (feature-selection)
@@ -22,3 +22,6 @@ ADD_SUBDIRECTORY (utils)
 IF (HAVE_CYTHON)
 	ADD_SUBDIRECTORY (cython)
 ENDIF (HAVE_CYTHON)
+WRITE_GUILE_CONFIG(${GUILE_BIN_DIR}/opencog/asmoses-config.scm SCM_CONFIG TRUE)
+WRITE_GUILE_CONFIG(${GUILE_BIN_DIR}/opencog/asmoses-config-installable.scm SCM_CONFIG FALSE)
+INSTALL(FILES ${GUILE_BIN_DIR}/opencog/asmoses-config-installable.scm DESTINATION ${GUILE_SITE_DIR}/opencog RENAME asmoses-config.scm)
