@@ -44,6 +44,7 @@ ComboToAtomese::ComboToAtomese(AtomSpace *as)
 {}
 
 Handle ComboToAtomese::operator()(const combo_tree &ct,
+                                  const type_node &output_type,
                                   const std::vector<std::string> &labels)
 {
 	Handle handle;
@@ -54,15 +55,25 @@ Handle ComboToAtomese::operator()(const combo_tree &ct,
 }
 
 vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpace *as,
-                             const std::vector<std::string> &labels)
-		: _as(as), _parent(parent), _labels(labels)
+                             const std::vector<std::string> &labels, type_node output_type)
+		: _as(as), _parent(parent), _labels(labels), _out_type(output_type)
 {}
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 {
 	Handle handle;
 	if (*_parent == id::unknown) {
-		*_parent = id::predicate;
+		switch (_out_type){
+			case id::contin_type:{
+				*_parent = id::schema;
+				break;
+			}
+			case id::boolean_type:
+			case id::enum_type:
+			case id::lambda_type:
+				*_parent = id::predicate;
+				break;
+		}
 	}
 	switch (*_parent) {
 		case id::predicate: {
