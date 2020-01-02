@@ -25,7 +25,7 @@
 #define _OPENCOG_MOSES_TABLE_PROBLEMS_H
 
 #include <boost/ptr_container/ptr_vector.hpp>
-
+#include <opencog/atomese/atomese_utils/constants.h>
 #include <opencog/moses/scoring/scoring_base.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include "problem-params.h"
