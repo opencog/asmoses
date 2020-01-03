@@ -87,7 +87,7 @@ struct atomese_based_scorer : public iscorer_base
 	atomese_based_scorer(behave_cscore &cs, representation &rep, bool reduce,
 	                     ComboToAtomese& to_atomese, type_node _output,
 	                     AtomSpace* as=nullptr)
-			: _cscorer(cs), _rep(rep), _reduce(reduce), _as(as), _output_type(_output),
+			: _cscorer(cs), _rep(rep), _reduce(reduce), _as(as),
 			  _to_atomese(to_atomese)
 	{}
 
@@ -101,7 +101,7 @@ protected:
 	// evaluated.  This is advantagous when _cscorer is
 	// also a cache; the reduced form will have more cache
 	// hits.
-	type_node _output_type;
+	//type_node _output_type;
 	ComboToAtomese &_to_atomese;
 };
 
