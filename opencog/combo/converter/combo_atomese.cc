@@ -39,12 +39,23 @@ namespace combo
 using namespace std;
 using namespace boost;
 
+ComboToAtomese::ComboToAtomese()
+{
+	_as = nullptr;
+}
+
 ComboToAtomese::ComboToAtomese(AtomSpace *as)
-		: _as(as)
+		:_as(as)
 {}
 
+ComboToAtomese::ComboToAtomese(type_node output_type)
+		:_output_type(output_type)
+{
+	_as = nullptr;
+
+}
+
 Handle ComboToAtomese::operator()(const combo_tree &ct,
-                                  const type_node &output_type,
                                   const std::vector<std::string> &labels)
 {
 	Handle handle;
@@ -113,6 +124,8 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 			OC_ASSERT(false, "unsupported procedure type");
 		}
 	}
+	std::string test1 = oc_to_string(handle);
+
 	handle = _as ? _as->add_atom(handle) : handle;
 
 	return std::make_pair(-1, handle);

@@ -80,7 +80,9 @@ private:
 class ComboToAtomese
 {
 public:
-	ComboToAtomese(AtomSpace *as=nullptr);
+	ComboToAtomese();
+	ComboToAtomese(AtomSpace *as);
+	ComboToAtomese(type_node output_type);
 
 	/**
 	 * Convert a combo_tree to atomese program.
@@ -88,7 +90,7 @@ public:
 	 * @param combo_tree   the combo_tree containing the combo program
 	 * @return                 the Handle containing the atomese program
 	 */
-	Handle operator()(const combo_tree &tr, const type_node &output_type = id::boolean_type, const std::vector<std::string> &labels={});
+	Handle operator()(const combo_tree &tr, const std::vector<std::string> &labels={});
 
 private:
 	AtomSpace *_as;
