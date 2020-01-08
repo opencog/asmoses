@@ -39,9 +39,21 @@ namespace combo
 using namespace std;
 using namespace boost;
 
+ComboToAtomese::ComboToAtomese()
+{
+	_as = nullptr;
+}
+
 ComboToAtomese::ComboToAtomese(AtomSpace *as)
-		: _as(as)
+		:_as(as)
 {}
+
+ComboToAtomese::ComboToAtomese(type_node output_type)
+		:_output_type(output_type)
+{
+	_as = nullptr;
+
+}
 
 Handle ComboToAtomese::operator()(const combo_tree &ct,
                                   const std::vector<std::string> &labels)
@@ -54,15 +66,25 @@ Handle ComboToAtomese::operator()(const combo_tree &ct,
 }
 
 vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpace *as,
-                             const std::vector<std::string> &labels)
-		: _as(as), _parent(parent), _labels(labels)
+                             const std::vector<std::string> &labels, type_node output_type)
+		: _as(as), _parent(parent), _labels(labels), _out_type(output_type)
 {}
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 {
 	Handle handle;
 	if (*_parent == id::unknown) {
-		*_parent = id::predicate;
+		switch (_out_type){
+			case id::contin_type:{
+				*_parent = id::schema;
+				break;
+			}
+			case id::boolean_type:
+			case id::enum_type:
+			case id::lambda_type:
+				*_parent = id::predicate;
+				break;
+		}
 	}
 	switch (*_parent) {
 		case id::predicate: {
@@ -102,6 +124,8 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 			OC_ASSERT(false, "unsupported procedure type");
 		}
 	}
+	std::string test1 = oc_to_string(handle);
+
 	handle = _as ? _as->add_atom(handle) : handle;
 
 	return std::make_pair(-1, handle);

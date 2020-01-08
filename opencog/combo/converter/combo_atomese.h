@@ -53,7 +53,8 @@ struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 {
 public:
 	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr,
-	              const std::vector<std::string> &labels={});
+	              const std::vector<std::string> &labels={},
+	              type_node output_type = id::boolean_type);
 	std::pair<Type, Handle> operator()(const argument &a) const;
 
 	std::pair<Type, Handle> operator()(const builtin &b) const;
@@ -73,12 +74,15 @@ private:
 	AtomSpace *_as;
 	const std::vector<std::string> &_labels;
 	mutable id::procedure_type *_parent;
+	type_node _out_type;
 };
 
 class ComboToAtomese
 {
 public:
-	ComboToAtomese(AtomSpace *as=nullptr);
+	ComboToAtomese();
+	ComboToAtomese(AtomSpace *as);
+	ComboToAtomese(type_node output_type);
 
 	/**
 	 * Convert a combo_tree to atomese program.
@@ -90,6 +94,7 @@ public:
 
 private:
 	AtomSpace *_as;
+	type_node _output_type;
 
 protected:
 	/**
@@ -101,12 +106,12 @@ protected:
 	template<typename Iter>
 	opencog::Handle atomese_combo_it(Iter it,
 	                                 id::procedure_type &parent_procedure_type,
-	                                 const std::vector<std::string> &labels)
+	                                 const std::vector<std::string> &labels, const type_node out_type=id::boolean_type)
 	{
 
 		id::procedure_type procedure_type = parent_procedure_type;
 		combo_tree::iterator head = it;
-		std::pair<Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as, labels), *head);
+		std::pair<Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as, labels, out_type), *head);
 		Type link_type = atomese.first;
 		Handle handle = atomese.second;
 

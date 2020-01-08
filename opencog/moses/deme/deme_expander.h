@@ -31,6 +31,7 @@
 #include "../scoring/behave_cscore.h"
 #include "../metapopulation/metapop_params.h"
 #include "deme_params.h"
+#include <opencog/atomese/atomese_utils/constants.h>
 
 namespace opencog {
 namespace moses {
@@ -43,7 +44,8 @@ struct deme_expander
 	              behave_cscore& sc,
 	              optimizer_base& opt,
 	              const deme_parameters& pa = deme_parameters(),
-	              const subsample_deme_filter_parameters& fp = subsample_deme_filter_parameters());
+	              const subsample_deme_filter_parameters& fp = subsample_deme_filter_parameters(),
+	              type_node output_t = id::boolean_type);
 
 	~deme_expander() {}
 
@@ -150,6 +152,7 @@ protected:
 	const deme_parameters& _params;
 
 	const subsample_deme_filter_parameters& _filter_params;
+	type_node _output_type;
 };
 
 } // ~namespace moses
