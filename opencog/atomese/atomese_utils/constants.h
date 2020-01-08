@@ -14,7 +14,6 @@ const static Handle compressed_value_key = createNode(NODE, "*-AS-MOSES:SchemaCo
 
 const static ValuePtr true_value(createLink(TRUE_LINK));
 const static ValuePtr false_value(createLink(FALSE_LINK));
-extern combo::type_node t_output_type;
 
 } // ~namespace atomese
 } // ~namespace opencog

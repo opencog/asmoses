@@ -45,7 +45,8 @@ struct deme_expander
 	              optimizer_base& opt,
 	              const deme_parameters& pa = deme_parameters(),
 	              const subsample_deme_filter_parameters& fp = subsample_deme_filter_parameters(),
-	              type_node output_t = id::boolean_type);
+	              type_node output_t = id::boolean_type,
+	              const string_seq& labels={});
 
 	~deme_expander() {}
 
@@ -153,6 +154,7 @@ protected:
 
 	const subsample_deme_filter_parameters& _filter_params;
 	type_node _output_type;
+	string_seq _labels;
 };
 
 } // ~namespace moses
