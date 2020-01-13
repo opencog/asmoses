@@ -79,11 +79,10 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const
 				*_parent = id::schema;
 				break;
 			}
-			case id::boolean_type:
-			case id::enum_type:
-			case id::lambda_type:
+			default:{
 				*_parent = id::predicate;
 				break;
+			}
 		}
 	}
 	switch (*_parent) {

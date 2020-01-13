@@ -74,16 +74,11 @@ composite_score atomese_based_scorer::operator()(const instance &inst) const
 		logger().fine() << "atomese_based_scorer - Evaluate instance: "
 		                << _rep.fields().to_string(inst);
 	}
-
 	combo_tree tr = _rep.get_candidate(inst, _reduce);
-	Handle handle = _to_atomese(tr);
-
+	Handle handle = _to_atomese(tr,_labels);
 	if(_as) {
 		handle = _as->add_atom(handle);
 	}
-	logger().info() << "Program generated: " << oc_to_string(handle);
-	auto test1 =_cscorer.get_cscore(handle);
-
 	return _cscorer.get_cscore(handle);
 }
 

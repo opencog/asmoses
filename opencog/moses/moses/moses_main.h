@@ -280,7 +280,8 @@ void metapop_moses_results_b(const combo_tree_seq& bases,
                              const metapop_parameters& meta_params,
                              const moses_parameters& moses_params,
                              Printer& printer,
-                             type_node t_output=id::boolean_type)
+                             type_node t_output=id::boolean_type,
+                             string_seq labels={})
 {
     moses_statistics stats;
     optimizer_base* optimizer = nullptr;
@@ -315,7 +316,7 @@ void metapop_moses_results_b(const combo_tree_seq& bases,
         simple_bases.push_back(siba);
     }
 
-    deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params, t_output);
+    deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params, t_output, labels);
     metapopulation metapop(simple_bases, sc, meta_params, filter_params);
 
     run_moses(metapop, dex, moses_params, stats);
@@ -353,7 +354,8 @@ void metapop_moses_results(const combo_tree_seq& bases,
                            const metapop_parameters& meta_params,
                            const moses_parameters moses_params,
                            Printer& printer,
-                           type_node t_output = id::boolean_type)
+                           type_node t_output = id::boolean_type,
+                           string_seq labels={})
 {
     // Parameters that might get tweaked are copied
     optim_parameters twk_opt_params(opt_params);
@@ -382,7 +384,7 @@ void metapop_moses_results(const combo_tree_seq& bases,
                                 c_scorer,
                                 twk_opt_params, hc_params, ps_params,
                                 deme_params, filter_params, twk_meta_params,
-                                twk_moses_params, printer, t_output);
+                                twk_moses_params, printer, t_output, labels);
     }
 }
 
