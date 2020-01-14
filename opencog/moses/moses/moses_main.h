@@ -281,7 +281,7 @@ void metapop_moses_results_b(const combo_tree_seq& bases,
                              const moses_parameters& moses_params,
                              Printer& printer,
                              type_node t_output=id::boolean_type,
-                             string_seq labels={})
+                             const string_seq& labels={})
 {
     moses_statistics stats;
     optimizer_base* optimizer = nullptr;
@@ -355,7 +355,7 @@ void metapop_moses_results(const combo_tree_seq& bases,
                            const moses_parameters moses_params,
                            Printer& printer,
                            type_node t_output = id::boolean_type,
-                           string_seq labels={})
+                           const string_seq& labels={})
 {
     // Parameters that might get tweaked are copied
     optim_parameters twk_opt_params(opt_params);

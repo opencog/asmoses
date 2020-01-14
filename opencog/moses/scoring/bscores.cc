@@ -190,7 +190,12 @@ behavioral_score contin_bscore::operator()(const Handle &handle) const
 	atomese::Interpreter interpreter(atomese::value_key);
 
 	const ValuePtr result = interpreter(handle);
-	boost::transform(FloatValueCast(result)->value(), target, back_inserter(bs),
+	vector<double> res = FloatValueCast(result)->value();
+	if(handle->get_type()==NUMBER_NODE) {
+		vector<double> tmp(_size,res.at(0));
+		res=tmp;
+	}
+	boost::transform(res, target, back_inserter(bs),
 	          [&](contin_t res, const vertex &tar_ver){
 		          contin_t tar = get_contin(tar_ver);
 		          return -err_func(res, tar);
