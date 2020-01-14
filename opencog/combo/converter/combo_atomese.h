@@ -106,12 +106,12 @@ protected:
 	template<typename Iter>
 	opencog::Handle atomese_combo_it(Iter it,
 	                                 id::procedure_type &parent_procedure_type,
-	                                 const std::vector<std::string> &labels, const type_node out_type=id::boolean_type)
+	                                 const std::vector<std::string> &labels)
 	{
 
 		id::procedure_type procedure_type = parent_procedure_type;
 		combo_tree::iterator head = it;
-		std::pair<Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as, labels, out_type), *head);
+		std::pair<Type, Handle> atomese = boost::apply_visitor(vertex_2_atom(&procedure_type, _as, labels, _output_type), *head);
 		Type link_type = atomese.first;
 		Handle handle = atomese.second;
 
