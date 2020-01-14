@@ -190,6 +190,7 @@ behavioral_score contin_bscore::operator()(const Handle &handle) const
 	atomese::Interpreter interpreter(atomese::value_key);
 
 	const ValuePtr result = interpreter(handle);
+	std::string test1 = oc_to_string(handle);
 	vector<double> res = FloatValueCast(result)->value();
 	if(handle->get_type()==NUMBER_NODE) {
 		vector<double> tmp(_size,res.at(0));
