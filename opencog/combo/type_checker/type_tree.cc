@@ -1359,7 +1359,19 @@ type_tree gen_signature(const type_tree& itype, const type_tree& otype,
     res.replace(sib, otype.begin());
     return res;
 }
-
+type_node_seq input_out;
+type_node_seq gen_signature(const Handle pg_type){
+	input_out = {};
+	for (Handle h: pg_type->getOutgoingSet()){
+		if(h->get_type() == LIST_LINK) gen_signature(h);
+		else input_out.push_back(gen_type_node(h));
+	}
+	return input_out;
+}
+type_node gen_type_node(const Handle program){
+	if (program->get_name()=="NumberNode") return id::contin_type;
+	return id::boolean_type;
+}
 type_tree gen_signature(type_node itype, type_node otype, arity_t arity)
 {
     type_tree itt(itype), ott(otype);

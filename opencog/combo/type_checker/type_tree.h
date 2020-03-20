@@ -416,6 +416,9 @@ type_tree gen_signature(const type_node_seq& itypes, type_node otype);
 /// As above, except using a vector of input types.
 type_tree gen_signature(const type_tree_seq& inputs, const type_tree& output);
 
+// genarete signature from Handle
+type_node_seq gen_signature(const Handle pg_type);
+type_node gen_type_node(const Handle program);
 /// For uniform input types, given the input arity, and the input type,
 /// together with the output, create a corresponding function signature,
 /// that is, a lambda type tree with that signature.  So, for example:
