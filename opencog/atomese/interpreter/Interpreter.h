@@ -47,7 +47,7 @@ class Interpreter
 	opencog::Handle _key;
 
 public:
-	Interpreter(const opencog::Handle &input_table);
+	Interpreter(const opencog::Handle &input_table, const int size=0);
 
 	/**
 	 * executes/evaluates a program over a problem data.

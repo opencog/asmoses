@@ -900,7 +900,7 @@ void complete_truth_table::populate(const Handle &handle)
 	// map the values of inputs to the program.
 	setup_features(handle, features);
 
-	atomese::Interpreter interpreter(atomese::value_key);
+	atomese::Interpreter interpreter(atomese::value_key, pow2(_arity));
 	ValueSeq result = LinkValueCast(interpreter(handle))->value();
 
 	// This happens if the program[handle] is a constant [i:e TRUE_LINK or NUMBER_NODE]

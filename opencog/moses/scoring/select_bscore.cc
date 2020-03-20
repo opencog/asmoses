@@ -198,7 +198,7 @@ behavioral_score select_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
 
-	atomese::Interpreter interpreter(atomese::value_key);
+	atomese::Interpreter interpreter(atomese::value_key, get_ctable().size());
 
 	const ValuePtr result = interpreter(handle);
 	auto link_result = FloatValueCast(result)->value();

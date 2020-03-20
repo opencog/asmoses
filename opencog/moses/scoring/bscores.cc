@@ -187,7 +187,7 @@ behavioral_score contin_bscore::operator()(const combo_tree &tr) const
 behavioral_score contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(atomese::value_key);
+	atomese::Interpreter interpreter(atomese::value_key, _size);
 
 	const ValuePtr result = interpreter(handle);
 	std::string test1 = oc_to_string(handle);
@@ -319,7 +319,7 @@ behavioral_score discretize_contin_bscore::operator()(const combo_tree &tr) cons
 behavioral_score discretize_contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(atomese::value_key);
+	atomese::Interpreter interpreter(atomese::value_key,_size);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), classes, back_inserter(bs),
@@ -360,7 +360,7 @@ behavioral_score ctruth_table_bscore::operator()(const combo_tree &tr) const
 behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(atomese::compressed_value_key);
+	atomese::Interpreter interpreter(atomese::compressed_value_key, _size);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(LinkValueCast(result)->value(), _wrk_ctable, back_inserter(bs),
@@ -529,7 +529,7 @@ behavioral_score enum_table_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
 
-	atomese::Interpreter interpreter(compressed_value_key);
+	atomese::Interpreter interpreter(compressed_value_key, _size);
 	const ValuePtr result = interpreter(handle);
 	boost::transform(LinkValueCast(result)->value(),
 	                 _ctable, back_inserter(bs),
