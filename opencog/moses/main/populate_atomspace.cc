@@ -11,12 +11,14 @@ namespace moses
 {
 
 
-void populate(AtomSpace *as, const ITable &itable)
+void populate(AtomSpace *as, const ITable &itable, const type_node_seq &tt_seq)
 {
 
 	int n_columns = itable.get_types().size();
 	for (int i = 0; i < n_columns; i++) {
-		id::type_node col_type = itable.get_types().at(i);
+		id::type_node col_type;
+		if (!tt_seq.empty())  col_type = tt_seq.at(i);
+		else col_type = itable.get_types().at(i);
 		vertex_seq col = itable.get_column_data(i);
 		std::vector<std::string> labels = itable.get_labels();
 		std::string test = "$"+labels[i];

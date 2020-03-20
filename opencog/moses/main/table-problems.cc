@@ -358,7 +358,7 @@ void ann_table_problem::run(option_base* ob)
 		reduct_cand = pms.contin_reduct;                             \
 		reduct_rep = pms.contin_reduct;                              \
 	}                                                                \
-	string_seq labels = TABLE.get_labels();                          \
+	string_seq labels = TABLE.get_input_labels();                          \
 	metapop_moses_results(pms.exemplars, cand_type_signature,        \
 					  *reduct_cand, *reduct_rep, mbcscore,           \
 					  pms.opt_params, pms.hc_params, pms.ps_params,  \

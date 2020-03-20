@@ -493,7 +493,7 @@ void deme_expander::optimize_demes(int max_evals, time_t max_time)
 				string_seq input_labels ;
 				for(int i=1; i< _labels.size(); i++) { input_labels.push_back(_labels.at(i));}
 				ComboToAtomese to_atomese(_output_type);
-				atomese_based_scorer cpx_scorer = atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, to_atomese, input_labels,
+				atomese_based_scorer cpx_scorer = atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, to_atomese, _labels,
 				                                                       _params.atomspace_store ? _params.as : nullptr);
 				_optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
 			}

@@ -1139,7 +1139,7 @@ struct Table : public boost::equality_comparable<Table>
 
 	// return a string with the io labels, the output label comes first
 	string_seq get_labels() const;
-
+	string_seq get_input_labels() const;
 	const std::string &get_target() const
 	{ return otable.get_label(); }
 

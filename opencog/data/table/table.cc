@@ -506,7 +506,11 @@ vector<string> Table::get_labels() const
 	labels.insert(labels.begin(), otable.get_label());
 	return labels;
 }
-
+vector<string> Table::get_input_labels() const
+{
+	vector<string> labels = itable.get_labels();
+	return labels;
+}
 // -------------------------------------------------------
 
 CTable Table::compressed(const std::string weight_col) const

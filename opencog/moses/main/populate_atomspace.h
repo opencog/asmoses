@@ -43,7 +43,7 @@ using namespace combo;
  * @param Itable&     itable
  *
  */
-void populate(AtomSpace *as, const ITable &itable);
+void populate(AtomSpace *as, const ITable &itable, const type_node_seq &tt_seq={});
 
 /**
  * Populate the given atomspace with input features of compressed table.
