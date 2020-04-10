@@ -319,7 +319,7 @@ behavioral_score discretize_contin_bscore::operator()(const combo_tree &tr) cons
 behavioral_score discretize_contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(atomese::value_key,_size);
+	atomese::Interpreter interpreter(atomese::value_key, _size);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), classes, back_inserter(bs),
