@@ -263,12 +263,13 @@ void polynomial_problem::run(option_base* ob)
 	}
 	type_tree tt = gen_signature(id::contin_type, 1);
 	ITable it(tt, (pms.nsamples>0 ? pms.nsamples : pms.default_nsamples));
-	type_node_seq tt_seq = type_tree_to_tyn_seq(tt);
 
-	if (pms.deme_params.atomspace_port) {
+    if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = new AtomSpace();
-		populate(pms.deme_params.as, it,tt_seq);
+        pms.deme_params.as = new AtomSpace();
+        type_node_seq tt_seq = type_tree_to_tyn_seq(tt);
+        it.set_types(tt_seq);
+        populate(pms.deme_params.as, it);
 	}
 
 	// sr is fundamentally a kind of non-linear regression!
