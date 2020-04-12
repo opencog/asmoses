@@ -236,7 +236,26 @@ HandleSeq
 Build_Atomese_Knobs::logical_probe_rec(HandleSeq &path, Handle &prog,
                                        const HandleSeq &seq, bool add_if_in_exemplar)
 {
-	OC_ASSERT(true, "Not Implemented")
+	HandleSeq vars;
+	for (const Handle child : seq) {
+		bool is_comp = logical_subtree_knob(prog, child, add_if_in_exemplar);
+		if (is_comp and not add_if_in_exemplar) continue;
+		auto h = disc_probe(path, prog, child, 3, is_comp);
+		if (h) vars.push_back(h);
+	}
+	return vars;
+}
+
+bool Build_Atomese_Knobs::logical_subtree_knob(Handle &, const Handle &,
+                                               bool add_if_in_exemplar)
+{
+	OC_ASSERT(true, "Not Implemented");
+}
+
+Handle Build_Atomese_Knobs::disc_probe(HandleSeq &path, Handle &prog,
+                                       const Handle &child, int, bool is_comp)
+{
+	OC_ASSERT(true, "Not Implemented");
 }
 }
 }

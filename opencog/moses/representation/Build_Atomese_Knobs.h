@@ -67,6 +67,12 @@ protected:
 	HandleSeq logical_probe_rec(HandleSeq &path, Handle &prog,
 	                            const HandleSeq &seq,
 	                            bool add_if_in_exemplar=true);
+
+	bool logical_subtree_knob(Handle &, const Handle &,
+	                          bool add_if_in_exemplar=true);
+
+	Handle disc_probe(HandleSeq &path, Handle &prog,
+	                  const Handle &child, int, bool is_comp);
 };
 
 }
