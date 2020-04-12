@@ -209,7 +209,27 @@ HandleSeq Build_Atomese_Knobs::add_logical_knobs(HandleSeq &path, Handle &prog,
 
 void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type tp)
 {
-	OC_ASSERT(true, "Not Implemented")
+	// TODO: this is not the correct implementation of the logical_perm,
+	//  Just a placeholder.
+	tp = tp == AND_LINK ? OR_LINK : AND_LINK;
+	for (int i = 1; i < _arity + 1; i++) {
+		seq.push_back(createNode(PREDICATE_NODE, "$" + std::to_string(i)));
+	}
+
+	std::string bitmask(2, 1);
+	bitmask.resize(_arity, 0);
+
+	do {
+		HandleSeq tmp_seq;
+		for (int i = 0; i < _arity; ++i)
+		{
+			if (bitmask[i]) tmp_seq.push_back(seq[i]);
+		}
+		seq.push_back(createLink(tmp_seq, tp));
+		*tmp_seq.begin() = createLink(NOT_LINK, *tmp_seq.begin());
+		seq.push_back(createLink(tmp_seq, tp));
+	} while (std::prev_permutation(bitmask.begin(), bitmask.end()) and
+	         seq.size() < _arity*2);
 }
 
 HandleSeq
