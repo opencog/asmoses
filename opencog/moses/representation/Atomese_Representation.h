@@ -62,6 +62,11 @@ protected:
 
 public:
 	Handle get_candidate(const instance inst);
+	void set_rep(Handle);
+	void set_fields(field_set);
+	const field_set& fields() const {
+		return _fields;
+	}
 };
 }
 }

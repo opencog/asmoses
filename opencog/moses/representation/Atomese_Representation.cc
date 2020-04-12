@@ -57,6 +57,16 @@ Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_cand
 	// TODO: Create field_set
 }
 
+void Atomese_Representation::set_rep(Handle rep)
+{
+	_rep = _as->add_atom(rep);
+}
+
+void Atomese_Representation::set_fields(field_set fields)
+{
+	_fields = fields;
+}
+
 Handle Atomese_Representation::get_candidate(const Handle &h)
 {
 	Handle ex = _as->add_atom(createLink(HandleSeq{_DSN, h}, PUT_LINK));
