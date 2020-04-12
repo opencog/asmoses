@@ -202,7 +202,21 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 HandleSeq Build_Atomese_Knobs::add_logical_knobs(HandleSeq &path, Handle &prog,
                                                  bool add_if_in_exemplar)
 {
-	OC_ASSERT(true, "Error: Not Implemented")
+	HandleSeq seq;
+	sample_logical_perms(seq, prog->get_type());
+	return logical_probe_rec(path, prog, seq, add_if_in_exemplar);
+}
+
+void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type tp)
+{
+	OC_ASSERT(true, "Not Implemented")
+}
+
+HandleSeq
+Build_Atomese_Knobs::logical_probe_rec(HandleSeq &path, Handle &prog,
+                                       const HandleSeq &seq, bool add_if_in_exemplar)
+{
+	OC_ASSERT(true, "Not Implemented")
 }
 }
 }

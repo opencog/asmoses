@@ -62,6 +62,11 @@ protected:
 	HandleSeq add_logical_knobs(HandleSeq &path, Handle &prog,
 	                            bool add_if_in_exemplar=true);
 
+	void sample_logical_perms(HandleSeq &seq, Type tp);
+
+	HandleSeq logical_probe_rec(HandleSeq &path, Handle &prog,
+	                            const HandleSeq &seq,
+	                            bool add_if_in_exemplar=true);
 };
 
 }
