@@ -78,7 +78,18 @@ Build_Atomese_Knobs::Build_Atomese_Knobs(Handle &exemplar,
 
 void Build_Atomese_Knobs::logical_canonize(Handle &prog)
 {
-	OC_ASSERT(true, "Error: Not Implemented!")
+	if (prog->get_type() == AND_LINK)
+		prog = createLink(HandleSeq{prog}, OR_LINK);
+	else if (prog->get_type() == OR_LINK)
+		prog = createLink(HandleSeq{prog}, AND_LINK);
+	else if (prog->get_type() == TRUE_LINK or
+	         prog->get_type() == FALSE_LINK)
+		prog = createLink(HandleSeq{createLink(HandleSeq{}, OR_LINK)},
+		                  AND_LINK);
+	else if (prog->get_type() == PREDICATE_NODE)
+		prog = createLink(HandleSeq{createLink(HandleSeq{prog}, AND_LINK)},
+		                  OR_LINK);
+	else OC_ASSERT(true, "Error: unknown program type in logical_canonize.")
 }
 
 HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
