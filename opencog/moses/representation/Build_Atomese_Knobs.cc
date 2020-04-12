@@ -93,11 +93,31 @@ void Build_Atomese_Knobs::logical_canonize(Handle &prog)
 	else OC_ASSERT(true, "Error: unknown program type in logical_canonize.")
 }
 
+inline Handle remove_copy(Handle prog, Handle ch, Handle sub)
+{
+	auto b = prog->getOutgoingSet().begin();
+	auto e = prog->getOutgoingSet().end();
+
+	HandleSeq seq;
+	std::remove_copy_if(b, e, std::back_inserter(seq), [&ch](Handle h){return content_eq(ch, h);});
+	seq.push_back(sub);
+	return createLink(seq, prog->get_type());
+}
+
 inline Handle find_insert(Handle prog, HandleSeq &path, Handle sub,
                           bool update=false)
 {
 	// The path needs to keep up with the changing program.
-	OC_ASSERT(true, "Not Implemented!")
+	auto prev = prog;
+	for(int i = path.size()-1; i>-1; i--)
+	{
+		Handle parent = path[i];
+		sub = remove_copy(parent, prev, sub);
+		prev = parent;
+		if (update)
+			path[i] = sub;
+	}
+	return sub;
 }
 
 HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
