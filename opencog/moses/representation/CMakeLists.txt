@@ -10,6 +10,7 @@ INSTALL(FILES
 	knob_mapper.h
 	knobs.h
 	representation.h
+	Atomese_Representation.h
 
 	DESTINATION
 

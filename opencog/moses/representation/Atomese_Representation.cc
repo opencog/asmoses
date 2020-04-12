@@ -1,0 +1,60 @@
+/*
+ * moses/moses/representation/Atomese_Representation.cc
+ *
+ * Copyright (C) 2020 OpenCog Foundation
+ *
+ * Author: Kasim Ebrahim
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <opencog/atoms/core/NumberNode.h>
+
+#include <opencog/reduct/reduct/reduct.h>
+#include <opencog/reduct/rules/meta_rules.h>
+#include <opencog/reduct/rules/logical_rules.h>
+#include <opencog/reduct/rules/general_rules.h>
+
+#include "Atomese_Representation.h"
+#include "Build_Atomese_Knobs.h"
+
+namespace opencog
+{
+namespace moses
+{
+
+static contin_t stepsize = 1.0;
+static contin_t expansion = 2.0;
+static int depth = 5;
+
+Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_candidate,
+                                               const reduct::rule &simplify_knob_building,
+                                               const Handle &exemplar,
+                                               const Handle &t,
+                                               AtomSpace* as,
+                                               const HandleSet &ignore_ops,
+                                               float perm_ratio)
+                                               : _exemplar(exemplar),
+                                               _simplify_candidate(&simplify_candidate),
+                                               _simplify_knob_building(&simplify_knob_building),
+                                               _as(as)
+{
+	// TODO: Build_Atomese_Knobs(...);
+	// TODO: Create field_set
+}
+
+}
+}
