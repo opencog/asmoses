@@ -246,10 +246,27 @@ Build_Atomese_Knobs::logical_probe_rec(HandleSeq &path, Handle &prog,
 	return vars;
 }
 
-bool Build_Atomese_Knobs::logical_subtree_knob(Handle &, const Handle &,
+bool Build_Atomese_Knobs::logical_subtree_knob(Handle &prog, const Handle &child,
                                                bool add_if_in_exemplar)
 {
-	OC_ASSERT(true, "Not Implemented");
+	bool is_comp=false;
+	auto reduced_neg_child = createLink(HandleSeq{child}, NOT_LINK);
+	reduct::logical_reduction r;
+	r(1)(reduced_neg_child);
+
+	HandleSeq seq;
+	for (Handle h : prog->getOutgoingSet())
+	{
+		// remove only one.
+		if ((content_eq(h, child) or content_eq(h, reduced_neg_child)) and not is_comp) {
+			is_comp = true;
+			if (not add_if_in_exemplar) seq.push_back(h);
+		} else {
+			seq.push_back(h);
+		}
+	}
+	prog = createLink(seq, prog->get_type());
+	return is_comp;
 }
 
 Handle Build_Atomese_Knobs::disc_probe(HandleSeq &path, Handle &prog,
