@@ -63,18 +63,31 @@ Build_Atomese_Knobs::Build_Atomese_Knobs(Handle &exemplar,
 {
 	Handle tn = _signature->getOutgoingAtom(1);
 	Type output_type = TypeNodeCast(tn)->get_kind();
+	std::multiset<field_set::spec> specs;
 
 	HandleSeq knob_vars;
 	if (output_type == BOOLEAN_NODE) {
 		logical_canonize(_exemplar);
 		HandleSeq path={};
 		knob_vars = build_logical(path, _exemplar);
+
+		// TODO: this is actually wrong, some of these variables
+		//  could be contine_spec. This will temporarly work til
+		//  build_contine is implemented to see if every thing works.
+		for (int j = 0; j < knob_vars.size(); ++j)
+			specs.insert(field_set::disc_spec(3));
 		// TODO: logical_cleanup
 	}
 	else {
 		OC_ASSERT(true, "NonBoolean output type is not supported")
 		return;
 	}
+
+	Handle vars = createLink(knob_vars, VARIABLE_LIST);
+	Handle LMBDA = createLink(HandleSeq{vars, _exemplar}, LAMBDA_LINK);
+	_rep.set_rep(createLink(HandleSeq{DSN, LMBDA}, DEFINE_LINK));
+
+	_rep.set_fields(field_set(specs.begin(), specs.end()));
 }
 
 void Build_Atomese_Knobs::logical_canonize(Handle &prog)
