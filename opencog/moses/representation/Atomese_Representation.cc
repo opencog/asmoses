@@ -53,7 +53,8 @@ Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_cand
                                                _simplify_knob_building(&simplify_knob_building),
                                                _as(as)
 {
-	// TODO: Build_Atomese_Knobs(...);
+	Build_Atomese_Knobs(_exemplar, t, *this, _DSN, ignore_ops,
+	                    stepsize, expansion, depth, perm_ratio);
 	// TODO: Create field_set
 }
 
