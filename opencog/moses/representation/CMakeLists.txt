@@ -11,6 +11,7 @@ INSTALL(FILES
 	knobs.h
 	representation.h
 	Atomese_Representation.h
+	Build_Atomese_Knobs.h
 
 	DESTINATION
 
