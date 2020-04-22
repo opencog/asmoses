@@ -38,6 +38,9 @@ namespace opencog
  * */
 class KnobLink : public FunctionLink
 {
+protected:
+	Handle _equiv;
+	void init();
 public:
 	KnobLink(const HandleSeq&&, Type=KNOB_LINK);
 
