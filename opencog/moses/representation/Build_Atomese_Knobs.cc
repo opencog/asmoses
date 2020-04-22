@@ -94,6 +94,8 @@ void Build_Atomese_Knobs::logical_canonize(Handle &prog)
 
 HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 {
+	// TODO we need a new atomese type to represent knobs.
+	//  Then start decorating prog with logical knobs
 	OC_ASSERT(true, "Error: Not Implemented!")
 }
 
