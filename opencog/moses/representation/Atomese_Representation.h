@@ -57,6 +57,11 @@ protected:
 	const Handle _DSN =
 			createNode(DEFINED_SCHEMA_NODE, randstr(std::string("REP") + "-"));
 	Handle _rep;
+
+	Handle get_candidate(const Handle &h);
+
+public:
+	Handle get_candidate(const instance inst);
 };
 }
 }

@@ -27,6 +27,7 @@
 #include <opencog/reduct/rules/meta_rules.h>
 #include <opencog/reduct/rules/logical_rules.h>
 #include <opencog/reduct/rules/general_rules.h>
+#include <opencog/atoms/execution/Instantiator.h>
 
 #include "Atomese_Representation.h"
 #include "Build_Atomese_Knobs.h"
@@ -54,6 +55,27 @@ Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_cand
 {
 	// TODO: Build_Atomese_Knobs(...);
 	// TODO: Create field_set
+}
+
+Handle Atomese_Representation::get_candidate(const Handle &h)
+{
+	Handle ex = _as->add_atom(createLink(HandleSeq{_DSN, h}, PUT_LINK));
+
+	Instantiator inst(_as);
+	return HandleCast(inst.execute(ex));
+}
+
+Handle Atomese_Representation::get_candidate(const instance inst)
+{
+	auto from = _fields.begin_disc(inst);
+	auto to = _fields.end_disc(inst);
+	HandleSeq seq;
+	while (from!=to)
+	{
+		seq.push_back(Handle(createNumberNode(from.operator*())));
+		from++;
+	}
+	return get_candidate(createLink(seq, LIST_LINK));
 }
 
 }
