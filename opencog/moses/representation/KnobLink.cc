@@ -80,7 +80,7 @@ void KnobLink::init()
 
 ValuePtr KnobLink::execute(opencog::AtomSpace *scratch, bool silent)
 {
-	OC_ASSERT(true, "Not Implemented");
+	return CondLinkCast(_equiv)->execute(scratch, silent);
 }
 
 DEFINE_LINK_FACTORY(KnobLink, KNOB_LINK)
