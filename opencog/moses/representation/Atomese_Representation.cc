@@ -92,7 +92,13 @@ void Atomese_Representation::clean_atomese_prog(Handle &prog,
                                                 bool reduce,
                                                 bool knob_building)
 {
-	OC_ASSERT(true, "Error: Not Implemented!")
+	reduct::clean_reduction()(prog);
+	if (reduce) {
+		if (knob_building)
+			(*_simplify_knob_building)(prog);
+		else
+			(*_simplify_candidate)(prog);
+	}
 }
 
 }
