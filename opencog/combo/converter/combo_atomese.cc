@@ -29,6 +29,7 @@
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/combo/combo/iostream_combo.h>
 #include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/utils/valueUtils.h>
 #include "combo_atomese.h"
 
 namespace opencog
@@ -211,7 +212,12 @@ void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &label
                                 combo_tree &tr, combo_tree::iterator &iter)
 {
 	const auto prev = iter;
-	if (h->is_link()) {
+	if (h->get_type() == KNOB_LINK and
+	    bool_value_to_bool(h->getOutgoingAtom(3))) {
+		atom2combo(h->getOutgoingAtom(1), labels, tr, iter);
+		return;
+	}
+	else if (h->is_link()) {
 		link2combo(h, labels, tr, iter);
 		for (auto child : h->getOutgoingSet()) {
 			atom2combo(child, labels, tr, iter);
@@ -278,7 +284,8 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 		       tr.append_child(iter, id::greater_than_zero);
 		return;
 	} else {
-		OC_ASSERT(false, "unsupported type");
+		iter = tr.empty() ? tr.set_head(id::null_vertex) : tr.append_child(iter, id::null_vertex);
+		return;
 	}
 }
 
@@ -287,7 +294,8 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 {
 	Type t = h->get_type();
 
-	if (PREDICATE_NODE == t || SCHEMA_NODE == t || VARIABLE_NODE == t) {
+	if (PREDICATE_NODE == t || SCHEMA_NODE == t ||
+	    VARIABLE_NODE == t || GLOB_NODE == t) {
 		const auto label = parse_combo_variables(h->get_name())[0];
 		// The argument idx must be the index of label in labels plus one.
 		auto i = std::find(labels.begin(), labels.end(), label) - labels.begin() + 1;
@@ -304,6 +312,10 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 		else tr.append_child(iter, NumberNodeCast(h)->get_value());
 
 		return;
+	}
+	if (TYPE_NODE == t) {
+		if (tr.empty()) tr.set_head(id::null_vertex);
+		else tr.append_child(iter, id::null_vertex);
 	} else OC_ASSERT(false, "unsupported type");
 }
 
