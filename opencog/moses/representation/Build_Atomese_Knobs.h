@@ -58,6 +58,10 @@ protected:
 	void logical_canonize(Handle &prog);
 
 	HandleSeq build_logical(HandleSeq &path, Handle &prog);
+
+	HandleSeq add_logical_knobs(HandleSeq &path, Handle &prog,
+	                            bool add_if_in_exemplar=true);
+
 };
 
 }
