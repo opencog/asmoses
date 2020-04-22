@@ -67,6 +67,7 @@ public:
 	const field_set& fields() const {
 		return _fields;
 	}
+	void clean_atomese_prog(Handle&, bool, bool);
 };
 }
 }

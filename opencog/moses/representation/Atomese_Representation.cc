@@ -88,5 +88,12 @@ Handle Atomese_Representation::get_candidate(const instance inst)
 	return get_candidate(createLink(seq, LIST_LINK));
 }
 
+void Atomese_Representation::clean_atomese_prog(Handle &prog,
+                                                bool reduce,
+                                                bool knob_building)
+{
+	OC_ASSERT(true, "Error: Not Implemented!")
+}
+
 }
 }

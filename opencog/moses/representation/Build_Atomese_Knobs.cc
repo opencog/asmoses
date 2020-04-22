@@ -269,10 +269,62 @@ bool Build_Atomese_Knobs::logical_subtree_knob(Handle &prog, const Handle &child
 	return is_comp;
 }
 
-Handle Build_Atomese_Knobs::disc_probe(HandleSeq &path, Handle &prog,
-                                       const Handle &child, int, bool is_comp)
+Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
+                                       const Handle &child, int mult, bool is_comp)
 {
-	OC_ASSERT(true, "Not Implemented");
+	std::string knob_settings = "";
+	auto idx_prog = prog;
+	if (is_comp)
+	{
+		auto seq = prog->getOutgoingSet();
+		seq.push_back(child);
+		idx_prog = createLink(seq, prog->get_type());
+	}
+	for (auto i : boost::irange(0, mult)) {
+		auto cand_seq(prog->getOutgoingSet());
+		Handle cand_handle;
+		switch (i) {
+			case 0: // TODO use identity
+				cand_seq.push_back(child);
+				break;
+			case 1:
+				cand_seq.push_back(child);
+				break;
+			case 2:
+				cand_seq.push_back(createLink(HandleSeq{child}, NOT_LINK));
+				break;
+			default: OC_ASSERT(false, "Error Unknown knob setting!")
+		}
+		auto sub = createLink(cand_seq, prog->get_type());
+		cand_handle = find_insert(idx_prog, path, sub);
+
+		complexity_t initial_c = atomese_complexity(cand_handle);
+
+		_rep.clean_atomese_prog(cand_handle, true, true);
+
+		auto tmp_c = atomese_complexity(cand_handle);
+		if (initial_c <= tmp_c)
+			knob_settings = knob_settings + std::to_string(i) + " ";
+	}
+
+	if (knob_settings.empty())
+		return Handle();
+
+	HandleSeq prog_seq(prog->getOutgoingSet());
+	auto knob_var =
+			createNode(VARIABLE_NODE, randstr(std::string("$knob") + "-"));
+
+	HandleSeq knob_seq =
+			{knob_var,
+			 child,
+			 Handle(createNumberNode(std::move(knob_settings))),
+			 createLink(is_comp ? TRUE_LINK : FALSE_LINK)};
+	prog_seq.push_back(createLink(knob_seq, KNOB_LINK));
+
+	prog = createLink(prog_seq, prog->get_type());
+	Handle del = find_insert(idx_prog, path, prog, true);
+
+	return knob_var;
 }
 }
 }
