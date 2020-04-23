@@ -220,29 +220,61 @@ HandleSeq Build_Atomese_Knobs::add_logical_knobs(HandleSeq &path, Handle &prog,
 	return logical_probe_rec(path, prog, seq, add_if_in_exemplar);
 }
 
-void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type tp)
+void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 {
-	// TODO: this is not the correct implementation of the logical_perm,
-	//  Just a placeholder.
-	tp = tp == AND_LINK ? OR_LINK : AND_LINK;
-	for (int i = 1; i < _arity + 1; i++) {
-		seq.push_back(createNode(PREDICATE_NODE, "$" + std::to_string(i)));
+	Type type = head_type == AND_LINK ? OR_LINK : AND_LINK;
+	HandleSeq arg_types = _signature->getOutgoingAtom(0)->getOutgoingSet();
+
+	for (int i = 0; i < _arity; i++) {
+		Type arg_type = TypeNodeCast(arg_types[i])->get_kind();
+		if (arg_type == BOOLEAN_NODE) {
+			Handle arg = createNode(PREDICATE_NODE, "$" + std::to_string(i+1));
+			if (_ignore_ops.find(arg) == _ignore_ops.end())
+				seq.push_back(arg);
+		}
+		else
+			OC_ASSERT(false, "Contin Not supported Yet");
 	}
 
-	std::string bitmask(2, 1);
-	bitmask.resize(_arity, 0);
+	unsigned ps = seq.size(); // the actual number of arguments to consider
 
-	do {
-		HandleSeq tmp_seq;
-		for (int i = 0; i < _arity; ++i)
-		{
-			if (bitmask[i]) tmp_seq.push_back(seq[i]);
+	if (_perm_ratio <= -1.0 or ps < 2)
+		return;
+
+	std::vector<HandleSeq> combs;
+
+	for (arity_t a = 0; a < ps; a++) {
+		for (arity_t b = a + 1; b < ps; b++) {
+			combs.push_back({seq[a], seq[b]});
+			combs.push_back({createLink(NOT_LINK, seq[a]), seq[b]});
 		}
-		seq.push_back(createLink(tmp_seq, tp));
-		*tmp_seq.begin() = createLink(NOT_LINK, *tmp_seq.begin());
-		seq.push_back(createLink(tmp_seq, tp));
-	} while (std::prev_permutation(bitmask.begin(), bitmask.end()) and
-	         seq.size() < _arity*2);
+	}
+
+	unsigned max_pairs = combs.size();
+
+	// Actual number of pairs to create ...
+	size_t n_pairs = 0;
+	if (0.0 < _perm_ratio)
+		n_pairs = static_cast<size_t>(floor(ps + _perm_ratio * (max_pairs - ps)));
+	else {
+		n_pairs = static_cast<size_t>(floor((1.0 + _perm_ratio) * ps));
+		if (ps < n_pairs) n_pairs = 0;  // Avoid accidental rounding to MAX_UINT
+	}
+
+	if (logger().is_debug_enabled()) {
+		logger().debug() << "perms.size: " << ps
+		                 << " max_pairs: " << max_pairs
+		                 << " logical knob pairs to create: "<< n_pairs;
+	}
+
+	lazy_random_selector randpair(max_pairs);
+	dorepeat (n_pairs) {
+		size_t i = randpair();
+		seq.push_back(createLink(combs[i], type));
+	}
+
+	if (logger().is_fine_enabled())
+		ostream_container(logger().fine() << "Perms:" << std::endl, seq, "\n");
 }
 
 HandleSeq
