@@ -70,7 +70,7 @@ struct rule
 			(*this)(conv_result.first, conv_result.first.begin());
 
 		ComboToAtomese to_atomese(as);
-		handle = to_atomese(conv_result.first);
+		handle = to_atomese(conv_result.first, conv_result.second);
 	}
 
 	std::string get_name() const
