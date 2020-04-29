@@ -22,13 +22,15 @@ class BooleanReductUTest : public CxxTest::TestSuite
 {
 private:
 	AtomSpace _as;
-	Handle X, XandX;
+	Handle X, Y, XandX, YandY;
 
 public:
 	BooleanReductUTest()
 	{
 		X = an(PREDICATE_NODE, "$1");
+		Y = an(PREDICATE_NODE, "$2");
 		XandX = al(AND_LINK, {X, X});
+		YandY = al(AND_LINK, {Y, Y});
 	}
 
 private:
@@ -56,6 +58,14 @@ private:
 		logical_reduce(3, handle, ignore_ops, &_as);
 
 		TS_ASSERT_EQUALS(handle, X);
+	}
+
+	void test_simplify_handle_labeled(Handle &handle)
+	{
+		HandleSet ignore_ops;
+		logical_reduce(3, handle, ignore_ops, &_as);
+
+		TS_ASSERT_EQUALS(handle, Y);
 	}
 
 public:
@@ -96,6 +106,11 @@ public:
 	void test_simplify7()
 	{
 		test_simplify_handle(XandX);
+	}
+
+	void test_simplify8()
+	{
+		test_simplify_handle_labeled(YandY);
 	}
 };
 
