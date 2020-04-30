@@ -5,6 +5,13 @@ TARGET_LINK_LIBRARIES(representationUTest
         ${COGUTIL_LIBRARY}
         )
 
+ADD_CXXTEST(AtomeseRepresentationUTest)
+TARGET_LINK_LIBRARIES(AtomeseRepresentationUTest
+        moses
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
+
 ADD_CXXTEST(KnobTurningUTest)
 TARGET_LINK_LIBRARIES(KnobTurningUTest
         moses
