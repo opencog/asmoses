@@ -50,6 +50,9 @@ public:
                           "-ur",
                           "-Ywgt",
                           "-m20000",
+                          "--discard-dominated=1",
+                          "-v150",
+                          "-z6",
                           data_file_path,
                           },
                           -6.1);
@@ -63,7 +66,10 @@ public:
                           "-ur",
                           "-r7",
                           "--score-weight=wgt",
-                          "-m20000",
+                          "-m8000",
+                          "--discard-dominated=1",
+                          "-v120",
+                          "-z6",
                           data_file_path,
                           },
                           -6.007);     // all 5-folds good, and 6 of the 10-folds bad.
