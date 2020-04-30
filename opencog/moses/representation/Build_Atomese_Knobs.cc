@@ -188,12 +188,15 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 					 child->getOutgoingAtom(3)};
 			child = createLink(knob_seq, KNOB_LINK);
 		}
-		else
-		{
+		else {
 			seq.erase(std::remove(seq.begin(), seq.end(), child));
-			// TODO p is not necessary.
 			auto p = path;
 			p.push_back(prog);
+
+			if (nameserver().isA(child->get_type(), NODE) ||
+					child->get_type() == NOT_LINK)
+				child = createLink(flip, child);
+
 			sub_knob_vars = build_logical(p, child);
 		}
 		knob_vars.insert(knob_vars.end(), sub_knob_vars.begin(), sub_knob_vars.end());
