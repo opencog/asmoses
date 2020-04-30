@@ -139,7 +139,7 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 	auto prev=prog;
 
 	if (prog->get_type() == NOT_LINK) // TODO check if greater_than_link
-	OC_ASSERT(true,
+	OC_ASSERT(false,
 	          "ERROR: the tree is supposed to be in normal form; "
 			          "and thus must not contain logical_not nodes.")
 
@@ -149,7 +149,7 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 	else if (prog->get_type() == OR_LINK)
 		flip = AND_LINK;
 
-	else OC_ASSERT(true,
+	else OC_ASSERT(false,
 	               "ERROR: the tree is supposed to be in normal form; "
 			               "and thus must not contain logical_not nodes.")
 
