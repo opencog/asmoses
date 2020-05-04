@@ -66,14 +66,14 @@ protected:
 	lookup disc_lookup;
 	lookup contin_lookup;
 public:
-	Handle get_candidate(const instance inst);
+	Handle get_candidate(const instance inst, bool reduce);
 	void set_rep(Handle);
 	void set_fields(field_set);
 	const field_set& fields() const {
 		return _fields;
 	}
 	void set_variables(HandleSeq);
-	void clean_atomese_prog(Handle&, bool, bool);
+	void clean_atomese_prog(Handle&, bool reduce, bool knob_building=false);
 
 	typedef std::multimap<field_set::disc_spec, Handle> disc_map;
 	typedef std::multimap<field_set::contin_spec, Handle> contin_map;

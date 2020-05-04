@@ -103,7 +103,7 @@ Handle Atomese_Representation::get_candidate(const Handle &h)
 	return HandleCast(inst.execute(ex));
 }
 
-Handle Atomese_Representation::get_candidate(const instance inst)
+Handle Atomese_Representation::get_candidate(const instance inst, bool reduce)
 {
 	HandleSeq seq;
 	for (Handle var : _variables) {
@@ -119,7 +119,10 @@ Handle Atomese_Representation::get_candidate(const instance inst)
 		}
 	}
 
-	return get_candidate(createLink(seq, LIST_LINK));
+	Handle candidate = get_candidate(createLink(seq, LIST_LINK));
+
+	clean_atomese_prog(candidate, reduce);
+	return candidate;
 }
 
 void Atomese_Representation::clean_atomese_prog(Handle &prog,
