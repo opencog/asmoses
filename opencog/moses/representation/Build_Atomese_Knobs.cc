@@ -177,7 +177,8 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 					{child->getOutgoingAtom(0),
 					 pattern,
 					 child->getOutgoingAtom(2),
-					 child->getOutgoingAtom(3)};
+					 child->getOutgoingAtom(3),
+					 child->getOutgoingAtom(4)};
 			child = createLink(knob_seq, KNOB_LINK);
 		}
 		else {
@@ -309,16 +310,27 @@ bool Build_Atomese_Knobs::logical_subtree_knob(Handle &prog, const Handle &child
 	return is_comp;
 }
 
+inline Handle identity(Type t)
+{
+	if (t == AND_LINK)
+		return createLink(TRUE_LINK);
+	if (t == OR_LINK)
+		return createLink(FALSE_LINK);
+	OC_ASSERT(false, "Unknown Type");
+}
+
 Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
                                        const Handle &child, int mult, bool is_comp)
 {
+	Type type=prog->get_type();
+
 	std::vector<int> knob_settings={0}; // absent knob setting.
 	auto idx_prog = prog;
 	if (is_comp)
 	{
 		auto seq = prog->getOutgoingSet();
 		seq.push_back(child);
-		idx_prog = createLink(seq, prog->get_type());
+		idx_prog = createLink(seq, type);
 	}
 	for (auto i : boost::irange(1, mult)) {
 		auto cand_seq(prog->getOutgoingSet());
@@ -332,7 +344,7 @@ Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
 				break;
 			default: OC_ASSERT(false, "Error Unknown knob setting!")
 		}
-		auto sub = createLink(cand_seq, prog->get_type());
+		auto sub = createLink(cand_seq, type);
 		cand_handle = find_insert(idx_prog, path, sub);
 
 		complexity_t initial_c = atomese_complexity(cand_handle);
@@ -358,10 +370,11 @@ Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
 			{knob_var,
 			 child,
 			 Handle(createNumberNode(std::move(knob_settings_str.str()))),
-			 createLink(is_comp ? TRUE_LINK : FALSE_LINK)};
+			 createLink(is_comp ? TRUE_LINK : FALSE_LINK),
+			 identity(type)};
 	prog_seq.push_back(createLink(knob_seq, KNOB_LINK));
 
-	prog = createLink(prog_seq, prog->get_type());
+	prog = createLink(prog_seq, type);
 	Handle del = find_insert(idx_prog, path, prog, true);
 
 	field_set::disc_spec ds(knob_settings.size());

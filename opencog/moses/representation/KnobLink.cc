@@ -23,6 +23,7 @@
 
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/core/CondLink.h>
+#include <opencog/atoms/core/TypeNode.h>
 #include <opencog/atomese/atom_types/atom_types.h>
 #include <opencog/util/oc_assert.h>
 
@@ -44,7 +45,7 @@ KnobLink::KnobLink(const HandleSeq &&seq, Type t)
 
 void KnobLink::init()
 {
-	if (4 !=_outgoing.size())
+	if (5 !=_outgoing.size())
 		throw SyntaxException(TRACE_INFO,
 		                      "KnobLink expected 4 arguments found %d!",
 		                      _outgoing.size());
@@ -59,13 +60,13 @@ void KnobLink::init()
 		Handle expr;
 		switch(i)
 		{
-			case 0: // TODO use identity
+			case 0: // Absent
+				expr = _outgoing[4]; // This is Identity. TrueLink if the incoming
+				break;               // link is And, FalseLink if inc. link is Or.
+			case 1: // Present
 				expr = _outgoing[1];
 				break;
-			case 1:
-				expr = _outgoing[1];
-				break;
-			case 2:
+			case 2: // Negated
 				expr = createLink(HandleSeq{_outgoing[1]}, NOT_LINK);
 				break;
 			default:
