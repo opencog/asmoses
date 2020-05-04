@@ -53,6 +53,7 @@ void KnobLink::init()
 
 	auto multi = NumberNodeCast(_outgoing[2])->value();
 	HandleSeq seq;
+	size_t counter = 0;
 	for (int i : multi)
 	{
 		Handle expr;
@@ -70,10 +71,14 @@ void KnobLink::init()
 			default:
 				throw SyntaxException(TRACE_INFO, "Error Unknown knob setting!");
 		}
-		// push cond
-		seq.push_back(createLink(HandleSeq{_outgoing[0], Handle(createNumberNode(i))}, EQUAL_LINK));
+		// push cond. we use separate counter because some knob_settings
+		// [which are missing in multi] could be disallowed.
+		seq.push_back(createLink(HandleSeq{
+						_outgoing[0],
+						Handle(createNumberNode(counter))}, EQUAL_LINK));
 		// push expr
 		seq.push_back(expr);
+		counter++;
 	}
 	_equiv = createLink(seq, COND_LINK);
 }

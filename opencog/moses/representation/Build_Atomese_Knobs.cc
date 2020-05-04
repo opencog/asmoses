@@ -320,7 +320,7 @@ bool Build_Atomese_Knobs::logical_subtree_knob(Handle &prog, const Handle &child
 Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
                                        const Handle &child, int mult, bool is_comp)
 {
-	std::string knob_settings = "";
+	std::vector<int> knob_settings={0}; // absent knob setting.
 	auto idx_prog = prog;
 	if (is_comp)
 	{
@@ -328,13 +328,10 @@ Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
 		seq.push_back(child);
 		idx_prog = createLink(seq, prog->get_type());
 	}
-	for (auto i : boost::irange(0, mult)) {
+	for (auto i : boost::irange(1, mult)) {
 		auto cand_seq(prog->getOutgoingSet());
 		Handle cand_handle;
 		switch (i) {
-			case 0: // TODO use identity
-				cand_seq.push_back(child);
-				break;
 			case 1:
 				cand_seq.push_back(child);
 				break;
@@ -352,20 +349,23 @@ Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
 
 		auto tmp_c = atomese_complexity(cand_handle);
 		if (initial_c <= tmp_c)
-			knob_settings = knob_settings + std::to_string(i) + " ";
+			knob_settings.push_back(i);
 	}
 
-	if (knob_settings.empty())
-		return Handle();
+	if (knob_settings.size() < 2) // No need to create knob if there is no
+		return Handle();          // other option.
 
 	HandleSeq prog_seq(prog->getOutgoingSet());
 	auto knob_var =
 			createNode(VARIABLE_NODE, randstr(std::string("$knob") + "-"));
 
+	std::stringstream knob_settings_str;
+	std::copy(knob_settings.begin(), knob_settings.end(),
+	          std::ostream_iterator<int>(knob_settings_str, " "));
 	HandleSeq knob_seq =
 			{knob_var,
 			 child,
-			 Handle(createNumberNode(std::move(knob_settings))),
+			 Handle(createNumberNode(std::move(knob_settings_str.str()))),
 			 createLink(is_comp ? TRUE_LINK : FALSE_LINK)};
 	prog_seq.push_back(createLink(knob_seq, KNOB_LINK));
 
