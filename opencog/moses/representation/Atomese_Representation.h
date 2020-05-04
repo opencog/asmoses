@@ -57,9 +57,14 @@ protected:
 	const Handle _DSN =
 			createNode(DEFINED_SCHEMA_NODE, randstr(std::string("REP") + "-"));
 	Handle _rep;
+	HandleSeq _variables;
 
 	Handle get_candidate(const Handle &h);
 
+	typedef std::map<Handle, int> lookup;
+
+	lookup disc_lookup;
+	lookup contin_lookup;
 public:
 	Handle get_candidate(const instance inst);
 	void set_rep(Handle);
@@ -67,7 +72,14 @@ public:
 	const field_set& fields() const {
 		return _fields;
 	}
+	void set_variables(HandleSeq);
 	void clean_atomese_prog(Handle&, bool, bool);
+
+	typedef std::multimap<field_set::disc_spec, Handle> disc_map;
+	typedef std::multimap<field_set::contin_spec, Handle> contin_map;
+
+	disc_map disc;
+	contin_map contin;
 };
 }
 }

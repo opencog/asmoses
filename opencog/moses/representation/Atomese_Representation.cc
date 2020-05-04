@@ -55,7 +55,29 @@ Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_cand
 {
 	Build_Atomese_Knobs(_exemplar, t, *this, _DSN, ignore_ops,
 	                    stepsize, expansion, depth, perm_ratio);
-	// TODO: Create field_set
+
+	std::multiset<field_set::spec> specs;
+	for (const auto ds : disc)
+		specs.insert(ds.first);
+	for (const auto cs : contin)
+		specs.insert(cs.first);
+	set_fields(field_set(specs.begin(), specs.end()));
+
+	disc_map::const_iterator it_d = disc.cbegin();
+	int count_d=_fields.begin_disc_raw_idx();
+	for (it_d; it_d != disc.cend(); ++it_d)
+	{
+		disc_lookup[it_d->second] = count_d;
+		count_d++;
+	}
+
+	contin_map::const_iterator it_c = contin.cbegin();
+	int count_c=_fields.begin_contin_raw_idx();
+	for (it_c; it_c != contin.cend(); ++it_c)
+	{
+		contin_lookup[it_c->second] = count_c;
+		count_c++;
+	}
 }
 
 void Atomese_Representation::set_rep(Handle rep)
@@ -68,6 +90,11 @@ void Atomese_Representation::set_fields(field_set fields)
 	_fields = fields;
 }
 
+void Atomese_Representation::set_variables(HandleSeq vars)
+{
+	_variables = vars;
+}
+
 Handle Atomese_Representation::get_candidate(const Handle &h)
 {
 	Handle ex = _as->add_atom(createLink(HandleSeq{_DSN, h}, PUT_LINK));
@@ -78,14 +105,20 @@ Handle Atomese_Representation::get_candidate(const Handle &h)
 
 Handle Atomese_Representation::get_candidate(const instance inst)
 {
-	auto from = _fields.begin_disc(inst);
-	auto to = _fields.end_disc(inst);
 	HandleSeq seq;
-	while (from!=to)
-	{
-		seq.push_back(Handle(createNumberNode(from.operator*())));
-		from++;
+	for (Handle var : _variables) {
+		auto dt = disc_lookup.find(var);
+		if (dt != disc_lookup.end()) {
+			std::cout << var->to_string() << " -> "<<dt->second<<"\n";
+			seq.push_back(Handle(createNumberNode(_fields.get_raw(inst, dt->second))));
+			continue;
+		}
+		auto ct = contin_lookup.find(var);
+		if (ct != contin_lookup.end()) {
+			seq.push_back(Handle(createNumberNode(_fields.get_contin(inst, ct->second))));
+		}
 	}
+
 	return get_candidate(createLink(seq, LIST_LINK));
 }
 
