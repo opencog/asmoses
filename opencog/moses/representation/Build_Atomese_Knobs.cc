@@ -64,11 +64,10 @@ Build_Atomese_Knobs::Build_Atomese_Knobs(Handle &exemplar,
 	Handle tn = _signature->getOutgoingAtom(1);
 	Type output_type = TypeNodeCast(tn)->get_kind();
 
-	HandleSeq knob_vars;
 	if (output_type == BOOLEAN_NODE) {
 		logical_canonize(_exemplar);
 		HandleSeq path={};
-		knob_vars = build_logical(path, _exemplar);
+		build_logical(path, _exemplar);
 		// TODO: logical_cleanup
 	}
 	else {
@@ -76,10 +75,10 @@ Build_Atomese_Knobs::Build_Atomese_Knobs(Handle &exemplar,
 		return;
 	}
 
-	Handle vars = createLink(knob_vars, VARIABLE_LIST);
+	Handle vars = createLink(_variables, VARIABLE_LIST);
 	Handle LMBDA = createLink(HandleSeq{vars, _exemplar}, LAMBDA_LINK);
 	_rep.set_rep(createLink(HandleSeq{DSN, LMBDA}, DEFINE_LINK));
-	_rep.set_variables(knob_vars);
+	_rep.set_variables(_variables);
 }
 
 void Build_Atomese_Knobs::logical_canonize(Handle &prog)
@@ -125,7 +124,7 @@ inline Handle find_insert(Handle prog, HandleSeq &path, Handle sub,
 	return sub;
 }
 
-HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
+void Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 {
 	Type flip;
 	auto prev=prog;
@@ -145,11 +144,10 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 	               "ERROR: the tree is supposed to be in normal form; "
 			               "and thus must not contain logical_not nodes.")
 
-	HandleSeq knob_vars = add_logical_knobs(path, prog);
+	add_logical_knobs(path, prog);
 
 	HandleSeq seq = prog->getOutgoingSet();
 	for (Handle child : prog->getOutgoingSet()) {
-		HandleSeq sub_knob_vars;
 		// TODO support greater than link once build_contin is implemented.
 		if (child->get_type() == KNOB_LINK) {
 			if (not bool_value_to_bool(child->getOutgoingAtom(3)))
@@ -169,9 +167,10 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 			find_insert(prog, p, parent, true);
 			p.push_back(parent);
 
-			sub_knob_vars = is_node ?
-			                add_logical_knobs(p, pattern, false) :
-			                build_logical(p, pattern);
+			if(is_node)
+				add_logical_knobs(p, pattern, false);
+			else
+				build_logical(p, pattern);
 
 			HandleSeq knob_seq =
 					{child->getOutgoingAtom(0),
@@ -190,9 +189,8 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 					child->get_type() == NOT_LINK)
 				child = createLink(flip, child);
 
-			sub_knob_vars = build_logical(p, child);
+			build_logical(p, child);
 		}
-		knob_vars.insert(knob_vars.end(), sub_knob_vars.begin(), sub_knob_vars.end());
 		seq.push_back(child);
 	}
 
@@ -201,19 +199,17 @@ HandleSeq Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 	tmp_seq.push_back(flp);
 
 	path.push_back(createLink(tmp_seq, prog->get_type()));
-	HandleSeq sub_knob_vars = add_logical_knobs(path, flp);
-	knob_vars.insert(knob_vars.end(), sub_knob_vars.begin(), sub_knob_vars.end());
+	add_logical_knobs(path, flp);
 	seq.push_back(flp);
 	prog = createLink(seq, prog->get_type());
-	return knob_vars;
 }
 
-HandleSeq Build_Atomese_Knobs::add_logical_knobs(HandleSeq &path, Handle &prog,
+void Build_Atomese_Knobs::add_logical_knobs(HandleSeq &path, Handle &prog,
                                                  bool add_if_in_exemplar)
 {
 	HandleSeq seq;
 	sample_logical_perms(seq, prog->get_type());
-	return logical_probe_rec(path, prog, seq, add_if_in_exemplar);
+	logical_probe_rec(path, prog, seq, add_if_in_exemplar);
 }
 
 void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type head_type)
@@ -273,18 +269,16 @@ void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 		ostream_container(logger().fine() << "Perms:" << std::endl, seq, "\n");
 }
 
-HandleSeq
+void
 Build_Atomese_Knobs::logical_probe_rec(HandleSeq &path, Handle &prog,
                                        const HandleSeq &seq, bool add_if_in_exemplar)
 {
-	HandleSeq vars;
 	for (const Handle child : seq) {
 		bool is_comp = logical_subtree_knob(prog, child, add_if_in_exemplar);
 		if (is_comp and not add_if_in_exemplar) continue;
 		auto h = disc_probe(path, prog, child, 3, is_comp);
-		if (h) vars.push_back(h);
+		if (h) _variables.push_back(h);
 	}
-	return vars;
 }
 
 bool Build_Atomese_Knobs::logical_subtree_knob(Handle &prog, const Handle &child,

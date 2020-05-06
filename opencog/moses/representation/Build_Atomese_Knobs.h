@@ -55,16 +55,18 @@ protected:
 
 	const HandleSet &_ignore_ops;
 
+	HandleSeq _variables;
+
 	void logical_canonize(Handle &prog);
 
-	HandleSeq build_logical(HandleSeq &path, Handle &prog);
+	void build_logical(HandleSeq &path, Handle &prog);
 
-	HandleSeq add_logical_knobs(HandleSeq &path, Handle &prog,
+	void add_logical_knobs(HandleSeq &path, Handle &prog,
 	                            bool add_if_in_exemplar=true);
 
 	void sample_logical_perms(HandleSeq &seq, Type tp);
 
-	HandleSeq logical_probe_rec(HandleSeq &path, Handle &prog,
+	void logical_probe_rec(HandleSeq &path, Handle &prog,
 	                            const HandleSeq &seq,
 	                            bool add_if_in_exemplar=true);
 
