@@ -109,7 +109,6 @@ Handle Atomese_Representation::get_candidate(const instance inst, bool reduce)
 	for (Handle var : _variables) {
 		auto dt = disc_lookup.find(var);
 		if (dt != disc_lookup.end()) {
-			std::cout << var->to_string() << " -> "<<dt->second<<"\n";
 			seq.push_back(Handle(createNumberNode(_fields.get_raw(inst, dt->second))));
 			continue;
 		}
