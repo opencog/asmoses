@@ -238,6 +238,10 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 		iter = tr.empty() ? tr.set_head(id::plus) : tr.append_child(iter, id::plus);
 		return;
 	}
+	if (TIMES_LINK == t) {
+		iter = tr.empty() ? tr.set_head(id::times) : tr.append_child(iter, id::times);
+		return;
+	}
 	if (DIVIDE_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::div) : tr.append_child(iter, id::div);
 		return;
