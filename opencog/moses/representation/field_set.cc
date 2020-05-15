@@ -265,6 +265,14 @@ std::ostream& field_set::ostream_field_set(std::ostream& out) const
     return out;
 }
 
-
 } // ~namespace moses
+
+std::string oc_to_string(const moses::field_set& fs,
+                         const std::string& /* TODO: support indent */)
+{
+    std::stringstream ss;
+    fs.ostream_field_set(ss);
+    return ss.str();
+}
+
 } // ~namespace opencog
