@@ -16,6 +16,7 @@ ADD_LIBRARY (reduct-types SHARED
 		atom_types
 		ReductTypes.cc
 		)
+ADD_GUILE_EXTENSION(SCM_CONFIG reduct-types "reduct_types_path")
 
 TARGET_LINK_LIBRARIES(reduct-types
 		${ATOMSPACE_LIBRARIES}
@@ -34,11 +35,11 @@ ENDIF (WIN32)
 
 INSTALL (FILES
 		${CMAKE_CURRENT_BINARY_DIR}/atom_types.h
-		DESTINATION "include/${PROJECT_NAME}/reductURE/types"
+		DESTINATION "include/opencog/${PROJECT_NAME}/reducture/types"
 		)
 
 ADD_GUILE_MODULE (FILES
 		${CMAKE_CURRENT_BINARY_DIR}/reduct_types.scm
-		MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/reductURE/types"
+		MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/reducture/types"
 		DEPENDS reduct_atom_types
 		)

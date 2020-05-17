@@ -49,7 +49,7 @@ public:
 		eval.eval(string("(add-to-load-path \"") + reductURE_rules_dir + string("\")"));
 
 		eval.eval("(use-modules (opencog))");
-		eval.eval("(use-modules (opencog exec))");
+		eval.eval("(use-modules (opencog exec) (opencog reduct))");
 	}
 
 	~ReductRulesUTest()

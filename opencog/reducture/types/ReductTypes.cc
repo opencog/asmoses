@@ -6,7 +6,7 @@
  * Copyright (c) 2019 Kasim
  */
 
-#include "opencog/reductURE/types/atom_types.definitions"
+#include "opencog/reducture/types/atom_types.definitions"
 
 #define INHERITANCE_FILE "opencog/reducture/types/atom_types.inheritance"
 #define INITNAME reduct_types_init
