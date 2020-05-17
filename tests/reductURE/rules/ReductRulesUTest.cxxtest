@@ -42,8 +42,8 @@ public:
 		logger().set_timestamp_flag(false);
 		logger().set_print_to_stdout_flag(true);
 
-		const string reductUREUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/reductURE/rules";
-		const string reductURE_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/reductURE/rules";
+		const string reductUREUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/reducture/rules";
+		const string reductURE_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/reducture/rules";
 
 		eval.eval(string("(add-to-load-path \"") + reductUREUTest_rules_dir + string("\")"));
 		eval.eval(string("(add-to-load-path \"") + reductURE_rules_dir + string("\")"));
@@ -90,7 +90,7 @@ void ReductRulesUTest::load_scm_files(std::vector<std::string> files)
 
 /**
  * tests the temp rule defined in:
- * opencog/reductURE/rules/temp.scm
+ * opencog/reducture/rules/temp.scm
  */
 void ReductRulesUTest::test_temp()
 {
