@@ -138,5 +138,90 @@ void Atomese_Representation::clean_atomese_prog(Handle &prog,
 	}
 }
 
+std::ostream &Atomese_Representation::ostream_rep(std::ostream &out) const
+{
+	using std::endl;
+
+	out << "#disc knobs= " << disc.size() << ";\n"
+	    << "#contin knobs= " << contin.size() << ";\n";
+
+	ostream_exemplar(out);
+
+	return out;
+}
+
+std::ostream &Atomese_Representation::ostream_exemplar(std::ostream &out) const
+{
+	out << "Rep = ";
+	ostream_handle(_exemplar, out);
+	return out;
+}
+
+inline void ostream_knob(Handle h, const std::vector<double> &st, std::ostream &out)
+{
+	auto msg = nameserver().isA(h->get_type(), LINK) ?
+	           oc_to_string(h->get_type(), empty_string) :
+	           h->get_name();
+	out << "[";
+	for (double d : st)
+	{
+		if (d == 0.0)
+			out << "nil" << " ";
+		else if (d == 1.0)
+			out << msg << " ";
+		else if (d == 2.0)
+			out << "!" << msg;
+	}
+	out << "] ";
+}
+
+std::ostream&
+Atomese_Representation::ostream_link(const Handle &h, std::ostream &out) const
+{
+	out << "(" << oc_to_string(h->get_type(), empty_string) << " ";
+	for (Handle ch : h->getOutgoingSet())
+	{
+		ostream_handle(ch, out);
+	}
+	out << ")";
+	return out;
+}
+
+std::ostream&
+Atomese_Representation::ostream_handle(const Handle &h, std::ostream &out) const
+{
+	Type t = h->get_type();
+
+	if (nameserver().isA(t, NODE)) {
+		out << h->get_name() << " ";
+		return out;
+	}
+
+	if (t == KNOB_LINK) {
+		Handle body = h->getOutgoingAtom(1);
+		auto settings = NumberNodeCast(h->getOutgoingAtom(2))->value();
+		if (nameserver().isA(body->get_type(), LINK)) {
+			out << "(";
+			ostream_knob(body, settings, out);
+			for (Handle ch : body->getOutgoingSet())
+			{
+				ostream_handle(ch, out);
+			}
+			out << ") ";
+		} else {
+			ostream_knob(body, settings, out);
+		}
+		return out;
+	}
+	return ostream_link(h, out);
+}
+}
+
+std::string
+oc_to_string(const moses::Atomese_Representation &rep, const std::string &indent)
+{
+	std::stringstream ss;
+	rep.ostream_rep(ss);
+	return ss.str();
 }
 }

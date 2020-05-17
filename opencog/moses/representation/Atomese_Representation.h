@@ -24,6 +24,7 @@
 #define _ATOMESE_REPRESENTATION_H
 
 #include <opencog/util/random.h>
+#include <opencog/util/empty_string.h>
 #include <opencog/reduct/reduct/reduct.h>
 #include "field_set.h"
 
@@ -80,7 +81,15 @@ public:
 
 	disc_map disc;
 	contin_map contin;
+
+	std::ostream& ostream_rep(std::ostream& out) const;
+	std::ostream& ostream_exemplar(std::ostream& out) const;
+	std::ostream& ostream_handle(const Handle&, std::ostream &out) const;
+	std::ostream& ostream_link(const Handle &h, std::ostream &out) const;
 };
 }
+
+std::string oc_to_string(const moses::Atomese_Representation& rep,
+                         const std::string& indent=empty_string);
 }
 #endif
