@@ -14,7 +14,10 @@ EXP_LINK <- ARITHMETIC_LINK
 SIN_LINK <- ARITHMETIC_LINK
 LOG_LINK <- ARITHMETIC_LINK
 IMPULSE_LINK <- FUNCTION_LINK,NUMERIC_OUTPUT_LINK,BOOLEAN_LINK
-KNOB_LINK <- FUNCTION_LINK
+
+// KnobLink wraps CondLink yet inherits EvaluatableLink in order to be able to
+// create OrLink and AndLinks with KnobLinks in their outgoing set.
+KNOB_LINK <- FUNCTION_LINK, EVALUATABLE_LINK
 
 
 BOOLEAN_NODE <- NODE
