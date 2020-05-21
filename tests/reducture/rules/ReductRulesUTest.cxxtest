@@ -83,6 +83,7 @@ void ReductRulesUTest::load_scm_files(std::vector<std::string> files)
 	std::string tl("\")");
 	for (auto f: files) {
 		string result = eval.eval(hd + f + tl);
+
 		logger().debug() << "[ReductRulesUTest] Loaded \"" << f << "\":"
 		                 << std::endl << result;
 	}
@@ -94,5 +95,11 @@ void ReductRulesUTest::load_scm_files(std::vector<std::string> files)
  */
 void ReductRulesUTest::test_temp()
 {
-	TS_ASSERT(true);
+
+    std::vector<std::string> str = {"logical-rules.scm", "logical-rules-test.scm"};
+    load_scm_files(str);
+    std::string testcase = eval.eval("(cog-execute! testcase1)");
+    std::string result = eval.eval("(cog-execute! and-identity-true)");
+	std::string expected = eval.eval("cog-execute! expected1");
+    TS_ASSERT_EQUALS(result, expected);
 }

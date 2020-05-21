@@ -3,7 +3,7 @@
 
 (use-modules (opencog))
 (use-modules (opencog exec))
-(use-modules (opencog rule-engine))
+(use-modules (opencog ure))
 
 ; ----------------------------------------------------------------------------
 (define-public (reduct-load-rules RULE-TYPE)
@@ -56,7 +56,7 @@
   (define prev-as (cog-set-atomspace! reduct-atomspace))
 
   ;; Load rule files
-  (reduct-load-rules "temp")
+  (reduct-load-rules "logical-rules")
   (reduct-load-rules "contin-rules")
 
   ;; Attach rules to reduct rule-base
