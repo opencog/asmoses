@@ -72,11 +72,11 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
 		build_logical(path, _exemplar);
 		// TODO: logical_cleanup
 	}
-	if (output_type == NUMBER_NODE) {
+	else if (output_type == NUMBER_NODE) {
 		build_contin(_exemplar);
 	}
 	else {
-		OC_ASSERT(true, "NonBoolean output type is not supported")
+		OC_ASSERT(false, "NonBoolean output type is not supported")
 		return;
 	}
 
