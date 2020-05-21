@@ -29,10 +29,6 @@
   (DefinedSchemaNode "distribuitive-or"))
 
 ;; and(true X)->X
-;; testcase
-(AndLink
- (False)
- (True))
 
 (DefineLink
  and-identity-true
@@ -51,10 +47,7 @@
  ))
 
 ;; or(true X)->true
-;; testcase
-(OrLink
- (False)
- (True))
+
 (DefineLink
  or-identity-true
    (BindLink
@@ -125,12 +118,7 @@
  ))
 
 ;; and(or X) -> and(X)
-;; testcase
-  (AndLink
-       (OrLink
-        (True)
-        (False)
-         ))
+
 (DefineLink
   and-or-identity
    (BindLink
@@ -151,11 +139,7 @@
 
 
 ;; or(and X) -> or(X)
-    (OrLink
-       (AndLink
-         (True)
-         (False)
-         ))
+
 (DefineLink
   or-and-identity
    (BindLink
