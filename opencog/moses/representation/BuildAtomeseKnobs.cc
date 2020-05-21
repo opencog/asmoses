@@ -229,8 +229,16 @@ void BuildAtomeseKnobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 			if (_ignore_ops.find(arg) == _ignore_ops.end())
 				seq.push_back(arg);
 		}
-		else
-			OC_ASSERT(false, "Contin Not supported Yet");
+		else if (arg_type == NUMBER_NODE) {
+			Handle grt = createNode(TYPE_NODE, "GreaterThanLink");
+			if (_ignore_ops.find(grt) == _ignore_ops.end()) {
+				Handle arg =
+						createLink(GREATER_THAN_LINK,
+						           createNode(SCHEMA_NODE, "$" + std::to_string(i+1)),
+						           createNode(NUMBER_NODE, "0"));
+				seq.push_back(arg);
+			}
+		}
 	}
 
 	unsigned ps = seq.size(); // the actual number of arguments to consider
