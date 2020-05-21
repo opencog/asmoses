@@ -1,5 +1,5 @@
 /*
- * moses/moses/representation/Build_Atomese_Knobs.h
+ * moses/moses/representation/BuildAtomeseKnobs.h
  *
  * Copyright (C) 2020 OpenCog Foundation
  *
@@ -24,18 +24,18 @@
 #define _BUILD_ATOMESE_KNOBS_H
 
 #include "field_set.h"
-#include "Atomese_Representation.h"
+#include "AtomeseRepresentation.h"
 
 namespace opencog
 {
 namespace moses
 {
 
-struct Build_Atomese_Knobs : boost::noncopyable
+struct BuildAtomeseKnobs : boost::noncopyable
 {
-	Build_Atomese_Knobs(Handle& exemplar,
+	BuildAtomeseKnobs(Handle& exemplar,
 	            const Handle& tt,
-	            Atomese_Representation& rep,
+	            AtomeseRepresentation& rep,
 	            const Handle &DSN,
 	            const HandleSet& ignore_ops={},
 	            contin_t step_size = 1.0,
@@ -45,7 +45,7 @@ struct Build_Atomese_Knobs : boost::noncopyable
 
 protected:
 	Handle& _exemplar;
-	Atomese_Representation& _rep;
+	AtomeseRepresentation& _rep;
 	const int _arity;
 	const Handle _signature;
 	contin_t _step_size, _expansion;

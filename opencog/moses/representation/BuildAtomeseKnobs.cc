@@ -1,5 +1,5 @@
 /*
- * moses/moses/representation/Build_Atomese_Knobs.cc
+ * moses/moses/representation/BuildAtomeseKnobs.cc
  *
  * Copyright (C) 2020 OpenCog Foundation
  *
@@ -41,15 +41,15 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/utils/valueUtils.h>
 
-#include "Build_Atomese_Knobs.h"
+#include "BuildAtomeseKnobs.h"
 
 namespace opencog
 {
 namespace moses
 {
-Build_Atomese_Knobs::Build_Atomese_Knobs(Handle &exemplar,
+BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
                                          const Handle &t,
-                                         Atomese_Representation &rep,
+                                         AtomeseRepresentation &rep,
                                          const Handle &DSN,
                                          const HandleSet &ignore_ops,
                                          contin_t step_size,
@@ -81,7 +81,7 @@ Build_Atomese_Knobs::Build_Atomese_Knobs(Handle &exemplar,
 	_rep.set_variables(_variables);
 }
 
-void Build_Atomese_Knobs::logical_canonize(Handle &prog)
+void BuildAtomeseKnobs::logical_canonize(Handle &prog)
 {
 	if (prog->get_type() == AND_LINK)
 		prog = createLink(HandleSeq{prog}, OR_LINK);
@@ -124,7 +124,7 @@ inline Handle find_insert(Handle prog, HandleSeq &path, Handle sub,
 	return sub;
 }
 
-void Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
+void BuildAtomeseKnobs::build_logical(HandleSeq& path, Handle &prog)
 {
 	Type flip;
 	auto prev=prog;
@@ -204,7 +204,7 @@ void Build_Atomese_Knobs::build_logical(HandleSeq& path, Handle &prog)
 	prog = createLink(seq, prog->get_type());
 }
 
-void Build_Atomese_Knobs::add_logical_knobs(HandleSeq &path, Handle &prog,
+void BuildAtomeseKnobs::add_logical_knobs(HandleSeq &path, Handle &prog,
                                                  bool add_if_in_exemplar)
 {
 	HandleSeq seq;
@@ -212,7 +212,7 @@ void Build_Atomese_Knobs::add_logical_knobs(HandleSeq &path, Handle &prog,
 	logical_probe_rec(path, prog, seq, add_if_in_exemplar);
 }
 
-void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type head_type)
+void BuildAtomeseKnobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 {
 	Type type = head_type == AND_LINK ? OR_LINK : AND_LINK;
 	HandleSeq arg_types = _signature->getOutgoingAtom(0)->getOutgoingSet();
@@ -270,7 +270,7 @@ void Build_Atomese_Knobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 }
 
 void
-Build_Atomese_Knobs::logical_probe_rec(HandleSeq &path, Handle &prog,
+BuildAtomeseKnobs::logical_probe_rec(HandleSeq &path, Handle &prog,
                                        const HandleSeq &seq, bool add_if_in_exemplar)
 {
 	for (const Handle child : seq) {
@@ -281,7 +281,7 @@ Build_Atomese_Knobs::logical_probe_rec(HandleSeq &path, Handle &prog,
 	}
 }
 
-bool Build_Atomese_Knobs::logical_subtree_knob(Handle &prog, const Handle &child,
+bool BuildAtomeseKnobs::logical_subtree_knob(Handle &prog, const Handle &child,
                                                bool add_if_in_exemplar)
 {
 	bool is_comp=false;
@@ -313,7 +313,7 @@ inline Handle identity(Type t)
 	OC_ASSERT(false, "Unknown Type");
 }
 
-Handle Build_Atomese_Knobs::disc_probe(HandleSeq& path, Handle &prog,
+Handle BuildAtomeseKnobs::disc_probe(HandleSeq& path, Handle &prog,
                                        const Handle &child, int mult, bool is_comp)
 {
 	Type type=prog->get_type();

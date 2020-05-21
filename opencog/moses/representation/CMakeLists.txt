@@ -10,8 +10,8 @@ INSTALL(FILES
 	knob_mapper.h
 	knobs.h
 	representation.h
-	Atomese_Representation.h
-	Build_Atomese_Knobs.h
+	AtomeseRepresentation.h
+	BuildAtomeseKnobs.h
 	KnobLink.h
 
 	DESTINATION

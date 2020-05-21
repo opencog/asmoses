@@ -1,5 +1,5 @@
 /*
- * moses/moses/representation/Atomese_Representation.cc
+ * moses/moses/representation/AtomeseRepresentation.cc
  *
  * Copyright (C) 2020 OpenCog Foundation
  *
@@ -29,8 +29,8 @@
 #include <opencog/reduct/rules/general_rules.h>
 #include <opencog/atoms/execution/Instantiator.h>
 
-#include "Atomese_Representation.h"
-#include "Build_Atomese_Knobs.h"
+#include "AtomeseRepresentation.h"
+#include "BuildAtomeseKnobs.h"
 
 namespace opencog
 {
@@ -41,7 +41,7 @@ static contin_t stepsize = 1.0;
 static contin_t expansion = 2.0;
 static int depth = 5;
 
-Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_candidate,
+AtomeseRepresentation::AtomeseRepresentation(const reduct::rule &simplify_candidate,
                                                const reduct::rule &simplify_knob_building,
                                                const Handle &exemplar,
                                                const Handle &t,
@@ -53,7 +53,7 @@ Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_cand
                                                _simplify_knob_building(&simplify_knob_building),
                                                _as(as)
 {
-	Build_Atomese_Knobs(_exemplar, t, *this, _DSN, ignore_ops,
+	BuildAtomeseKnobs(_exemplar, t, *this, _DSN, ignore_ops,
 	                    stepsize, expansion, depth, perm_ratio);
 
 	std::multiset<field_set::spec> specs;
@@ -80,22 +80,22 @@ Atomese_Representation::Atomese_Representation(const reduct::rule &simplify_cand
 	}
 }
 
-void Atomese_Representation::set_rep(Handle rep)
+void AtomeseRepresentation::set_rep(Handle rep)
 {
 	_rep = _as->add_atom(rep);
 }
 
-void Atomese_Representation::set_fields(field_set fields)
+void AtomeseRepresentation::set_fields(field_set fields)
 {
 	_fields = fields;
 }
 
-void Atomese_Representation::set_variables(HandleSeq vars)
+void AtomeseRepresentation::set_variables(HandleSeq vars)
 {
 	_variables = vars;
 }
 
-Handle Atomese_Representation::get_candidate(const Handle &h)
+Handle AtomeseRepresentation::get_candidate(const Handle &h)
 {
 	Handle ex = _as->add_atom(createLink(HandleSeq{_DSN, h}, PUT_LINK));
 
@@ -103,7 +103,7 @@ Handle Atomese_Representation::get_candidate(const Handle &h)
 	return HandleCast(inst.execute(ex));
 }
 
-Handle Atomese_Representation::get_candidate(const instance inst, bool reduce)
+Handle AtomeseRepresentation::get_candidate(const instance inst, bool reduce)
 {
 	HandleSeq seq;
 	for (Handle var : _variables) {
@@ -124,7 +124,7 @@ Handle Atomese_Representation::get_candidate(const instance inst, bool reduce)
 	return candidate;
 }
 
-void Atomese_Representation::clean_atomese_prog(Handle &prog,
+void AtomeseRepresentation::clean_atomese_prog(Handle &prog,
                                                 bool reduce,
                                                 bool knob_building)
 {
@@ -137,7 +137,7 @@ void Atomese_Representation::clean_atomese_prog(Handle &prog,
 	}
 }
 
-std::ostream &Atomese_Representation::ostream_rep(std::ostream &out) const
+std::ostream &AtomeseRepresentation::ostream_rep(std::ostream &out) const
 {
 	using std::endl;
 
@@ -149,7 +149,7 @@ std::ostream &Atomese_Representation::ostream_rep(std::ostream &out) const
 	return out;
 }
 
-std::ostream &Atomese_Representation::ostream_exemplar(std::ostream &out) const
+std::ostream &AtomeseRepresentation::ostream_exemplar(std::ostream &out) const
 {
 	out << "Rep = ";
 	ostream_handle(_exemplar, out);
@@ -175,7 +175,7 @@ inline void ostream_knob(Handle h, const std::vector<double> &st, std::ostream &
 }
 
 std::ostream&
-Atomese_Representation::ostream_link(const Handle &h, std::ostream &out) const
+AtomeseRepresentation::ostream_link(const Handle &h, std::ostream &out) const
 {
 	out << "(" << oc_to_string(h->get_type(), empty_string) << " ";
 	for (Handle ch : h->getOutgoingSet())
@@ -187,7 +187,7 @@ Atomese_Representation::ostream_link(const Handle &h, std::ostream &out) const
 }
 
 std::ostream&
-Atomese_Representation::ostream_handle(const Handle &h, std::ostream &out) const
+AtomeseRepresentation::ostream_handle(const Handle &h, std::ostream &out) const
 {
 	Type t = h->get_type();
 
@@ -217,7 +217,7 @@ Atomese_Representation::ostream_handle(const Handle &h, std::ostream &out) const
 }
 
 std::string
-oc_to_string(const moses::Atomese_Representation &rep, const std::string &indent)
+oc_to_string(const moses::AtomeseRepresentation &rep, const std::string &indent)
 {
 	std::stringstream ss;
 	rep.ostream_rep(ss);

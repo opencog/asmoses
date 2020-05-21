@@ -1,5 +1,5 @@
 /*
- * moses/moses/representation/Atomese_Representation.h
+ * moses/moses/representation/AtomeseRepresentation.h
  *
  * Copyright (C) 2020 OpenCog Foundation
  *
@@ -40,9 +40,9 @@ namespace moses
  * provides a mechanism to run the representation with knob settings to
  * get candidate programs.
  */
-struct Atomese_Representation : public boost::noncopyable
+struct AtomeseRepresentation : public boost::noncopyable
 {
-	Atomese_Representation(const reduct::rule& simplify_candidate,
+	AtomeseRepresentation(const reduct::rule& simplify_candidate,
 	                       const reduct::rule& simplify_knob_building,
 	                       const Handle& exemplar_,
 	                       const Handle& t,
@@ -89,7 +89,7 @@ public:
 };
 }
 
-std::string oc_to_string(const moses::Atomese_Representation& rep,
+std::string oc_to_string(const moses::AtomeseRepresentation& rep,
                          const std::string& indent=empty_string);
 }
 #endif
