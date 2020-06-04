@@ -47,13 +47,14 @@ AtomeseRepresentation::AtomeseRepresentation(const reduct::rule &simplify_candid
                                                const Handle &t,
                                                AtomSpace* as,
                                                const HandleSet &ignore_ops,
-                                               float perm_ratio)
+                                               float perm_ratio,
+                                               bool linear_contin)
                                                : _exemplar(exemplar),
                                                _simplify_candidate(&simplify_candidate),
                                                _simplify_knob_building(&simplify_knob_building),
                                                _as(as)
 {
-	BuildAtomeseKnobs(_exemplar, t, *this, _DSN, ignore_ops,
+	BuildAtomeseKnobs(_exemplar, t, *this, _DSN, linear_contin, ignore_ops,
 	                    stepsize, expansion, depth, perm_ratio);
 
 	std::multiset<field_set::spec> specs;

@@ -51,6 +51,7 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
                                          const Handle &t,
                                          AtomeseRepresentation &rep,
                                          const Handle &DSN,
+                                         bool linear_contin,
                                          const HandleSet &ignore_ops,
                                          contin_t step_size,
                                          contin_t expansion,
@@ -59,7 +60,8 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
 		: _exemplar(exemplar), _rep(rep), _skip_disc_probe(true),
 		  _arity(t->getOutgoingAtom(0)->get_arity()), _signature(t),
 		  _step_size(step_size), _expansion(expansion), _depth(depth),
-		  _perm_ratio(perm_ratio), _ignore_ops(ignore_ops)
+		  _perm_ratio(perm_ratio), _ignore_ops(ignore_ops),
+		  _linear_contin(linear_contin)
 {
 	Handle tn = _signature->getOutgoingAtom(1);
 	Type output_type = TypeNodeCast(tn)->get_kind();
