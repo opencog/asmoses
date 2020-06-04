@@ -381,6 +381,27 @@ Handle BuildAtomeseKnobs::disc_probe(HandleSeq& path, Handle &prog,
 	return knob_var;
 }
 
+inline Handle pick_const(Handle &prog)
+{
+	auto b = prog->getOutgoingSet().begin();
+	auto e = prog->getOutgoingSet().end();
+
+	HandleSeq seq;
+	Handle c;
+	std::remove_copy_if(b, e,
+	                    std::back_inserter(seq),
+	                    [&c](Handle h) {
+		                    if (h->get_type() == NUMBER_NODE)
+		                    {
+			                    c = h;
+			                    return true;
+		                    }
+		                    return false;
+	                    });
+	prog = createLink(seq, prog->get_type());
+	return c;
+}
+
 void BuildAtomeseKnobs::build_contin(Handle &prog)
 {
 	Type type = prog->get_type();
