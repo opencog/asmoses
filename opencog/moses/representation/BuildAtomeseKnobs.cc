@@ -428,5 +428,70 @@ void BuildAtomeseKnobs::build_contin(Handle &prog)
 	}
 }
 
+Handle BuildAtomeseKnobs::linear_combination(Handle prog, bool in_SLE)
+{
+	HandleSeq seq;
+	Handle const_node = Handle(createNumberNode(0));
+
+	if (prog->get_type() == NUMBER_NODE)
+		const_node = prog;
+	else if (prog->get_type() == SCHEMA_NODE) {// if prog is a contin arg.
+		seq.push_back(multi_const(prog));
+	}
+	else if (nameserver().isA(prog->get_type(), LINK)) {
+		for (Handle child : prog->getOutgoingSet())
+		{
+			if (child->get_type() == NUMBER_NODE) {
+				if (!NumberNodeCast(const_node)->value().at(0))
+					const_node = child;
+				else
+					seq.push_back(create_const_knob(child));
+			}
+			else if (nameserver().isA(child->get_type(), NODE)) {
+				if (_linear_contin)
+					seq.push_back(multi_const(child));
+				else
+					seq.push_back(
+							createLink(TIMES_LINK, child,
+							           linear_combination(Handle(createNumberNode(1)))));
+			}
+			else if (child->get_type() == TIMES_LINK) {
+				if (_linear_contin)
+					seq.push_back(make_knob_rec(child));
+				else {
+					HandleSeq ch_seq;
+					Handle const_mul = Handle(createNumberNode(1));
+					for(Handle h : child->getOutgoingSet())
+					{
+						if (h->get_type() == NUMBER_NODE and
+								NumberNodeCast(const_mul)->value().at(0) == 1.0) {
+							const_mul = h;
+							continue;
+						}
+						ch_seq.push_back(h);
+					}
+					ch_seq.push_back(linear_combination(const_mul));
+					seq.push_back(make_knob_rec(createLink(ch_seq, TIMES_LINK)));
+				}
+			}
+			else {
+				if (_linear_contin)
+					seq.push_back(multi_const(make_knob_rec(child)));
+				else
+					seq.push_back(
+							createLink(TIMES_LINK, linear_combination(child),
+							           linear_combination(Handle(createNumberNode(1)))));
+			}
+		}
+	}
+
+	HandleSeq tmp(linear_combination(in_SLE));
+	seq.insert(seq.end(), tmp.begin(), tmp.end());
+	if (!in_SLE)
+		seq.push_back(create_const_knob(const_node));
+
+	return createLink(seq, PLUS_LINK);
+}
+
 }
 }

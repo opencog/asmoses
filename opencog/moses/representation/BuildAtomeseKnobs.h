@@ -79,6 +79,8 @@ protected:
 
 	Handle disc_probe(HandleSeq &path, Handle &prog,
 	                  const Handle &child, int, bool is_comp);
+
+	Handle linear_combination(Handle prog, bool in_SLE=false);
 };
 
 }
