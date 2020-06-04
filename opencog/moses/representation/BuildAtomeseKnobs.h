@@ -61,6 +61,8 @@ protected:
 
 	void build_logical(HandleSeq &path, Handle &prog);
 
+	void build_contin(Handle &prog);
+
 	void add_logical_knobs(HandleSeq &path, Handle &prog,
 	                            bool add_if_in_exemplar=true);
 

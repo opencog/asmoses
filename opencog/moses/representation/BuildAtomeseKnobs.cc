@@ -70,6 +70,9 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
 		build_logical(path, _exemplar);
 		// TODO: logical_cleanup
 	}
+	if (output_type == NUMBER_NODE) {
+		build_contin(_exemplar);
+	}
 	else {
 		OC_ASSERT(true, "NonBoolean output type is not supported")
 		return;
@@ -375,5 +378,32 @@ Handle BuildAtomeseKnobs::disc_probe(HandleSeq& path, Handle &prog,
 	_rep.disc.insert(std::make_pair(ds, knob_var));
 	return knob_var;
 }
+
+void BuildAtomeseKnobs::build_contin(Handle &prog)
+{
+	Type type = prog->get_type();
+
+	if (type == PLUS_LINK or type == TIMES_LINK) {
+		Handle cn = pick_const(prog);
+		if (type == PLUS_LINK)
+			prog = add_to(div_with_lc(multi_const(linear_combination(prog))), cn);
+		else
+			prog = add_to(div_with_lc(multi_const(linear_combination(prog), cn)));
+		return;
+	}
+
+	if (type == DIVIDE_LINK) {
+		OC_ASSERT(prog->get_arity()==2, "DivideLink expects 2 arguments!");
+		Handle n = multi_const(linear_combination(prog->getOutgoingAtom(0)));
+		prog = add_to(div_with_lc(n, prog->getOutgoingAtom(1)));
+		return;
+	}
+
+	else {
+		prog = createLink(PLUS_LINK, prog);
+		prog = add_to(div_with_lc(multi_const(linear_combination(prog))));
+	}
+}
+
 }
 }
