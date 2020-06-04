@@ -357,4 +357,40 @@ public:
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(99, fields.contin().size());
 	}
+
+	void test_mixed_1()
+	{
+		Handle exemplar =
+				al(GREATER_THAN_LINK,
+				      an(SCHEMA_NODE, "$1"), an(NUMBER_NODE, "0"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+		TS_ASSERT_EQUALS(28, fields.contin().size());
+	}
+
+	void test_mixed_2()
+	{
+		Handle exemplar =
+				al(AND_LINK,
+				   al(GREATER_THAN_LINK,
+				      an(SCHEMA_NODE, "$2"), an(NUMBER_NODE, "0")),
+				   an(PREDICATE_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+		TS_ASSERT_EQUALS(27, fields.contin().size());
+	}
 };
