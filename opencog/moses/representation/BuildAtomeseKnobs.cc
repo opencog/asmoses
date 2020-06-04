@@ -99,6 +99,14 @@ void BuildAtomeseKnobs::logical_canonize(Handle &prog)
 	else if (prog->get_type() == PREDICATE_NODE)
 		prog = createLink(HandleSeq{createLink(HandleSeq{prog}, AND_LINK)},
 		                  OR_LINK);
+	else if (is_predicate(prog)) {
+		Handle lh = prog->getOutgoingAtom(0);
+		lh = linear_combination(lh);
+		prog = createLink(OR_LINK,
+		                  createLink(AND_LINK,
+		                             createLink(GREATER_THAN_LINK,
+		                                        lh, prog->getOutgoingAtom(1))));
+	}
 	else OC_ASSERT(true, "Error: unknown program type in logical_canonize.")
 }
 
@@ -609,6 +617,15 @@ Handle BuildAtomeseKnobs::make_knob_rec(Handle prog)
 		seq.push_back(make_knob_rec(ch));
 
 	return createLink(seq, prog->get_type());
+}
+
+bool BuildAtomeseKnobs::is_predicate(const Handle &prog) const
+{
+	if (prog->get_type() == GREATER_THAN_LINK)
+		return true;
+	if (prog->get_type() == NOT_LINK)
+		return prog->getOutgoingAtom(0)->get_type() == GREATER_THAN_LINK;
+	return false;
 }
 }
 }

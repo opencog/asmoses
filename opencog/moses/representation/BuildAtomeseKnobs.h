@@ -95,6 +95,8 @@ protected:
 	Handle add_to(Handle l, Handle r=Handle());
 
 	Handle make_knob_rec(Handle prog);
+
+	bool is_predicate(const Handle &prog) const;
 };
 
 }
