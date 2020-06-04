@@ -80,6 +80,10 @@ protected:
 	Handle disc_probe(HandleSeq &path, Handle &prog,
 	                  const Handle &child, int, bool is_comp);
 
+	Handle create_const_knob(Handle const_node, Type type=NOTYPE);
+
+	Handle create_contin_knob(int i);
+
 	Handle linear_combination(Handle prog, bool in_SLE=false);
 
 	HandleSeq linear_combination(bool in_SLE);

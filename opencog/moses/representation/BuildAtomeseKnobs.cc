@@ -547,5 +547,29 @@ HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
 	return seq;
 }
 
+Handle BuildAtomeseKnobs::create_const_knob(Handle const_node, Type type)
+{
+	Handle const_knob;
+	if (const_node)
+		const_knob = create_contin_knob(NumberNodeCast(const_node)->value().at(0));
+	else if (type != NOTYPE) {
+		// if const_node is nullptr, create contin knob with identity.
+		const_knob = type == PLUS_LINK ?
+		             create_contin_knob(0) :
+		             create_contin_knob(1);
+	}
+	return const_knob;
+}
+
+Handle BuildAtomeseKnobs::create_contin_knob(int i)
+{
+	Handle knob_var =
+			createNode(VARIABLE_NODE, randstr(std::string("$knob") + "-"));
+	_variables.push_back(knob_var);
+	field_set::contin_spec cs(i, _step_size, _expansion, _depth);
+	_rep.contin.insert(std::make_pair(cs, knob_var));
+	return knob_var;
+}
+
 }
 }
