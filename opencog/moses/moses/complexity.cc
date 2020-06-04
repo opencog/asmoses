@@ -24,6 +24,8 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/combo/combo/combo.h>
 #include <opencog/atoms/core/NumberNode.h>
+#include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/utils/valueUtils.h>
 
 #include "complexity.h"
 
@@ -140,6 +142,12 @@ complexity_t atomese_complexity(const Handle &handle,
 				return 0;
 		}
 	}
+
+	if (KNOB_LINK == t) {
+		return bool_value_to_bool(handle->getOutgoingAtom(3)) ?
+		       atomese_complexity(handle->getOutgoingAtom(1)) : 0;
+	}
+
 	if (nameserver().isA(t, LINK)) {
 		int c = int(t == DIVIDE_LINK
 		            || t == RANDOM_CHOICE_LINK

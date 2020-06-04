@@ -55,6 +55,9 @@ ADD_LIBRARY (moses SHARED
 	representation/knobs
 	representation/representation
 	representation/instance_scorer
+	representation/AtomeseRepresentation
+	representation/BuildAtomeseKnobs
+	representation/KnobLink
 
 	scoring/behave_cscore
 	scoring/bscores

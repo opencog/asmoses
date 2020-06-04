@@ -200,6 +200,13 @@ protected:
 };
 
 } //~namespace moses
+
+std::string oc_to_string(combo::combo_tree::iterator,
+                         const std::string &indent=empty_string);
+
+std::string oc_to_string(combo::combo_tree_seq &,
+                         const std::string &indent=empty_string);
+
 } //~namespace opencog
 
 #endif

@@ -1348,4 +1348,27 @@ void build_knobs::ann_canonize(pre_it it)
 }
 
 } // ~namespace moses
+
+std::string
+oc_to_string(combo::combo_tree::iterator_base itr, const std::string&)
+{
+	std::ostringstream os;
+	combo::ostream_combo_tree(os, combo::combo_tree(itr));
+	std::string str = os.str();
+
+	return str;
+}
+
+std::string
+oc_to_string(combo::combo_tree_seq& seq, const std::string&)
+{
+	std::ostringstream os;
+	for (const auto ct : seq) {
+		combo::ostream_combo_tree(os, ct);
+		os << '\n';
+	}
+	std::string str = os.str();
+	return str;
+}
+
 } // ~namespace opencog
