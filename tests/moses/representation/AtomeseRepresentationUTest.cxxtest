@@ -244,4 +244,117 @@ public:
 		// expect about ~27 knobs [apparently depends on reduct]
 		TS_ASSERT_LESS_THAN(0, fields.raw_size());
 	}
+
+	void test_simple_contin_1()
+	{
+		Handle exemplar =
+				al(PLUS_LINK,
+				   an(NUMBER_NODE, "3"),
+				   an(SCHEMA_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
+		                              createNode(TYPE_NODE, "LogLink"),
+		                              createNode(TYPE_NODE, "ExpLink")};
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(7, fields.contin().size());
+	}
+
+	void test_simple_contin_2()
+	{
+		Handle exemplar =
+				al(DIVIDE_LINK,
+				   al(PLUS_LINK,
+				      al(TIMES_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1"),
+				         al(PLUS_LINK,
+				            an(NUMBER_NODE, "7"),
+				            an(SCHEMA_NODE, "$2"))),
+				      an(SCHEMA_NODE, "$2")),
+				   al(PLUS_LINK,
+				      al(PLUS_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1")),
+				      an(NUMBER_NODE, "4"),
+				      an(SCHEMA_NODE, "$2")));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
+		                              createNode(TYPE_NODE, "LogLink"),
+		                              createNode(TYPE_NODE, "ExpLink")};
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(14, fields.contin().size());
+	}
+
+	void test_contin_SLE()
+	{
+		Handle exemplar =
+				al(PLUS_LINK,
+				   an(NUMBER_NODE, "3"),
+				   an(SCHEMA_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(19, fields.contin().size());
+	}
+
+	void test_contin_non_linear_1()
+	{
+		Handle exemplar =
+				al(TIMES_LINK,
+				   an(NUMBER_NODE, "3"),
+				   an(SCHEMA_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0, false);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(26, fields.contin().size());
+	}
+
+	void test_contin_non_linear_2()
+	{
+		Handle exemplar =
+				al(DIVIDE_LINK,
+				   al(PLUS_LINK,
+				      al(TIMES_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1"),
+				         al(PLUS_LINK,
+				            an(NUMBER_NODE, "7"),
+				            an(SCHEMA_NODE, "$2"))),
+				      an(SCHEMA_NODE, "$2")),
+				   al(PLUS_LINK,
+				      al(PLUS_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1")),
+				      an(NUMBER_NODE, "4"),
+				      an(SCHEMA_NODE, "$2")));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0, false);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(99, fields.contin().size());
+	}
 };
