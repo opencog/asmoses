@@ -571,5 +571,18 @@ Handle BuildAtomeseKnobs::create_contin_knob(int i)
 	return knob_var;
 }
 
+
+Handle BuildAtomeseKnobs::make_knob_rec(Handle prog)
+{
+	if (nameserver().isA(prog->get_type(), NODE))
+		return prog->get_type() == NUMBER_NODE ?
+		       create_const_knob(prog) : prog;
+
+	HandleSeq seq;
+	for (Handle ch : prog->getOutgoingSet())
+		seq.push_back(make_knob_rec(ch));
+
+	return createLink(seq, prog->get_type());
+}
 }
 }

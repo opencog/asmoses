@@ -87,6 +87,8 @@ protected:
 	Handle linear_combination(Handle prog, bool in_SLE=false);
 
 	HandleSeq linear_combination(bool in_SLE);
+
+	Handle make_knob_rec(Handle prog);
 };
 
 }
