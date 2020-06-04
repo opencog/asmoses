@@ -571,6 +571,24 @@ Handle BuildAtomeseKnobs::create_contin_knob(int i)
 	return knob_var;
 }
 
+Handle BuildAtomeseKnobs::multi_const(Handle l, Handle r)
+{
+	Handle contin_knob = create_const_knob(r, TIMES_LINK);
+	return createLink(TIMES_LINK, l, contin_knob);
+}
+
+Handle BuildAtomeseKnobs::div_with_lc(Handle n, Handle d)
+{
+	d = d ? linear_combination(d) :
+	    linear_combination(Handle(createNumberNode(1)));
+	return createLink(DIVIDE_LINK, n, d);
+}
+
+Handle BuildAtomeseKnobs::add_to(Handle l, Handle r)
+{
+	Handle contin_knob = create_const_knob(r, PLUS_LINK);
+	return createLink(PLUS_LINK, l, contin_knob);
+}
 
 Handle BuildAtomeseKnobs::make_knob_rec(Handle prog)
 {

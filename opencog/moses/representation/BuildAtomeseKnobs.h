@@ -88,6 +88,12 @@ protected:
 
 	HandleSeq linear_combination(bool in_SLE);
 
+	Handle multi_const(Handle l, Handle r=Handle());
+
+	Handle div_with_lc(Handle n, Handle d=Handle());
+
+	Handle add_to(Handle l, Handle r=Handle());
+
 	Handle make_knob_rec(Handle prog);
 };
 
