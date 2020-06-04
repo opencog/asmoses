@@ -97,6 +97,8 @@ protected:
 	Handle make_knob_rec(Handle prog);
 
 	bool is_predicate(const Handle &prog) const;
+
+	void build_predicate(Handle &prog, Handle child);
 };
 
 }

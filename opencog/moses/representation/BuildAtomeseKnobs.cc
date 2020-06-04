@@ -137,6 +137,15 @@ inline Handle find_insert(Handle prog, HandleSeq &path, Handle sub,
 	return sub;
 }
 
+inline HandleSeq new_path(HandleSeq path, Handle ch, HandleSeq seq, Handle prog)
+{
+	seq.push_back(ch);
+	auto parent = createLink(seq, prog->get_type());
+	find_insert(prog, path, parent, true);
+	path.push_back(parent);
+	return path;
+}
+
 void BuildAtomeseKnobs::build_logical(HandleSeq& path, Handle &prog)
 {
 	Type flip;
@@ -168,22 +177,21 @@ void BuildAtomeseKnobs::build_logical(HandleSeq& path, Handle &prog)
 			seq.erase(std::remove(seq.begin(), seq.end(), child));
 
 			Handle pattern = child->getOutgoingAtom(1);
+
 			auto is_node = pattern->is_node();
-			if (is_node)
+			auto is_pred = is_predicate(pattern);
+
+			if (is_node || is_pred)
 				pattern = createLink(flip, pattern);
 
-			auto p = path;
-			auto tmp_seq = seq;
-			tmp_seq.push_back(pattern);
-			auto parent = createLink(tmp_seq, prog->get_type());
-
-			find_insert(prog, p, parent, true);
-			p.push_back(parent);
-
-			if(is_node)
+			HandleSeq p = new_path(path, pattern, seq, prog);
+			if(is_node || is_pred)
 				add_logical_knobs(p, pattern, false);
 			else
 				build_logical(p, pattern);
+
+			if(is_pred)
+				build_predicate(pattern, child->getOutgoingAtom(1));
 
 			HandleSeq knob_seq =
 					{child->getOutgoingAtom(0),
@@ -196,13 +204,21 @@ void BuildAtomeseKnobs::build_logical(HandleSeq& path, Handle &prog)
 		else {
 			seq.erase(std::remove(seq.begin(), seq.end(), child));
 			auto p = path;
-			p.push_back(prog);
+			bool is_pred = is_predicate(child);
 
-			if (nameserver().isA(child->get_type(), NODE) ||
-					child->get_type() == NOT_LINK)
-				child = createLink(flip, child);
+			Handle orig=child;
+			if (nameserver().isA(orig->get_type(), NODE) ||
+			    orig->get_type() == NOT_LINK || is_pred) {
+				child = createLink(flip, orig);
+				p = new_path(p, child, seq, prog);
+				add_logical_knobs(p, child, false);
+			} else
+				p.push_back(prog);
 
-			build_logical(p, child);
+			if (is_pred) {
+				build_predicate(child, orig);
+			} else
+				build_logical(p, child);
 		}
 		seq.push_back(child);
 	}
@@ -626,6 +642,36 @@ bool BuildAtomeseKnobs::is_predicate(const Handle &prog) const
 	if (prog->get_type() == NOT_LINK)
 		return prog->getOutgoingAtom(0)->get_type() == GREATER_THAN_LINK;
 	return false;
+}
+
+void
+BuildAtomeseKnobs::build_predicate(Handle &prog, Handle child)
+{
+	OC_ASSERT(is_predicate(child),
+	          "ERROR child is supposed to be Predicate.")
+	HandleSeq seq;
+	std::remove_copy_if(prog->getOutgoingSet().begin(),
+	                    prog->getOutgoingSet().end(),
+	                    std::back_inserter(seq),
+	                    [&child](Handle h){return content_eq(child, h);});
+	bool is_neg = child->get_type() == NOT_LINK;
+	if (is_neg) {
+		child = child->getOutgoingAtom(0);
+		auto contin_h = child->getOutgoingAtom(0);
+		build_contin(contin_h);
+		child = createLink(NOT_LINK,
+		                   createLink(GREATER_THAN_LINK,
+		                              contin_h,
+		                              child->getOutgoingAtom(1)));
+	} else {
+		auto contin_h = child->getOutgoingAtom(0);
+		build_contin(contin_h);
+		child = createLink(GREATER_THAN_LINK,
+		                   contin_h,
+		                   child->getOutgoingAtom(1));
+	}
+	seq.push_back(child);
+	prog = createLink(seq, prog->get_type());
 }
 }
 }
