@@ -352,6 +352,8 @@ ostream& ostream_builtin(ostream& out, const builtin& h, output_format f)
             return out << "log";
         case id::exp:
             return out << "exp";
+        case id::impulse:
+            return out << "impulse";
         case id::sin:
             return out << "sin";
         default:
