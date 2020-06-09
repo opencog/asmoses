@@ -107,7 +107,7 @@ cdef class moses:
             for candidate in output_list:
                 program = candidate
                 if b"#score: " in program:
-                    score = int(program.split(b"#score: ")[1].splitlines()[0])
+                    score = float(program.split(b"#score: ")[1].splitlines()[0])
                 else:
                     raise MosesException('Error: A score value was expected '
                                          'but not found in the Python '
