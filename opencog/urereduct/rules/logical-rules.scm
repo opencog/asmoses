@@ -28,12 +28,12 @@
 (define distribuitive-or
   (DefinedSchemaNode "distribuitive-or"))
 
-;; and(true X)->X
 
+;; and(true X)->X
 (DefineLink
  and-identity-true
    (BindLink
-     (Glob "$op")
+   (Glob "$op")
      (Present
      (AndLink
        (Glob "$op")
@@ -43,15 +43,19 @@
      (AndLink
      (Glob "$op")
      (True))
-     (Glob "$op"))
- ))
+     (Glob "$op"))))
+
 
 ;; or(true X)->true
-
 (DefineLink
  or-identity-true
    (BindLink
-     (Glob "$op")
+     (TypedVariableLink
+      (Glob "$op")
+      (TypeChoice
+      (TypeNode "TrueLink")
+      (TypeNode "FalseLink")))
+
      (Present
      (OrLink
        (Glob "$op")
@@ -61,16 +65,19 @@
      (OrLink
      (Glob "$op")
      (True))
-     (True)
-     )
- ))
+     (True))))
+
 
 ;; and(false X)->false
-
 (DefineLink
  and-identity-false
    (BindLink
-     (Glob "$op")
+     (TypedVariableLink
+      (Glob "$op")
+      (TypeChoice
+      (TypeNode "TrueLink")
+      (TypeNode "FalseLink")))
+
      (Present
      (AndLink
        (Glob "$op")
@@ -80,14 +87,18 @@
      (AndLink
      (Glob "$op")
      (False))
-     (False))
- ))
+     (False))))
 
 ;; or(false X)->X
 (DefineLink
  or-identity-false
    (BindLink
-     (Glob "$op")
+   (TypedVariableLink
+      (Glob "$op")
+      (TypeChoice
+      (TypeNode "TrueLink")
+      (TypeNode "FalseLink")))
+
      (Present
      (OrLink
        (Glob "$op")
@@ -97,16 +108,18 @@
      (OrLink
      (Glob "$op")
      (False))
-     (Glob "$op")
-     )
- ))
+     (Glob "$op"))))
+
 
 ;; or(X)->X
-
 (DefineLink
  or-identity
    (BindLink
+     (TypedVariableLink
      (Glob "$op")
+     (TypeChoice
+     (TypeNode "TrueLink")
+     (TypeNode "FalseLink")))
      (Present
      (OrLink
        (Glob "$op")))
@@ -114,15 +127,19 @@
      (ReducedTo
      (OrLink
      (Glob "$op"))
-     (Glob "$op"))
- ))
+     (Glob "$op"))))
+
 
 ;; and(or X) -> and(X)
-
 (DefineLink
   and-or-identity
    (BindLink
-     (Glob "$op")
+     (TypedVariableLink
+          (Glob "$op")
+          (TypeChoice
+          (TypeNode "TrueLink")
+          (TypeNode "FalseLink")))
+
      (Present
      (AndLink
        (OrLink
@@ -134,16 +151,18 @@
         (Glob "$op")))
 
      (AndLink
-      (Glob "$op")) )
- ))
+      (Glob "$op")))))
 
 
 ;; or(and X) -> or(X)
-
 (DefineLink
   or-and-identity
    (BindLink
-     (Glob "$op")
+     (TypedVariableLink
+          (Glob "$op")
+          (TypeChoice
+          (TypeNode "TrueLink")
+          (TypeNode "FalseLink")))
      (Present
      (OrLink
        (AndLink
@@ -155,15 +174,18 @@
         (Glob "$op")))
 
      (OrLink
-      (Glob "$op")) )
- ))
+      (Glob "$op")))))
+
 
 ;; !!a->a,
-
  (DefineLink
    double-not
     (BindLink
-      (Variable "x")
+      (TypedVariableLink
+           (Variable "x")
+           (TypeChoice
+           (TypeNode "TrueLink")
+           (TypeNode "FalseLink")))
       (Present
       (NotLink
         (NotLink
@@ -173,22 +195,31 @@
       (NotLink
        (NotLink
          (Variable "x")))
-       (Variable "x"))
-  ))
-;; !(a&&b)->(!a||!b)
+       (Variable "x"))))
 
+
+;; !(a&&b)->(!a||!b)
  (DefineLink
    distribuitive-and
     (BindLink
     (VariableList
-      (Variable "a")
-      (Variable "b"))
+      (TypedVariableLink
+           (Variable "a")
+           (TypeChoice
+           (TypeNode "TrueLink")
+           (TypeNode "FalseLink")))
+
+      (TypedVariableLink
+           (Variable "b")
+           (TypeChoice
+           (TypeNode "TrueLink")
+           (TypeNode "FalseLink"))))
+
       (Present
       (NotLink
         (AndLink
           (Variable "a")
-          (Variable "b")
-          )))
+          (Variable "b"))))
 
       (ReducedTo
       (NotLink
@@ -200,24 +231,31 @@
          (NotLink
          (Variable "a"))
          (NotLink
-         (Variable "b")))
-       )
-))
+         (Variable "b"))))))
+
 
 ;; !(a||b)->(!a&&!b)
-
 (DefineLink
    distribuitive-or
     (BindLink
     (VariableList
-      (Variable "a")
-      (Variable "b"))
+        (TypedVariableLink
+             (Variable "a")
+             (TypeChoice
+             (TypeNode "TrueLink")
+             (TypeNode "FalseLink")))
+
+        (TypedVariableLink
+             (Variable "b")
+             (TypeChoice
+             (TypeNode "TrueLink")
+             (TypeNode "FalseLink"))))
+
       (Present
       (NotLink
         (OrLink
           (Variable "a")
-          (Variable "b")
-          )))
+          (Variable "b"))))
 
       (ReducedTo
       (NotLink
@@ -229,6 +267,7 @@
          (NotLink
          (Variable "a"))
          (NotLink
-         (Variable "b")))
-       )
-))
+         (Variable "b"))))))
+
+
+

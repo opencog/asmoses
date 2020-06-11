@@ -7,3 +7,4 @@
 (load-extension (string-append reduct_types_path "libreduct-types") "reduct_types_init")
 (load-from-path  "opencog/reducture/types/reduct_types.scm")
 (load-from-path "opencog/utilities.scm")
+

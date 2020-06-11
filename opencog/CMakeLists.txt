@@ -25,10 +25,11 @@ IF (HAVE_CYTHON)
 ENDIF (HAVE_CYTHON)
 
 IF (HAVE_ATOMSPACE AND HAVE_GUILE )
-	ADD_SUBDIRECTORY (reducture)
+	ADD_SUBDIRECTORY (urereduct)
 ENDIF (HAVE_ATOMSPACE AND HAVE_GUILE )
 
 
 WRITE_GUILE_CONFIG(${GUILE_BIN_DIR}/opencog/asmoses-config.scm SCM_CONFIG TRUE)
 WRITE_GUILE_CONFIG(${GUILE_BIN_DIR}/opencog/asmoses-config-installable.scm SCM_CONFIG FALSE)
 INSTALL(FILES ${GUILE_BIN_DIR}/opencog/asmoses-config-installable.scm DESTINATION ${GUILE_SITE_DIR}/opencog RENAME asmoses-config.scm)
+

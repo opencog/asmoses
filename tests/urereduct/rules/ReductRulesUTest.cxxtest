@@ -42,8 +42,8 @@ public:
 		logger().set_timestamp_flag(false);
 		logger().set_print_to_stdout_flag(true);
 
-		const string reductUREUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/reducture/rules";
-		const string reductURE_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/reducture/rules";
+		const string reductUREUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/urereduct/rules";
+		const string reductURE_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/urereduct/rules";
 
 		eval.eval(string("(add-to-load-path \"") + reductUREUTest_rules_dir + string("\")"));
 		eval.eval(string("(add-to-load-path \"") + reductURE_rules_dir + string("\")"));
