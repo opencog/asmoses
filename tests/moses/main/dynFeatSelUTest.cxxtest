@@ -45,7 +45,7 @@ public:
     // single-threaded test.
     // Expected score results:
     // -m12000 -r0 get score of -42 run-time  8 secs
-    // -m12000 -r1 get score of -29 run-time 13 secs
+    // -m12000 -r1 get score of -27 run-time 13 secs
     // -m12000 -r2 get score of -41 run-time 18 secs
     // -m12000 -r3 get score of -42 run-time  9 secs
     // -m12000 -r4 get score of -34 run-time 13 secs
@@ -60,7 +60,7 @@ public:
         // Reset the seed, so that this, and the next test, give exactly the same result.
         opencog::randGen().seed(1);
         vector<string> ans;
-        ans.push_back("and(or(and(or(and(or($16 $124 !$168 $200) !$23 !$284 !$287 !$288) and($16 $284) $184) !$22 !$273 !$282) $27) !$13)");
+        ans.push_back("and(or(and(or(and($16 !$278) and(!$23 !$181 !$284) $272) or(!$65 $70) !$273 !$282 !$287 !$288) $285) !$13)");
 
         string data_file_path("-i" + test_dir + "feat-sel.csv");
         // moses_test_score({"-Hit", 
@@ -87,7 +87,7 @@ public:
         opencog::randGen().seed(1);
 
         vector<string> ans;
-        ans.push_back("and(or(and(or(and(or($16 $124 !$168 $200) !$23 !$284 !$287 !$288) and($16 $284) $184) !$22 !$273 !$282) $27) !$13)");
+        ans.push_back("and(or(and(or(and($16 !$278) and(!$23 !$181 !$284) $272) or(!$65 $70) !$273 !$282 !$287 !$288) $285) !$13)");
 
         string data_file_path("-i" + test_dir + "feat-sel.csv");
         // moses_test_score({"-Hit", 
@@ -115,11 +115,11 @@ public:
         // Reset the seed, so that this, and the next test, give exactly the same result.
         opencog::randGen().seed(1);
         vector<scored_combo_tree> scts;
-        scts.push_back(string_to_scored_combo_tree("-33 and(or(and(or($16 !$23) or($16 !$36) !$22 !$30 !$53) and($16 !$36 !$59)) !$105) [score=-33, penalized score=-36.1428565979003906, complexity=11, complexity penalty=3.14285731315612793, uniformity penalty=0]"));
-        scts.push_back(string_to_scored_combo_tree("-33 and(or(and(or($16 !$23) or($16 !$36) !$22 !$30 !$53) and($16 !$36 !$161)) !$105) [score=-33, penalized score=-36.1428565979003906, complexity=11, complexity penalty=3.14285731315612793, uniformity penalty=0]"));
-        scts.push_back(string_to_scored_combo_tree("-33 and(or(and(or($16 !$23) or($16 !$36) !$22 !$30 !$53 !$290) and($16 !$36)) !$105) [score=-33, penalized score=-36.1428565979003906, complexity=11, complexity penalty=3.14285731315612793, uniformity penalty=0]"));
-        scts.push_back(string_to_scored_combo_tree("-33 and(or(and(or($16 !$23) or($16 !$36) !$22 !$30 !$53) and($16 !$36)) or($22 !$290) !$105) [score=-33, penalized score=-36.4285736083984375, complexity=12, complexity penalty=3.42857170104980469, uniformity penalty=0]"));
-        scts.push_back(string_to_scored_combo_tree("-33 and(or(and(or($16 !$23) or($16 !$36) !$22 !$30 !$53 !$290) and($16 !$36)) or($22 !$290) !$105) [score=-33, penalized score=-36.7142868041992188, complexity=13, complexity penalty=3.71428585052490234, uniformity penalty=0]"));
+        scts.push_back(string_to_scored_combo_tree("-33 and(or(and(!$30 !$36 !$53 !$156 !$250) $16) or(!$30 !$209) !$22 !$105)  [score=-33, penalized score=-35.8571434020996094, complexity=10, complexity penalty=2.85714292526245117, uniformity penalty=0]"));
+        scts.push_back(string_to_scored_combo_tree("-33 and(or(and(or($22 !$156) !$30 !$36 !$53 !$250) $16) or(and(!$36 $156) !$22) !$105)  [score=-33, penalized score=-36.1428565979003906, complexity=11, complexity penalty=3.14285731315612793, uniformity penalty=0]"));
+        scts.push_back(string_to_scored_combo_tree("-34 and(or(and(!$30 !$36 !$53 !$156 !$250) $16) !$22 !$105)  [score=-34, penalized score=-36.2857131958007812, complexity=8, complexity penalty=2.28571438789367676, uniformity penalty=0]"));
+        scts.push_back(string_to_scored_combo_tree("-34 and(or(and(!$30 !$36 !$53 !$156 !$202 !$250) $16) !$22 !$105)  [score=-34, penalized score=-36.5714302062988281, complexity=9, complexity penalty=2.57142877578735352, uniformity penalty=0]"));
+        scts.push_back(string_to_scored_combo_tree("-34 and(or(and(or($5 !$36) !$30 !$53 !$156 !$250) $16) !$22 !$105)  [score=-34, penalized score=-36.5714302062988281, complexity=9, complexity penalty=2.57142877578735352, uniformity penalty=0]"));
 
         string data_file_path("-i" + test_dir + "feat-sel.csv");
 

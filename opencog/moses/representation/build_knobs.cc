@@ -653,18 +653,20 @@ void build_knobs::build_logical(pre_it subtree, pre_it it)
         // Insert logical and/or knobs above arguments and predicates.
         if (is_argument(*sib)) {
             logger().debug("Call add_logical_knobs for argument");
-            add_logical_knobs(subtree, _exemplar.insert_above(sib, flip), false);
+            sib = _exemplar.insert_above(sib, flip);
+            add_logical_knobs(subtree, sib, false);
         }
         else if (is_predicate(sib)) {
             logger().debug("Call add_logical_knobs for predictate");
-            add_logical_knobs(subtree, _exemplar.insert_above(sib, flip), false);
+            pre_it pit(sib);
+            sib = _exemplar.insert_above(sib, flip);
+            add_logical_knobs(subtree, sib, false);
 
             // At this time, we assume that the only predicate is
             // "greater_than_zero", and it has a single arg, which
             // is either contin or an argument, or any function
             // returning contin ... So, go and insert contin knobs
             // into that expression.
-            pre_it pit = sib;
             if (*pit == id::logical_not)  // skip over the not.
                 pit = pit.begin();
             pre_it cit = pit.begin();  // get the arg of predicate.
