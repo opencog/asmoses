@@ -48,7 +48,8 @@ struct AtomeseRepresentation : public boost::noncopyable
 	                       const Handle& t,
 	                       AtomSpace* as,
 	                       const HandleSet& ignore_ops={},
-	                       float perm_ratio=0.0);
+	                       float perm_ratio=0.0,
+	                       bool linear_contin=true);
 protected:
 	Handle _exemplar;
 	field_set _fields;

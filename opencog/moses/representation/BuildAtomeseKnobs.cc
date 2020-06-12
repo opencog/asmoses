@@ -51,6 +51,7 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
                                          const Handle &t,
                                          AtomeseRepresentation &rep,
                                          const Handle &DSN,
+                                         bool linear_contin,
                                          const HandleSet &ignore_ops,
                                          contin_t step_size,
                                          contin_t expansion,
@@ -59,7 +60,8 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
 		: _exemplar(exemplar), _rep(rep), _skip_disc_probe(true),
 		  _arity(t->getOutgoingAtom(0)->get_arity()), _signature(t),
 		  _step_size(step_size), _expansion(expansion), _depth(depth),
-		  _perm_ratio(perm_ratio), _ignore_ops(ignore_ops)
+		  _perm_ratio(perm_ratio), _ignore_ops(ignore_ops),
+		  _linear_contin(linear_contin)
 {
 	Handle tn = _signature->getOutgoingAtom(1);
 	Type output_type = TypeNodeCast(tn)->get_kind();
@@ -70,8 +72,11 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
 		build_logical(path, _exemplar);
 		// TODO: logical_cleanup
 	}
+	else if (output_type == NUMBER_NODE) {
+		build_contin(_exemplar);
+	}
 	else {
-		OC_ASSERT(true, "NonBoolean output type is not supported")
+		OC_ASSERT(false, "NonBoolean output type is not supported")
 		return;
 	}
 
@@ -94,6 +99,14 @@ void BuildAtomeseKnobs::logical_canonize(Handle &prog)
 	else if (prog->get_type() == PREDICATE_NODE)
 		prog = createLink(HandleSeq{createLink(HandleSeq{prog}, AND_LINK)},
 		                  OR_LINK);
+	else if (is_predicate(prog)) {
+		Handle lh = prog->getOutgoingAtom(0);
+		lh = linear_combination(lh);
+		prog = createLink(OR_LINK,
+		                  createLink(AND_LINK,
+		                             createLink(GREATER_THAN_LINK,
+		                                        lh, prog->getOutgoingAtom(1))));
+	}
 	else OC_ASSERT(true, "Error: unknown program type in logical_canonize.")
 }
 
@@ -122,6 +135,15 @@ inline Handle find_insert(Handle prog, HandleSeq &path, Handle sub,
 			path[i] = sub;
 	}
 	return sub;
+}
+
+inline HandleSeq new_path(HandleSeq path, Handle ch, HandleSeq seq, Handle prog)
+{
+	seq.push_back(ch);
+	auto parent = createLink(seq, prog->get_type());
+	find_insert(prog, path, parent, true);
+	path.push_back(parent);
+	return path;
 }
 
 void BuildAtomeseKnobs::build_logical(HandleSeq& path, Handle &prog)
@@ -155,22 +177,21 @@ void BuildAtomeseKnobs::build_logical(HandleSeq& path, Handle &prog)
 			seq.erase(std::remove(seq.begin(), seq.end(), child));
 
 			Handle pattern = child->getOutgoingAtom(1);
+
 			auto is_node = pattern->is_node();
-			if (is_node)
+			auto is_pred = is_predicate(pattern);
+
+			if (is_node || is_pred)
 				pattern = createLink(flip, pattern);
 
-			auto p = path;
-			auto tmp_seq = seq;
-			tmp_seq.push_back(pattern);
-			auto parent = createLink(tmp_seq, prog->get_type());
-
-			find_insert(prog, p, parent, true);
-			p.push_back(parent);
-
-			if(is_node)
+			HandleSeq p = new_path(path, pattern, seq, prog);
+			if(is_node || is_pred)
 				add_logical_knobs(p, pattern, false);
 			else
 				build_logical(p, pattern);
+
+			if(is_pred)
+				build_predicate(pattern, child->getOutgoingAtom(1));
 
 			HandleSeq knob_seq =
 					{child->getOutgoingAtom(0),
@@ -183,13 +204,21 @@ void BuildAtomeseKnobs::build_logical(HandleSeq& path, Handle &prog)
 		else {
 			seq.erase(std::remove(seq.begin(), seq.end(), child));
 			auto p = path;
-			p.push_back(prog);
+			bool is_pred = is_predicate(child);
 
-			if (nameserver().isA(child->get_type(), NODE) ||
-					child->get_type() == NOT_LINK)
-				child = createLink(flip, child);
+			Handle orig=child;
+			if (nameserver().isA(orig->get_type(), NODE) ||
+			    orig->get_type() == NOT_LINK || is_pred) {
+				child = createLink(flip, orig);
+				p = new_path(p, child, seq, prog);
+				add_logical_knobs(p, child, false);
+			} else
+				p.push_back(prog);
 
-			build_logical(p, child);
+			if (is_pred) {
+				build_predicate(child, orig);
+			} else
+				build_logical(p, child);
 		}
 		seq.push_back(child);
 	}
@@ -224,8 +253,16 @@ void BuildAtomeseKnobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 			if (_ignore_ops.find(arg) == _ignore_ops.end())
 				seq.push_back(arg);
 		}
-		else
-			OC_ASSERT(false, "Contin Not supported Yet");
+		else if (arg_type == NUMBER_NODE) {
+			Handle grt = createNode(TYPE_NODE, "GreaterThanLink");
+			if (_ignore_ops.find(grt) == _ignore_ops.end()) {
+				Handle arg =
+						createLink(GREATER_THAN_LINK,
+						           createNode(SCHEMA_NODE, "$" + std::to_string(i+1)),
+						           createNode(NUMBER_NODE, "0"));
+				seq.push_back(arg);
+			}
+		}
 	}
 
 	unsigned ps = seq.size(); // the actual number of arguments to consider
@@ -374,6 +411,267 @@ Handle BuildAtomeseKnobs::disc_probe(HandleSeq& path, Handle &prog,
 	field_set::disc_spec ds(knob_settings.size());
 	_rep.disc.insert(std::make_pair(ds, knob_var));
 	return knob_var;
+}
+
+inline Handle pick_const(Handle &prog)
+{
+	auto b = prog->getOutgoingSet().begin();
+	auto e = prog->getOutgoingSet().end();
+
+	HandleSeq seq;
+	Handle c;
+	std::remove_copy_if(b, e,
+	                    std::back_inserter(seq),
+	                    [&c](Handle h) {
+		                    if (h->get_type() == NUMBER_NODE)
+		                    {
+			                    c = h;
+			                    return true;
+		                    }
+		                    return false;
+	                    });
+	prog = createLink(seq, prog->get_type());
+	return c;
+}
+
+void BuildAtomeseKnobs::build_contin(Handle &prog)
+{
+	Type type = prog->get_type();
+
+	if (type == PLUS_LINK or type == TIMES_LINK) {
+		Handle cn = pick_const(prog);
+		if (type == PLUS_LINK)
+			prog = add_to(div_with_lc(multi_const(linear_combination(prog))), cn);
+		else
+			prog = add_to(div_with_lc(multi_const(linear_combination(prog), cn)));
+		return;
+	}
+
+	if (type == DIVIDE_LINK) {
+		OC_ASSERT(prog->get_arity()==2, "DivideLink expects 2 arguments!");
+		Handle n = multi_const(linear_combination(prog->getOutgoingAtom(0)));
+		prog = add_to(div_with_lc(n, prog->getOutgoingAtom(1)));
+		return;
+	}
+
+	else {
+		prog = createLink(PLUS_LINK, prog);
+		prog = add_to(div_with_lc(multi_const(linear_combination(prog))));
+	}
+}
+
+Handle BuildAtomeseKnobs::linear_combination(Handle prog, bool in_SLE)
+{
+	HandleSeq seq;
+	Handle const_node = Handle(createNumberNode(0));
+
+	if (prog->get_type() == NUMBER_NODE)
+		const_node = prog;
+	else if (prog->get_type() == SCHEMA_NODE) {// if prog is a contin arg.
+		seq.push_back(multi_const(prog));
+	}
+	else if (nameserver().isA(prog->get_type(), LINK)) {
+		for (Handle child : prog->getOutgoingSet())
+		{
+			if (child->get_type() == NUMBER_NODE) {
+				if (!NumberNodeCast(const_node)->value().at(0))
+					const_node = child;
+				else
+					seq.push_back(create_const_knob(child));
+			}
+			else if (nameserver().isA(child->get_type(), NODE)) {
+				if (_linear_contin)
+					seq.push_back(multi_const(child));
+				else
+					seq.push_back(
+							createLink(TIMES_LINK, child,
+							           linear_combination(Handle(createNumberNode(1)))));
+			}
+			else if (child->get_type() == TIMES_LINK) {
+				if (_linear_contin)
+					seq.push_back(make_knob_rec(child));
+				else {
+					HandleSeq ch_seq;
+					Handle const_mul = Handle(createNumberNode(1));
+					for(Handle h : child->getOutgoingSet())
+					{
+						if (h->get_type() == NUMBER_NODE and
+								NumberNodeCast(const_mul)->value().at(0) == 1.0) {
+							const_mul = h;
+							continue;
+						}
+						ch_seq.push_back(h);
+					}
+					ch_seq.push_back(linear_combination(const_mul));
+					seq.push_back(make_knob_rec(createLink(ch_seq, TIMES_LINK)));
+				}
+			}
+			else {
+				if (_linear_contin)
+					seq.push_back(multi_const(make_knob_rec(child)));
+				else
+					seq.push_back(
+							createLink(TIMES_LINK, linear_combination(child),
+							           linear_combination(Handle(createNumberNode(1)))));
+			}
+		}
+	}
+
+	HandleSeq tmp(linear_combination(in_SLE));
+	seq.insert(seq.end(), tmp.begin(), tmp.end());
+	if (!in_SLE)
+		seq.push_back(create_const_knob(const_node));
+
+	return createLink(seq, PLUS_LINK);
+}
+
+HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
+{
+	HandleSeq seq;
+	for (int idx : boost::irange(1, _arity + 1))
+	{
+		HandleSeq arg_types = _signature->getOutgoingAtom(0)->getOutgoingSet();
+		Type arg_type = TypeNodeCast(arg_types[idx-1])->get_kind();
+		if (arg_type == NUMBER_NODE) {
+			Handle arg = Handle(createNode(SCHEMA_NODE, "$" + std::to_string(idx)));
+			seq.push_back(multi_const(arg, Handle(createNumberNode(0))));
+		}
+		else if (arg_type == BOOLEAN_NODE) {
+			Handle imp_t = createNode(TYPE_NODE, "ImpulseLink");
+			if (_ignore_ops.find(imp_t) == _ignore_ops.end()) {
+				Handle arg = Handle(createNode(PREDICATE_NODE, "$" + std::to_string(idx)));
+				Handle imp = createLink(IMPULSE_LINK, arg);
+				seq.push_back(multi_const(imp, Handle(createNumberNode(0))));
+			}
+		}
+	}
+
+	if (!in_SLE) {
+		std::vector<std::string> func_strs = {"SinLink", "LogLink", "ExpLink"};
+		for (int i=0; i < func_strs.size(); i++)
+		{
+			Handle imp_t = createNode(TYPE_NODE, func_strs[i]);
+			if (_ignore_ops.find(imp_t) != _ignore_ops.end())
+				continue;
+			Handle sub_child=createLink(PLUS_LINK);
+			switch(i)
+			{
+				case 0:
+					seq.push_back(multi_const(
+							createLink(SIN_LINK, linear_combination(sub_child, true)),
+							Handle(createNumberNode(0))));
+					break;
+				case 1:
+					seq.push_back(multi_const(
+							createLink(LOG_LINK, linear_combination(sub_child, true)),
+							Handle(createNumberNode(0))));
+					break;
+				case 2:
+					seq.push_back(multi_const(
+							createLink(EXP_LINK, linear_combination(sub_child, true)),
+							Handle(createNumberNode(0))));
+					break;
+				default:
+				OC_ASSERT(false, "Unknown OP!");
+			}
+		}
+	}
+	return seq;
+}
+
+Handle BuildAtomeseKnobs::create_const_knob(Handle const_node, Type type)
+{
+	Handle const_knob;
+	if (const_node)
+		const_knob = create_contin_knob(NumberNodeCast(const_node)->value().at(0));
+	else if (type != NOTYPE) {
+		// if const_node is nullptr, create contin knob with identity.
+		const_knob = type == PLUS_LINK ?
+		             create_contin_knob(0) :
+		             create_contin_knob(1);
+	}
+	return const_knob;
+}
+
+Handle BuildAtomeseKnobs::create_contin_knob(int i)
+{
+	Handle knob_var =
+			createNode(VARIABLE_NODE, randstr(std::string("$knob") + "-"));
+	_variables.push_back(knob_var);
+	field_set::contin_spec cs(i, _step_size, _expansion, _depth);
+	_rep.contin.insert(std::make_pair(cs, knob_var));
+	return knob_var;
+}
+
+Handle BuildAtomeseKnobs::multi_const(Handle l, Handle r)
+{
+	Handle contin_knob = create_const_knob(r, TIMES_LINK);
+	return createLink(TIMES_LINK, l, contin_knob);
+}
+
+Handle BuildAtomeseKnobs::div_with_lc(Handle n, Handle d)
+{
+	d = d ? linear_combination(d) :
+	    linear_combination(Handle(createNumberNode(1)));
+	return createLink(DIVIDE_LINK, n, d);
+}
+
+Handle BuildAtomeseKnobs::add_to(Handle l, Handle r)
+{
+	Handle contin_knob = create_const_knob(r, PLUS_LINK);
+	return createLink(PLUS_LINK, l, contin_knob);
+}
+
+Handle BuildAtomeseKnobs::make_knob_rec(Handle prog)
+{
+	if (nameserver().isA(prog->get_type(), NODE))
+		return prog->get_type() == NUMBER_NODE ?
+		       create_const_knob(prog) : prog;
+
+	HandleSeq seq;
+	for (Handle ch : prog->getOutgoingSet())
+		seq.push_back(make_knob_rec(ch));
+
+	return createLink(seq, prog->get_type());
+}
+
+bool BuildAtomeseKnobs::is_predicate(const Handle &prog) const
+{
+	if (prog->get_type() == GREATER_THAN_LINK)
+		return true;
+	if (prog->get_type() == NOT_LINK)
+		return prog->getOutgoingAtom(0)->get_type() == GREATER_THAN_LINK;
+	return false;
+}
+
+void
+BuildAtomeseKnobs::build_predicate(Handle &prog, Handle child)
+{
+	OC_ASSERT(is_predicate(child),
+	          "ERROR child is supposed to be Predicate.")
+	HandleSeq seq;
+	std::remove_copy_if(prog->getOutgoingSet().begin(),
+	                    prog->getOutgoingSet().end(),
+	                    std::back_inserter(seq),
+	                    [&child](Handle h){return content_eq(child, h);});
+	bool is_neg = child->get_type() == NOT_LINK;
+	if (is_neg) {
+		child = child->getOutgoingAtom(0);
+		auto contin_h = child->getOutgoingAtom(0);
+		build_contin(contin_h);
+		child = createLink(NOT_LINK,
+		                   createLink(GREATER_THAN_LINK,
+		                              contin_h,
+		                              child->getOutgoingAtom(1)));
+	} else {
+		auto contin_h = child->getOutgoingAtom(0);
+		build_contin(contin_h);
+		child = createLink(GREATER_THAN_LINK,
+		                   contin_h,
+		                   child->getOutgoingAtom(1));
+	}
+	seq.push_back(child);
+	prog = createLink(seq, prog->get_type());
 }
 }
 }
