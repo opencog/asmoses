@@ -193,7 +193,13 @@ AtomeseRepresentation::ostream_handle(const Handle &h, std::ostream &out) const
 	Type t = h->get_type();
 
 	if (nameserver().isA(t, NODE)) {
-		out << h->get_name() << " ";
+		auto ct = contin_lookup.find(h);
+		if (ct != contin_lookup.end())
+			out << "["
+			    << _fields.contin().at(ct->second).mean
+			    << "] ";
+		else
+			out << h->get_name() << " ";
 		return out;
 	}
 
