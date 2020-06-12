@@ -1209,7 +1209,13 @@ type_tree infer_type_tree(const combo_tree& tr)
     insert_arg_type_tree(arg_types, tt);
     return tt;
 }
-
+type_node_seq type_tree_to_tyn_seq(const type_tree& tt)
+{
+	type_node_seq t_node_seq;
+	auto tt_sig = get_signature_inputs(tt);
+	for( type_tree t : tt_sig) t_node_seq.push_back(get_type_node(t));
+	return t_node_seq;
+}
 // port infer type tree for atomese type
 Handle infer_atomese_type(const Handle& handle)
 {

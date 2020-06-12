@@ -259,6 +259,8 @@ void infer_arg_type_tree(const combo_tree& tr, type_tree_seq& arg_types);
 // insert the types of the arguments in arg_types in the signature of
 // a given function type. If the function is a constant then wrap it
 // in lambda_type
+type_node_seq type_tree_to_tyn_seq(const type_tree& tt);
+
 void insert_arg_type_tree(const type_tree_seq& arg_types,
                           type_tree& tt2);
 

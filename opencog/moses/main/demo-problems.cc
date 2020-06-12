@@ -30,7 +30,7 @@
 #include <opencog/moses/scoring/behave_cscore.h>
 #include <opencog/moses/scoring/bscores.h>
 #include <examples/example-progs/scoring_iterators.h>
-
+#include "populate_atomspace.h"
 #include "problem.h"
 #include "demo-problems.h"
 
@@ -261,20 +261,21 @@ void polynomial_problem::run(option_base* ob)
 	if (pms.exemplars.empty()) {
 		pms.exemplars.push_back(type_to_exemplar(id::contin_type));
 	}
+	type_tree tt = gen_signature(id::contin_type, 1);
+	ITable it(tt, (pms.nsamples>0 ? pms.nsamples : pms.default_nsamples));
 
-	if (pms.deme_params.atomspace_port) {
+    if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = new AtomSpace();
+        pms.deme_params.as = new AtomSpace();
+        type_node_seq tt_seq = type_tree_to_tyn_seq(tt);
+        it.set_types(tt_seq);
+        populate(pms.deme_params.as, it);
 	}
 
 	// sr is fundamentally a kind of non-linear regression!
 	// over-ride any flag settings regarding this.
+
 	pms.deme_params.linear_contin = false;
-
-	type_tree tt = gen_signature(id::contin_type, 1);
-
-	ITable it(tt, (pms.nsamples>0 ? pms.nsamples : pms.default_nsamples));
-
 	int as = alphabet_size(tt, pms.ignore_ops);
 
 	contin_bscore::err_function_type eft =
@@ -292,7 +293,7 @@ void polynomial_problem::run(option_base* ob)
 	                      cscore,
 	                      pms.opt_params, pms.hc_params, pms.ps_params,
 	                      pms.deme_params, pms.filter_params, pms.meta_params,
-	                      pms.moses_params, pms.mmr_pa);
+	                      pms.moses_params, pms.mmr_pa, id::contin_type, it.get_labels());
 }
 
 // ==================================================================

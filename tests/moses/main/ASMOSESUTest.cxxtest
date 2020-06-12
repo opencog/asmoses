@@ -97,10 +97,10 @@ public:
 		string atomspace_port("--atomspace-port=1");
 		moses_test_score({data_file_path, max_evals, atomspace_port}, -3);
 	}
-//	void test_atomese_sr_3() {
-//		cout << BOOST_CURRENT_FUNCTION << endl;
-//		moses_test_score({"-Hsr", "-k3", "-m1000", "-L1", "--atomspace-port=1"});
-//	}
+	void test_atomese_sr_3() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		moses_test_score({"-Hsr", "-k3", "-m1000", "-L1", "--atomspace-port=1"});
+	}
 	void test_atomese_times(){
 		cout << BOOST_CURRENT_FUNCTION << endl;
 		string data_file_path("-i" + MOSESUTest_dir + "times.csv");

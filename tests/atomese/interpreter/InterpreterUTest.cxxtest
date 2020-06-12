@@ -283,7 +283,7 @@ public:
 		HandleSeq seq = {f4};
 		Handle program = createLink(seq, SIN_LINK);
 		std::vector<double> expected = {floorf(sin(2.0)*10000)/10000, floorf(sin(5.0)*10000)/10000,floorf(sin(3.6)*10000)/10000};
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::value_key) ;
 		ValuePtr _result = interpreter(program);
 		std::vector<double> interout = FloatValueCast(_result)->value();
 		std::vector<double> result = {};

@@ -35,8 +35,8 @@
 using namespace opencog;
 using namespace atomese;
 
-Interpreter::Interpreter(const opencog::Handle &key)
-		: _key(key), _problem_data_size(0)
+Interpreter::Interpreter(const opencog::Handle &key, const int size)
+		: _key(key), _problem_data_size(size)
 {}
 
 opencog::ValuePtr Interpreter::operator()(const opencog::Handle &program)

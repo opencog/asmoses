@@ -506,7 +506,11 @@ vector<string> Table::get_labels() const
 	labels.insert(labels.begin(), otable.get_label());
 	return labels;
 }
-
+vector<string> Table::get_input_labels() const
+{
+	vector<string> labels = itable.get_labels();
+	return labels;
+}
 // -------------------------------------------------------
 
 CTable Table::compressed(const std::string weight_col) const
@@ -900,7 +904,7 @@ void complete_truth_table::populate(const Handle &handle)
 	// map the values of inputs to the program.
 	setup_features(handle, features);
 
-	atomese::Interpreter interpreter(atomese::value_key);
+	atomese::Interpreter interpreter(atomese::value_key, pow2(_arity));
 	ValueSeq result = LinkValueCast(interpreter(handle))->value();
 
 	// This happens if the program[handle] is a constant [i:e TRUE_LINK or NUMBER_NODE]
