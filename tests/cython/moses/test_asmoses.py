@@ -1,7 +1,7 @@
 __author__ = 'Cosmo Harrigan'
 
 import sys
-
+import unittest
 # The opencog.pyasmoses module won't be found without this!
 if sys.version_info >= (3, 0):
    sys.path.append("/usr/local/lib/python3/dist-packages")
@@ -11,7 +11,7 @@ from nose.tools import *
 from opencog.pyasmoses import moses, MosesException, MosesCandidate
 
 
-class TestMOSES:
+class TestMOSES(unittest.TestCase):
     def setUp(self):
         self.moses = moses()
 
@@ -57,3 +57,17 @@ class TestMOSES:
     @raises(MosesException)
     def test_run_manually_raise(self):
         assert raises(MosesException, self.moses.run_manually(args="-c"))
+
+    def test_float_score(self):
+        input_data = [[0, 0, 0],
+              [0.2, 0.2, 0.4],
+              [1, 1, 2],
+              [1, 0, 1],
+              [2., 1, 3]]
+        output = self.moses.run(input=input_data, python=True, args='--max-time=60 --balance=1')
+        self.assertTrue(any([isinstance(o.score, float) for o in output]),
+                "Test only valid when there is a float score")
+        model = output[0].eval
+        print(model([0, 1]))
+        print(model([1, 1]))
+
