@@ -42,11 +42,11 @@ public:
 		logger().set_timestamp_flag(false);
 		logger().set_print_to_stdout_flag(true);
 
-		const string reductUREUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/urereduct/rules";
-		const string reductURE_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/urereduct/rules";
+		const string UREreductUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/urereduct/rules";
+		const string UREreduct_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/urereduct/rules";
 
-		eval.eval(string("(add-to-load-path \"") + reductUREUTest_rules_dir + string("\")"));
-		eval.eval(string("(add-to-load-path \"") + reductURE_rules_dir + string("\")"));
+		eval.eval(string("(add-to-load-path \"") + UREreductUTest_rules_dir + string("\")"));
+		eval.eval(string("(add-to-load-path \"") + UREreduct_rules_dir + string("\")"));
 
 		eval.eval("(use-modules (opencog))");
 		eval.eval("(use-modules (opencog exec) (opencog reduct))");
@@ -64,18 +64,16 @@ public:
 	void tearDown();
 
 	void load_scm_files(std::vector<std::string>);
-
 	void test_and_idenityT();
-    void test_or_identityT();
-    void test_and_identityF();
-    void test_or_identityF();
-    void test_or_identity();
-//    void test_and_or_iden();
-//    void test_or_and_iden();
-    void test_double_not();
-//    void test_dist_and();
-//    void test_dist_or();
-
+	void test_or_identityT();
+	void test_and_identityF();
+	void test_or_identityF();
+	void test_or_identity();
+	void test_double_not();
+//	void test_and_or_iden();
+//	void test_or_and_iden();
+//	void test_dist_and();
+//	void test_dist_or();
 
 };
 
@@ -100,113 +98,101 @@ void ReductRulesUTest::load_scm_files(std::vector<std::string> files)
 	}
 }
 
-
 void ReductRulesUTest::test_and_idenityT()
 {
-
-    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-    load_scm_files(str);
-    std::string testcase = eval.eval("(cog-execute! testcase1)");
-    std::string result = eval.eval("(cog-execute! and-identity-true)");
+	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+	load_scm_files(str);
+	std::string testcase = eval.eval("(cog-execute! testcase1)");
+	std::string result = eval.eval("(cog-execute! and-identity-true)");
 	std::string expected = eval.eval("(cog-execute! expected1)");
-    TS_ASSERT_EQUALS(result, expected);
+	TS_ASSERT_EQUALS(result, expected);
 }
 
 void ReductRulesUTest::test_or_identityT()
 {
-
-    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-    load_scm_files(str);
-    std::string testcase = eval.eval("(cog-execute! testcase2)");
-    std::string result = eval.eval("(cog-execute! or-identity-true)");
-    std::string expected = eval.eval("(cog-execute! expected2)");
-    TS_ASSERT_EQUALS(result, expected);
+	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+	load_scm_files(str);
+	std::string testcase = eval.eval("(cog-execute! testcase2)");
+	std::string result = eval.eval("(cog-execute! or-identity-true)");
+	std::string expected = eval.eval("(cog-execute! expected2)");
+	TS_ASSERT_EQUALS(result, expected);
 }
 
 void ReductRulesUTest::test_and_identityF()
 {
-
-    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-    load_scm_files(str);
-    std::string testcase = eval.eval("(cog-execute! testcase1)");
-    std::string result = eval.eval("(cog-execute! and-identity-false)");
-    std::string expected = eval.eval("(cog-execute! expected3)");
-    TS_ASSERT_EQUALS(result, expected);
+	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+	load_scm_files(str);
+	std::string testcase = eval.eval("(cog-execute! testcase1)");
+	std::string result = eval.eval("(cog-execute! and-identity-false)");
+	std::string expected = eval.eval("(cog-execute! expected3)");
+	TS_ASSERT_EQUALS(result, expected);
 }
 
 void ReductRulesUTest::test_or_identityF()
 {
-
-    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-    load_scm_files(str);
-    std::string testcase = eval.eval("(cog-execute! testcase2)");
-    std::string result = eval.eval("(cog-execute! or-identity-false)");
-    std::string expected = eval.eval("(cog-execute! expected4)");
-    TS_ASSERT_EQUALS(result, expected);
+	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+	load_scm_files(str);
+	std::string testcase = eval.eval("(cog-execute! testcase2)");
+	std::string result = eval.eval("(cog-execute! or-identity-false)");
+	std::string expected = eval.eval("(cog-execute! expected4)");
+	TS_ASSERT_EQUALS(result, expected);
 }
 
 void ReductRulesUTest::test_or_identity()
 {
-
-    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-    load_scm_files(str);
-    std::string testcase = eval.eval("(cog-execute! testcase2)");
-    std::string result = eval.eval("(cog-execute!  or-identity)");
-    std::string expected = eval.eval("(cog-execute! expected5)");
-    TS_ASSERT_EQUALS(result, expected);
+	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+	load_scm_files(str);
+	std::string testcase = eval.eval("(cog-execute! testcase2)");
+	std::string result = eval.eval("(cog-execute!  or-identity)");
+	std::string expected = eval.eval("(cog-execute! expected5)");
+	TS_ASSERT_EQUALS(result, expected);
 }
 //void ReductRulesUTest::test_and_or_iden()
 //{
-//
-//    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-//    load_scm_files(str);
-//    std::string testcase = eval.eval("(cog-execute! testcase6)");
-//    std::string result = eval.eval("(cog-execute!  and-or-identity)");
-//    std::string expected = eval.eval("(cog-execute! expected6)");
-//    TS_ASSERT_EQUALS(result, expected);
+//	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+//	load_scm_files(str);
+//	std::string testcase = eval.eval("(cog-execute! testcase6)");
+//	std::string result = eval.eval("(cog-execute!  and-or-identity)");
+//	std::string expected = eval.eval("(cog-execute! expected6)");
+//	TS_ASSERT_EQUALS(result, expected);
 //}
 //
 //void ReductRulesUTest::test_or_and_iden()
 //{
-//
-//    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-//    load_scm_files(str);
-//    std::string testcase = eval.eval("(cog-execute! testcase7)");
-//    std::string result = eval.eval("(cog-execute!  or-and-identity)");
-//    std::string expected = eval.eval("(cog-execute! expected7)");
-//    TS_ASSERT_EQUALS(result, expected);
+//	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+//	load_scm_files(str);
+//	std::string testcase = eval.eval("(cog-execute! testcase7)");
+//	std::string result = eval.eval("(cog-execute!  or-and-identity)");
+//	std::string expected = eval.eval("(cog-execute! expected7)");
+//	TS_ASSERT_EQUALS(result, expected);
 //}
-
 
 void ReductRulesUTest::test_double_not()
 {
-
-    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-    load_scm_files(str);
-    std::string testcase = eval.eval("(cog-execute! testcase8)");
-    std::string result = eval.eval("(cog-execute!  double-not)");
-    std::string expected = eval.eval("(cog-execute! expected8)");
-    TS_ASSERT_EQUALS(result, expected);
+	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+	load_scm_files(str);
+	std::string testcase = eval.eval("(cog-execute! testcase8)");
+	std::string result = eval.eval("(cog-execute!  double-not)");
+	std::string expected = eval.eval("(cog-execute! expected8)");
+	TS_ASSERT_EQUALS(result, expected);
 }
-//
+
 //void ReductRulesUTest::test_dist_and()
 //{
-//
-//    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-//    load_scm_files(str);
-//    std::string testcase = eval.eval("(cog-execute! testcase9)");
-//    std::string result = eval.eval("(cog-execute! distribuitive-and )");
-//    std::string expected = eval.eval("(cog-execute! expected9)");
-//    TS_ASSERT_EQUALS(result, expected);
+//	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+//	load_scm_files(str);
+//	std::string testcase = eval.eval("(cog-execute! testcase9)");
+//	std::string result = eval.eval("(cog-execute! distribuitive-and )");
+//	std::string expected = eval.eval("(cog-execute! expected9)");
+//	TS_ASSERT_EQUALS(result, expected);
 //}
 //void ReductRulesUTest::test_dist_or()
 //{
-//
-//    std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
-//    load_scm_files(str);
-//    std::string testcase = eval.eval("(cog-execute! testcase10)");
-//    std::string result = eval.eval("(cog-execute! distribuitive-or)");
-//    std::string expected = eval.eval("(cog-execute! expected10)");
-//    TS_ASSERT_EQUALS(result, expected);
+//	std::vector<std::string> str = {"logical-rules.scm", "logical-rulesUTest.scm"};
+//	load_scm_files(str);
+//	std::string testcase = eval.eval("(cog-execute! testcase10)");
+//	std::string result = eval.eval("(cog-execute! distribuitive-or)");
+//	std::string expected = eval.eval("(cog-execute! expected10)");
+//	TS_ASSERT_EQUALS(result, expected);
 //}
 

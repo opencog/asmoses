@@ -21,7 +21,7 @@
   ; 3. load-from-path is used so as to be able to use build_dir/opencog/scm,
   ;    even when the module isn't installed.
 
-  (load-from-path (string-append "opencog/reducture/rules/" RULE-TYPE ".scm"))
+  (load-from-path (string-append "opencog/urereduct/rules/" RULE-TYPE ".scm"))
 )
 
 (define-public reduct-atomspace (cog-new-atomspace))

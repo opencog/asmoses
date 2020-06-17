@@ -28,11 +28,11 @@ ADD_DEPENDENCIES(reduct-types reduct_atom_types)
 
 INSTALL (FILES
 		${CMAKE_CURRENT_BINARY_DIR}/atom_types.h
-		DESTINATION "include/opencog/${PROJECT_NAME}/reducture/types"
+		DESTINATION "include/opencog/${PROJECT_NAME}/urereduct/types"
 		)
 
 ADD_GUILE_MODULE (FILES
 		${CMAKE_CURRENT_BINARY_DIR}/reduct_types.scm
-		MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/reducture/types"
+		MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/urereduct/types"
 		DEPENDS reduct_atom_types
 		)
