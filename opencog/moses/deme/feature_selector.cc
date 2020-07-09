@@ -263,7 +263,7 @@ void feature_selector::log_stats_top_feature_sets(const feature_set_pop& top_fs)
                                           ba::tag::mean,
                                           ba::tag::variance,
                                           ba::tag::min,
-                                          ba::tag::max> > accumulator_t;
+                                          ba::tag::max>> accumulator_t;
     accumulator_t diversity_acc, score_acc;
 
     // Stats about score and diversity

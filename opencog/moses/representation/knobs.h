@@ -279,7 +279,7 @@ struct action_subtree_knob : public discrete_knob<MAX_PERM_ACTIONS>
     typedef combo_tree::pre_order_iterator pre_it;
 
     action_subtree_knob(combo_tree& tr, combo_tree::iterator tgt,
-                        const std::vector<combo_tree>& perms);
+                        const combo_tree_seq& perms);
 
     complexity_t complexity_bound() const;
 
@@ -295,7 +295,7 @@ struct action_subtree_knob : public discrete_knob<MAX_PERM_ACTIONS>
 
     std::string toStr() const;
 protected:
-    const std::vector<combo_tree> _perms;
+    const combo_tree_seq _perms;
 };
 
 // Binary knob for action subtree, present or absent

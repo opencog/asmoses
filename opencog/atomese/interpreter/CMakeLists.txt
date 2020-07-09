@@ -3,6 +3,7 @@ INSTALL(FILES
 
 		Interpreter.h
 		logical_interpreter.h
+		condlink_interpreter.h
 
 		DESTINATION
 

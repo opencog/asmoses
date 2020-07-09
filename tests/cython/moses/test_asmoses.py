@@ -42,15 +42,13 @@ class TestMOSES(unittest.TestCase):
         # assert output[0].program == b"or(and(!$1 $2) and($1 !$2)) "
 
     def test_run_majority_python(self):
-        output = self.moses.run(args="-H maj -c 2", python=True)
+        output = self.moses.run(args="-H maj -c 2 -z 100", python=True)
         assert isinstance(output[0], MosesCandidate)
         print ("In run_majority_python, the program is:\n", output[0].program)
         assert output[0].score == 0
         model = output[0].eval
         assert not model([0, 1, 0, 1, 0])
         assert model([1, 1, 0, 1, 0])
-        assert isinstance(output[1], MosesCandidate)
-        assert output[1].score == -1
 
     @raises(MosesException)
     def test_run_raise(self):

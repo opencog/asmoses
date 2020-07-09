@@ -80,7 +80,7 @@ void reduce_gt_zero_pair_power::operator()(combo_tree& tr,combo_tree::iterator i
 {
     //associate for each subtree its parity
     typedef std::map<pre_it, bool,
-                     opencog::lexicographic_subtree_order<vertex> > subtree_parity;
+                     opencog::lexicographic_subtree_order<vertex>> subtree_parity;
     typedef subtree_parity::iterator subtree_parity_it;
     if(*it==id::greater_than_zero) {
         OC_ASSERT(it.has_one_child(),
@@ -448,7 +448,7 @@ void reduce_contin_if::operator()(combo_tree& tr,combo_tree::iterator it) const
 // op(if(x y1 z1) if(x y2 z2)) -> if(x op(y1 y2) op(z1 z2))
 void reduce_op_contin_if::operator()(combo_tree& tr,combo_tree::iterator it) const
 {
-    typedef std::set<pre_it, opencog::lexicographic_subtree_order<vertex> > subtree_quotient;
+    typedef std::set<pre_it, opencog::lexicographic_subtree_order<vertex>> subtree_quotient;
     typedef subtree_quotient::const_iterator subtree_quotient_const_it;
     if(*it==id::div) {
         OC_ASSERT(tr.number_of_children(it)==2, 
@@ -516,7 +516,7 @@ void reduce_op_contin_if::operator()(combo_tree& tr,combo_tree::iterator it) con
 // op in {+, *, /}. If op is / the order of argument is respected
 void reduce_contin_if_inner_op::operator()(combo_tree& tr,combo_tree::iterator it) const
 {
-    typedef std::multiset<pre_it, opencog::lexicographic_subtree_order<vertex> > subtree_quotient;
+    typedef std::multiset<pre_it, opencog::lexicographic_subtree_order<vertex>> subtree_quotient;
     typedef subtree_quotient::iterator subtree_quotient_it;
     if(*it==id::contin_if) {
         OC_ASSERT(tr.number_of_children(it)==3,
@@ -641,7 +641,7 @@ void reduce_junction_gt_zero_sum_constant::operator()(combo_tree& tr,
     // 0<s+c
     // such that s is a sum of non-constant term and c is a constant
     // the second argument, contin_t, is c
-    typedef std::map<pre_it, contin_t, opencog::lexicographic_subtree_order<vertex> > subtree_quotient;
+    typedef std::map<pre_it, contin_t, opencog::lexicographic_subtree_order<vertex>> subtree_quotient;
     typedef subtree_quotient::iterator subtree_quotient_it;
     if(*it==id::logical_and || *it==id::logical_or) {
         subtree_quotient sq;
@@ -1460,7 +1460,7 @@ void reduce_inequality_from_assumptions::operator()
     // the size of a row is |assumptions|+1
     // the last column of the matrix contains the coef associated with its
     // expression
-    typedef std::map<pre_it, std::vector<contin_t>, opencog::lexicographic_subtree_order<vertex> > subtree_row;
+    typedef std::map<pre_it, std::vector<contin_t>, opencog::lexicographic_subtree_order<vertex>> subtree_row;
     typedef subtree_row::iterator subtree_row_it;
     typedef subtree_row::const_iterator subtree_row_const_it;
     //true if the main term is strictly positive false otherwise
@@ -1561,7 +1561,7 @@ void reduce_inequality_from_assumptions::operator()
                             if(sr_it==sr.end()) {
                                 std::vector<contin_t> v(assumptions.size()+1, 0.0);
                                 v.push_back(coef);
-                                std::pair<pre_it, std::vector<contin_t> > p(expression, v);
+                                std::pair<pre_it, std::vector<contin_t>> p(expression, v);
                                 sr.insert(p);
                             }
                             else { //update coef
@@ -1591,7 +1591,7 @@ void reduce_inequality_from_assumptions::operator()
                     if(ctr.is_valid(expression)) {
                         std::vector<contin_t> v(assumptions.size()+1, 0.0);
                         v.push_back(coef);
-                        std::pair<pre_it, std::vector<contin_t> > p(expression, v);
+                        std::pair<pre_it, std::vector<contin_t>> p(expression, v);
                         sr.insert(p);
                     }
                     //add coef to the last entry of free_coefs
@@ -1635,7 +1635,7 @@ void reduce_inequality_from_assumptions::operator()
                                 if(sr_it==sr.end()) {
                                     std::vector<contin_t> v(assumptions.size()+2, 0.0);
                                     v[i] = coef;
-                                    std::pair<pre_it, std::vector<contin_t> >
+                                    std::pair<pre_it, std::vector<contin_t>>
                                         p(expression, v);
                                     sr.insert(p);
                                 }
@@ -1667,7 +1667,7 @@ void reduce_inequality_from_assumptions::operator()
                             if(sr_it==sr.end()) {
                                 std::vector<contin_t> v(assumptions.size()+2, 0.0);
                                 v[i] = coef;
-                                std::pair<pre_it, std::vector<contin_t> > p(expression, v);
+                                std::pair<pre_it, std::vector<contin_t>> p(expression, v);
                                 sr.insert(p);
                             }
                             else { //update coef
@@ -1680,7 +1680,7 @@ void reduce_inequality_from_assumptions::operator()
                     }  
                 }
                 //generate matrix to be solved
-                std::vector< std::vector<contin_t> > mat;
+                std::vector< std::vector<contin_t>> mat;
                 for(subtree_row_const_it sci = sr.begin(); sci != sr.end(); ++sci)
                     mat.push_back(sci->second);
                 mat.push_back(free_coefs);

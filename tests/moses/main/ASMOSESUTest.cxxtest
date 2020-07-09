@@ -95,11 +95,34 @@ public:
 		string data_file_path("-i" + MOSESUTest_dir + "dataset.csv");
 		string max_evals("-m1000");
 		string atomspace_port("--atomspace-port=1");
-		moses_test_score({data_file_path, max_evals, atomspace_port}, -5);
+		moses_test_score({data_file_path, max_evals, atomspace_port}, -3);
 	}
 	void test_atomese_sr_3() {
 		cout << BOOST_CURRENT_FUNCTION << endl;
-		moses_test_score({"-Hsr", "-k3", "-m100000", "-L1", "--atomspace-port=1"});
+		moses_test_score({"-Hsr", "-k3", "-m1000", "-L1", "--atomspace-port=1"});
+	}
+	void test_atomese_times(){
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		string data_file_path("-i" + MOSESUTest_dir + "times.csv");
+		string max_evals("-m1000");
+		string atomspace_port("--atomspace-port=1");
+		moses_test_score({data_file_path, max_evals, atomspace_port}, 0);
+	}
+//	void test_precision() {
+//		cout << BOOST_CURRENT_FUNCTION << endl;
+//		string tr_str("!$1");
+//		string data_file_path("-i" + MOSESUTest_dir + "precision.csv");
+//		moses_test_combo({ data_file_path, "--atomspace-port=1"}, {tr_str});
+//	}
+	void test_output_labels() {
+		cout << BOOST_CURRENT_FUNCTION << endl;
+		string tr_str("and($arg1 $arg2)"),
+				data_file_path("-i" + MOSESUTest_dir + "dataset.csv"),
+				max_evals("-m1000"),
+				output_labels("-W1");
+		string atomspace_port("--atomspace-port=1");
+		cheap_moses_test_combo({data_file_path, max_evals, output_labels, atomspace_port},
+		                       {tr_str});
 	}
 //    // test for moses_test_atomese
 //	void test_atomese_cp_simple() {

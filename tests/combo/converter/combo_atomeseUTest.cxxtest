@@ -28,25 +28,28 @@
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/core/NumberNode.h>
+#include <opencog/atomese/type_checker/AtomeseTypeChecker.h>
 
 
 using namespace std;
 using namespace opencog;
 
 
-class combo_atomeseUTest : public CxxTest::TestSuite{
+class combo_atomeseUTest : public CxxTest::TestSuite
+{
 
 public:
-	void test_atomese_combo_predicate(void) {
+	void test_atomese_combo_predicate(void)
+	{
 		combo::combo_tree tr = combo::str2combo_tree("and(or($1 $2) not($3))", {});
 
-		combo::ComboToAtomeseConverter to_atomese;
+		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
-		HandleSeq list_or = {createNode(PREDICATE_NODE, "1"), createNode(PREDICATE_NODE, "2")};
+		HandleSeq list_or = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
 		Handle or_link = createLink(list_or, OR_LINK);
 
-		HandleSeq list_not = {createNode(PREDICATE_NODE, "3")};
+		HandleSeq list_not = {createNode(PREDICATE_NODE, "$3")};
 		Handle not_link = createLink(list_not, NOT_LINK);
 
 		HandleSeq list_and = {or_link, not_link};
@@ -56,23 +59,25 @@ public:
 
 	}
 
-	void test_atomese_combo_schema(void) {
+	void test_atomese_combo_schema(void)
+	{
 		combo::combo_tree tr = combo::str2combo_tree("+($1 $2)", {});
 
-		combo::ComboToAtomeseConverter to_atomese;
+		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
-		HandleSeq list_plus = {createNode(SCHEMA_NODE, "1"), createNode(SCHEMA_NODE, "2")};
+		HandleSeq list_plus = {createNode(SCHEMA_NODE, "$1"), createNode(SCHEMA_NODE, "$2")};
 		Handle plus_link = createLink(list_plus, PLUS_LINK);
 
 		TS_ASSERT(content_eq(h, plus_link));
 
 	}
 
-	void test_atomese_combo_true_link(void) {
+	void test_atomese_combo_true_link(void)
+	{
 		combo::combo_tree tr = combo::str2combo_tree("true", {});
 
-		combo::ComboToAtomeseConverter to_atomese;
+		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
 		Handle true_link = createLink(TRUE_LINK);
@@ -81,10 +86,11 @@ public:
 
 	}
 
-	void test_atomese_combo_false_link(void) {
+	void test_atomese_combo_false_link(void)
+	{
 		combo::combo_tree tr = combo::str2combo_tree("false", {});
 
-		combo::ComboToAtomeseConverter to_atomese;
+		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
 		Handle false_link = createLink(FALSE_LINK);
@@ -93,21 +99,23 @@ public:
 
 	}
 
-	void test_atomese_combo_arguments(void) {
+	void test_atomese_combo_arguments(void)
+	{
 		combo::combo_tree tr = combo::str2combo_tree("$1", {});
 
-		combo::ComboToAtomeseConverter to_atomese;
+		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
-		Handle predicate_node = createNode(PREDICATE_NODE, "1");
+		Handle predicate_node = createNode(PREDICATE_NODE, "$1");
 
 		TS_ASSERT(content_eq(predicate_node, h));
 	}
 
-	void test_atomese_combo_contin(void) {
+	void test_atomese_combo_contin(void)
+	{
 		combo::combo_tree tr = combo::str2combo_tree("*(1 2)", {});
 
-		combo::ComboToAtomeseConverter to_atomese;
+		combo::ComboToAtomese to_atomese;
 		Handle h = to_atomese(tr);
 
 		HandleSeq list_plus = {Handle(createNumberNode(1)), Handle(createNumberNode(2))};
@@ -115,4 +123,209 @@ public:
 
 		TS_ASSERT(content_eq(h, times_link));
 	}
+
+	void test_atomese_combo_greater_than(void)
+	{
+		combo_tree prog;
+		combo_tree::iterator it = prog.set_head(id::greater_than_zero);
+		prog.append_child(it, 1.0);
+
+		combo::ComboToAtomese to_atomese;
+		Handle result = to_atomese(prog);
+
+		HandleSeq seq = {Handle(createNumberNode(1)), Handle(createNumberNode(0))};
+		Handle exp = createLink(seq, GREATER_THAN_LINK);
+
+		TS_ASSERT(content_eq(result, exp));
+	}
+
+	void test_atomese_combo_labeled(void)
+	{
+		combo::combo_tree tr = combo::str2combo_tree("+($1 +($2 $3))", {});
+
+		combo::ComboToAtomese to_atomese;
+		const std::vector<std::string> labels = {"z", "x", "y"};
+		Handle result = to_atomese(tr, labels);
+
+		Handle p1 = createNode(SCHEMA_NODE, "$x");
+		Handle p2 = createNode(SCHEMA_NODE, "$y");
+		Handle p3 = createNode(SCHEMA_NODE, "$z");
+
+		HandleSeq seq = {p1, p2};
+		Handle pluslink = createLink(seq, PLUS_LINK);
+
+		HandleSeq prog_seq = {p3, pluslink};
+		Handle program = createLink(prog_seq, PLUS_LINK);
+
+		TS_ASSERT(content_eq(program, result));
+	}
+
+	void test_combo_atomese_predicate1()
+	{
+		Handle p1 = createNode(PREDICATE_NODE, "$x");
+		Handle p2 = createNode(PREDICATE_NODE, "$y");
+		Handle p3 = createNode(PREDICATE_NODE, "$z");
+
+		HandleSeq seq = {p1, p2};
+		Handle andlink = createLink(seq, AND_LINK);
+
+		HandleSeq prog_seq = {andlink, p3};
+		Handle program = createLink(prog_seq, AND_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(program);
+
+		// Note: AndLink is unordered_link meaning the order might require caution.
+		// The order of the labels and the child nodes in the generated combo depends
+		// on the atomese programs' order of out_going_set.
+		const std::vector<string> exp_labels = {"z", "x", "y"};
+		auto expected = std::make_pair(combo::str2combo_tree("and($1 and($2 $3))", {}), exp_labels);
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
+
+	void test_combo_atomese_predicate2()
+	{
+		Handle p1 = createNode(PREDICATE_NODE, "$x");
+		Handle p2 = createLink(FALSE_LINK);
+		Handle p3 = createLink(TRUE_LINK);
+
+		HandleSeq seq = {p1, p2};
+		Handle orlink = createLink(seq, OR_LINK);
+
+		HandleSeq prog_seq = {orlink, p3};
+		Handle program = createLink(prog_seq, AND_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(program);
+
+		const std::vector<string> exp_labels = {"x"};
+		auto expected = std::make_pair(combo::str2combo_tree("and(true or($1 false))", {}), exp_labels);
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
+
+	void test_combo_atomese_schema()
+	{
+		Handle n = createNode(NUMBER_NODE, "5");
+		Handle f = createNode(SCHEMA_NODE, "$f");
+		HandleSeq seq = {n, f};
+		Handle plus = createLink(seq, PLUS_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(plus);
+
+		const std::vector<string> exp_labels = {"f"};
+		auto expected = std::make_pair(combo::str2combo_tree("+(5 $1)", {}), exp_labels);
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
+
+	void test_combo_atomese_greater_than(void)
+	{
+		HandleSeq seq = {Handle(createNumberNode(1)), Handle(createNumberNode(0))};
+		Handle g = createLink(seq, GREATER_THAN_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(g);
+
+		combo_tree exp;
+		combo_tree::iterator it = exp.set_head(id::greater_than_zero);
+		exp.append_child(it, 1.0);
+
+		auto expected = std::make_pair(exp, std::vector<string>{});
+
+		TS_ASSERT_EQUALS(result, expected);
+	}
+
+	void test_combo_atomese()
+	{
+		Handle p1 = createNode(PREDICATE_NODE, "$x");
+		Handle p2 = createNode(PREDICATE_NODE, "$y");
+		Handle p3 = createNode(PREDICATE_NODE, "$z");
+
+		HandleSeq seq = {p1, p2};
+		Handle andlink = createLink(seq, AND_LINK);
+
+		HandleSeq prog_seq = {andlink, p3};
+		Handle program = createLink(prog_seq, AND_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto combo_result = to_combo(program);
+
+		combo::ComboToAtomese to_atomese;
+		Handle result = to_atomese(combo_result.first, combo_result.second);
+
+		TS_ASSERT(content_eq(result, program));
+	}
+
+	void test_type_tree_to_atomese1()
+	{
+		Handle p1 = createNode(PREDICATE_NODE, "$x");
+		Handle p2 = createNode(PREDICATE_NODE, "$y");
+		Handle p3 = createNode(PREDICATE_NODE, "$z");
+
+		HandleSeq handleSeq1 = {p1, p2};
+		Handle program1 = createLink(handleSeq1, AND_LINK);
+
+		HandleSeq handleSeq2 = {program1, p3};
+		Handle program = createLink(handleSeq2, OR_LINK);
+
+		//convert the atomese to combo program first
+		combo::AtomeseToCombo to_combo;
+		auto combo_result = to_combo(program);
+
+		// infer the type tree of the combo
+		auto type_result = combo::infer_type_tree(combo_result.first);
+
+		// convert the type tree to atomese type
+		atomese::AtomeseTypeChecker typetreeToAtomese;
+		auto result = typetreeToAtomese(type_result);
+
+		// expected output
+		Handle b1 = createNode(TYPE_NODE, "BooleanNode");
+		Handle b2 = createNode(TYPE_NODE, "BooleanNode");
+		Handle b3 = createNode(TYPE_NODE, "BooleanNode");
+		Handle b4 = createNode(TYPE_NODE, "BooleanNode");
+
+		HandleSeq handleSeq4 = {b1, b2, b3};
+		Handle listlink = createLink(handleSeq4, LIST_LINK);
+		HandleSeq handleSeq5 = {listlink, b4};
+		Handle expected = createLink(handleSeq5, ARROW_LINK);
+
+		TS_ASSERT(content_eq(result, expected));
+	}
+
+	void test_type_tree_to_atomese2()
+	{
+		Handle c1 = createNode(SCHEMA_NODE, "$c1");
+		Handle c2 = createNode(SCHEMA_NODE, "$c2");
+
+		HandleSeq handleSeq = {c1, c2};
+		Handle program = createLink(handleSeq, PLUS_LINK);
+
+		// convert the atomese to combo program first
+		combo::AtomeseToCombo toCombo;
+		auto combo_result = toCombo(program);
+
+		// infert the type tree of the combo
+		auto type_result = combo::infer_type_tree(combo_result.first);
+
+		// convert the type tree to atomese type
+		atomese::AtomeseTypeChecker typetreeToAtomese;
+		auto result = typetreeToAtomese(type_result);
+
+		// expected output
+		Handle c3 = createNode(TYPE_NODE, "NumberNode");
+		Handle c4 = createNode(TYPE_NODE, "NumberNode");
+		Handle c5 = createNode(TYPE_NODE, "NumberNode");
+
+		HandleSeq handleSeq2 = {c3, c4};
+		Handle listlink = createLink(handleSeq2, LIST_LINK);
+		HandleSeq handleSeq4 = {listlink, c5};
+		Handle expected = createLink(handleSeq4, ARROW_LINK);
+
+		TS_ASSERT(content_eq(result, expected));
+	}
+
 };

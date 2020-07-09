@@ -256,7 +256,7 @@ std::string logical_subtree_knob::posStr(int pos, bool tag_current) const
 /////////////////////////
 
 action_subtree_knob::action_subtree_knob(combo_tree& tr, combo_tree::iterator tgt,
-                                         const std::vector<combo_tree>& perms)
+                                         const combo_tree_seq& perms)
     : discrete_knob<MAX_PERM_ACTIONS>(tr), _perms(perms) {
 
     OC_ASSERT((int)_perms.size() < MAX_PERM_ACTIONS, "Too many perms.");

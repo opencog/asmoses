@@ -193,7 +193,7 @@ int main(int argc, char** argv)
 
         // ======= Generic algo opts =========
         (opt_desc_str(initial_feature_opt).c_str(),
-         value<vector<string> >(&fs_params.initial_features),
+         value<vector<string>>(&fs_params.initial_features),
          "Initial feature to search from (not supported by inc). "
          "This option can be used as many times as there are features, "
          "to have them included in the initial feature set. If the "

@@ -29,7 +29,9 @@
 #include <opencog/util/tree.h>
 #include <opencog/util/numeric.h>
 #include <opencog/util/exceptions.h>
+#include <opencog/util/empty_string.h>
 
+#include <opencog/atoms/base/Handle.h>
 #include <opencog/combo/type_checker/type_tree_def.h>
 #include <opencog/combo/crutil/exception.h>
 #include <opencog/combo/combo/vertex.h>
@@ -257,6 +259,8 @@ void infer_arg_type_tree(const combo_tree& tr, type_tree_seq& arg_types);
 // insert the types of the arguments in arg_types in the signature of
 // a given function type. If the function is a constant then wrap it
 // in lambda_type
+type_node_seq type_tree_to_tyn_seq(const type_tree& tt);
+
 void insert_arg_type_tree(const type_tree_seq& arg_types,
                           type_tree& tt2);
 
@@ -298,6 +302,8 @@ type_tree get_type_tree(const combo_tree& tr, combo_tree::iterator it);
 /// ill_formed_type
 type_tree infer_type_tree(const combo_tree& tr);
 
+// port infer type tree for atomese
+Handle infer_atomese_type(const Handle& handle);
 // ----------------------------------------------------------
 // Arity-related functions
 
@@ -428,6 +434,12 @@ type_tree gen_signature(const type_tree& iotype, arity_t arity);
 
 
 } // ~namespace combo
+
+// For pretty printing OpenCog objects while debugging, see
+// https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
+std::string oc_to_string(const combo::type_tree& tt,
+                         const std::string& indent=empty_string);
+
 } // ~namespace opencog
 
 namespace std {

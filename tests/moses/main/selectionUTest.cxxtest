@@ -42,15 +42,17 @@ public:
         // opencog::logger().setPrintToStdoutFlag(true);
     }
 
-    void frame(string filename, string meval, bool boosting,
-               string expstr, int hamm)
+    void frame(string filename, bool boosting, string expstr,
+               int hamm, vector<string> args_ops={})
     {
         string data_file_path(test_dir + filename);
 
         // Create temp output file
-        vector<string> args = {"-i" + data_file_path, "-Hselect", meval,
+        vector<string> args = {"-i" + data_file_path, "-Hselect",
                                // "-lDEBUG",
                                "-q0.8", "-w0.9"};
+
+        args.insert(args.end(), args_ops.begin(), args_ops.end());
 
         if (boosting) args.push_back("--boost=1");
 
@@ -86,9 +88,9 @@ public:
         // std::cout << "Debug table:\n" << dbg << std::endl;
 
         double diff = expected.abs_distance(predicted);
-        std::cout << "Hamming distance=" << diff << " expected "<< hamm << endl;
+        std::cout << "Hamming distance=" << diff << ", maximum tolerated="<< hamm << endl;
 
-        TS_ASSERT(hamm == diff);
+        TS_ASSERT_LESS_THAN_EQUALS(diff, hamm);
     }
 
     // -----------------------------------------------------------
@@ -99,7 +101,7 @@ public:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1650.225))))";
         // Maximum reachable score is 28, and should be reachable in
         // about 7K evaluations.
-        frame("select.csv", "-m15000", true, expstr, 28);
+        frame("select.csv", true, expstr, 28, {"-m15000"});
     }
 
     void test_selection_de()
@@ -108,7 +110,7 @@ public:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1663.795))))";
         // Maximum reachable score is 12, and should be reachable in 
         // about 32K evaluations.
-        frame("select-less-dupe.csv", "-m50000", true, expstr, 12);
+        frame("select-less-dupe.csv", true, expstr, 12, {"-m50000"});
     }
 
     void test_selection_no()
@@ -117,7 +119,7 @@ public:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1663.795))))";
         // Maximum reachable score is 0, and should be reachable in
         // about 42K evaluations.
-        frame("select-no-dupe.csv", "-m80000", true, expstr, 0);
+        frame("select-no-dupe.csv", true, expstr, 0, {"-m80000"});
     }
 
     // -----------------------------------------------------------
@@ -129,7 +131,7 @@ public:
         // Maximum reachable score is 28.  Without boosting, as
         // compared to above, the solution is not as good: the ones
         // that are typically found have a score of -4, so 28+4 = 32
-        frame("select.csv", "-m10000", false, expstr, 32);
+        frame("select.csv", false, expstr, 32, {"-m10000"});
     }
 
     void test_selection_de_noboo()
@@ -139,7 +141,7 @@ public:
         // Maximum reachable score is 12, but, without boosting, as
         // compared to above, the solution is not as good: the ones
         // that are typically found have a score of -21, so 12+21 = 33
-        frame("select-less-dupe.csv", "-m20000", false, expstr, 33);
+        frame("select-less-dupe.csv", false, expstr, 33, {"-z3.3", "-m20000"});
     }
 
     void test_selection_no_noboo()
@@ -149,6 +151,6 @@ public:
         // Maximum reachable score is 0, but, without boosting, as
         // compared to above, the solution is not as good: the ones
         // that are typically found have a score of -21, so 0+21 = 21
-        frame("select-no-dupe.csv", "-m40000", false, expstr, 21);
+        frame("select-no-dupe.csv", false, expstr, 21, {"-z3.7", "-m40000"});
     }
 };

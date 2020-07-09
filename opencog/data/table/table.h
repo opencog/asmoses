@@ -441,7 +441,7 @@ struct interpreter_visitor : public boost::static_visitor<vertex>
 		return vertex();
 	}
 
-	vertex operator()(const std::vector<combo_tree> &inputs)
+	vertex operator()(const combo_tree_seq &inputs)
 	{
 		OC_ASSERT(false, "Not implemented");
 		return vertex();
@@ -1139,7 +1139,7 @@ struct Table : public boost::equality_comparable<Table>
 
 	// return a string with the io labels, the output label comes first
 	string_seq get_labels() const;
-
+	string_seq get_input_labels() const;
 	const std::string &get_target() const
 	{ return otable.get_label(); }
 
@@ -1501,10 +1501,9 @@ double mutualInformationBtwSets(const CTable &ctable,
 	FeatureSet fs_u = set_union(fs_l, fs_r);
 
 	// Check that the arities are within permitted range
-	OC_ASSERT(all_of(fs_u.begin(), fs_u.end(),
-	                 [&](const typename FeatureSet::value_type &f) {
-		                 return f < ctable.get_arity();
-	                 }));
+	OC_ASSERT(std::all_of(fs_u.begin(), fs_u.end(),
+	                      [&](const typename FeatureSet::value_type& f) {
+		                      return f < ctable.get_arity();}));
 
 	// declare useful visitors
 	seq_filtered_visitor <FeatureSet> sfv_u(fs_u), sfv_l(fs_l), sfv_r(fs_r);
@@ -1617,7 +1616,6 @@ void subsampleTable(ITable &it, unsigned nsamples);
  * +-----------------------+--+--+
  */
 typedef std::vector<bool> bool_seq;
-typedef std::vector<ValuePtr> ValuePtrVec;
 
 class complete_truth_table : public bool_seq
 {
@@ -1721,11 +1719,11 @@ protected:
 	 * @param It from      beginning iterator of the vector containing values of variables.
 	 * @param It to        end iterator of vector containing values of variables.
 	 */
-	void setup_features(const Handle &handle, const std::vector<ValuePtrVec>& features);
+	void setup_features(const Handle &handle, const std::vector<ValueSeq>& features);
 
 	void populate(const Handle &handle);
 
-	void populate_features(std::vector<ValuePtrVec> &features);
+	void populate_features(std::vector<ValueSeq> &features);
 
 	arity_t _arity;
 	mutable builtin_seq inputs;

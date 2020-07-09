@@ -224,7 +224,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "maj, demo, majority problem\n\n"
          "sr, demo, regression of f_n(x) = sum_{k=1,n} x^k\n")
 
-        (opt_desc_str(nsamples_opt).c_str(),
+        (nsamples_opt.c_str(),
          po::value<int>(&nsamples)->default_value(-1),
          "Number of samples to describe the problem. "
          "If nsample is negative, null or larger than the maximum "
@@ -1008,7 +1008,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
 
         // no need of that for now
         // (opt_desc_str(hc_initial_feature_opt).c_str(),
-        //  po::value<vector<string> >(&fs_params.hc_initial_features),
+        //  po::value<vector<string>>(&fs_params.hc_initial_features),
         //  "Hillclimbing parameter.  Initial feature to search from.  "
         //  "This option can be used as many times as there are features, "
         //  "to have them included in the initial feature set. If the "
@@ -1139,7 +1139,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
         // Option to store population in Atomspace.
 
         (opt_desc_str(atomspace_store_opt).c_str(),
-         po::value<bool>(&deme_params.atomspace_store)->default_value(0),
+         po::value<bool>(&deme_params.atomspace_store)->default_value(1),
          "If atomspace store is enable then deme populations will"
          " be stored in Atomspace.")
 

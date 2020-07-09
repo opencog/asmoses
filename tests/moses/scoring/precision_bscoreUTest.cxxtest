@@ -1,0 +1,77 @@
+/** precision_bscoreUTest.cxxtest ---
+ *
+ * Copyright (C) 2019 OpenCog Foundation
+ *
+ * Authors: Bitseat Tadesse <bitseatt@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+#include <opencog/moses/scoring/precision_bscore.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/data/table/table.h>
+#include <opencog/data/table/table_io.h>
+
+#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/utils/valueUtils.h>
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+#define GET_PRECISION [](const vertex &ver){ return get_precision(ver); }
+
+const string utest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+const string target_feature = "target";
+
+class precision_bscoreUTest : public CxxTest::TestSuite
+{
+public:
+
+	void test_precision_bscore(void)
+	{
+		Table tt = loadTable(utest_dir + "precision.csv", target_feature);
+		CTable ctt = tt.compressed();
+		precision_bscore p_bscore(ctt);
+		combo::combo_tree tr = combo::str2combo_tree("or($1 $2)", {});
+		behavioral_score expected_bs = p_bscore(tr);
+
+		Handle f1 = createNode(PREDICATE_NODE, "f1");
+		Handle f2 = createNode(PREDICATE_NODE, "f2");
+
+		ValueSeq _f1_values, _f2_values;
+
+		boost::transform(ctt.get_input_col_data(0), back_inserter(_f1_values),
+		                 bool_vertex_to_value);
+		boost::transform(ctt.get_input_col_data(1), back_inserter(_f2_values),
+		                 bool_vertex_to_value);
+
+		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
+		f1->setValue(atomese::compressed_value_key, f1_proto_atom);
+		ValuePtr f2_proto_atom(new LinkValue(_f2_values));
+		f2->setValue(atomese::compressed_value_key, f2_proto_atom);
+
+		Handle program = createLink(OR_LINK, f1, f2);
+
+		behavioral_score bs = p_bscore(program);
+
+		std::cout << "bs = " << bs << std::endl
+		          << "expected_bs = " << expected_bs << std::endl;
+		TS_ASSERT_EQUALS(bs, expected_bs);
+	}
+};

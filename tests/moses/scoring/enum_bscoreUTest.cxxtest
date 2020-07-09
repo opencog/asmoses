@@ -1,0 +1,76 @@
+/** enum_bscoreUTest.cxxtest ---
+ *
+ * Copyright (C) 2019 OpenCog Foundation
+ *
+ * Authors: Kiros Hailay <se.kiros.hailay12@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <cxxtest/TestSuite.h>
+#include <opencog/moses/scoring/bscores.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/data/table/table.h>
+#include <opencog/data/table/table_io.h>
+
+#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/utils/valueUtils.h>
+#include <opencog/moses/main/populate_atomspace.h>
+
+using namespace opencog;
+using namespace combo;
+using namespace moses;
+using namespace std;
+
+#define GET_ENUM [](const vertex &ver) { \
+    auto en = get_enum_type(ver); \
+    return ValuePtr(createNode(CONCEPT_NODE, en.getContent())); \
+    }
+
+const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+
+class enum_bscoreUTest : public CxxTest::TestSuite
+{
+public:
+
+	void test_enum_bscore(void)
+	{
+		Table table = loadTable(utest_dir + "enum.ctable");
+		CTable ctt = table.compressed();
+		enum_table_bscore et_bscore(ctt);
+
+		Handle f1 = createNode(PREDICATE_NODE, "f1");
+		Handle f2 = createNode(PREDICATE_NODE, "f2");
+		Handle f3 = createNode(CONCEPT_NODE, "f3");
+		Handle f4 = createNode(CONCEPT_NODE, "f4");
+		populate_frm_ctable(ctt, f1, f2, f3, f4);
+		HandleSeq handleSeq = {f1, f2};
+		Handle program1 = createLink(handleSeq, OR_LINK);
+		HandleSeq handleSeq1 = {program1,f3, f4};
+		Handle program = createLink(handleSeq1, COND_LINK);
+
+		behavioral_score bs = et_bscore(program);
+		// note that the compressed table might get reordered in this case the
+		// first row will come at the first, third row will come at the second,
+		// second row will come at the third, and the fourth row will come at
+		// fourth. Since the population of the input data to atomspace is
+		// called after the reorder this should have no problem.
+		behavioral_score expected_bs = {0, -1, 0, -1};
+
+		TS_ASSERT_EQUALS(bs, expected_bs);
+	}
+};

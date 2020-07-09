@@ -30,7 +30,7 @@
 #include <opencog/moses/scoring/behave_cscore.h>
 #include <opencog/moses/scoring/bscores.h>
 #include <examples/example-progs/scoring_iterators.h>
-
+#include "populate_atomspace.h"
 #include "problem.h"
 #include "demo-problems.h"
 
@@ -38,32 +38,32 @@ namespace opencog { namespace moses {
 
 struct demo_params : public option_base
 {
-    void add_options(boost::program_options::options_description&);
+	void add_options(boost::program_options::options_description&);
 
-    std::string combo_str;
-    unsigned int problem_size;
+	std::string combo_str;
+	unsigned int problem_size;
 };
 
 void demo_params::add_options(boost::program_options::options_description& desc)
 {
-    namespace po = boost::program_options;
+	namespace po = boost::program_options;
 
-    desc.add_options()
+	desc.add_options()
 
-        ("combo-program,y",
-         po::value<std::string>(&combo_str),
-         "Combo program to learn, used when the problem cp is "
-         "selected (option -y).\n")
+		("combo-program,y",
+		 po::value<std::string>(&combo_str),
+		 "Combo program to learn, used when the problem cp is "
+		 "selected (option -y).\n")
 
-        ("problem-size,k",
-         po::value<unsigned int>(&problem_size)->default_value(5),
-         "For even parity (pa), disjunction (dj) and majority (maj) "
-         "the problem size corresponds directly to the arity. "
-         "For multiplex (mux) the arity is arg+2^arg. "
-         "For regression of f(x)_o = sum_{i={1,o}} x^i (sr) "
-         "the problem size corresponds to the order o.\n")
+		("problem-size,k",
+		 po::value<unsigned int>(&problem_size)->default_value(5),
+		 "For even parity (pa), disjunction (dj) and majority (maj) "
+		 "the problem size corresponds directly to the arity. "
+		 "For multiplex (mux) the arity is arg+2^arg. "
+		 "For regression of f(x)_o = sum_{i={1,o}} x^i (sr) "
+		 "the problem size corresponds to the order o.\n")
 
-    ; // end of options
+		; // end of options
 }
 
 // ==================================================================
@@ -72,10 +72,10 @@ void demo_params::add_options(boost::program_options::options_description& desc)
 template <typename BScorer>
 void set_noise_or_ratio(BScorer& scorer, unsigned as, float noise, score_t ratio)
 {
-    if (noise >= 0.0)
-        scorer.set_complexity_coef(as, noise);
-    else
-        scorer.set_complexity_coef(ratio);
+	if (noise >= 0.0)
+		scorer.set_complexity_coef(as, noise);
+	else
+		scorer.set_complexity_coef(ratio);
 }
 
 // ==================================================================
@@ -83,42 +83,48 @@ void set_noise_or_ratio(BScorer& scorer, unsigned as, float noise, score_t ratio
 
 class bool_problem_base : public problem_base
 {
-    public:
-        bool_problem_base(demo_params& dp) : _dparms(dp) {}
-        virtual combo::arity_t get_arity(int) = 0;
-        virtual logical_bscore get_bscore(int) = 0;
-        virtual void run(option_base*);
-    protected:
-        demo_params& _dparms;
+public:
+	bool_problem_base(demo_params& dp) : _dparms(dp) {}
+	virtual combo::arity_t get_arity(int) = 0;
+	virtual logical_bscore get_bscore(int) = 0;
+	virtual void run(option_base*);
+protected:
+	demo_params& _dparms;
 };
 
 void bool_problem_base::run(option_base* ob)
 {
-    problem_params& pms = *dynamic_cast<problem_params*>(ob);
+	problem_params& pms = *dynamic_cast<problem_params*>(ob);
 
-    if (pms.enable_feature_selection)
-        logger().warn("Feature selection is not supported for the demo problems");
+	if (pms.enable_feature_selection)
+		logger().warn("Feature selection is not supported for the demo problems");
 
-    // If no exemplar has been provided in the options, use the
-    // default boolean_type exemplar (which is 'and').
-    if (pms.exemplars.empty()) {
-        pms.exemplars.push_back(type_to_exemplar(id::boolean_type));
-    }
+	// If no exemplar has been provided in the options, use the
+	// default boolean_type exemplar (which is 'and').
+	if (pms.exemplars.empty()) {
+		pms.exemplars.push_back(type_to_exemplar(id::boolean_type));
+	}
 
-    logical_bscore bscore = get_bscore(_dparms.problem_size);
-    if (pms.meta_params.do_boosting) bscore.use_weighted_scores();
+	// create atomspace if the code is running through port atomspace
+	if (pms.deme_params.atomspace_port) {
+		// atomspace used for storing candidate programs
+		pms.deme_params.as = new AtomSpace();
+	}
 
-    type_tree sig = gen_signature(id::boolean_type, get_arity(_dparms.problem_size));
-    unsigned as = alphabet_size(sig, pms.ignore_ops);
-    set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
+	logical_bscore bscore = get_bscore(_dparms.problem_size);
+	if (pms.meta_params.do_boosting) bscore.use_weighted_scores();
 
-    behave_cscore cscore(bscore);
-    metapop_moses_results(pms.exemplars, sig,
-                          *pms.bool_reduct, *pms.bool_reduct_rep,
-                          cscore,
-                          pms.opt_params, pms.hc_params, pms.ps_params,
-                          pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+	type_tree sig = gen_signature(id::boolean_type, get_arity(_dparms.problem_size));
+	unsigned as = alphabet_size(sig, pms.ignore_ops);
+	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
+
+	behave_cscore cscore(bscore);
+	metapop_moses_results(pms.exemplars, sig,
+	                      *pms.bool_reduct, *pms.bool_reduct_rep,
+	                      cscore,
+	                      pms.opt_params, pms.hc_params, pms.ps_params,
+	                      pms.deme_params, pms.filter_params, pms.meta_params,
+	                      pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -127,18 +133,18 @@ void bool_problem_base::run(option_base* ob)
 // program will be a boolean circuit that computes parity.
 class pa_problem : public bool_problem_base
 {
-    public:
-        pa_problem(demo_params& dp) : bool_problem_base(dp) {}
-        virtual const std::string name() const { return "pa"; }
-        virtual const std::string description() const {
-             return "Learn parity function demo"; }
-        virtual combo::arity_t get_arity(int sz) { return sz; }
-        virtual logical_bscore get_bscore(int problem_size)
-        {
-            even_parity func;
-            logical_bscore bscore(func, problem_size);
-            return bscore;
-        }
+public:
+	pa_problem(demo_params& dp) : bool_problem_base(dp) {}
+	virtual const std::string name() const { return "pa"; }
+	virtual const std::string description() const {
+		return "Learn parity function demo"; }
+	virtual combo::arity_t get_arity(int sz) { return sz; }
+	virtual logical_bscore get_bscore(int problem_size)
+	{
+		even_parity func;
+		logical_bscore bscore(func, problem_size);
+		return bscore;
+	}
 };
 
 
@@ -148,18 +154,18 @@ class pa_problem : public bool_problem_base
 // k is the number of inputs specified by the -k option.
 class dj_problem : public bool_problem_base
 {
-    public:
-        dj_problem(demo_params& dp) : bool_problem_base(dp) {}
-        virtual const std::string name() const { return "dj"; }
-        virtual const std::string description() const {
-             return "Learn logicical disjunction demo"; }
-        virtual combo::arity_t get_arity(int sz) { return sz; }
-        virtual logical_bscore get_bscore(int problem_size)
-        {
-            disjunction func;
-            logical_bscore bscore(func, problem_size);
-            return bscore;
-        }
+public:
+	dj_problem(demo_params& dp) : bool_problem_base(dp) {}
+	virtual const std::string name() const { return "dj"; }
+	virtual const std::string description() const {
+		return "Learn logicical disjunction demo"; }
+	virtual combo::arity_t get_arity(int sz) { return sz; }
+	virtual logical_bscore get_bscore(int problem_size)
+	{
+		disjunction func;
+		logical_bscore bscore(func, problem_size);
+		return bscore;
+	}
 };
 
 
@@ -170,18 +176,18 @@ class dj_problem : public bool_problem_base
 
 class majority_problem : public bool_problem_base
 {
-    public:
-        majority_problem(demo_params& dp) : bool_problem_base(dp) {}
-        virtual const std::string name() const { return "maj"; }
-        virtual const std::string description() const {
-             return "Majority problem demo"; }
-        virtual combo::arity_t get_arity(int sz) { return sz; }
-        virtual logical_bscore get_bscore(int problem_size)
-        {
-            majority func(problem_size);
-            logical_bscore bscore(func, problem_size);
-            return bscore;
-        }
+public:
+	majority_problem(demo_params& dp) : bool_problem_base(dp) {}
+	virtual const std::string name() const { return "maj"; }
+	virtual const std::string description() const {
+		return "Majority problem demo"; }
+	virtual combo::arity_t get_arity(int sz) { return sz; }
+	virtual logical_bscore get_bscore(int problem_size)
+	{
+		majority func(problem_size);
+		logical_bscore bscore(func, problem_size);
+		return bscore;
+	}
 };
 
 // ==================================================================
@@ -193,32 +199,32 @@ class majority_problem : public bool_problem_base
 
 class mux_problem : public bool_problem_base
 {
-    public:
-        mux_problem(demo_params& dp) : bool_problem_base(dp) {}
-        virtual const std::string name() const { return "mux"; }
-        virtual const std::string description() const {
-            return "Multiplex problem demo"; }
+public:
+	mux_problem(demo_params& dp) : bool_problem_base(dp) {}
+	virtual const std::string name() const { return "mux"; }
+	virtual const std::string description() const {
+		return "Multiplex problem demo"; }
 
-        virtual combo::arity_t get_arity(int sz) {
-            if (4 < sz) {
-                // A mux of 5 would multiplex 32 bits, requiring a truth
-                // table of 2^37 rows ... which is some many umpteen gigabytes.
-                logger().warn() <<
-                    "Error: maximum mux demo problem size is 4;\n"
-                    "use the -k flag to pick a smaller size";
-                std::cerr <<
-                    "Error: maximum mux demo problem size is 4;\n"
-                    "use the -k flag to pick a smaller size" << std::endl;
-                exit(-1);
-            }
-            return sz + pow2(sz);
-        }
-        virtual logical_bscore get_bscore(int problem_size)
-        {
-            multiplex func(problem_size);
-            logical_bscore bscore(func, get_arity(problem_size));
-            return bscore;
-        }
+	virtual combo::arity_t get_arity(int sz) {
+		if (4 < sz) {
+			// A mux of 5 would multiplex 32 bits, requiring a truth
+			// table of 2^37 rows ... which is some many umpteen gigabytes.
+			logger().warn() <<
+				"Error: maximum mux demo problem size is 4;\n"
+				"use the -k flag to pick a smaller size";
+			std::cerr <<
+				"Error: maximum mux demo problem size is 4;\n"
+				"use the -k flag to pick a smaller size" << std::endl;
+			exit(-1);
+		}
+		return sz + pow2(sz);
+	}
+	virtual logical_bscore get_bscore(int problem_size)
+	{
+		multiplex func(problem_size);
+		logical_bscore bscore(func, get_arity(problem_size));
+		return bscore;
+	}
 };
 
 // ==================================================================
@@ -232,56 +238,62 @@ class mux_problem : public bool_problem_base
 
 class polynomial_problem : public problem_base
 {
-    public:
-        polynomial_problem(demo_params& dp) : _dparms(dp) {}
-        virtual const std::string name() const { return "sr"; }
-        virtual const std::string description() const {
-             return "Simple regression of f_n(x) = sum_{k={1,n}} x^k"; }
-        virtual combo::arity_t get_arity(int sz) { return 1; }
-        virtual void run(option_base*);
-    protected:
-        demo_params& _dparms;
+public:
+	polynomial_problem(demo_params& dp) : _dparms(dp) {}
+	virtual const std::string name() const { return "sr"; }
+	virtual const std::string description() const {
+		return "Simple regression of f_n(x) = sum_{k={1,n}} x^k"; }
+	virtual combo::arity_t get_arity(int sz) { return 1; }
+	virtual void run(option_base*);
+protected:
+	demo_params& _dparms;
 };
 
 void polynomial_problem::run(option_base* ob)
 {
-    problem_params& pms = *dynamic_cast<problem_params*>(ob);
+	problem_params& pms = *dynamic_cast<problem_params*>(ob);
 
-    if (pms.enable_feature_selection)
-        logger().warn("Feature selection is not supported for the polynomial problem");
+	if (pms.enable_feature_selection)
+		logger().warn("Feature selection is not supported for the polynomial problem");
 
-    // If no exemplar has been provided in the options, use the
-    // default contin_type exemplar (+)
-    if (pms.exemplars.empty()) {
-        pms.exemplars.push_back(type_to_exemplar(id::contin_type));
-    }
+	// If no exemplar has been provided in the options, use the
+	// default contin_type exemplar (+)
+	if (pms.exemplars.empty()) {
+		pms.exemplars.push_back(type_to_exemplar(id::contin_type));
+	}
+	type_tree tt = gen_signature(id::contin_type, 1);
+	ITable it(tt, (pms.nsamples>0 ? pms.nsamples : pms.default_nsamples));
 
-    // sr is fundamentally a kind of non-linear regression!
-    // over-ride any flag settings regarding this.
-    pms.deme_params.linear_contin = false;
+    if (pms.deme_params.atomspace_port) {
+		// atomspace used for storing candidate programs
+        pms.deme_params.as = new AtomSpace();
+        type_node_seq tt_seq = type_tree_to_tyn_seq(tt);
+        it.set_types(tt_seq);
+        populate(pms.deme_params.as, it);
+	}
 
-    type_tree tt = gen_signature(id::contin_type, 1);
+	// sr is fundamentally a kind of non-linear regression!
+	// over-ride any flag settings regarding this.
 
-    ITable it(tt, (pms.nsamples>0 ? pms.nsamples : pms.default_nsamples));
+	pms.deme_params.linear_contin = false;
+	int as = alphabet_size(tt, pms.ignore_ops);
 
-    int as = alphabet_size(tt, pms.ignore_ops);
+	contin_bscore::err_function_type eft =
+		pms.it_abs_err ? contin_bscore::abs_error :
+		contin_bscore::squared_error;
+	contin_bscore bscore(simple_symbolic_regression(_dparms.problem_size),
+	                     it, eft);
 
-    contin_bscore::err_function_type eft =
-        pms.it_abs_err ? contin_bscore::abs_error :
-        contin_bscore::squared_error;
-    contin_bscore bscore(simple_symbolic_regression(_dparms.problem_size),
-                         it, eft);
+	OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
 
-    OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
-
-    set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
-    behave_cscore cscore(bscore);
-    metapop_moses_results(pms.exemplars, tt,
-                          *pms.contin_reduct, *pms.contin_reduct,
-                          cscore,
-                          pms.opt_params, pms.hc_params, pms.ps_params,
-                          pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
+	behave_cscore cscore(bscore);
+	metapop_moses_results(pms.exemplars, tt,
+	                      *pms.contin_reduct, *pms.contin_reduct,
+	                      cscore,
+	                      pms.opt_params, pms.hc_params, pms.ps_params,
+	                      pms.deme_params, pms.filter_params, pms.meta_params,
+	                      pms.moses_params, pms.mmr_pa, id::contin_type, it.get_labels());
 }
 
 // ==================================================================
@@ -291,208 +303,218 @@ void polynomial_problem::run(option_base* ob)
 
 static combo_tree str_to_combo_tree(const string& combo_str)
 {
-    stringstream ss;
-    combo_tree tr;
-    ss << combo_str;
-    ss >> tr;
-    return tr;
+	stringstream ss;
+	combo_tree tr;
+	ss << combo_str;
+	ss >> tr;
+	return tr;
 }
 
 class combo_problem_base : public problem_base
 {
-    public:
-        combo_problem_base(demo_params& dp) : _dparms(dp) {}
-        void check_args(problem_params&);
-    protected:
-        demo_params& _dparms;
+public:
+	combo_problem_base(demo_params& dp) : _dparms(dp) {}
+	void check_args(problem_params&);
+protected:
+	demo_params& _dparms;
 };
 
 void combo_problem_base::check_args(problem_params& pms)
 {
-    if (pms.enable_feature_selection)
-        logger().warn("Feature selection is not supported for the combo demo.");
+	if (pms.enable_feature_selection)
+		logger().warn("Feature selection is not supported for the combo demo.");
 
-    if (_dparms.combo_str.empty()) {
-        logger().warn() << "You must specify a combo tree to learn (option -y).";
-        std::cerr << "You must specify a combo tree to learn (option -y)." << std::endl;
-        exit(-1);
-    }
+	if (_dparms.combo_str.empty()) {
+		logger().warn() << "You must specify a combo tree to learn (option -y).";
+		std::cerr << "You must specify a combo tree to learn (option -y)." << std::endl;
+		exit(-1);
+	}
 
-    // get the combo_tree and infer its type
-    combo_tree tr = str_to_combo_tree(_dparms.combo_str);
-    type_tree tt = infer_type_tree(tr);
-    if (not is_well_formed(tt)) {
-        logger().warn() << "The combo tree " << tr << " is not well formed.";
-        std::cerr << "The combo tree " << tr << " is not well formed." << std::endl;
-        exit(-1);
-    }
+	// get the combo_tree and infer its type
+	combo_tree tr = str_to_combo_tree(_dparms.combo_str);
+	type_tree tt = infer_type_tree(tr);
+	if (not is_well_formed(tt)) {
+		logger().warn() << "The combo tree " << tr << " is not well formed.";
+		std::cerr << "The combo tree " << tr << " is not well formed." << std::endl;
+		exit(-1);
+	}
 
-    combo::arity_t arity = type_tree_arity(tt);
+	combo::arity_t arity = type_tree_arity(tt);
 
-    // If the user specifies the combo program from bash or similar
-    // shells, and forgets to escape the $ in the variable names,
-    // then the resulting combo program will be garbage.  Try to
-    // sanity-check this, so as to avoid user frustration.
-    // A symptom of this error is that the arity will be -1.
-    if (-1 == arity || NULL == strchr(_dparms.combo_str.c_str(), '$')) {
-        cerr << "Error: the combo program " << tr << "\n"
-             << "appears not to contain any arguments. Did you\n"
-             << "forget to escape the $'s in the shell command line?"
-             << endl;
-        exit(-2);
-    }
+	// If the user specifies the combo program from bash or similar
+	// shells, and forgets to escape the $ in the variable names,
+	// then the resulting combo program will be garbage.  Try to
+	// sanity-check this, so as to avoid user frustration.
+	// A symptom of this error is that the arity will be -1.
+	if (-1 == arity || NULL == strchr(_dparms.combo_str.c_str(), '$')) {
+		cerr << "Error: the combo program " << tr << "\n"
+		     << "appears not to contain any arguments. Did you\n"
+		     << "forget to escape the $'s in the shell command line?"
+		     << endl;
+		exit(-2);
+	}
 }
 
 //* Get largest contin constant in a combo tree
 static contin_t largest_const_in_tree(const combo_tree &tr)
 {
-    contin_t rc = 0.0;
-    combo_tree::pre_order_iterator it;
-    for(it = tr.begin(); it != tr.end(); ++it) {
-        if (is_contin(*it)) {
-            contin_t val = get_contin(*it);
-            if (rc < val) rc = val;
-        }
-    }
+	contin_t rc = 0.0;
+	combo_tree::pre_order_iterator it;
+	for(it = tr.begin(); it != tr.end(); ++it) {
+		if (is_contin(*it)) {
+			contin_t val = get_contin(*it);
+			if (rc < val) rc = val;
+		}
+	}
 
-    return rc;
+	return rc;
 }
 
 class combo_problem : public combo_problem_base
 {
-    public:
-        combo_problem(demo_params& dp) : combo_problem_base(dp) {}
-        virtual const std::string name() const { return "cp"; }
-        virtual const std::string description() const {
-             return "Demo: Learn a given combo program"; }
-        virtual void run(option_base*);
+public:
+	combo_problem(demo_params& dp) : combo_problem_base(dp) {}
+	virtual const std::string name() const { return "cp"; }
+	virtual const std::string description() const {
+		return "Demo: Learn a given combo program"; }
+	virtual void run(option_base*);
 };
 
 void combo_problem::run(option_base* ob)
 {
-    problem_params& pms = *dynamic_cast<problem_params*>(ob);
-    check_args(pms);
+	problem_params& pms = *dynamic_cast<problem_params*>(ob);
+	check_args(pms);
 
-    // get the combo_tree and infer its type
-    combo_tree tr = str_to_combo_tree(_dparms.combo_str);
-    type_tree tt = infer_type_tree(tr);
-    type_node output_type = get_type_node(get_signature_output(tt));
-    combo::arity_t arity = type_tree_arity(tt);
+	// get the combo_tree and infer its type
+	combo_tree tr = str_to_combo_tree(_dparms.combo_str);
+	type_tree tt = infer_type_tree(tr);
+	type_node output_type = get_type_node(get_signature_output(tt));
+	combo::arity_t arity = type_tree_arity(tt);
 
-    OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
+	OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
 
-    // If no exemplar has been provided in the options, use the
-    // default one.
-    if (pms.exemplars.empty()) {
-        pms.exemplars.push_back(type_to_exemplar(output_type));
-    }
+	// If no exemplar has been provided in the options, use the
+	// default one.
+	if (pms.exemplars.empty()) {
+		pms.exemplars.push_back(type_to_exemplar(output_type));
+	}
 
-    if (output_type == id::boolean_type) {
-        // @todo: Occam's razor and nsamples is not taken into account
-        logical_bscore bscore(tr, arity);
-        behave_cscore cscore(bscore);
-        metapop_moses_results(pms.exemplars, tt,
-                              *pms.bool_reduct, *pms.bool_reduct_rep,
-                              cscore,
-                              pms.opt_params, pms.hc_params, pms.ps_params,
-                              pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa);
-    }
-    else if (output_type == id::contin_type) {
+	if (pms.deme_params.atomspace_port) {
+		// atomspace used for storing candidate programs
+		pms.deme_params.as = new AtomSpace();
+	}
 
-        // Naive users of the combo regression mode will fail
-        // to understand that the input program must be sampled
-        // in order for the fitness function to be evaluated.
-        // The default sample range 0<x<1 is probably too small
-        // for any fancy-pants input program, so try to make
-        // a reasonable guess.  Yes, this is a stupid hack, but
-        // it does avoid the problem of naive users saying
-        // "aww moses sucks" when they fail to invoke it correctly.
-        if ((0.0 == pms.min_rand_input) && (1.0 == pms.max_rand_input)) {
-            pms.max_rand_input = 2.0 * largest_const_in_tree(tr);
-            pms.min_rand_input = -pms.max_rand_input;
-            if ((pms.nsamples <= 0) &&
-                (pms.default_nsamples < 2 * arity * pms.max_rand_input)) {
-                pms.nsamples = 2 * arity * pms.max_rand_input;
-            }
-        }
+	if (output_type == id::boolean_type) {
+		// @todo: Occam's razor and nsamples is not taken into account
+		logical_bscore bscore(tr, arity);
+		behave_cscore cscore(bscore);
+		metapop_moses_results(pms.exemplars, tt,
+		                      *pms.bool_reduct, *pms.bool_reduct_rep,
+		                      cscore,
+		                      pms.opt_params, pms.hc_params, pms.ps_params,
+		                      pms.deme_params, pms.filter_params, pms.meta_params,
+		                      pms.moses_params, pms.mmr_pa);
+	}
+	else if (output_type == id::contin_type) {
 
-        if (pms.nsamples <= 0)
-            pms.nsamples = pms.default_nsamples;
+		// Naive users of the combo regression mode will fail
+		// to understand that the input program must be sampled
+		// in order for the fitness function to be evaluated.
+		// The default sample range 0<x<1 is probably too small
+		// for any fancy-pants input program, so try to make
+		// a reasonable guess.  Yes, this is a stupid hack, but
+		// it does avoid the problem of naive users saying
+		// "aww moses sucks" when they fail to invoke it correctly.
+		if ((0.0 == pms.min_rand_input) && (1.0 == pms.max_rand_input)) {
+			pms.max_rand_input = 2.0 * largest_const_in_tree(tr);
+			pms.min_rand_input = -pms.max_rand_input;
+			if ((pms.nsamples <= 0) &&
+			    (pms.default_nsamples < 2 * arity * pms.max_rand_input)) {
+				pms.nsamples = 2 * arity * pms.max_rand_input;
+			}
+		}
 
-        logger().info() << "Will sample combo program " << tr << "\n"
-                        << "\tat " << pms.nsamples << " input values, "
-                        << "ranging between " << pms.min_rand_input
-                        << " and " << pms.max_rand_input;
+		if (pms.nsamples <= 0)
+			pms.nsamples = pms.default_nsamples;
 
-        // @todo: introduce some noise optionally
-        ITable it(tt, pms.nsamples, pms.max_rand_input, pms.min_rand_input);
-        OTable ot(tr, it);
+		logger().info() << "Will sample combo program " << tr << "\n"
+		                << "\tat " << pms.nsamples << " input values, "
+		                << "ranging between " << pms.min_rand_input
+		                << " and " << pms.max_rand_input;
 
-        int as = alphabet_size(tt, pms.ignore_ops);
+		// @todo: introduce some noise optionally
+		ITable it(tt, pms.nsamples, pms.max_rand_input, pms.min_rand_input);
+		OTable ot(tr, it);
 
-        contin_bscore bscore(ot, it);
-        set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
-        behave_cscore cscore(bscore);
-        metapop_moses_results(pms.exemplars, tt,
-                              *pms.contin_reduct, *pms.contin_reduct,
-                              cscore,
-                              pms.opt_params, pms.hc_params, pms.ps_params,
-                              pms.deme_params, pms.filter_params, pms.meta_params,
-                              pms.moses_params, pms.mmr_pa);
-    } else {
-        logger().error() << "Error: combo_problem: type " << tt << " not supported.";
-        std::cerr << "Error: combo_problem: type " << tt << " not supported." << std::endl;
-        exit(-1);
-    }
+		int as = alphabet_size(tt, pms.ignore_ops);
+
+		contin_bscore bscore(ot, it);
+		set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
+		behave_cscore cscore(bscore);
+		metapop_moses_results(pms.exemplars, tt,
+		                      *pms.contin_reduct, *pms.contin_reduct,
+		                      cscore,
+		                      pms.opt_params, pms.hc_params, pms.ps_params,
+		                      pms.deme_params, pms.filter_params, pms.meta_params,
+		                      pms.moses_params, pms.mmr_pa);
+	} else {
+		logger().error() << "Error: combo_problem: type " << tt << " not supported.";
+		std::cerr << "Error: combo_problem: type " << tt << " not supported." << std::endl;
+		exit(-1);
+	}
 }
 
 /// Regression based on combo program using ann
 class ann_combo_problem : public combo_problem_base
 {
-    public:
-        ann_combo_problem(demo_params& dp) : combo_problem_base(dp) {}
-        virtual const std::string name() const { return "ann-cp"; }
-        virtual const std::string description() const {
-             return "Demo: Learn a given combo program using ANN"; }
-        virtual void run(option_base*);
+public:
+	ann_combo_problem(demo_params& dp) : combo_problem_base(dp) {}
+	virtual const std::string name() const { return "ann-cp"; }
+	virtual const std::string description() const {
+		return "Demo: Learn a given combo program using ANN"; }
+	virtual void run(option_base*);
 };
 
 void ann_combo_problem::run(option_base* ob)
 {
-    problem_params& pms = *dynamic_cast<problem_params*>(ob);
-    check_args(pms);
+	problem_params& pms = *dynamic_cast<problem_params*>(ob);
+	check_args(pms);
 
-    // get the combo_tree and infer its type
-    combo_tree tr = str_to_combo_tree(_dparms.combo_str);
-    type_tree tt = infer_type_tree(tr);
-    // type_tree tt = gen_signature(id::ann_type, 0);
+	// get the combo_tree and infer its type
+	combo_tree tr = str_to_combo_tree(_dparms.combo_str);
+	type_tree tt = infer_type_tree(tr);
+	// type_tree tt = gen_signature(id::ann_type, 0);
 
-    // If no exemplar has been provided in the options, use the
-    // default one.
-    if (pms.exemplars.empty()) {
-        type_node output_type = get_type_node(get_signature_output(tt));
-        pms.exemplars.push_back(type_to_exemplar(output_type));
-    }
+	// If no exemplar has been provided in the options, use the
+	// default one.
+	if (pms.exemplars.empty()) {
+		type_node output_type = get_type_node(get_signature_output(tt));
+		pms.exemplars.push_back(type_to_exemplar(output_type));
+	}
 
-    if (pms.nsamples <= 0)
-        pms.nsamples = pms.default_nsamples;
+	if (pms.deme_params.atomspace_port) {
+		// atomspace used for storing candidate programs
+		pms.deme_params.as = new AtomSpace();
+	}
 
-    ITable it(tt, pms.nsamples, pms.max_rand_input, pms.min_rand_input);
-    OTable ot(tr, it);
+	if (pms.nsamples <= 0)
+		pms.nsamples = pms.default_nsamples;
 
-    contin_bscore bscore(ot, it);
-    int as = alphabet_size(tt, pms.ignore_ops);
-    set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
+	ITable it(tt, pms.nsamples, pms.max_rand_input, pms.min_rand_input);
+	OTable ot(tr, it);
 
-    OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
-    behave_cscore cscore(bscore);
-    metapop_moses_results(pms.exemplars, tt,
-                          *pms.contin_reduct, *pms.contin_reduct,
-                          cscore,
-                          pms.opt_params, pms.hc_params, pms.ps_params,
-                          pms.deme_params, pms.filter_params, pms.meta_params,
-                          pms.moses_params, pms.mmr_pa);
+	contin_bscore bscore(ot, it);
+	int as = alphabet_size(tt, pms.ignore_ops);
+	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
+
+	OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
+	behave_cscore cscore(bscore);
+	metapop_moses_results(pms.exemplars, tt,
+	                      *pms.contin_reduct, *pms.contin_reduct,
+	                      cscore,
+	                      pms.opt_params, pms.hc_params, pms.ps_params,
+	                      pms.deme_params, pms.filter_params, pms.meta_params,
+	                      pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================

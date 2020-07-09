@@ -101,8 +101,8 @@ FeatureSet simple_selection(const FeatureSet& features,
 {
     typedef std::pair<double, FeatureSet> ScoredFeatureSet;
     // std::greater<>: First, sort by score, then sort by lexicographic order.
-    // std::set<ScoredFeatureSet, std::greater<ScoredFeatureSet> > sorted_flist;
-    std::set<ScoredFeatureSet, ScoredFeatureSetGreater<FeatureSet> > sorted_flist;
+    // std::set<ScoredFeatureSet, std::greater<ScoredFeatureSet>> sorted_flist;
+    std::set<ScoredFeatureSet, ScoredFeatureSetGreater<FeatureSet>> sorted_flist;
 
     // Build vector of singleton feature sets.
     std::vector<FeatureSet> singletons; 

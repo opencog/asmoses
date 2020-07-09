@@ -27,47 +27,76 @@
 #include <opencog/util/RandGen.h>
 
 #include <opencog/combo/combo/vertex.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/combo/converter/combo_atomese.h>
+#include <opencog/util/comprehension.h>
 
-namespace opencog { namespace reduct {
+namespace opencog
+{
+namespace reduct
+{
 
 using namespace opencog::combo;
 
 struct rule
 {
-    typedef combo_tree argument_type;
+	typedef combo_tree argument_type;
 
-    rule(std::string _name) : name(_name) {}
-    virtual ~rule() {}
-    virtual void operator()(combo_tree&, combo_tree::iterator) const=0;
-    virtual rule* clone() const=0;
+	rule(std::string _name) : name(_name)
+	{}
 
-    void operator()(combo_tree& tr) const
-    {
-        if (!tr.empty())
-            (*this)(tr, tr.begin());
-    }
+	virtual ~rule()
+	{}
 
-    std::string get_name() const
-    {
-        return name;
-    }
+	virtual void operator()(combo_tree &, combo_tree::iterator) const =0;
+
+	virtual rule *clone() const =0;
+
+	void operator()(combo_tree &tr) const
+	{
+		if (!tr.empty())
+			(*this)(tr, tr.begin());
+	}
+
+	void operator()(Handle &handle, AtomSpace *as=nullptr) const
+	{
+		AtomeseToCombo to_combo;
+		auto conv_result = to_combo(handle);
+
+		if (!conv_result.first.empty())
+			(*this)(conv_result.first, conv_result.first.begin());
+
+		ComboToAtomese to_atomese(as);
+		handle = to_atomese(conv_result.first, conv_result.second);
+	}
+
+	std::string get_name() const
+	{
+		return name;
+	}
 
 protected:
-    std::string name;
+	std::string name;
 };
 
 // new_clone() is needed by boost ptr_vector in struct sequential
 // (and other places) but is not otherwise used anywhere.
-reduct::rule* new_clone(const reduct::rule& r);
+reduct::rule *new_clone(const reduct::rule &r);
 
 template<typename T>
 struct crule : public rule
 {
-    crule(std::string _name) : rule(_name) {}
-    rule* clone() const { return new T(*((T*) this)); }
+	crule(std::string _name) : rule(_name)
+	{}
+
+	rule *clone() const
+	{ return new T(*((T *) this)); }
 };
 
-const rule& ann_reduction();
+const rule &ann_reduction();
 
 // @ignore_ops is the set of operators to ignore
 // logical_reduction doesn't use it itself, but does pass it
@@ -75,33 +104,58 @@ const rule& ann_reduction();
 // Reduction levels of 2 and higher must specify ignore_ops.
 struct logical_reduction
 {
-    logical_reduction();
-    logical_reduction(const logical_reduction&);
-    logical_reduction(const vertex_set& ignore_ops);
-    logical_reduction& operator=(const logical_reduction&);
-    ~logical_reduction();
+	logical_reduction();
 
-    const rule& operator()(int effort = 2);
+	logical_reduction(const logical_reduction &);
+
+	logical_reduction(const vertex_set &ignore_ops);
+
+	logical_reduction(const HandleSet &ignore_ops)
+			: logical_reduction(set_comp(ignore_ops, [this](const Handle h) {
+		return *to_combo(h).first.begin();
+	}))
+	{}
+
+	logical_reduction &operator=(const logical_reduction &);
+
+	~logical_reduction();
+
+	const rule &operator()(int effort=2);
+
 private:
-    void do_init();
-    const rule* p_medium;
-    const rule* p_complexe;
+	void do_init();
+
+	void setup_logical_reduction(const vertex_set &ignore_ops);
+
+	const rule *p_medium;
+	const rule *p_complexe;
+	AtomeseToCombo to_combo;
 public:
-    static rule* p_extra_simple;
-    static rule* p_simple;
+	static rule *p_extra_simple;
+	static rule *p_simple;
 };
 
 // @ignore_ops is the set of operators to ignore
-const rule& contin_reduction(int reduct_effort,
-                             const vertex_set& ignore_ops);
+const rule &contin_reduction(int reduct_effort,
+                             const vertex_set &ignore_ops);
 
-const rule& fold_reduction();
-const rule& mixed_reduction();
-const rule& full_reduction();
-const rule& action_reduction();
-const rule& perception_reduction();
+const rule &contin_reduction(int reduct_effort,
+                             const HandleSet &ignore_ops);
 
-const rule& clean_reduction();
+const rule &setup_contin_reduction(int reduct_effort,
+                                    const vertex_set &ignore_ops);
+
+const rule &fold_reduction();
+
+const rule &mixed_reduction();
+
+const rule &full_reduction();
+
+const rule &action_reduction();
+
+const rule &perception_reduction();
+
+const rule &clean_reduction();
 //const rule& clean_and_full_reduction();
 
 /**
@@ -113,63 +167,78 @@ const rule& clean_reduction();
  * predicate is supported; when such a predicate is encountered,
  * the contin terms inside of it are reduced.
  */
-inline void logical_reduce(int effort, combo_tree& tr,
+inline void logical_reduce(int effort, combo_tree &tr,
                            combo_tree::iterator it,
-                           const vertex_set& ignore_ops)
+                           const vertex_set &ignore_ops)
 {
-    logical_reduction r(ignore_ops);
-    r(effort)(tr, it);
+	logical_reduction r(ignore_ops);
+	r(effort)(tr, it);
 }
 
-inline void logical_reduce(int effort, combo_tree& tr,
-                           const vertex_set& ignore_ops)
+inline void logical_reduce(int effort, combo_tree &tr,
+                           const vertex_set &ignore_ops)
 {
-    logical_reduction r(ignore_ops);
-    r(effort)(tr);
+	logical_reduction r(ignore_ops);
+	r(effort)(tr);
 }
 
-inline void logical_reduce(int effort, combo_tree& tr)
+inline void logical_reduce(int effort, combo_tree &tr)
 {
-    logical_reduction r;
-    r(effort)(tr);
+	logical_reduction r;
+	r(effort)(tr);
+}
+
+inline void logical_reduce(int effort, Handle &handle,
+                           const HandleSet &a_ignore_ops,
+                           AtomSpace *as=nullptr)
+{
+	logical_reduction r(a_ignore_ops);
+	r(effort)(handle, as);
 }
 
 /**
  * reduce trees containing only arithmetic operators, float-point
  * constants and contin-typed literals.
  */
-inline void contin_reduce(combo_tree& tr, combo_tree::iterator it,
+inline void contin_reduce(combo_tree &tr, combo_tree::iterator it,
                           int reduct_effort,
-                          const vertex_set& ignore_ops)
+                          const vertex_set &ignore_ops)
 {
-    contin_reduction(reduct_effort, ignore_ops)(tr, it);
+	contin_reduction(reduct_effort, ignore_ops)(tr, it);
 }
 
-inline void contin_reduce(combo_tree& tr,
+inline void contin_reduce(combo_tree &tr,
                           int reduct_effort,
-                          const vertex_set& ignore_ops)
+                          const vertex_set &ignore_ops)
 {
-    contin_reduction(reduct_effort, ignore_ops)(tr);
+	contin_reduction(reduct_effort, ignore_ops)(tr);
 }
 
-inline void fold_reduce(combo_tree& tr, combo_tree::iterator it)
+inline void contin_reduce(Handle &h,
+                          int reduct_effort,
+                          const HandleSet &ignore_ops)
 {
-    fold_reduction()(tr, it);
+	contin_reduction(reduct_effort, ignore_ops)(h);
 }
 
-inline void fold_reduce(combo_tree& tr)
+inline void fold_reduce(combo_tree &tr, combo_tree::iterator it)
 {
-    fold_reduction()(tr);
+	fold_reduction()(tr, it);
 }
 
-inline void mixed_reduce(combo_tree& tr, combo_tree::iterator it)
+inline void fold_reduce(combo_tree &tr)
 {
-    mixed_reduction()(tr, it);
+	fold_reduction()(tr);
 }
 
-inline void mixed_reduce(combo_tree& tr)
+inline void mixed_reduce(combo_tree &tr, combo_tree::iterator it)
 {
-    mixed_reduction()(tr);
+	mixed_reduction()(tr, it);
+}
+
+inline void mixed_reduce(combo_tree &tr)
+{
+	mixed_reduction()(tr);
 }
 
 /**
@@ -178,69 +247,69 @@ inline void mixed_reduce(combo_tree& tr)
  * arithmetic operators, contin-typed constants, and contin-valued
  * literals.  (Elsewhere, we call these "predicate trees").
  */
-inline void full_reduce(combo_tree& tr, combo_tree::iterator it)
+inline void full_reduce(combo_tree &tr, combo_tree::iterator it)
 {
-    full_reduction()(tr, it);
+	full_reduction()(tr, it);
 }
 
-inline void full_reduce(combo_tree& tr)
+inline void full_reduce(combo_tree &tr)
 {
-    full_reduction()(tr);
+	full_reduction()(tr);
 }
 
-inline void ann_reduce(combo_tree& tr)
+inline void ann_reduce(combo_tree &tr)
 {
-    ann_reduction()(tr);
+	ann_reduction()(tr);
 }
 
 /**
  * clean_reduce removes null vertices
  */
-inline void clean_reduce(combo_tree& tr,combo_tree::iterator it)
+inline void clean_reduce(combo_tree &tr, combo_tree::iterator it)
 {
-    clean_reduction()(tr, it);
+	clean_reduction()(tr, it);
 }
 
-inline void clean_reduce(combo_tree& tr)
+inline void clean_reduce(combo_tree &tr)
 {
-    clean_reduction()(tr);
+	clean_reduction()(tr);
 }
 
-inline void clean_and_full_reduce(combo_tree& tr,
+inline void clean_and_full_reduce(combo_tree &tr,
                                   combo_tree::iterator it)
 {
-    // clean_and_full_reduction()(tr,it);
-    clean_reduce(tr, it);
-    full_reduce(tr, it);
+	// clean_and_full_reduction()(tr,it);
+	clean_reduce(tr, it);
+	full_reduce(tr, it);
 }
 
-inline void clean_and_full_reduce(combo_tree& tr)
+inline void clean_and_full_reduce(combo_tree &tr)
 {
-    // clean_and_full_reduction()(tr,tr.begin());
-    clean_reduce(tr);
-    full_reduce(tr);
+	// clean_and_full_reduction()(tr,tr.begin());
+	clean_reduce(tr);
+	full_reduce(tr);
 }
 
 //action
-inline void action_reduce(combo_tree& tr, combo_tree::iterator it)
+inline void action_reduce(combo_tree &tr, combo_tree::iterator it)
 {
-    action_reduction()(tr, it);
+	action_reduction()(tr, it);
 }
 
-inline void action_reduce(combo_tree& tr)
+inline void action_reduce(combo_tree &tr)
 {
-    action_reduction()(tr);
+	action_reduction()(tr);
 }
 
 //perception
-inline void perception_reduce(combo_tree& tr, combo_tree::iterator it)
+inline void perception_reduce(combo_tree &tr, combo_tree::iterator it)
 {
-    perception_reduction()(tr, it);
+	perception_reduction()(tr, it);
 }
 
-inline void perception_reduce(combo_tree& tr)
+inline void perception_reduce(combo_tree &tr)
 {
-    perception_reduction()(tr);
+	perception_reduction()(tr);
 }
 
 // helper to replace a subtree by another subtree (belonging to the
@@ -249,18 +318,18 @@ inline void perception_reduce(combo_tree& tr)
 // change the iterator they take in argument. That is dst is not
 // changed (expect possibly it's content of course).
 // tr is the tree containing dst iterator
-inline void replace_without_changing_it(combo_tree& tr,
+inline void replace_without_changing_it(combo_tree &tr,
                                         combo_tree::iterator dst,
                                         combo_tree::iterator src)
 {
-    *dst = *src;
-    if (src.is_childless())
-        tr.erase_children(dst);
-    else {
-        // it is assumed (for now) that dst and src have the same
-        // number of children
-        tr.replace(dst.begin(), dst.end(), src.begin(), src.end());
-    }
+	*dst = *src;
+	if (src.is_childless())
+		tr.erase_children(dst);
+	else {
+		// it is assumed (for now) that dst and src have the same
+		// number of children
+		tr.replace(dst.begin(), dst.end(), src.begin(), src.end());
+	}
 }
 
 } // ~namespace reduct

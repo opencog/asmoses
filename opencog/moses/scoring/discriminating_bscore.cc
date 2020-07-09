@@ -162,6 +162,57 @@ discriminator::d_counts discriminator::count(const combo_tree& tr) const
     return ctr;
 }
 
+discriminator::d_counts discriminator::count(const Handle& program) const
+{
+    d_counts ctr;
+    atomese::Interpreter interpreter(atomese::compressed_value_key,_ctable.size());
+    ValuePtr _result = interpreter(program);
+    auto link_result = LinkValueCast(_result)->value();
+
+    int i = 0;
+    for (const CTable::value_type& vct : _ctable) {
+        // vct.first = input vector
+        // vct.second = counter of outputs
+
+        double pos = sum_true(vct.second);
+        double neg = sum_false(vct.second);
+        unsigned totalc = vct.second.total_count();
+
+        if (HandleCast(link_result.at(i))->get_type() == TRUE_LINK)
+        {
+            ctr.true_positive_sum += pos;
+            ctr.false_positive_sum += neg;
+            ctr.positive_count += totalc;
+            i+=1;
+        }
+        else
+        {
+            ctr.true_negative_sum += neg;
+            ctr.false_negative_sum += pos;
+            ctr.negative_count += totalc;
+            i+=1;
+        }
+    }
+
+    if (logger().is_fine_enabled()) {
+        logger().fine("counter: tp = %f  fp = %f  tp+fp = %f pos = %f",
+                      ctr.true_positive_sum, ctr.false_positive_sum,
+                      ctr.true_positive_sum + ctr.false_positive_sum,
+                      ctr.positive_count);
+
+        logger().fine("counter: fn = %f  tn = %f  fn+tn = %f neg=%f",
+                      ctr.false_negative_sum, ctr.true_negative_sum,
+                      ctr.false_negative_sum + ctr.true_negative_sum,
+                      ctr.negative_count);
+
+        logger().fine("counter: tp+fn = %f  fp+tn = %f  total = %f",
+                      ctr.true_positive_sum + ctr.false_negative_sum,
+                      ctr.false_positive_sum + ctr.true_negative_sum,
+                      ctr.positive_count + ctr.negative_count);
+    }
+    return ctr;
+}
+
 vector<discriminator::d_counts> discriminator::counts(const combo_tree& tr) const
 {
     std::vector<d_counts> ctr_seq;
@@ -189,6 +240,43 @@ vector<discriminator::d_counts> discriminator::counts(const combo_tree& tr) cons
             ctr.true_negative_sum = neg;
             ctr.false_negative_sum = pos;
             ctr.negative_count = totalc;
+        }
+        ctr_seq.push_back(ctr);
+    }
+    return ctr_seq;
+}
+
+vector<discriminator::d_counts> discriminator::counts(const Handle& program) const
+{
+    std::vector<d_counts> ctr_seq;
+
+    atomese::Interpreter interpreter(atomese::compressed_value_key, _ctable.size());
+    ValuePtr _result = interpreter(program);
+    auto link_result = LinkValueCast(_result)->value();
+    int i = 0;
+
+    for (const CTable::value_type& vct : _ctable) {
+        // vct.first = input vector
+        // vct.second = counter of outputs
+
+        double pos = sum_true(vct.second);
+        double neg = sum_false(vct.second);
+        unsigned totalc = vct.second.total_count();
+
+        d_counts ctr;
+        if (bool_value_to_bool(link_result.at(i)))
+        {
+            ctr.true_positive_sum = pos;
+            ctr.false_positive_sum = neg;
+            ctr.positive_count = totalc;
+            i+=1;
+        }
+        else
+        {
+            ctr.true_negative_sum = neg;
+            ctr.false_negative_sum = pos;
+            ctr.negative_count = totalc;
+            i+=1;
         }
         ctr_seq.push_back(ctr);
     }
@@ -443,6 +531,32 @@ behavioral_score recall_bscore::operator()(const combo_tree& tr) const
     return bs;
 }
 
+
+behavioral_score recall_bscore::operator()(const Handle& program) const
+{
+    d_counts ctr = count(program);
+
+    // Compute normalized precision and recall.
+    score_t tp_fp = ctr.true_positive_sum + ctr.false_positive_sum;
+    score_t precision = (0.0 < tp_fp) ? ctr.true_positive_sum / tp_fp : 0.0;
+
+    score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
+    score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
+
+    // We are maximizing recall, so that is the first part of the score.
+    behavioral_score bs;
+    bs.push_back(recall);
+
+    score_t precision_penalty = get_threshold_penalty(precision);
+    bs.push_back(precision_penalty);
+    if (logger().is_fine_enabled()) {
+        logger().fine("recall_bcore: precision = %f  recall=%f  precision penalty=%e",
+                      precision, recall, precision_penalty);
+    }
+    log_candidate_bscore(program, bs);
+    return bs;
+}
+
 /// Return the precision for this ctable row(s).
 ///
 /// Since this scorer is trying to maximize recall while holding
@@ -510,7 +624,8 @@ behavioral_score prerec_bscore::operator()(const combo_tree& tr) const
             pos_total += ctr.positive_count;
         }
         // divide all element by pos_total (so it sums up to precision - 1/2)
-        boost::transform(bs, bs.begin(), arg1 / pos_total);
+
+        boost::transform(bs, bs.begin(),[pos_total](score_t x){ return 0.0 < pos_total ? x/pos_total : 0.0; });
 
         // By using (tp-fp)/2 the sum of all the per-row contributions
         // is offset by -1/2 from the precision, as proved below
@@ -557,6 +672,76 @@ behavioral_score prerec_bscore::operator()(const combo_tree& tr) const
                       precision, recall, recall_penalty);
 
     log_candidate_bscore(tr, bs);
+    return bs;
+}
+
+behavioral_score prerec_bscore::operator()(const Handle& program) const
+{
+    behavioral_score bs;
+    score_t precision = 1.0,
+            recall = 0.0;
+    if (_full_bscore) {
+        // each element of the bscore correspond to a data point
+        // contribution of the variable component of the score
+
+        vector<d_counts> ctr_seq = counts(program);
+        score_t pos_total = 0.0;
+        for (const d_counts& ctr : ctr_seq) {
+            // here we actually store (tp-fp)/2 instead of tp, to have
+            // a more expressive bscore (so that bad datapoints are
+            // distict from non-positive ones)
+            bs.push_back((ctr.true_positive_sum - ctr.false_positive_sum)
+                         / 2);
+            pos_total += ctr.positive_count;
+        }
+        // divide all element by pos_total (so it sums up to precision - 1/2)
+        boost::transform(bs, bs.begin(),[pos_total](score_t x){ return 0.0 < pos_total ? x/pos_total : 0.0; });
+
+        // By using (tp-fp)/2 the sum of all the per-row contributions
+        // is offset by -1/2 from the precision, as proved below
+        //
+        // 1/2 * (tp - fp) / (tp + fp)
+        // = 1/2 * (tp - tp + tp - fp) / (tp + fp)
+        // = 1/2 * (tp + tp) / (tp + fp) - (tp + fp) / (tp + fp)
+        // = 1/2 * 2*tp / (tp + fp) - 1
+        // = precision - 1/2
+        //
+        // So before adding the recall penalty we add +1/2 to
+        // compensate that
+        bs.push_back(0.5);
+
+        // compute precision and recall
+        precision = boost::accumulate(bs, 0.0);
+        for (const d_counts& ctr : ctr_seq)
+            recall += ctr.true_positive_sum;
+        if (0.0 < _true_total)
+            recall /= _true_total;
+    } else {
+        // the aggregated (across all datapoints) variable component
+        // of the score is the first value of the bscore
+
+        d_counts ctr = count(program);
+
+        // Compute normalized precision and recall.
+        score_t tp_fp = ctr.true_positive_sum + ctr.false_positive_sum;
+        precision = (0.0 < tp_fp) ? ctr.true_positive_sum / tp_fp : 1.0;
+        recall = (0.0 < _true_total) ? ctr.true_positive_sum / _true_total : 0.0;
+
+        // We are maximizing precision, so that is the first part of the score.
+        bs.push_back(precision);
+    }
+
+    // calculate recall_penalty
+    score_t recall_penalty = get_threshold_penalty(recall);
+    bs.push_back(recall_penalty);
+
+    // Log precision, recall and penalty
+    if (logger().is_fine_enabled())
+        logger().fine("prerec_bscore: precision = %f  "
+                      "recall = %f  recall penalty = %f",
+                      precision, recall, recall_penalty);
+
+    log_candidate_bscore(program, bs);
     return bs;
 }
 
@@ -614,6 +799,33 @@ behavioral_score bep_bscore::operator()(const combo_tree& tr) const
     return bs;
 }
 
+behavioral_score bep_bscore::operator()(const Handle& program) const
+{
+    d_counts ctr = count(program);
+
+    // Compute normalized precision and recall.
+    score_t tp_fp = ctr.true_positive_sum + ctr.false_positive_sum;
+    score_t precision = (0.0 < tp_fp) ? ctr.true_positive_sum / tp_fp : 0.0;
+
+    score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
+    score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
+
+    score_t bep = (precision + recall) / 2;
+    // We are maximizing bep, so that is the first part of the score.
+    behavioral_score bs;
+    bs.push_back(bep);
+
+    score_t bep_diff = fabs(precision - recall);
+    score_t bep_penalty = get_threshold_penalty(bep_diff);
+    bs.push_back(bep_penalty);
+    if (logger().is_fine_enabled())
+        logger().fine("bep = %f  diff=%f  bep penalty=%e",
+                      bep, bep_diff, bep_penalty);
+
+    log_candidate_bscore(program, bs);
+    return bs;
+}
+
 /// Return the break-even-point for this ctable row.
 score_t bep_bscore::get_variable(score_t pos, score_t neg, unsigned cnt) const
 {
@@ -643,7 +855,7 @@ score_t bep_bscore::get_fixed(score_t pos, score_t neg, unsigned cnt) const
 /// within some given thresholds, this turns out to be complicated,
 /// so we are not going to bother.
 f_one_bscore::f_one_bscore(const CTable& ct)
-    : discriminating_bscore(ct, 0.0, 1.0, 1.0e-20)
+    : discriminating_bscore(ct, 0.5, 1.0, 1.0e-20)
 {
     // XXX Currently, this scorer does not return a true behavioral score
     _size = 1;
@@ -660,7 +872,7 @@ behavioral_score f_one_bscore::operator()(const combo_tree& tr) const
     score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
     score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
 
-    score_t f_one = 2 * precision * recall / (precision + recall);
+    score_t f_one = (precision + recall == 0) ? 0 :  2 * precision * recall / (precision + recall);
 
     // We are maximizing f_one, so that is the first part of the score.
     behavioral_score bs;
@@ -671,6 +883,31 @@ behavioral_score f_one_bscore::operator()(const combo_tree& tr) const
                      precision, recall, f_one);
 
     log_candidate_bscore(tr, bs);
+    return bs;
+}
+
+behavioral_score f_one_bscore::operator()(const Handle& program) const
+{
+    d_counts ctr = count(program);
+
+    // Compute normalized precision and recall.
+    score_t tp_fp = ctr.true_positive_sum + ctr.false_positive_sum;
+    score_t precision = (0.0 < tp_fp) ? ctr.true_positive_sum / tp_fp : 0.0;
+
+    score_t tp_fn = ctr.true_positive_sum + ctr.false_negative_sum;
+    score_t recall = (0.0 < tp_fn) ? ctr.true_positive_sum / tp_fn : 0.0;
+
+    score_t f_one = (precision + recall == 0) ? 0 :  2 * precision * recall / (precision + recall);
+
+    // We are maximizing f_one, so that is the first part of the score.
+    behavioral_score bs;
+    bs.push_back(f_one);
+
+    if (logger().is_fine_enabled())
+        logger().fine("f_one_bscore: precision = %f recall = %f f_one=%f",
+                      precision, recall, f_one);
+
+    log_candidate_bscore(program, bs);
     return bs;
 }
 

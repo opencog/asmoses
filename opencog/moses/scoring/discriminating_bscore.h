@@ -26,9 +26,11 @@
 #define _DISCRIMINATING_BSCORE_H
 
 #include <opencog/data/table/table.h>
-
+#include <opencog/atomese/interpreter/Interpreter.h>
+#include <boost/phoenix/core/argument.hpp>
 #include "scoring_base.h"
-
+#include "opencog/atomese/atomese_utils/constants.h"
+#include "opencog/utils/valueUtils.h"
 namespace opencog { namespace moses {
 
 using combo::CTable;
@@ -63,11 +65,13 @@ struct discriminator
         score_t negative_count;
     };
     d_counts count(const combo_tree&) const;
+    d_counts count(const Handle&) const;
 
     // Like count but do the counting for each datapoint (each row of
     // the ctable). This is useful for finer grain bscore (see
     // variable discriminator_bscore::full_bscore)
     std::vector<d_counts> counts(const combo_tree&) const;
+    std::vector<d_counts> counts(const Handle&) const;
 
 protected:
     const CTable& _ctable;
@@ -172,6 +176,7 @@ struct recall_bscore : public discriminating_bscore
                   float hardness = 1.0f);
 
     behavioral_score operator()(const combo_tree& tr) const;
+    behavioral_score operator()(const Handle& program) const;
 
 protected:
     virtual score_t get_fixed(score_t pos, score_t neg, unsigned cnt) const;
@@ -190,6 +195,8 @@ struct prerec_bscore : public discriminating_bscore
                   float hardness = 1.0f);
 
     behavioral_score operator()(const combo_tree& tr) const;
+    behavioral_score operator()(const Handle& program) const;
+
 
 protected:
     virtual score_t get_fixed(score_t pos, score_t neg, unsigned cnt) const;
@@ -207,11 +214,12 @@ protected:
 struct bep_bscore : public discriminating_bscore
 {
     bep_bscore(const CTable& _ctable,
-               float min_diff = 0.0f,
+               float min_diff = 0.5f,
                float max_diff = 0.5f,
                float hardness = 1.0f);
 
     behavioral_score operator()(const combo_tree& tr) const;
+    behavioral_score operator()(const Handle& program) const;
 
 protected:
     virtual score_t get_fixed(score_t pos, score_t neg, unsigned cnt) const;
@@ -226,6 +234,7 @@ struct f_one_bscore : public discriminating_bscore
 {
     f_one_bscore(const CTable& _ctable);
     behavioral_score operator()(const combo_tree& tr) const;
+    behavioral_score operator()(const Handle& program) const;
 
 protected:
     virtual score_t get_fixed(score_t pos, score_t neg, unsigned cnt) const;

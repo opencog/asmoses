@@ -77,7 +77,7 @@ public:
         unsigned int actual_evals = deme.n_evals;
         std::cout << "actual_evals = " << actual_evals << std::endl;
         std::sort(deme.begin(), deme.end(),
-                  std::greater<scored_instance<composite_score> >());
+                  std::greater<scored_instance<composite_score>>());
         // check if it has found the solution
         TS_ASSERT_EQUALS(deme.begin_scores()->get_score(), 0);
     }    

@@ -32,7 +32,7 @@ typedef combo_tree::sibling_iterator sib_it;
 typedef combo_tree::iterator pre_it;
 
 partial_solver::partial_solver(const CTable &ctable,
-                               const vector<combo_tree>& exemplars,
+                               const combo_tree_seq& exemplars,
                                const rule& reduct,
                                const optim_parameters& opt_params,
                                const hc_parameters& hc_params,

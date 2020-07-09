@@ -274,7 +274,7 @@ float metapopulation::ss_average_agreement(const representation& rep,
         }
 
         // Generate a vector of candidates corresponding to each ss-deme
-        std::vector<combo_tree> trs;
+        combo_tree_seq trs;
         for (unsigned i_deme = 0; i_deme < exponent; ++i_deme) {
             deme_t& deme = ss_demes[i_deme];
 
@@ -320,7 +320,7 @@ float metapopulation::ss_average_agreement(const representation& rep,
     return mean_agreement;
 }
 
-void metapopulation::ss_tanimoto_stats(const std::vector<combo_tree>& trs,
+void metapopulation::ss_tanimoto_stats(const combo_tree_seq& trs,
                                        metapopulation::tanimoto_acc_t& acc) const
 {
     // Compute all weighted activations for all combo tree. Grouped by
@@ -408,7 +408,7 @@ void metapopulation::ss_tanimoto_stats(const representation& rep,
         }
 
         // Generate a vector of candidates corresponding to each ss-deme
-        std::vector<combo_tree> trs;
+        combo_tree_seq trs;
         for (unsigned i_deme = 0; i_deme < exponent; ++i_deme) {
             const deme_t& deme = ss_demes[i_deme];
 

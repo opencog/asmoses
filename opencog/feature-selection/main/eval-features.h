@@ -97,10 +97,10 @@ set<arity_t> get_features_idx(const vector<string>& features,
     return res;
 }
 
-vector<set<arity_t> > feature_sets(const eval_features_parameters& pa,
+vector<set<arity_t>> feature_sets(const eval_features_parameters& pa,
                                    const vector<string>& labels)
 {
-    vector<set<arity_t> > res;
+    vector<set<arity_t>> res;
     if(!pa.features.empty())
         res += get_features_idx(pa.features, labels, pa);
     if(!pa.features_file.empty()) {
@@ -119,7 +119,7 @@ vector<set<arity_t> > feature_sets(const eval_features_parameters& pa,
 template<typename Scorer>
 void eval_output_results(const eval_features_parameters& pa,
                          const Scorer& sc,
-                         const vector<set<arity_t> >& feature_sets)
+                         const vector<set<arity_t>>& feature_sets)
 {
     // compute feature quality for each feature set
     vector<double> qs;
@@ -130,12 +130,12 @@ void eval_output_results(const eval_features_parameters& pa,
 }
 
 void eval_output_results(const eval_features_parameters& pa,
-                         const vector<set<arity_t> > fss,
+                         const vector<set<arity_t>> fss,
                          const ITable& it,
                          const OTable& ot)
 {
     
-    typedef MICScorer<set<arity_t> > FSScorer;
+    typedef MICScorer<set<arity_t>> FSScorer;
 
     FSScorer fs_sc(it, ot, pa.confidence_penalty_intensity);
     // compute and output the results
@@ -155,7 +155,7 @@ void read_eval_output_results(const eval_features_parameters& pa)
     vector<string> labels = table.get_labels();
 
     // read feature sets
-    vector<set<arity_t> > fss = feature_sets(pa, labels);
+    vector<set<arity_t>> fss = feature_sets(pa, labels);
 
     // eval and output the results
     eval_output_results(pa, fss, table.itable, table.otable);

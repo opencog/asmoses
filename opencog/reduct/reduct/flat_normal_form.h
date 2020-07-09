@@ -38,7 +38,7 @@
 #include <opencog/combo/combo/vertex.h>
 
 namespace opencog { namespace reduct {
-typedef std::set<int, opencog::absolute_value_order<int> > clause;
+typedef std::set<int, opencog::absolute_value_order<int>> clause;
 typedef std::list<clause> nf;
 using namespace opencog::combo;
 
@@ -99,7 +99,7 @@ public:
     typedef opencog::tree<T> tree;
     typedef typename tree::sibling_iterator sib_it;
     typedef std::map<sib_it,int,
-                     opencog::lexicographic_subtree_order<T> > Item2Int;
+                     opencog::lexicographic_subtree_order<T>> Item2Int;
     typedef std::unordered_map<int,tree> Int2Item;
 
     nf add_cnf(sib_it, sib_it);

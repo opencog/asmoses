@@ -100,7 +100,7 @@ template<typename Int> Int ndigits(Int x)
 }
 
 void eval_output_results(const evalTableParameters& pa,
-                         const Table& table, const vector<combo_tree>& trs)
+                         const Table& table, const combo_tree_seq& trs)
 {
     unsigned npad = ndigits(trs.size());
     OC_ASSERT(pa.output_files.size() == trs.size() || pa.output_files.size() <= 1);
@@ -187,7 +187,7 @@ void read_eval_output_results(evalTableParameters& pa)
                    all_missing_variables.begin(), all_missing_variables.end());
 
     // Parse combo programs
-    vector<combo_tree> trs;
+    combo_tree_seq trs;
     for (const string& tr_str : all_combo_tree_str) {
 	    combo_tree tr = str2combo_tree(tr_str, pa.has_labels ?
 	                                   ilabels : vector<string>());

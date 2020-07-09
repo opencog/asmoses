@@ -268,7 +268,7 @@ private:
  * Create metapopulation, run moses, print results.
  */
 template<typename Printer>
-void metapop_moses_results_b(const std::vector<combo_tree>& bases,
+void metapop_moses_results_b(const combo_tree_seq& bases,
                              const opencog::combo::type_tree& tt,
                              const reduct::rule& si_ca,
                              const reduct::rule& si_kb,
@@ -280,7 +280,9 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
                              const subsample_deme_filter_parameters& filter_params,
                              const metapop_parameters& meta_params,
                              const moses_parameters& moses_params,
-                             Printer& printer)
+                             Printer& printer,
+                             type_node t_output=id::boolean_type,
+                             const string_seq& labels={})
 {
     moses_statistics stats;
     optimizer_base* optimizer = nullptr;
@@ -308,14 +310,14 @@ void metapop_moses_results_b(const std::vector<combo_tree>& bases,
 
     // This seems kind of cheesy ... shouldn't the exemplars
     // already be simplified, by now?
-    std::vector<combo_tree> simple_bases;
+    combo_tree_seq simple_bases;
     for (const combo_tree& xmplr: bases) {
         combo_tree siba(xmplr);
         si_ca(siba);
         simple_bases.push_back(siba);
     }
 
-    deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params);
+    deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params, t_output, labels);
     metapopulation metapop(simple_bases, sc, meta_params, filter_params);
 
     run_moses(metapop, dex, moses_params, stats);
@@ -340,7 +342,7 @@ void autoscale_diversity(const behave_cscore& sc,
  * like above, but assumes that the score is bscore based
  */
 template<typename Printer>
-void metapop_moses_results(const std::vector<combo_tree>& bases,
+void metapop_moses_results(const combo_tree_seq& bases,
                            const opencog::combo::type_tree& type_sig,
                            const reduct::rule& si_ca,
                            const reduct::rule& si_kb,
@@ -352,7 +354,9 @@ void metapop_moses_results(const std::vector<combo_tree>& bases,
                            const subsample_deme_filter_parameters& filter_params,
                            const metapop_parameters& meta_params,
                            const moses_parameters moses_params,
-                           Printer& printer)
+                           Printer& printer,
+                           type_node t_output = id::boolean_type,
+                           const string_seq& labels={})
 {
     // Parameters that might get tweaked are copied
     optim_parameters twk_opt_params(opt_params);
@@ -381,7 +385,7 @@ void metapop_moses_results(const std::vector<combo_tree>& bases,
                                 c_scorer,
                                 twk_opt_params, hc_params, ps_params,
                                 deme_params, filter_params, twk_meta_params,
-                                twk_moses_params, printer);
+                                twk_moses_params, printer, t_output, labels);
     }
 }
 

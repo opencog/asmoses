@@ -43,7 +43,7 @@
 #include <opencog/combo/combo/ann.h>
 #include <opencog/combo/combo/simple_nn.h>
 #include <opencog/combo/combo/convert_ann_combo.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 #include <opencog/utils/valueUtils.h>
 
 #include "table.h"
@@ -506,7 +506,11 @@ vector<string> Table::get_labels() const
 	labels.insert(labels.begin(), otable.get_label());
 	return labels;
 }
-
+vector<string> Table::get_input_labels() const
+{
+	vector<string> labels = itable.get_labels();
+	return labels;
+}
 // -------------------------------------------------------
 
 CTable Table::compressed(const std::string weight_col) const
@@ -894,44 +898,49 @@ void complete_truth_table::populate(const Handle &handle)
 {
 	// create a vector containing values for each feature or arity.
 	// this will contain the inputs of the truth table.
-	std::vector<ValuePtrVec> features(_arity);
+	std::vector<ValueSeq> features(_arity);
 	populate_features(features);
 
 	// map the values of inputs to the program.
 	setup_features(handle, features);
 
-	atomese::Interpreter interpreter(moses::value_key);
-	std::vector<ValuePtr> result = LinkValueCast(interpreter(handle))->value();
+	atomese::Interpreter interpreter(atomese::value_key, pow2(_arity));
+	ValueSeq result = LinkValueCast(interpreter(handle))->value();
+
+	// This happens if the program[handle] is a constant [i:e TRUE_LINK or NUMBER_NODE]
+	// the Interpreter returns a single value. hence we need to resize result to _arity
+	// with the same constant.
+	if (result.size() == 1) result.resize(pow2(_arity), result[0]);
 
 	// convert Links in the result of the interpreter to bool,
 	// and store it to the truth table.
 	std::transform(result.begin(), result.end(), begin(), bool_value_to_bool);
 }
 
-void complete_truth_table::populate_features(std::vector<ValuePtrVec> &features)
+void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 {
 	auto it = begin();
 	for (int i = 0; it != end(); ++i, ++it) {
 		for (int j = 0; j < _arity; ++j) {
 			ValuePtr v;
 			if ((i >> j) % 2)
-				v = ValuePtr(createLink(TRUE_LINK));
-			else v = ValuePtr(createLink(FALSE_LINK));
+				v = atomese::true_value;
+			else v = atomese::false_value;
 			features[j].push_back(v);
 		}
 	}
 }
 
-void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValuePtrVec> &features)
+void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValueSeq> &features)
 {
 	if (PREDICATE_NODE == handle->get_type()) {
 		// We extract the index of the feature from the name of the Predicate Node.
 		// the assumption is the Predicate nodes have names in [$#] format. and this
 		// convention is adopted from the combo counterpart.
 		const std::string h_name = handle->get_name();
-		ValuePtrVec value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
+		ValueSeq value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
 
-		handle->setValue(moses::value_key, ValuePtr(new LinkValue(value)));
+		handle->setValue(atomese::value_key, ValuePtr(new LinkValue(value)));
 		return;
 	}
 

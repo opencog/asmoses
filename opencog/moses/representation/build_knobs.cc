@@ -431,7 +431,7 @@ void build_knobs::insert_typed_arg(combo_tree &tr,
  * positive literal choosen randomly and $j is a positive or negative
  * literal choosen randomly.
  */
-void build_knobs::sample_logical_perms(pre_it it, vector<combo_tree>& perms)
+void build_knobs::sample_logical_perms(pre_it it, combo_tree_seq& perms)
 {
     // An argument can be a subtree if it's boolean.
     // If its a contin, then wrap it with "greater_than_zero".
@@ -567,7 +567,7 @@ void build_knobs::add_logical_knobs(pre_it subtree,
             logger().fine() << "it = " << combo_tree(it);
         }
     }
-    vector<combo_tree> perms;
+    combo_tree_seq perms;
     sample_logical_perms(it, perms);
 
     // recursive knob probing can be a significant performance
@@ -653,18 +653,20 @@ void build_knobs::build_logical(pre_it subtree, pre_it it)
         // Insert logical and/or knobs above arguments and predicates.
         if (is_argument(*sib)) {
             logger().debug("Call add_logical_knobs for argument");
-            add_logical_knobs(subtree, _exemplar.insert_above(sib, flip), false);
+            sib = _exemplar.insert_above(sib, flip);
+            add_logical_knobs(subtree, sib, false);
         }
         else if (is_predicate(sib)) {
             logger().debug("Call add_logical_knobs for predictate");
-            add_logical_knobs(subtree, _exemplar.insert_above(sib, flip), false);
+            pre_it pit(sib);
+            sib = _exemplar.insert_above(sib, flip);
+            add_logical_knobs(subtree, sib, false);
 
             // At this time, we assume that the only predicate is
             // "greater_than_zero", and it has a single arg, which
             // is either contin or an argument, or any function
             // returning contin ... So, go and insert contin knobs
             // into that expression.
-            pre_it pit = sib;
             if (*pit == id::logical_not)  // skip over the not.
                 pit = pit.begin();
             pre_it cit = pit.begin();  // get the arg of predicate.
@@ -1154,7 +1156,7 @@ void build_knobs::build_action(pre_it it)
 
 void build_knobs::add_action_knobs(pre_it it, bool add_if_in_exemplar)
 {
-    vector<combo_tree> perms;
+    combo_tree_seq perms;
     sample_action_perms(it, perms);
 
     action_probe(perms, it, add_if_in_exemplar);
@@ -1167,7 +1169,7 @@ void build_knobs::add_simple_action_knobs(pre_it it, bool add_if_in_exemplar)
 }
 
 
-void build_knobs::sample_action_perms(pre_it it, vector<combo_tree>& perms)
+void build_knobs::sample_action_perms(pre_it it, combo_tree_seq& perms)
 {
     const int number_of_actions = _actions->size();
     int n = number_of_actions; // controls the number of perms
@@ -1214,7 +1216,7 @@ void build_knobs::simple_action_probe(pre_it it, bool add_if_in_exemplar)
 }
 
 
-void build_knobs::action_probe(vector<combo_tree>& perms, pre_it it,
+void build_knobs::action_probe(combo_tree_seq& perms, pre_it it,
                                bool add_if_in_exemplar)
 {
     action_subtree_knob kb(_exemplar, it, perms);
@@ -1348,4 +1350,27 @@ void build_knobs::ann_canonize(pre_it it)
 }
 
 } // ~namespace moses
+
+std::string
+oc_to_string(combo::combo_tree::iterator_base itr, const std::string&)
+{
+	std::ostringstream os;
+	combo::ostream_combo_tree(os, combo::combo_tree(itr));
+	std::string str = os.str();
+
+	return str;
+}
+
+std::string
+oc_to_string(combo::combo_tree_seq& seq, const std::string&)
+{
+	std::ostringstream os;
+	for (const auto ct : seq) {
+		combo::ostream_combo_tree(os, ct);
+		os << '\n';
+	}
+	std::string str = os.str();
+	return str;
+}
+
 } // ~namespace opencog

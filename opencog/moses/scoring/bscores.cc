@@ -47,7 +47,7 @@
 #include <opencog/data/table/table_io.h>
 #include <opencog/atomese/interpreter/Interpreter.h>
 #include <opencog/utils/valueUtils.h>
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 #include "bscores.h"
 
 namespace opencog
@@ -65,6 +65,8 @@ using boost::transform;
 using namespace boost::phoenix;
 using boost::phoenix::arg_names::arg1;
 using namespace boost::accumulators;
+
+using namespace atomese;
 
 ////////////////////
 // logical_bscore //
@@ -185,10 +187,16 @@ behavioral_score contin_bscore::operator()(const combo_tree &tr) const
 behavioral_score contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(moses::value_key);
+	atomese::Interpreter interpreter(atomese::value_key, _size);
 
 	const ValuePtr result = interpreter(handle);
-	boost::transform(FloatValueCast(result)->value(), target, back_inserter(bs),
+	std::string test1 = oc_to_string(handle);
+	vector<double> res = FloatValueCast(result)->value();
+	if(handle->get_type()==NUMBER_NODE) {
+		vector<double> tmp(_size,res.at(0));
+		res=tmp;
+	}
+	boost::transform(res, target, back_inserter(bs),
 	          [&](contin_t res, const vertex &tar_ver){
 		          contin_t tar = get_contin(tar_ver);
 		          return -err_func(res, tar);
@@ -311,7 +319,7 @@ behavioral_score discretize_contin_bscore::operator()(const combo_tree &tr) cons
 behavioral_score discretize_contin_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(moses::value_key);
+	atomese::Interpreter interpreter(atomese::value_key, _size);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(FloatValueCast(result)->value(), classes, back_inserter(bs),
@@ -352,7 +360,7 @@ behavioral_score ctruth_table_bscore::operator()(const combo_tree &tr) const
 behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
-	atomese::Interpreter interpreter(moses::compressed_value_key);
+	atomese::Interpreter interpreter(atomese::compressed_value_key, _size);
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(LinkValueCast(result)->value(), _wrk_ctable, back_inserter(bs),
@@ -514,6 +522,27 @@ behavioral_score enum_table_bscore::operator()(const combo_tree &tr) const
 	}
 
 	log_candidate_bscore(tr, bs);
+	return bs;
+}
+
+behavioral_score enum_table_bscore::operator()(const Handle &handle) const
+{
+	behavioral_score bs;
+
+	atomese::Interpreter interpreter(compressed_value_key, _size);
+	const ValuePtr result = interpreter(handle);
+	boost::transform(LinkValueCast(result)->value(),
+	                 _ctable, back_inserter(bs),
+	                 [&](ValuePtr res, const CTable::value_type &vct) {
+		                 const CTable::counter_t &c = vct.second;
+		                 // The number that are wrong  equals
+		                 // total minus num correct.
+		                 score_t sc = score_t(c.get(value_to_enum(res)));
+		                 sc -= score_t(c.total_count());
+		                 return sc;
+	                 }
+	);
+
 	return bs;
 }
 

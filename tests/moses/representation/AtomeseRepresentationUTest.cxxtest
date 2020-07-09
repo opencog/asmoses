@@ -1,0 +1,396 @@
+/*
+ * tests/moses/AtomeseRepresentationUTest.cxxtest
+ *
+ * Copyright (C) 2020 OpenCog Foundation
+ * All Rights Reserved
+ *
+ * Written by Kasim Ebrahim
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+#include <sstream>
+#include <string>
+
+#include <opencog/moses/representation/AtomeseRepresentation.h>
+#include <opencog/reduct/reduct/reduct.h>
+#include <opencog/util/mt19937ar.h>
+#include <opencog/util/Logger.h>
+#include <opencog/atoms/execution/Instantiator.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/core/NumberNode.h>
+#include <opencog/atoms/core/TypeNode.h>
+
+#include <opencog/moses/representation/KnobLink.h>
+
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/guile/SchemeEval.h>
+#include <opencog/combo/type_checker/type_tree.h>
+#include <opencog/moses/eda/initialization.h>
+#include <opencog/util/mt19937ar.h>
+
+using namespace opencog;
+using namespace moses;
+using namespace reduct;
+using namespace combo;
+using namespace std;
+
+#define al _as.add_link
+#define an _as.add_node
+
+class AtomeseRepresentationUTest : public CxxTest::TestSuite
+{
+private:
+	AtomSpace _as;
+	SchemeEval _eval;
+
+public:
+	AtomeseRepresentationUTest() : _eval(&_as)
+	{
+		logger().set_print_to_stdout_flag(true);
+		logger().set_level(Logger::DEBUG);
+	}
+
+	void test_simple_1()
+	{
+		Handle exemplar =
+				al(AND_LINK,
+				   an(PREDICATE_NODE, "$1"),
+				   an(PREDICATE_NODE, "$2"));
+		Handle type = infer_atomese_type(exemplar);
+
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		// about 22 knobs are expected
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+	}
+
+	void test_simple_2()
+	{
+		Handle exemplar =
+				al(AND_LINK,
+				   al(OR_LINK, an(PREDICATE_NODE, "$1")),
+				   an(PREDICATE_NODE, "$2"));
+		Handle type = infer_atomese_type(exemplar);
+
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		// about 30 knobs are expected
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+	}
+
+	void test_simple_3()
+	{
+		Handle exemplar =
+				al(OR_LINK,
+				   al(AND_LINK,
+				   		an(PREDICATE_NODE, "$1"),
+				   		an(PREDICATE_NODE, "$2")),
+				   al(AND_LINK,
+				   		an(PREDICATE_NODE, "$1"),
+				   		al(OR_LINK,
+				   				an(PREDICATE_NODE, "$1"),
+				   				an(PREDICATE_NODE, "$2"))),
+				   al(OR_LINK,
+				   		an(PREDICATE_NODE, "$1"),
+				   		an(PREDICATE_NODE, "$2")));
+		Handle type = infer_atomese_type(exemplar);
+
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		// about 69 knobs are expected
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+	}
+
+	void test_with_notlink()
+	{
+		Handle exemplar =
+				al(AND_LINK,
+				   al(NOT_LINK, an(PREDICATE_NODE, "$1")));
+		Handle type = infer_atomese_type(exemplar);
+
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		// about 4 knobs are expected
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+	}
+
+	void test_nested_large()
+	{
+		Handle exemplar =
+				al(OR_LINK,
+				   al(AND_LINK,
+				      al(NOT_LINK, an(PREDICATE_NODE, "$2")),
+				      al(NOT_LINK, an(PREDICATE_NODE, "$3")),
+				      al(OR_LINK,
+				         an(PREDICATE_NODE, "$3"),
+				         al(NOT_LINK, an(PREDICATE_NODE, "$2"))),
+				      al(OR_LINK,
+				         al(NOT_LINK, an(PREDICATE_NODE, "$1")),
+				         an(PREDICATE_NODE, "$3"))),
+				   al(AND_LINK,
+				      an(PREDICATE_NODE, "$3"),
+				      an(PREDICATE_NODE, "$2")),
+				   al(AND_LINK,
+				      an(PREDICATE_NODE, "$3"),
+				      an(PREDICATE_NODE, "$1")),
+				   al(AND_LINK,
+				      an(PREDICATE_NODE, "$1"),
+				      an(PREDICATE_NODE, "$2"),
+				      al(OR_LINK,
+				          an(PREDICATE_NODE, "$3"),
+				          an(PREDICATE_NODE, "$1"))));
+		Handle type = infer_atomese_type(exemplar);
+
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		// about 178 knobs are expected
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+	}
+
+	void test_from_signature()
+	{
+		Handle exemplar =
+				al(AND_LINK);
+		Handle type = al(ARROW_LINK,
+		                 al(LIST_LINK,
+		                    an(TYPE_NODE, "BooleanNode"),
+		                    an(TYPE_NODE, "BooleanNode"),
+		                    an(TYPE_NODE, "BooleanNode")),
+		                 an(TYPE_NODE, "BooleanNode"));
+
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r3 = r.operator()(3);
+
+		AtomeseRepresentation rep(r2, r3, exemplar, type, &_as, ignore_ops, 1);
+
+		field_set fields = rep.fields();
+		// about 36 knobs are expected.
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+	}
+
+	void test_more_reduce()
+	{
+		Handle exemplar =
+				al(OR_LINK,
+				   al(AND_LINK,
+				      al(OR_LINK,
+				         an(PREDICATE_NODE, "$1"),
+				         an(PREDICATE_NODE, "$2")),
+				      al(OR_LINK,
+				         an(PREDICATE_NODE, "$1"),
+				         an(PREDICATE_NODE, "$3")),
+				      al(OR_LINK,
+				         an(PREDICATE_NODE, "$2"),
+				         an(PREDICATE_NODE, "$3"))),
+				   al(AND_LINK,
+				      an(PREDICATE_NODE, "$1"),
+				      an(PREDICATE_NODE, "$3")));
+		Handle type = infer_atomese_type(exemplar);
+
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+
+		AtomeseRepresentation rep(r2, r2, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		// expect about ~27 knobs [apparently depends on reduct]
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+	}
+
+	void test_simple_contin_1()
+	{
+		Handle exemplar =
+				al(PLUS_LINK,
+				   an(NUMBER_NODE, "3"),
+				   an(SCHEMA_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
+		                              createNode(TYPE_NODE, "LogLink"),
+		                              createNode(TYPE_NODE, "ExpLink")};
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(7, fields.contin().size());
+	}
+
+	void test_simple_contin_2()
+	{
+		Handle exemplar =
+				al(DIVIDE_LINK,
+				   al(PLUS_LINK,
+				      al(TIMES_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1"),
+				         al(PLUS_LINK,
+				            an(NUMBER_NODE, "7"),
+				            an(SCHEMA_NODE, "$2"))),
+				      an(SCHEMA_NODE, "$2")),
+				   al(PLUS_LINK,
+				      al(PLUS_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1")),
+				      an(NUMBER_NODE, "4"),
+				      an(SCHEMA_NODE, "$2")));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
+		                              createNode(TYPE_NODE, "LogLink"),
+		                              createNode(TYPE_NODE, "ExpLink")};
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(14, fields.contin().size());
+	}
+
+	void test_contin_SLE()
+	{
+		Handle exemplar =
+				al(PLUS_LINK,
+				   an(NUMBER_NODE, "3"),
+				   an(SCHEMA_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(19, fields.contin().size());
+	}
+
+	void test_contin_non_linear_1()
+	{
+		Handle exemplar =
+				al(TIMES_LINK,
+				   an(NUMBER_NODE, "3"),
+				   an(SCHEMA_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0, false);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(26, fields.contin().size());
+	}
+
+	void test_contin_non_linear_2()
+	{
+		Handle exemplar =
+				al(DIVIDE_LINK,
+				   al(PLUS_LINK,
+				      al(TIMES_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1"),
+				         al(PLUS_LINK,
+				            an(NUMBER_NODE, "7"),
+				            an(SCHEMA_NODE, "$2"))),
+				      an(SCHEMA_NODE, "$2")),
+				   al(PLUS_LINK,
+				      al(PLUS_LINK,
+				         an(NUMBER_NODE, "3"),
+				         an(SCHEMA_NODE, "$1")),
+				      an(NUMBER_NODE, "4"),
+				      an(SCHEMA_NODE, "$2")));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
+		                           contin_reduction(2, ignore_ops),
+		                           exemplar, type, &_as, ignore_ops,
+		                           0.0, false);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_EQUALS(99, fields.contin().size());
+	}
+
+	void test_mixed_1()
+	{
+		Handle exemplar =
+				al(GREATER_THAN_LINK,
+				      an(SCHEMA_NODE, "$1"), an(NUMBER_NODE, "0"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+		TS_ASSERT_EQUALS(28, fields.contin().size());
+	}
+
+	void test_mixed_2()
+	{
+		Handle exemplar =
+				al(AND_LINK,
+				   al(GREATER_THAN_LINK,
+				      an(SCHEMA_NODE, "$2"), an(NUMBER_NODE, "0")),
+				   an(PREDICATE_NODE, "$1"));
+		Handle type = infer_atomese_type(exemplar);
+		const HandleSet ignore_ops;
+		logical_reduction r(ignore_ops);
+		const rule& r2 = r.operator()(2);
+		const rule& r0 = r.operator()(0);
+		AtomeseRepresentation rep(r2, r0, exemplar, type, &_as, ignore_ops);
+
+		field_set fields = rep.fields();
+		TS_ASSERT_LESS_THAN(0, fields.raw_size());
+		TS_ASSERT_EQUALS(27, fields.contin().size());
+	}
+};

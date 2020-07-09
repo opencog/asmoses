@@ -65,7 +65,7 @@ public:
         moses_test_good_enough_score({"-Hit", 
                           "-uclass",
                           "-ndiv", "-nsin", "-nexp", "-nlog",
-                          "-m10000",
+                          "-m13000",
                           "-r14",  // Seems to work best ...
                           "-Z1",   // much much faster w/this flag...
                           data_file_path,
@@ -84,7 +84,7 @@ public:
         moses_test_good_enough_score({"-Hit", 
                           "-uclass",
                           "-ndiv", "-nsin", "-nexp", "-nlog",
-                          "-m10000",
+                          "-m13000",
                           "-r14",  // Seems to work best ...
                           "-j2",   // two threads
                           "-Z1",   // much much faster w/this flag...

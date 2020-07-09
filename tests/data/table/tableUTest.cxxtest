@@ -439,7 +439,7 @@ public:
 		}
 	}
 
-	void test_complete_truth_table()
+	void test_complete_truth_table_1()
 	{
 		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
 		Handle or_link = createLink(seq_1, OR_LINK);
@@ -467,6 +467,30 @@ public:
 		complete_truth_table c_ctable(c_program, 3);
 
 		TS_ASSERT(ctable == c_ctable);
+	}
+
+	void test_complete_truth_table_3()
+	{
+		Handle program = createLink(TRUE_LINK);
+
+		combo::complete_truth_table ctable(program, 3);
+
+		combo_tree c_program = combo::str2combo_tree("true", {"f1","f2","f3"});
+		complete_truth_table c_ctable(c_program, 3);
+
+		TS_ASSERT(ctable == c_ctable);
+	}
+
+	void test_complete_truth_table_4()
+	{
+		Handle program = createLink(FALSE_LINK);
+
+		combo::complete_truth_table ctable(program, 3);
+
+		combo_tree c_program = combo::str2combo_tree("false", {"f1","f2","f3"});
+		complete_truth_table c_ctable(c_program, 3);
+
+		 TS_ASSERT(ctable == c_ctable);
 	}
 
 	void test_get_input_col_data()

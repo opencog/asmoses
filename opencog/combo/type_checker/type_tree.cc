@@ -24,6 +24,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include <opencog/util/Logger.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/combo/converter/combo_atomese.h>
+#include <opencog/atomese/type_checker/AtomeseTypeChecker.h>
 
 #include "type_tree.h"
 #include "../combo/descriptions.h"
@@ -959,7 +962,7 @@ type_tree get_intersection(const type_tree& tt1, type_tree_pre_it it1,
     //check if tt1 and tt2 are unions, if so the intersection of the unions
     //is the union of the interections
     else if (*it1 == id::union_type && *it2 == id::union_type) {
-        set<type_tree, opencog::size_tree_order<type_node> > union_of_inter;
+        set<type_tree, opencog::size_tree_order<type_node>> union_of_inter;
         for (type_tree_sib_it sib1 = it1.begin(); sib1 != it1.end(); ++sib1) {
             for (type_tree_sib_it sib2 = it2.begin(); sib2 != it2.end(); ++sib2) {
                 type_tree inter_tt = get_intersection(tt1,
@@ -1206,7 +1209,29 @@ type_tree infer_type_tree(const combo_tree& tr)
     insert_arg_type_tree(arg_types, tt);
     return tt;
 }
+type_node_seq type_tree_to_tyn_seq(const type_tree& tt)
+{
+	type_node_seq t_node_seq;
+	auto tt_sig = get_signature_inputs(tt);
+	for( type_tree t : tt_sig) t_node_seq.push_back(get_type_node(t));
+	return t_node_seq;
+}
+// port infer type tree for atomese type
+Handle infer_atomese_type(const Handle& handle)
+{
+	// convert the atomese to combo tree
+	combo::AtomeseToCombo toCombo;
+	auto combo_result = toCombo(handle);
 
+	// infer the type tree of the combo tree
+	auto type_result = infer_type_tree(combo_result.first);
+
+	// infer the atomese type from the type tree
+	atomese::AtomeseTypeChecker typetreeToAtomese;
+	auto result = typetreeToAtomese(type_result);
+	return result;
+
+}
 bool is_well_formed(const type_tree& tt)
 {
     if (tt.empty())
@@ -1353,6 +1378,15 @@ type_tree gen_signature(type_node iotype, arity_t arity)
 }
 
 } // ~namespace combo
+
+std::string oc_to_string(const combo::type_tree& tt,
+                         const std::string& indent)
+{
+	std::stringstream ss;
+	ss << indent << tt;
+	return ss.str();
+}
+
 } // ~namespace opencog
 
 namespace std {

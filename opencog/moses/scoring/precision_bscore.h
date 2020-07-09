@@ -28,7 +28,10 @@
 #include "scoring_base.h"
 #include "time_dispersion.h"
 
-namespace opencog { namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using combo::CTable;
 using combo::count_t;
@@ -106,93 +109,103 @@ using combo::type_node;
  */
 struct precision_bscore : public bscore_ctable_time_dispersion
 {
-    precision_bscore(const CTable& _ctable,
-                     float activation_pressure = 1.0f,
-                     float min_activation = 0.5f,
-                     float max_activation = 1.0f,
-                     bool positive = true,
-                     float dispersion_pressure = 0.0f,
-                     float dispersion_exponent = 1.0f,
-                     bool exact_experts = true,
-                     double bias_scale = 1.0,
-                     bool time_bscore = false,
-                     TemporalGranularity granularity = TemporalGranularity::day,
-                     bool disable_debug_log = false);
+	precision_bscore(const CTable &_ctable,
+	                 float activation_pressure = 1.0f,
+	                 float min_activation = 0.5f,
+	                 float max_activation = 1.0f,
+	                 bool positive = true,
+	                 float dispersion_pressure = 0.0f,
+	                 float dispersion_exponent = 1.0f,
+	                 bool exact_experts = true,
+	                 double bias_scale = 1.0,
+	                 bool time_bscore = false,
+	                 TemporalGranularity granularity = TemporalGranularity::day,
+	                 bool disable_debug_log = false);
 
-    behavioral_score operator()(const combo_tree& tr) const;
-    behavioral_score operator()(const scored_combo_tree_set&) const;
-    score_t get_error(const combo_tree&) const;
+	behavioral_score operator()(const combo_tree &tr) const;
 
-    // Return the best possible bscore. Used as one of the
-    // termination conditions (when the best bscore is reached).
-    behavioral_score best_possible_bscore() const;
-    behavioral_score worst_possible_bscore() const;
+	behavioral_score operator()(const scored_combo_tree_set &) const;
 
-    score_t min_improv() const;
+	score_t get_error(const combo_tree &) const;
 
-    void set_complexity_coef(score_t complexity_ratio);
-    void set_complexity_coef(unsigned alphabet_size, float stddev);
+	behavioral_score operator()(const Handle &handle) const;
 
-    // For boosting
-    void reset_weights();
-    void update_weights(const std::vector<double>&);
+	score_t get_error(const Handle &) const;
 
-    /**
-     * This is a experimental feature, we generate a massive combo
-     * tree that is supposed to maximize the precision (keeping
-     * activation within acceptable boundaries). The plan is that
-     * because that combo tree is possibly (even certainly) overfit we
-     * evolve it to prune from it what contributes the least (via
-     * setting an adequate complexity penalty).
-     *
-     * The combo tree is a boolean formula, more specifically a
-     * disjunctive normal form, representing a decision tree
-     * maximizing the precision.
-     *
-     * Each active row corresponds to a conjunctive clauses where each
-     * literal is in a input value (positive if the input is
-     * id::logical_true, negative if the input is id::logical_false).
-     *
-     * The active rows are determined identically as in
-     * precision_bscore::best_possible_bscore(). That is the rows are
-     * sorted according to their individual precision, the first ones
-     * till the min activation is reached are active.
-     */
-    combo_tree gen_canonical_best_candidate() const;
+	// Return the best possible bscore. Used as one of the
+	// termination conditions (when the best bscore is reached).
+	behavioral_score best_possible_bscore() const;
+
+	behavioral_score worst_possible_bscore() const;
+
+	score_t min_improv() const;
+
+	void set_complexity_coef(score_t complexity_ratio);
+
+	void set_complexity_coef(unsigned alphabet_size, float stddev);
+
+	// For boosting
+	void reset_weights();
+
+	void update_weights(const std::vector<double> &);
+
+	/**
+	 * This is a experimental feature, we generate a massive combo
+	 * tree that is supposed to maximize the precision (keeping
+	 * activation within acceptable boundaries). The plan is that
+	 * because that combo tree is possibly (even certainly) overfit we
+	 * evolve it to prune from it what contributes the least (via
+	 * setting an adequate complexity penalty).
+	 *
+	 * The combo tree is a boolean formula, more specifically a
+	 * disjunctive normal form, representing a decision tree
+	 * maximizing the precision.
+	 *
+	 * Each active row corresponds to a conjunctive clauses where each
+	 * literal is in a input value (positive if the input is
+	 * id::logical_true, negative if the input is id::logical_false).
+	 *
+	 * The active rows are determined identically as in
+	 * precision_bscore::best_possible_bscore(). That is the rows are
+	 * sorted according to their individual precision, the first ones
+	 * till the min activation is reached are active.
+	 */
+	combo_tree gen_canonical_best_candidate() const;
 
 protected:
-    score_t min_activation, max_activation;
-    score_t activation_pressure;
-    bool positive;
+	score_t min_activation, max_activation;
+	score_t activation_pressure;
+	bool positive;
 
-    double bias_scale;
-    double wnorm;
-    bool exact_experts;
+	double bias_scale;
+	double wnorm;
+	bool exact_experts;
 
 
-    bool time_bscore;           // whether the bscore is spread over
-                                // the temporal axis
-    type_node output_type;
+	bool time_bscore;           // whether the bscore is spread over
+	// the temporal axis
+	type_node output_type;
 
-    // the actual work-horse.
-    behavioral_score do_score(std::function<bool(const multi_type_seq&)>) const;
+	// the actual work-horse.
+	behavioral_score do_score(std::function<bool(const multi_type_seq &)>) const;
 
 private:
-    vertex _target, _neg_target; // same as positive
+	vertex _target, _neg_target; // same as positive
 
-    // Kind of a hack, do not log debug message when calling
-    // best_possible_bscore() because the latter can be used as
-    // feature quality score by feature-selection
-    bool _disable_debug_log;
+	// Kind of a hack, do not log debug message when calling
+	// best_possible_bscore() because the latter can be used as
+	// feature quality score by feature-selection
+	bool _disable_debug_log;
 
-    score_t get_activation_penalty(score_t activation) const;
+	score_t get_activation_penalty(score_t activation) const;
 
-    // function to calculate the total weight of the observations
-    // associated to an input vector
-    score_t sum_outputs(const CTable::counter_t&) const;
+	// function to calculate the total weight of the observations
+	// associated to an input vector
+	score_t sum_outputs(const CTable::counter_t &) const;
 
-    behavioral_score exact_selection(const scored_combo_tree_set&) const;
-    behavioral_score bias_selection(const scored_combo_tree_set&) const;
+	behavioral_score exact_selection(const scored_combo_tree_set &) const;
+
+	behavioral_score bias_selection(const scored_combo_tree_set &) const;
 };
 
 /**
@@ -201,32 +214,34 @@ private:
  */
 struct precision_conj_bscore : public bscore_base
 {
-    precision_conj_bscore(const CTable& _ctable, float hardness,
-                          bool positive = true);
+	precision_conj_bscore(const CTable &_ctable, float hardness,
+	                      bool positive = true);
 
-    behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const combo_tree& tr) const;
+	behavioral_score operator()(const Handle& handle) const;
 
-    // Return the best possible bscore. Used as one of the
-    // termination conditions (when the best bscore is reached).
-    behavioral_score best_possible_bscore() const;
+	// Return the best possible bscore. Used as one of the
+	// termination conditions (when the best bscore is reached).
+	behavioral_score best_possible_bscore() const;
 
-    score_t min_improv() const;
+	score_t min_improv() const;
 
-    virtual void set_complexity_coef(score_t complexity_ratio);
-    virtual void set_complexity_coef(unsigned alphabet_size, float stddev);
+	virtual void set_complexity_coef(score_t complexity_ratio);
+
+	virtual void set_complexity_coef(unsigned alphabet_size, float stddev);
 
 protected:
-    const CTable& ctable;
+	const CTable &ctable;
 
-    size_t ctable_usize;   // uncompressed size of ctable
+	size_t ctable_usize;   // uncompressed size of ctable
 
-    float hardness;
-    bool positive;
+	float hardness;
+	bool positive;
 
 private:
-    // function to calculate the total weight of the observations
-    // associated to an input vector
-    std::function<score_t(const CTable::counter_t&)> sum_outputs;
+	// function to calculate the total weight of the observations
+	// associated to an input vector
+	std::function<score_t(const CTable::counter_t &)> sum_outputs;
 };
 
 } // ~namespace moses

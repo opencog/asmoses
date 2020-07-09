@@ -531,7 +531,7 @@ typedef combo_tree_seq::iterator combo_tree_seq_it;
 typedef combo_tree_seq::const_iterator combo_tree_seq_const_it;
 
 // ns stands for normal size
-typedef std::set<combo_tree, size_tree_order<vertex> > combo_tree_ns_set;
+typedef std::set<combo_tree, size_tree_order<vertex>> combo_tree_ns_set;
 typedef combo_tree_ns_set::iterator combo_tree_ns_set_it;
 typedef combo_tree_ns_set::const_iterator combo_tree_ns_set_const_it;
 

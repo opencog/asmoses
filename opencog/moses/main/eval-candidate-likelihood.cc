@@ -411,7 +411,7 @@ int main(int argc, char** argv)
     ITable& it = table.itable;
 
     // parse combo programs
-    vector<combo_tree> trs;
+    combo_tree_seq trs;
     for (const string& tr_str : all_combo_tree_str) {
         combo_tree tr = str2combo_tree_label(tr_str, it.get_labels());
         if (logger().is_fine_enabled()) {

@@ -36,6 +36,8 @@
 #include <opencog/util/oc_assert.h>
 #include <opencog/util/RandGen.h>
 #include <opencog/util/Counter.h>
+#include <opencog/util/empty_string.h> // required by oc_to_string due
+                                       // to some limitation of gdb
 
 #include "instance.h"
 
@@ -1372,8 +1374,13 @@ inline std::ostream& operator<<(std::ostream& out,
     return fs.ostream_field_set(out);
 }
 
-
 } // ~namespace moses
+
+// For gdb, see
+// https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
+std::string oc_to_string(const moses::field_set& fs,
+                         const std::string& indent=empty_string);
+
 } // ~namespace opencog
 
 #endif

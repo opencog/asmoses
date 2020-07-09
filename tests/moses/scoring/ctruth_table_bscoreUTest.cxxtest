@@ -27,8 +27,9 @@
 #include <opencog/data/table/table.h>
 #include <opencog/data/table/table_io.h>
 
-#include <opencog/utils/value_key.h>
+#include <opencog/atomese/atomese_utils/constants.h>
 #include <opencog/utils/valueUtils.h>
+#include <opencog/moses/main/populate_atomspace.h>
 
 using namespace opencog;
 using namespace combo;
@@ -48,17 +49,7 @@ public:
 
 		Handle f1 = createNode(PREDICATE_NODE, "f1");
 		Handle f2 = createNode(PREDICATE_NODE, "f2");
-		std::vector<ValuePtr> _f1_values;
-		std::vector<ValuePtr> _f2_values;
-
-		boost::transform(ct.get_input_col_data(0), back_inserter(_f1_values), bool_vertex_to_value);
-		boost::transform(ct.get_input_col_data(1), back_inserter(_f2_values), bool_vertex_to_value);
-
-		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
-		f1->setValue(moses::compressed_value_key, f1_proto_atom);
-		ValuePtr f2_proto_atom(new LinkValue(_f2_values));
-		f2->setValue(moses::compressed_value_key, f2_proto_atom);
-
+		populate_frm_ctable(ct, f1, f2);
 		HandleSeq handleSeq = {f1, f2};
 		Handle program = createLink(handleSeq, AND_LINK);
 
