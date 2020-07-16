@@ -10,21 +10,20 @@ namespace opencog
 namespace moses
 {
 
-void populate(AtomSpace *as, const ITable &itable) {
-
-        int n_columns = itable.get_types().size();
-        for (int i = 0; i < n_columns; i++) {
-            id::type_node col_type = itable.get_types().at(i);
-            vertex_seq col = itable.get_column_data(i);
-            std::vector<std::string> labels = itable.get_labels();
-            std::string test = "$"+labels[i];
-            Handle feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE,"$"+ labels[i]);
-            ValuePtr vtr = vertex_seq_to_value(col, col_type);
-            feature->setValue(atomese::value_key, vtr);
-            as->add_atom(feature);
-        }
-    }
-
+void populate(AtomSpace *as, const ITable &itable)
+{
+	int n_columns = itable.get_types().size();
+	for (int i = 0; i < n_columns; i++) {
+		id::type_node col_type = itable.get_types().at(i);
+		vertex_seq col = itable.get_column_data(i);
+		std::vector<std::string> labels = itable.get_labels();
+		std::string test = "$"+labels[i];
+		Handle feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE,"$"+ labels[i]);
+		ValuePtr vtr = vertex_seq_to_value(col, col_type);
+		feature->setValue(atomese::value_key, vtr);
+		as->add_atom(feature);
+	}
+}
 
 void populate(AtomSpace *as, const CTable &ctable)
 {
