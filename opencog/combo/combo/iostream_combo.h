@@ -40,12 +40,12 @@
 namespace opencog { namespace combo {
 
 enum class output_format {
-    combo,
-    atomese,
-    python,
-    python3,
-    scheme,
-    output_format_count                // to get the number of formats
+	combo,
+	atomese,
+	python,
+	python3,
+	scheme,
+	output_format_count                // to get the number of formats
 };
 
 // Take a string "combo", "atomese", "python" or "scheme" and return the
@@ -71,52 +71,53 @@ template<typename Iter>
 std::ostream& ostream_combo_it(std::ostream& out, Iter it,
                                const std::vector<std::string>& labels =
                                std::vector<std::string>(),
-                               output_format fmt = output_format::combo) {
-    switch(fmt) {
-    case(output_format::combo):
-        ostream_vertex(out, *it, labels, fmt);
-        if (it.number_of_children() > 0) {
-            out << "(";
-            auto sib = it.begin();
-            ostream_combo_it(out, sib++, labels, fmt);
-            for (; sib != it.end(); ++sib)
-                ostream_combo_it(out << " ", sib, labels, fmt);
-            out << ")";
-        }
-        return out;
-    case(output_format::python):
-    case(output_format::python3): {
-        bool is_infix = *it == id::logical_and or *it == id::logical_or;
+                               output_format fmt = output_format::combo)
+{
+	switch(fmt) {
+	case(output_format::combo):
+		ostream_vertex(out, *it, labels, fmt);
+		if (it.number_of_children() > 0) {
+			out << "(";
+			auto sib = it.begin();
+			ostream_combo_it(out, sib++, labels, fmt);
+			for (; sib != it.end(); ++sib)
+				ostream_combo_it(out << " ", sib, labels, fmt);
+			out << ")";
+		}
+		return out;
+	case(output_format::python):
+	case(output_format::python3): {
+		bool is_infix = *it == id::logical_and or *it == id::logical_or;
 
-        std::stringstream seperator;
-        if (is_infix) {
-            ostream_vertex(seperator << " ", *it, labels, fmt) << " ";
-        } else {
-            ostream_vertex(out, *it, labels, fmt);
-            seperator << ", ";
-        }
+		std::stringstream seperator;
+		if (is_infix) {
+			ostream_vertex(seperator << " ", *it, labels, fmt) << " ";
+		} else {
+			ostream_vertex(out, *it, labels, fmt);
+			seperator << ", ";
+		}
 
-        if (it.number_of_children() > 0) {
-            out << "(";
-            auto sib = it.begin();
-            ostream_combo_it(out, sib++, labels, fmt);
-            for (; sib != it.end(); ++sib)
-                ostream_combo_it(out << seperator.str(), sib, labels, fmt);
-            out << ")";
-        }
-        return out;
-    }
-    case(output_format::scheme):
-        out << "(";
-        ostream_vertex(out, *it, labels, fmt);
-        for (auto sib = it.begin(); sib != it.end(); ++sib)
-            ostream_combo_it(out << " ", sib, labels, fmt);
-        out << ")";
-        return out;
-    default:
-        OC_ASSERT(false, "Unsupported case");
-        return out;
-    }
+		if (it.number_of_children() > 0) {
+			out << "(";
+			auto sib = it.begin();
+			ostream_combo_it(out, sib++, labels, fmt);
+			for (; sib != it.end(); ++sib)
+				ostream_combo_it(out << seperator.str(), sib, labels, fmt);
+			out << ")";
+		}
+		return out;
+	}
+	case(output_format::scheme):
+		out << "(";
+		ostream_vertex(out, *it, labels, fmt);
+		for (auto sib = it.begin(); sib != it.end(); ++sib)
+			ostream_combo_it(out << " ", sib, labels, fmt);
+		out << ")";
+		return out;
+	default:
+		OC_ASSERT(false, "Unsupported case");
+		return out;
+	}
 }
 
 // return false if the string has no match
@@ -131,62 +132,62 @@ template<class BUILTIN_ACTION, class PERCEPTION,
          class ACTION_SYMBOL, class INDEFINITE_OBJECT>
 void str_to_vertex(const std::string& str, vertex& v)
 {
-    OC_ASSERT(!str.empty(), "input to string should not be empty.");
-    // builtin, ann, argument, constant and message
-    // the order may matter
-    if (builtin_str_to_vertex(str, v)
-       || argument_str_to_vertex(str, v)
-       || contin_str_to_vertex(str, v)
-       || enum_str_to_vertex(str, v)
-       || ann_str_to_vertex(str, v)
-       || message_str_to_vertex(str, v)) {
-        return;
-    }
-    // builtin_action
-    else if (builtin_action ba = BUILTIN_ACTION::get_instance(str)) {
-        v = ba;
-    }
-    // perception
-    else if (perception p = PERCEPTION::get_instance(str)) {
-        v = p;
-    }
-    // action symbol
-    else if (action_symbol as = ACTION_SYMBOL::get_instance(str)) {
-        v = as;
-    }
-    // indefinite_object
-    else if (indefinite_object i = INDEFINITE_OBJECT::get_instance(str)) {
-        v = i;
-    }
-    // should be definite object then
-    else {
-        // Any word character (alphanumeric characters plus the
-        // underscore). If you find this too constraining, feel free to
-        // relax.
-        static const boost::regex e("[\\w-]+");
-        OC_ASSERT(boost::regex_match(str, e),
-                  "Lexical error: '%s' does not name a definite_object", str.c_str());
-        v = str;
-    }
+	OC_ASSERT(!str.empty(), "input to string should not be empty.");
+	// builtin, ann, argument, constant and message
+	// the order may matter
+	if (builtin_str_to_vertex(str, v)
+	    || argument_str_to_vertex(str, v)
+	    || contin_str_to_vertex(str, v)
+	    || enum_str_to_vertex(str, v)
+	    || ann_str_to_vertex(str, v)
+	    || message_str_to_vertex(str, v)) {
+		return;
+	}
+	// builtin_action
+	else if (builtin_action ba = BUILTIN_ACTION::get_instance(str)) {
+		v = ba;
+	}
+	// perception
+	else if (perception p = PERCEPTION::get_instance(str)) {
+		v = p;
+	}
+	// action symbol
+	else if (action_symbol as = ACTION_SYMBOL::get_instance(str)) {
+		v = as;
+	}
+	// indefinite_object
+	else if (indefinite_object i = INDEFINITE_OBJECT::get_instance(str)) {
+		v = i;
+	}
+	// should be definite object then
+	else {
+		// Any word character (alphanumeric characters plus the
+		// underscore). If you find this too constraining, feel free to
+		// relax.
+		static const boost::regex e("[\\w-]+");
+		OC_ASSERT(boost::regex_match(str, e),
+		          "Lexical error: '%s' does not name a definite_object", str.c_str());
+		v = str;
+	}
 }
 
 template<class BUILTIN_ACTION, class PERCEPTION, class ACTION_SYMBOL, class INDEFINITE_OBJECT>
 vertex str_to_vertex(const std::string& str)
 {
-    vertex v;
-    str_to_vertex<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(str, v);
-    return v;
+	vertex v;
+	str_to_vertex<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(str, v);
+	return v;
 }
 
 template<class BUILTIN_ACTION, class PERCEPTION, class ACTION_SYMBOL, class INDEFINITE_OBJECT>
 std::istream& stream_to_vertex(std::istream& in, vertex& v)
 {
-    std::string str;
-    //use getline instead of in >> str to be sure to not
-    //skip spaces in the message
-    std::getline(in, str);
-    str_to_vertex<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(str, v);
-    return in;
+	std::string str;
+	//use getline instead of in >> str to be sure to not
+	//skip spaces in the message
+	std::getline(in, str);
+	str_to_vertex<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(str, v);
+	return in;
 }
 
 template<class BUILTIN_ACTION, class PERCEPTION, class ACTION_SYMBOL, class INDEFINITE_OBJECT>
@@ -194,35 +195,35 @@ void sub_strtree_to_combo_tree(const tree<std::string>& src,
                                tree<std::string>::iterator src_it,
                                combo_tree& dst, combo_tree::iterator dst_it)
 {
-    dst_it = dst.replace(dst_it, str_to_vertex<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(*src_it));
-    dst.erase_children(dst_it);
-    for (tree<std::string>::sibling_iterator sib = src_it.begin();
-            sib != src_it.end(); ++sib)
-        sub_strtree_to_combo_tree<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(src, tree<std::string>::iterator(sib), dst, dst.append_child(dst_it));
+	dst_it = dst.replace(dst_it, str_to_vertex<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(*src_it));
+	dst.erase_children(dst_it);
+	for (tree<std::string>::sibling_iterator sib = src_it.begin();
+	     sib != src_it.end(); ++sib)
+		sub_strtree_to_combo_tree<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(src, tree<std::string>::iterator(sib), dst, dst.append_child(dst_it));
 }
 
 template<class BUILTIN_ACTION, class PERCEPTION, class ACTION_SYMBOL, class INDEFINITE_OBJECT>
 void strtree_to_combo_tree(const tree<std::string>& src, combo_tree& dst)
 {
-    dst = combo_tree(vertex());
-    tree<std::string>::iterator src_it = src.begin();
-    combo_tree::iterator dst_it = dst.begin();
-    while (src_it != src.end()) {
-        dst_it = dst.insert_after(dst_it, vertex());
-        sub_strtree_to_combo_tree<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(src, src_it, dst, dst_it);
-        src_it.skip_children();
-        ++src_it;
-    }
-    dst.erase(dst.begin());
+	dst = combo_tree(vertex());
+	tree<std::string>::iterator src_it = src.begin();
+	combo_tree::iterator dst_it = dst.begin();
+	while (src_it != src.end()) {
+		dst_it = dst.insert_after(dst_it, vertex());
+		sub_strtree_to_combo_tree<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(src, src_it, dst, dst_it);
+		src_it.skip_children();
+		++src_it;
+	}
+	dst.erase(dst.begin());
 }
 
 template<class BUILTIN_ACTION, class PERCEPTION, class ACTION_SYMBOL, class INDEFINITE_OBJECT>
 std::istream& stream_to_combo_tree(std::istream& in, combo_tree& tr)
 {
-    tree<std::string> tmp;
-    in >> tmp;
-    strtree_to_combo_tree<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(tmp, tr);
-    return  in;
+	tree<std::string> tmp;
+	in >> tmp;
+	strtree_to_combo_tree<BUILTIN_ACTION, PERCEPTION, ACTION_SYMBOL, INDEFINITE_OBJECT>(tmp, tr);
+	return  in;
 }
 
 /**
