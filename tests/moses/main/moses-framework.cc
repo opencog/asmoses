@@ -141,6 +141,7 @@ vector<scored_combo_tree> parse_scored_combo_trees(const string& tempfile)
 // Test passes only if the score is exactly equal to expected_sc
 void moses_test_score(vector<string> arguments, score_t expected_sc)
 {
+	arguments.push_back("--output-format=combo");
 	auto t1 = microsec_clock::local_time();
 	// build arguments
 	pair<vector<string>, string> cmd_tmp = build_cmd(arguments);
@@ -234,6 +235,7 @@ void moses_test_atomese(const vector<string>& arguments,
 void cheap_moses_test_combo(vector<string> arguments,
                             vector<string> expected_tr_strs)
 {
+	arguments.push_back("--output-format=combo");
 	auto t1 = microsec_clock::local_time();
 	// build command
 	pair<vector<string>, string> cmd_tmp = build_cmd(arguments);
