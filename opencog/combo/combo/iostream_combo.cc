@@ -253,7 +253,9 @@ bool enum_str_to_vertex(const std::string& str, vertex& v)
 output_format parse_output_format(const std::string& fmt_str)
 {
 	combo::output_format fmt = combo::output_format::combo;
-	if (fmt_str == "combo")
+	if (fmt_str == "auto")
+		fmt = combo::output_format::auto_fmt;
+	else if (fmt_str == "combo")
 		fmt = combo::output_format::combo;
 	else if (fmt_str == "atomese")
 		fmt = combo::output_format::atomese;

@@ -40,6 +40,7 @@
 namespace opencog { namespace combo {
 
 enum class output_format {
+	auto_fmt,
 	combo,
 	atomese,
 	python,

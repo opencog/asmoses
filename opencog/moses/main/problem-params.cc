@@ -623,8 +623,8 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "EXPANSION[.BREADTH_FIRST_INDEX[.SUBSAMPLED_INDEX]].\n")
 
         ("output-format",
-         po::value<string>(&output_format_str)->default_value("combo"),
-         "Supported output formats are combo, atomese, python and scheme.\n")
+         po::value<string>(&output_format_str)->default_value("auto"),
+         "Supported output formats are auto, combo, atomese, python and scheme.\n")
 
         (opt_desc_str(output_file_opt).c_str(),
          po::value<string>(&output_file)->default_value(""),
@@ -1490,6 +1490,10 @@ void problem_params::parse_options(boost::program_options::variables_map& vm)
 
     // Parse output format
     combo::output_format fmt = parse_output_format(output_format_str);
+    if (fmt == combo::output_format::auto_fmt) {
+	    fmt = deme_params.atomspace_port ? combo::output_format::atomese
+		    : combo::output_format::combo;
+    }
 
     // Set metapop printer parameters.
     mmr_pa = metapop_printer(result_count,
