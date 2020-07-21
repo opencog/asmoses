@@ -248,14 +248,15 @@ std::ostream& ostream_scored_combo_tree(std::ostream& out,
 }
 
 std::ostream& ostream_scored_atomese(std::ostream& out,
-									 const scored_atomese& sa,
-									 bool output_score,
-									 bool output_cscore,
-									 bool output_demeID,
-									 bool output_bscore)
+                                     const scored_atomese& sa,
+                                     bool output_score,
+                                     bool output_cscore,
+                                     bool output_demeID,
+                                     bool output_bscore)
 {
 	if (output_score)
-		out << sa.get_score() << " " << oc_to_string(sa.get_handle());
+		out << sa.get_score() << " ";
+	out << sa.get_handle()->to_short_string();
 
 	// Is this really used?
 	static const bool output_weight = false;

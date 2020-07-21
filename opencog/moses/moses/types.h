@@ -565,7 +565,7 @@ inline std::ostream& operator<<(std::ostream& out,
 }
 
 inline std::ostream& operator<<(std::ostream& out,
-								const moses::scored_atomese& sa)
+                                const moses::scored_atomese& sa)
 {
 	return moses::ostream_scored_atomese(out, sa);
 }

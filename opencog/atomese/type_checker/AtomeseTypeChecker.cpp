@@ -58,7 +58,8 @@ Handle AtomeseTypeChecker::convert_type_node(const type_node &tt)
 	else if (tt == id::lambda_type)
 		return createLink(HandleSeq{}, ARROW_LINK);
 
-	else OC_ASSERT(false, "unsupported type");
+	OC_ASSERT(false, "unsupported type");
+	return Handle::UNDEFINED;
 }
 
 }
