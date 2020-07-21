@@ -48,15 +48,15 @@ namespace opencog
 namespace moses
 {
 BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
-                                         const Handle &t,
-                                         AtomeseRepresentation &rep,
-                                         const Handle &DSN,
-                                         bool linear_contin,
-                                         const HandleSet &ignore_ops,
-                                         contin_t step_size,
-                                         contin_t expansion,
-                                         field_set::width_t depth,
-                                         float perm_ratio)
+                                     const Handle &t,
+                                     AtomeseRepresentation &rep,
+                                     const Handle &DSN,
+                                     bool linear_contin,
+                                     const HandleSet &ignore_ops,
+                                     contin_t step_size,
+                                     contin_t expansion,
+                                     field_set::width_t depth,
+                                     float perm_ratio)
 		: _exemplar(exemplar), _rep(rep), _skip_disc_probe(true),
 		  _arity(t->getOutgoingAtom(0)->get_arity()), _signature(t),
 		  _step_size(step_size), _expansion(expansion), _depth(depth),
