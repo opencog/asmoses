@@ -24,7 +24,9 @@ TARGET_LINK_LIBRARIES(reduct-types
 
 # Without this, parallel make will race and crap up the generated files.
 ADD_DEPENDENCIES(reduct-types reduct_atom_types)
-
+INSTALL(TARGETS  reduct-types
+		EXPORT ASMosesTargets
+		DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
 
 INSTALL (FILES
 		${CMAKE_CURRENT_BINARY_DIR}/atom_types.h
