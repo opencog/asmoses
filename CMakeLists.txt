@@ -364,6 +364,10 @@ ENDIF (VALGRIND_FOUND)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} ${Boost_INCLUDE_DIRS}
 	${COGUTIL_INCLUDE_DIR})
 
+# Macros
+INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogMacros.cmake")
+INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogFunctions.cmake")
+
 # -------------------------------------------------
 # Library configuration
 
