@@ -1,0 +1,11 @@
+//
+// Script for automatic "atom type" generation. For more information,
+// consult the opencog/atomspace/README file.
+//
+// ====================================================================
+//
+// ReducedToLink    ;indicate that expression B is reduced form of expression A
+//  A
+//  B
+
+REDUCED_TO_LINK <- ORDERED_LINK
