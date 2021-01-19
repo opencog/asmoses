@@ -230,6 +230,9 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		                               FloatValueCast(params[1]));
 		return result;
 	}
+
+	// Silent warning
+	return nullptr;
 }
 
 value_size Interpreter::extract_output_size(const Handle &program, const Handle &key)
