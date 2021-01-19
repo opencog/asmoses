@@ -413,6 +413,7 @@ bool metapopulation::merge_demes_atomese(std::vector<std::vector<deme_t>>& all_d
                                          const boost::ptr_vector<representation>& reps)
 {
 	OC_ASSERT(false, "Not implemented yet");
+	return false;
 }
 
 

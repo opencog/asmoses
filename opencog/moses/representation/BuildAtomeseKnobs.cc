@@ -348,6 +348,7 @@ inline Handle identity(Type t)
 	if (t == OR_LINK)
 		return createLink(FALSE_LINK);
 	OC_ASSERT(false, "Unknown Type");
+	return Handle::UNDEFINED;
 }
 
 Handle BuildAtomeseKnobs::disc_probe(HandleSeq& path, Handle &prog,
