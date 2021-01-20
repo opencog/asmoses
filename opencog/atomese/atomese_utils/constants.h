@@ -4,16 +4,17 @@
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 
-namespace opencog
-{
-namespace atomese
-{
+namespace opencog {
+namespace atomese {
 
-const static Handle value_key = createNode(NODE, "*-AS-MOSES:SchemaValuesKey-*");
-const static Handle compressed_value_key = createNode(NODE, "*-AS-MOSES:SchemaCompressedValuesKey-*");
+class Constants {
+public:
+	const static Handle value_key;
+	const static Handle compressed_value_key;
 
-const static ValuePtr true_value(createLink(TRUE_LINK));
-const static ValuePtr false_value(createLink(FALSE_LINK));
+	const static ValuePtr true_value;
+	const static ValuePtr false_value;
+};
 
 } // ~namespace atomese
 } // ~namespace opencog

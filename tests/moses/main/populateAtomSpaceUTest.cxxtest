@@ -35,8 +35,8 @@ public:
 		f2 = it.get_labels().at(1);
 
 		//Get the value from Atomspace
-		feature1 = as.get_handle(SCHEMA_NODE, "$"+f1)->getValue(value_key);
-		feature2 = as.get_handle(SCHEMA_NODE, "$"+f2)->getValue(value_key);
+		feature1 = as.get_handle(SCHEMA_NODE, "$"+f1)->getValue(Constants::value_key);
+		feature2 = as.get_handle(SCHEMA_NODE, "$"+f2)->getValue(Constants::value_key);
 
 		//Get the value
 		vector<double> results1 = FloatValueCast(feature1)->value();
@@ -62,8 +62,8 @@ public:
 		f2 = it.get_labels().at(1);
 
 		//get the inputs from AtomSpace
-		feature1 = as.get_handle(PREDICATE_NODE, "$"+f1)->getValue(value_key);
-		feature2 = as.get_handle(PREDICATE_NODE, "$"+f2)->getValue(value_key);
+		feature1 = as.get_handle(PREDICATE_NODE, "$"+f1)->getValue(Constants::value_key);
+		feature2 = as.get_handle(PREDICATE_NODE, "$"+f2)->getValue(Constants::value_key);
 
 		//Get the values
 		values_vec1 = LinkValueCast(feature1)->value();
@@ -93,8 +93,8 @@ public:
 		f1 = labels[0];
 		f2 = labels[1];
 		//get the inputs from AtomSpace
-		feature1 = as.get_handle(PREDICATE_NODE, "$"+f1)->getValue(atomese::compressed_value_key);
-		feature2 = as.get_handle(PREDICATE_NODE, "$"+f2)->getValue(atomese::compressed_value_key);
+		feature1 = as.get_handle(PREDICATE_NODE, "$"+f1)->getValue(Constants::compressed_value_key);
+		feature2 = as.get_handle(PREDICATE_NODE, "$"+f2)->getValue(Constants::compressed_value_key);
 
 		//Get the values
 		values_vec1 = LinkValueCast(feature1)->value();

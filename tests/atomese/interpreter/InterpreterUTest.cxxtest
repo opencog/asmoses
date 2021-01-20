@@ -64,37 +64,37 @@ public:
 		std::vector<double> _size_value = {3};
 
 		ValuePtr f1_proto_atom(new FloatValue(_f1_values));
-		f1->setValue(atomese::value_key, f1_proto_atom);
+		f1->setValue(atomese::Constants::value_key, f1_proto_atom);
 
 		ValuePtr f2_proto_atom(new FloatValue(_f2_values));
-		f2->setValue(atomese::value_key, f2_proto_atom);
+		f2->setValue(atomese::Constants::value_key, f2_proto_atom);
 
 		ValuePtr f3_proto_atom(new FloatValue(_f3_values));
-		f3->setValue(atomese::value_key, f3_proto_atom);
+		f3->setValue(atomese::Constants::value_key, f3_proto_atom);
 
 		ValuePtr f4_proto_atom(new FloatValue(_f4_values));
-		f4->setValue(atomese::value_key, f4_proto_atom);
+		f4->setValue(atomese::Constants::value_key, f4_proto_atom);
 
 		// initialization of program [Boolean]
 		p1 = createNode(PREDICATE_NODE, "p1");
 		p2 = createNode(PREDICATE_NODE, "p2");
 		p3 = createNode(PREDICATE_NODE, "p3");
 
-		t_link = atomese::true_value;
-		f_link = atomese::false_value;
+		t_link = atomese::Constants::true_value;
+		f_link = atomese::Constants::false_value;
 
 		ValueSeq _p1 = {t_link, t_link, f_link};
 		ValueSeq _p2 = {f_link, t_link, f_link};
 		ValueSeq _p3 = {f_link, f_link, t_link};
 
 		ValuePtr p1_proto_atom(new LinkValue(_p1));
-		p1->setValue(atomese::value_key, p1_proto_atom);
+		p1->setValue(atomese::Constants::value_key, p1_proto_atom);
 
 		ValuePtr p2_proto_atom(new LinkValue(_p2));
-		p2->setValue(atomese::value_key, p2_proto_atom);
+		p2->setValue(atomese::Constants::value_key, p2_proto_atom);
 
 		ValuePtr p3_proto_atom(new LinkValue(_p3));
-		p3->setValue(atomese::value_key, p3_proto_atom);
+		p3->setValue(atomese::Constants::value_key, p3_proto_atom);
 	}
 
 	void test_interpret(void)
@@ -107,7 +107,7 @@ public:
 		std::vector<double> exp_value = {1.0, 1.0, 0.0};
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -125,7 +125,7 @@ public:
 		std::vector<double> exp_value = {6.0, 6.0, 5.0};
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -145,7 +145,7 @@ public:
 		std::vector<double> exp_value = {5.0, 5.0, 0.0};
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -167,7 +167,7 @@ public:
 		ValuePtr expected(new LinkValue(exp_value));
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr result = interpreter(program);
 
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
@@ -187,7 +187,7 @@ public:
         ValuePtr expected(new LinkValue(exp_value));
 
         // interpret
-        atomese::Interpreter interpreter(atomese::value_key);
+        atomese::Interpreter interpreter(atomese::Constants::value_key);
         ValuePtr result = interpreter(program);
 
         TS_ASSERT(atomese::logical_compare(LinkValueCast(result), LinkValueCast(expected)));
@@ -208,7 +208,7 @@ public:
 
 
         // interpret
-        atomese::Interpreter interpreter(atomese::value_key);
+        atomese::Interpreter interpreter(atomese::Constants::value_key);
         ValuePtr _result = interpreter(program);
         std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -225,7 +225,7 @@ public:
 		std::vector<double> exp_value = {1.0, 1.0, 0.0};
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -248,7 +248,7 @@ public:
 		std::vector<double> exp_value = {1.0, 1.0, 0.0};
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> result = FloatValueCast(_result)->value();
 
@@ -258,7 +258,7 @@ public:
 		HandleSeq seq = {f1};
 		Handle program = createLink(seq, EXP_LINK);
 		std::vector<double> expected = {floorf(exp(1.0) * 10000) / 10000, exp(0.0), exp(0.0)};
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> interout = FloatValueCast(_result)->value();
 		std::vector<double> result = {};
@@ -271,7 +271,7 @@ public:
 		Handle program = createLink(seq, EXP_LINK);
 		std::vector<double> expected = {floorf(exp(2.0)*10000)/10000, floorf(exp(5.0)*10000)/10000,floorf(exp(3.6)*10000)/10000};
 
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> interout = FloatValueCast(_result)->value();
 		std::vector<double> result = {};
@@ -283,7 +283,7 @@ public:
 		HandleSeq seq = {f4};
 		Handle program = createLink(seq, SIN_LINK);
 		std::vector<double> expected = {floorf(sin(2.0)*10000)/10000, floorf(sin(5.0)*10000)/10000,floorf(sin(3.6)*10000)/10000};
-		atomese::Interpreter interpreter(atomese::value_key) ;
+		atomese::Interpreter interpreter(atomese::Constants::value_key) ;
 		ValuePtr _result = interpreter(program);
 		std::vector<double> interout = FloatValueCast(_result)->value();
 		std::vector<double> result = {};
@@ -296,7 +296,7 @@ public:
 		Handle program = createLink(seq, LOG_LINK);
 		std::vector<double> expected = {floorf(log(2.0) * 10000) / 10000, floorf(log(5.0) * 10000) / 10000,
 		                                floorf(log(3.6) * 10000) / 10000};
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr _result = interpreter(program);
 		std::vector<double> interout = FloatValueCast(_result)->value();
 		std::vector<double> result = {};
@@ -313,7 +313,7 @@ public:
 		ValuePtr expected(new LinkValue(exp_value));
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr result = interpreter(program);
 
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
@@ -328,7 +328,7 @@ public:
 		ValuePtr expected(new LinkValue(exp_value));
 
 		// interpret
-		atomese::Interpreter interpreter(atomese::value_key);
+		atomese::Interpreter interpreter(atomese::Constants::value_key);
 		ValuePtr result = interpreter(program);
 
 		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));

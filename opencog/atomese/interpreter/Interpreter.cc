@@ -125,7 +125,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		return result;
 	}
 	if (t == AND_LINK) {
-		ValueSeq _result(_problem_data_size, atomese::true_value);
+		ValueSeq _result(_problem_data_size, Constants::true_value);
 		LinkValuePtr result(new LinkValue(_result));
 
 		for (const ValuePtr &p : params) {
@@ -134,7 +134,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		return ValuePtr(result);
 	}
 	if (t == OR_LINK) {
-		ValueSeq _result(_problem_data_size, atomese::false_value);
+		ValueSeq _result(_problem_data_size, Constants::false_value);
 		LinkValuePtr result(new LinkValue(_result));
 
 		for (const ValuePtr &p : params) {

@@ -164,8 +164,10 @@ discriminator::d_counts discriminator::count(const combo_tree& tr) const
 
 discriminator::d_counts discriminator::count(const Handle& program) const
 {
+    using namespace atomese;
+
     d_counts ctr;
-    atomese::Interpreter interpreter(atomese::compressed_value_key,_ctable.size());
+    Interpreter interpreter(Constants::compressed_value_key,_ctable.size());
     ValuePtr _result = interpreter(program);
     auto link_result = LinkValueCast(_result)->value();
 
@@ -248,9 +250,11 @@ vector<discriminator::d_counts> discriminator::counts(const combo_tree& tr) cons
 
 vector<discriminator::d_counts> discriminator::counts(const Handle& program) const
 {
+    using namespace atomese;
+
     std::vector<d_counts> ctr_seq;
 
-    atomese::Interpreter interpreter(atomese::compressed_value_key, _ctable.size());
+    Interpreter interpreter(Constants::compressed_value_key, _ctable.size());
     ValuePtr _result = interpreter(program);
     auto link_result = LinkValueCast(_result)->value();
     int i = 0;

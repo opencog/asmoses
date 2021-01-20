@@ -8,6 +8,7 @@ ADD_LIBRARY(atomese SHARED
 		interpreter/logical_interpreter
 		interpreter/condlink_interpreter
 		atom_types
+		atomese_utils/constants
 		type_checker/AtomeseTypeChecker)
 
 TARGET_LINK_LIBRARIES(atomese

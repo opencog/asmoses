@@ -196,9 +196,11 @@ behavioral_score select_bscore::operator()(const combo_tree &tr) const
 
 behavioral_score select_bscore::operator()(const Handle &handle) const
 {
+	using namespace atomese;
+
 	behavioral_score bs;
 
-	atomese::Interpreter interpreter(atomese::value_key, get_ctable().size());
+	Interpreter interpreter(Constants::value_key, get_ctable().size());
 
 	const ValuePtr result = interpreter(handle);
 	auto link_result = FloatValueCast(result)->value();
