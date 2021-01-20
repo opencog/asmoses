@@ -18,7 +18,8 @@ inline bool bool_value_to_bool (const ValuePtr &valuePtr)
 
 inline ValuePtr bool_vertex_to_value (const vertex &v)
 {
-	return vertex_to_bool(v) ? atomese::true_value : atomese::false_value;
+	return vertex_to_bool(v) ? atomese::Constants::true_value
+		: atomese::Constants::false_value;
 }
 inline enum_t value_to_enum(const ValuePtr &valuePtr) {
 	return HandleCast(valuePtr)->get_name();

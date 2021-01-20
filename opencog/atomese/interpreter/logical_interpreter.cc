@@ -29,10 +29,10 @@ void zip_and::operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t
 {
 	if (bool_value_to_bool(t.get<0>())
 	    && bool_value_to_bool(t.get<1>())) {
-		_result.push_back(atomese::true_value);
+		_result.push_back(Constants::true_value);
 	}
 	else {
-		_result.push_back(atomese::false_value);
+		_result.push_back(Constants::false_value);
 	}
 }
 
@@ -40,16 +40,17 @@ void zip_or::operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t)
 {
 	if (bool_value_to_bool(t.get<0>())
 	    || bool_value_to_bool(t.get<1>())) {
-		_result.push_back(atomese::true_value);
+		_result.push_back(Constants::true_value);
 	}
 	else {
-		_result.push_back(atomese::false_value);
+		_result.push_back(Constants::false_value);
 	}
 }
 
 void zip_greater_than::operator()(const boost::tuple<const double&, const double&>& t)
 {
-	_result.push_back(t.get<0>() > t.get<1>() ? true_value: false_value);
+	_result.push_back(t.get<0>() > t.get<1>() ?
+	                  Constants::true_value: Constants::false_value);
 }
 
 LinkValuePtr logical_and(const LinkValuePtr& p1, const LinkValuePtr& p2)
@@ -108,7 +109,7 @@ LinkValuePtr logical_not(const LinkValuePtr& p) {
 	ValueSeq::iterator it;
 	for(it = p_value.begin(); it != p_value.end(); ++it)
 		_result.push_back(bool_value_to_bool(HandleCast(*it)) ?
-		atomese::false_value: atomese::true_value);
+		Constants::false_value : Constants::true_value);
 	return LinkValuePtr(new LinkValue(_result));
 }
 
