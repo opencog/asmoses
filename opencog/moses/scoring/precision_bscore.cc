@@ -375,7 +375,8 @@ behavioral_score precision_bscore::operator()(const combo_tree &tr) const
 
 behavioral_score precision_bscore::operator()(const Handle &handle) const
 {
-	atomese::Interpreter interpreter(atomese::compressed_value_key, get_ctable().size());
+	using namespace atomese;
+	Interpreter interpreter(Constants::compressed_value_key, get_ctable().size());
 	const ValuePtr result = interpreter(handle);
 	auto link_result = LinkValueCast(result)->value();
 	int i = 0;
@@ -868,13 +869,15 @@ behavioral_score precision_conj_bscore::operator()(const combo_tree &tr) const
 
 behavioral_score precision_conj_bscore::operator()(const Handle &handle) const
 {
+	using namespace atomese;
+
 	behavioral_score bs;
 
 	// compute active and sum of all active outputs
 	count_t active = 0.0;  // total weight of active outputs by tr
 	score_t sao = 0.0;     // sum of all active outputs (in the boolean case)
 
-	atomese::Interpreter interpreter(atomese::compressed_value_key, ctable.size());
+	Interpreter interpreter(Constants::compressed_value_key, ctable.size());
 	const ValuePtr result = interpreter(handle);
 	auto link_result = LinkValueCast(result)->value();
 	int i = 0;

@@ -62,9 +62,9 @@ public:
 		                 bool_vertex_to_value);
 
 		ValuePtr f1_proto_atom(new LinkValue(_f1_values));
-		f1->setValue(atomese::compressed_value_key, f1_proto_atom);
+		f1->setValue(atomese::Constants::compressed_value_key, f1_proto_atom);
 		ValuePtr f2_proto_atom(new LinkValue(_f2_values));
-		f2->setValue(atomese::compressed_value_key, f2_proto_atom);
+		f2->setValue(atomese::Constants::compressed_value_key, f2_proto_atom);
 
 		Handle program = createLink(OR_LINK, f1, f2);
 

@@ -27,8 +27,6 @@
 namespace opencog { 
 namespace moses {
 
-using namespace std;
-
 void occam_randomize_contin(const field_set& fs, instance& inst,
                             field_set::contin_iterator it,
                             opencog::RandGen& rng)

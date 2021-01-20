@@ -20,7 +20,7 @@ void populate(AtomSpace *as, const ITable &itable)
 		std::string test = "$"+labels[i];
 		Handle feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE,"$"+ labels[i]);
 		ValuePtr vtr = vertex_seq_to_value(col, col_type);
-		feature->setValue(atomese::value_key, vtr);
+		feature->setValue(atomese::Constants::value_key, vtr);
 		as->add_atom(feature);
 	}
 }
@@ -34,7 +34,7 @@ void populate(AtomSpace *as, const CTable &ctable)
 		type_node col_type = get_type_node(types[j]);
 		const Handle &feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE, "$"+labels[j]);
 		const ValuePtr &vtr = vertex_seq_to_value(col, get_type_node(types[j]));
-		feature->setValue(atomese::compressed_value_key, vtr);
+		feature->setValue(atomese::Constants::compressed_value_key, vtr);
 		as->add_atom(feature);
 	}
 }
@@ -49,7 +49,7 @@ ValuePtr vertex_seq_to_value(const vertex_seq &col, id::type_node col_type)
 			ValueSeq col_values = {};
 			for (int j = 0; j < n_rows; j++) {
 				bool col_data = vertex_to_bool(col.at(j));
-				col_values.push_back(col_data ? atomese::true_value : atomese::false_value);
+				col_values.push_back(col_data ? atomese::Constants::true_value : atomese::Constants::false_value);
 			}
 			return ValuePtr(new LinkValue(col_values));
 		}
