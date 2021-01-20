@@ -904,7 +904,7 @@ void complete_truth_table::populate(const Handle &handle)
 	// map the values of inputs to the program.
 	setup_features(handle, features);
 
-	atomese::Interpreter interpreter(atomese::value_key, pow2(_arity));
+	atomese::Interpreter interpreter(atomese::Constants::value_key, pow2(_arity));
 	ValueSeq result = LinkValueCast(interpreter(handle))->value();
 
 	// This happens if the program[handle] is a constant [i:e TRUE_LINK or NUMBER_NODE]
@@ -924,8 +924,8 @@ void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 		for (int j = 0; j < _arity; ++j) {
 			ValuePtr v;
 			if ((i >> j) % 2)
-				v = atomese::true_value;
-			else v = atomese::false_value;
+				v = atomese::Constants::true_value;
+			else v = atomese::Constants::false_value;
 			features[j].push_back(v);
 		}
 	}
@@ -940,7 +940,8 @@ void complete_truth_table::setup_features(const Handle &handle, const std::vecto
 		const std::string h_name = handle->get_name();
 		ValueSeq value = features[std::stoi(h_name.substr(h_name.find("$")+1))-1];
 
-		handle->setValue(atomese::value_key, ValuePtr(new LinkValue(value)));
+		std::cout << "atomese::Constants::value_key = " << oc_to_string(atomese::Constants::value_key) << std::endl;
+		handle->setValue(atomese::Constants::value_key, ValuePtr(new LinkValue(value)));
 		return;
 	}
 

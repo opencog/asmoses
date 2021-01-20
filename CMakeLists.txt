@@ -137,9 +137,11 @@ ENDIF (WIN32)
 
 # ===============================================================
 # Check for existance of various required, optional packages.
-# Listed in alphabetical order, more or less.
+# Listed in alphabetical, more or less.
 # CogUtil must come first, because it supplies various FindXXX macros.
 
+# ----------------------------------------------------------
+# CogUtil
 FIND_PACKAGE(CogUtil CONFIG REQUIRED)
 IF (COGUTIL_FOUND)
 	MESSAGE(STATUS "CogUtil found.")
@@ -162,20 +164,16 @@ SET(Boost_USE_STATIC_LIBS OFF)
 SET(Boost_USE_MULTITHREADED ON)
 
 # Required boost packages
-# hypertable requires boost iostreams
-# boost-1.49 no longer has a libboost_iostreams
-# 1.46 is minimum for required filesystem support
-# program_options needed by some combo utilities
-FIND_PACKAGE(Boost 1.46 COMPONENTS date_time filesystem program_options regex serialization system thread REQUIRED)
+FIND_PACKAGE(Boost 1.60 COMPONENTS date_time filesystem program_options regex serialization system thread REQUIRED)
 
 IF(Boost_FOUND)
 	SET(Boost_FOUND_SAVE 1)
 ELSE(Boost_FOUND)
-	MESSAGE(FATAL_ERROR "Boost 1.46 or newer is needed to build Moses!")
+	MESSAGE(FATAL_ERROR "Boost 1.60 or newer is needed to build Moses!")
 ENDIF(Boost_FOUND)
 
 # Optional boost packages; can build without these.
-FIND_PACKAGE(Boost 1.46 COMPONENTS math_c99 QUIET)
+FIND_PACKAGE(Boost 1.60 COMPONENTS math_c99 QUIET)
 
 # Arghhh. Except cmake is treating above as required, not optional. #$%**&
 IF(Boost_FOUND_SAVE)
@@ -340,6 +338,17 @@ IF (CYTHON_FOUND AND PYTHONLIBS_FOUND)
 ENDIF (CYTHON_FOUND AND PYTHONLIBS_FOUND)
 
 # ----------------------------------------------------------
+# URE, for URE-Reduct
+FIND_PACKAGE(URE 1.0.0 CONFIG REQUIRED)
+IF (URE_FOUND)
+	MESSAGE(STATUS "URE found.")
+	ADD_DEFINITIONS(-DHAVE_URE)
+	SET(HAVE_URE 1)
+ELSE (URE_FOUND)
+	MESSAGE(STATUS "URE missing: it is needed!")
+ENDIF (URE_FOUND)
+
+# ----------------------------------------------------------
 # Optional, currently needed only to hush up DRD in util/Logger.cc
 FIND_PACKAGE(VALGRIND)
 IF (VALGRIND_FOUND)
@@ -418,11 +427,11 @@ SET (MAN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/man")
 # ==========================================================
 # Decide what to build, based on the packages found.
 
-IF(Boost_FOUND AND COGUTIL_FOUND)
+IF(Boost_FOUND AND COGUTIL_FOUND AND URE_FOUND)
 	SET(HAVE_COMBOREDUCT 1)
 	SET(HAVE_MOSES 1)
 	SET(HAVE_FEATURE_SELECTION 1)
-ENDIF(Boost_FOUND AND COGUTIL_FOUND)
+ENDIF(Boost_FOUND AND COGUTIL_FOUND AND URE_FOUND)
 
 ADD_SUBDIRECTORY(opencog)
 
