@@ -25,29 +25,33 @@
 #include <fstream>
 
 #include <boost/program_options.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "../combo/iostream_combo.h"
 #include "../type_checker/type_tree.h"
+#include "../../data/table/table.h"
+#include "../../data/table/table_io.h"
 
 using namespace boost::program_options;
 using namespace boost::algorithm;
 using namespace std;
 using namespace opencog;
 using namespace combo;
-using boost::trim;
 
 // using namespace ant_combo;
 
 // Structure containing the options for the combo-fmt-converter program
 struct pgrParameters
 {
-	vector<string> combo_programs;
-	vector<string> combo_programs_files;
+	string_seq combo_programs;
+	string_seq combo_programs_files;
 	string log_level;
 	string output_file;
 	string output_format_str;
+	bool output_with_labels;
+	string labels;
+	string input_file;
+	string target_feature;
 };
 
 /**
@@ -65,7 +69,7 @@ pgrParameters parse_program_args(int argc, char** argv)
 		("help,h", "Produce help message.\n")
 
 		("combo-program,c",
-		 value<vector<string>>(&pa.combo_programs),
+		 value<string_seq>(&pa.combo_programs),
 		 "Alternative way to entering the programs to convert "
 		 "(as opposed to via stdin, not that using this option will "
 		 "disable reading on the stdin). "
@@ -81,7 +85,7 @@ pgrParameters parse_program_args(int argc, char** argv)
          "DEBUG, FINE. Case does not matter.\n")
 
 		("combo-programs-file,C",
-		 value<vector<string>>(&pa.combo_programs_files),
+		 value<string_seq>(&pa.combo_programs_files),
 		 "Other alternative way (disables stdin). "
 		 "Indicate the path of a file containing combo "
 		 "programs (seperated by newlines) to convert. "
@@ -97,6 +101,27 @@ pgrParameters parse_program_args(int argc, char** argv)
 		 value<string>(&pa.output_format_str)->default_value("combo"),
 		 "Supported output formats are combo, python, python3 and scheme.\n")
 
+		("output-with-labels,W",
+		 value<bool>(&pa.output_with_labels)->default_value(false),
+		 "If 1, output the candidates with argument labels "
+		 "instead of argument numbers, if the input programs did not have "
+		 "any. In that case the user may provide the list of labels with the "
+		 "--labels or --input-file options.\n")
+
+		("labels,L", value<string>(&pa.labels),
+		 "Contain a comma separated list of labels to be used combined with the "
+		 "--output-with-labels.\n")
+
+		("input-file,i", value<string>(&pa.input_file),
+		 "DSV file containing inputs and outputs features. This is intended to be "
+		 "combined with the --output-with-labels option. In that case the row header "
+		 "of the input file is used as a list of labels. In order to dismiss the "
+		 "output feature one may use the --target-feature option.\n")
+
+		("target-feature,u", value<string>(&pa.target_feature),
+		 "Name of the target (aka output) feature. This option must be combined "
+		 "with the --input-file options to avoid using the output feature as "
+		 "variable name.\n")
 		;
 
 	variables_map vm;
@@ -112,7 +137,7 @@ pgrParameters parse_program_args(int argc, char** argv)
 	const string log_filename = "combo-fmt-converter.log";
 	remove(log_filename.c_str());
 	logger().set_filename(log_filename);
-	trim(pa.log_level);
+	boost::trim(pa.log_level);
 	Logger::Level level = logger().get_level_from_string(pa.log_level);
 	if (level != Logger::BAD_LEVEL)
 		logger().set_level(level);
@@ -127,9 +152,9 @@ pgrParameters parse_program_args(int argc, char** argv)
 	return pa;
 }
 
-vector<string> get_all_combo_tree_str(const pgrParameters& pa)
+string_seq get_all_combo_tree_str(const pgrParameters& pa)
 {
-    vector<string> res(pa.combo_programs);     // from command line
+    string_seq res(pa.combo_programs);     // from command line
 
     // from files
     for (const string& combo_programs_file : pa.combo_programs_files) {
@@ -166,12 +191,27 @@ void convert(istream& in, ostream& out,
 	if (starts_with(line, "\"") and ends_with(line, "\""))
 		line = line.substr(1, line.size() - 2);
 
-	vector<string> variables = parse_combo_variables(line);
-	combo_tree tr = str2combo_tree(line, variables);
+	// Parse the variable names
+	string_seq old_variable_names = parse_combo_variables(line);
+	string_seq new_variable_names = old_variable_names;
+	if (pa.output_with_labels) {
+		if (not pa.labels.empty()) {
+			boost::split(new_variable_names, pa.labels, boost::is_any_of(","));
+		} else if (pa.input_file.empty()) {
+			Table table = loadTable(pa.input_file, pa.target_feature);
+			new_variable_names = table.get_input_labels();
+		} else {
+			cerr << "Error: no labels, use --labels or --input-file" << endl;
+			exit(1);
+		}
+	}
+
+	// Type check the program
+	combo_tree tr = str2combo_tree(line, old_variable_names);
 	type_tree tt = infer_type_tree(tr);
 
 	// Write to the right format
-	ostream_combo_tree(out, tr, variables, fmt) << std::endl;
+	ostream_combo_tree(out, tr, new_variable_names, fmt) << std::endl;
 }
 
 int main(int argc, char** argv)
@@ -184,7 +224,7 @@ int main(int argc, char** argv)
 
 	// read combo program strings given by an alternative way than
 	// stdin
-	vector<string> combo_trees_str = get_all_combo_tree_str(pa);
+	string_seq combo_trees_str = get_all_combo_tree_str(pa);
 
 	ostream* out = pa.output_file.empty()?
 		&cout :	new ofstream(pa.output_file.c_str());

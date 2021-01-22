@@ -31,6 +31,7 @@ ADD_EXECUTABLE (ascombo-fmt-converter combo-fmt-converter.cc)
 TARGET_LINK_LIBRARIES(ascombo-fmt-converter
 	ascombo
 	ascomboant
+	data
 	${COGUTIL_LIBRARY}
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
