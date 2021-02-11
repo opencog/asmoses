@@ -1337,10 +1337,10 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
 		}
 	}
 
-
 	/////////////////////
 	// discrete inputs //
 	/////////////////////
+
 	if (all_discrete_inputs
 	    and (id::enum_type == otype
 	         or id::boolean_type == otype
@@ -1432,9 +1432,10 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
 		return entropy(ip) + entropy(yprob) - entropy(iop);
 	}
 
-		/////////////////////
-		// continuous case //
-		/////////////////////
+	/////////////////////
+	// continuous case //
+	/////////////////////
+
 	else if (id::contin_type == otype) {
 		if (1 < fs.size()) {
 			OC_ASSERT(0, "Contin MI currently supports only 1 feature.");
@@ -1477,9 +1478,10 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
 		return ic;
 	}
 
-		//////////////////////////////////
-		// Other non implemented cases //
-		//////////////////////////////////
+	//////////////////////////////////
+	// Other non implemented cases //
+	//////////////////////////////////
+
 	else {
 		std::stringstream ss;
 		ss << "Type " << otype << " is not supported for mutual information";
