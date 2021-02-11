@@ -1484,7 +1484,8 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
 
 	else {
 		std::stringstream ss;
-		ss << "Type " << otype << " is not supported for mutual information";
+		ss << "Mutual Information not implemented for the following type signature"
+		   << std::endl << tsig;
 		OC_ASSERT(0, ss.str());
 		return 0.0;
 	}
