@@ -48,7 +48,7 @@ public:
 		int _arity = 2;
 		HandleSeq seq_1 = {createNode(PREDICATE_NODE, "$1"), createNode(PREDICATE_NODE, "$2")};
 		Handle and_link = createLink(seq_1, AND_LINK);
-		disjunction func;
+		opencog::moses::disjunction func;
 		logical_bscore lbsc(func, _arity);
 		behavioral_score bs = lbsc(and_link);
 
@@ -56,7 +56,6 @@ public:
 		std::cout << "bs = " <<bs << std::endl
 				  << "expected_bs = " << expected_bs << std::endl;
 		TS_ASSERT_EQUALS(bs, expected_bs);
-
 	}
 
 	void test_logical_bscore_pa() {
