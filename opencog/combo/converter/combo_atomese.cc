@@ -304,7 +304,7 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 		// The argument idx must be the index of label in labels plus one.
 		auto i = std::find(labels.begin(), labels.end(), label) - labels.begin() + 1;
 		// If label exists in labels already we dont want to add it.
-		if (i > labels.size()) labels.push_back(label);
+		if (i > (int)labels.size()) labels.push_back(label);
 
 		if (tr.empty()) tr.set_head(argument(i));
 		else tr.append_child(iter, argument(i));

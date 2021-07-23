@@ -57,11 +57,11 @@ BuildAtomeseKnobs::BuildAtomeseKnobs(Handle &exemplar,
                                      contin_t expansion,
                                      field_set::width_t depth,
                                      float perm_ratio)
-		: _exemplar(exemplar), _rep(rep), _skip_disc_probe(true),
+		: _exemplar(exemplar), _rep(rep),
 		  _arity(t->getOutgoingAtom(0)->get_arity()), _signature(t),
 		  _step_size(step_size), _expansion(expansion), _depth(depth),
-		  _perm_ratio(perm_ratio), _ignore_ops(ignore_ops),
-		  _linear_contin(linear_contin)
+		  _perm_ratio(perm_ratio), _skip_disc_probe(true),
+		  _linear_contin(linear_contin), _ignore_ops(ignore_ops)
 {
 	Handle tn = _signature->getOutgoingAtom(1);
 	Type output_type = TypeNodeCast(tn)->get_kind();
@@ -272,8 +272,8 @@ void BuildAtomeseKnobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 
 	std::vector<HandleSeq> combs;
 
-	for (arity_t a = 0; a < ps; a++) {
-		for (arity_t b = a + 1; b < ps; b++) {
+	for (arity_t a = 0; a < (arity_t)ps; a++) {
+		for (arity_t b = a + 1; b < (arity_t)ps; b++) {
 			combs.push_back({seq[a], seq[b]});
 			combs.push_back({createLink(NOT_LINK, seq[a]), seq[b]});
 		}
@@ -310,7 +310,7 @@ void
 BuildAtomeseKnobs::logical_probe_rec(HandleSeq &path, Handle &prog,
                                        const HandleSeq &seq, bool add_if_in_exemplar)
 {
-	for (const Handle child : seq) {
+	for (const Handle& child : seq) {
 		bool is_comp = logical_subtree_knob(prog, child, add_if_in_exemplar);
 		if (is_comp and not add_if_in_exemplar) continue;
 		auto h = disc_probe(path, prog, child, 3, is_comp);
@@ -549,7 +549,7 @@ HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
 
 	if (!in_SLE) {
 		std::vector<std::string> func_strs = {"SinLink", "LogLink", "ExpLink"};
-		for (int i=0; i < func_strs.size(); i++)
+		for (unsigned i=0; i < func_strs.size(); i++)
 		{
 			Handle imp_t = createNode(TYPE_NODE, func_strs[i]);
 			if (_ignore_ops.find(imp_t) != _ignore_ops.end())

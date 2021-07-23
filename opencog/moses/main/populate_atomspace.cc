@@ -29,7 +29,7 @@ void populate(AtomSpace *as, const CTable &ctable)
 {
 	const string_seq &labels = ctable.get_input_labels();
 	const type_tree_seq &types = get_signature_inputs(ctable.get_signature());
-	for (int j = 0; j < labels.size(); ++j) {
+	for (int j = 0; j < (int)labels.size(); ++j) {
 		const vertex_seq &col = ctable.get_input_col_data(j);
 		type_node col_type = get_type_node(types[j]);
 		const Handle &feature = createNode(col_type == id::boolean_type ? PREDICATE_NODE : SCHEMA_NODE, "$"+labels[j]);
