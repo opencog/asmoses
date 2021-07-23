@@ -190,7 +190,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 			}
 		}
 
-		for (int i = 0; i < conds.size(); i++) {
+		for (unsigned i = 0; i < conds.size(); i++) {
 			auto f_value = FloatValueCast(exps[i]);
 			if (f_value) {
 				f_result2 = condlink_exec_floatvalue(LinkValueCast(conds[i]),

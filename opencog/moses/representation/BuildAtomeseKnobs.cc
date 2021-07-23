@@ -272,8 +272,8 @@ void BuildAtomeseKnobs::sample_logical_perms(HandleSeq &seq, Type head_type)
 
 	std::vector<HandleSeq> combs;
 
-	for (arity_t a = 0; a < ps; a++) {
-		for (arity_t b = a + 1; b < ps; b++) {
+	for (arity_t a = 0; a < (arity_t)ps; a++) {
+		for (arity_t b = a + 1; b < (arity_t)ps; b++) {
 			combs.push_back({seq[a], seq[b]});
 			combs.push_back({createLink(NOT_LINK, seq[a]), seq[b]});
 		}
@@ -549,7 +549,7 @@ HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
 
 	if (!in_SLE) {
 		std::vector<std::string> func_strs = {"SinLink", "LogLink", "ExpLink"};
-		for (int i=0; i < func_strs.size(); i++)
+		for (unsigned i=0; i < func_strs.size(); i++)
 		{
 			Handle imp_t = createNode(TYPE_NODE, func_strs[i]);
 			if (_ignore_ops.find(imp_t) != _ignore_ops.end())
