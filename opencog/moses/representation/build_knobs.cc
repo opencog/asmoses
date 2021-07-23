@@ -1368,7 +1368,7 @@ std::string
 oc_to_string(combo::combo_tree_seq& seq, const std::string&)
 {
 	std::ostringstream os;
-	for (const auto ct : seq) {
+	for (const auto& ct : seq) {
 		combo::ostream_combo_tree(os, ct);
 		os << '\n';
 	}

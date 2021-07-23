@@ -310,7 +310,7 @@ void
 BuildAtomeseKnobs::logical_probe_rec(HandleSeq &path, Handle &prog,
                                        const HandleSeq &seq, bool add_if_in_exemplar)
 {
-	for (const Handle child : seq) {
+	for (const Handle& child : seq) {
 		bool is_comp = logical_subtree_knob(prog, child, add_if_in_exemplar);
 		if (is_comp and not add_if_in_exemplar) continue;
 		auto h = disc_probe(path, prog, child, 3, is_comp);

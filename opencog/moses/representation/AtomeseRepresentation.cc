@@ -58,15 +58,15 @@ AtomeseRepresentation::AtomeseRepresentation(const reduct::rule &simplify_candid
 	                  stepsize, expansion, depth, perm_ratio);
 
 	std::multiset<field_set::spec> specs;
-	for (const auto ds : disc)
+	for (const auto& ds : disc)
 		specs.insert(ds.first);
-	for (const auto cs : contin)
+	for (const auto& cs : contin)
 		specs.insert(cs.first);
 	set_fields(field_set(specs.begin(), specs.end()));
 
 	disc_map::const_iterator it_d = disc.cbegin();
 	int count_d=_fields.begin_disc_raw_idx();
-	for (it_d; it_d != disc.cend(); ++it_d)
+	for (; it_d != disc.cend(); ++it_d)
 	{
 		disc_lookup[it_d->second] = count_d;
 		count_d++;
@@ -74,7 +74,7 @@ AtomeseRepresentation::AtomeseRepresentation(const reduct::rule &simplify_candid
 
 	contin_map::const_iterator it_c = contin.cbegin();
 	int count_c=_fields.begin_contin_raw_idx();
-	for (it_c; it_c != contin.cend(); ++it_c)
+	for (; it_c != contin.cend(); ++it_c)
 	{
 		contin_lookup[it_c->second] = count_c;
 		count_c++;
