@@ -85,9 +85,10 @@ protected:
 struct atomese_based_scorer : public iscorer_base
 {
 	atomese_based_scorer(behave_cscore &cs, representation &rep, bool reduce,
-	                     ComboToAtomese& to_atomese, const std::vector<std::string> &labels={},
+	                     ComboToAtomese& to_atomese,
+	                     const std::vector<std::string> &labels={},
 	                     AtomSpace* as=nullptr)
-			: _cscorer(cs), _rep(rep), _reduce(reduce), _as(as), _labels(labels),
+			: _as(as), _cscorer(cs), _rep(rep), _reduce(reduce), _labels(labels),
 			  _to_atomese(to_atomese)
 	{}
 
