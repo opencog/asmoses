@@ -47,6 +47,6 @@ INSTALL(FILES
 
    DESTINATION
 
-   "include/opencog/${PROJECT_NAME}/ascombo/main"
+   "include/opencog/${PROJECT_NAME}/combo/main"
 )
 
