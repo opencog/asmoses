@@ -133,7 +133,7 @@ void reduce_factorize_fraction::operator()(combo_tree& tr,combo_tree::iterator i
                         //this is to avoid endless increasing size of the expression
                         if(is_contin(*pf) && get_contin(*pf)==1.0)
                             continue;
-                        
+
                         subtree_partition_it spit = sp.find(pf);
                         if(spit == sp.end()) {
                             pre_it_vector ev;

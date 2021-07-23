@@ -44,60 +44,60 @@
 namespace opencog {
 namespace moses {
 
- /**
-  * A field set describes a compact encoding of a set of continuous,
-  * discrete and 'term algebra' variables.  The field set does not
-  * itself hold the values of these variables; it simply describes
-  * how they are packed into a bit-string (the 'instance'). The field
-  * set provides a collection of iterators for walking over the fields
-  * in an instance; the iterators can also be used to extract values
-  * from the instance (or to change them).
-  *
-  * Some terminology:
-  * 'Discrete' variables, or discs, are just variables that range over
-  * a set of n discrete values. These take ciel(log_2(n)) bits to store.
-  *
-  * 'Boolean' or 'bit' variables. This is a special case of the discrete
-  * variables, and are handled distinctly in the code and API's below:
-  * they have their own iterators, etc. Only the multi-bit discrete
-  * variables are called 'disc'.
-  *
-  * 'Continuous' variables are variables that can range over a continuum.
-  * Although one might want to think of these as floats or doubles,
-  * they're not.  They're represented very, very differently: as
-  * variable-length bit strings which encode intervals on the real-number
-  * line. The motivation for this, as opposed to using floats or doubles,
-  * is that EDA algorithms are more efficient for such an encoding.
-  * Further details, motivation and documentation can be found here:
-  * http://code.google.com/p/moses/wiki/ModelingAtomSpaces
-  *
-  * 'Term algebra' variables, or 'term's, are variables that take values
-  * in a term algebra (aka an 'absolutely free algebra').  Terms are
-  * best understood as node-labelled trees. The labels occuring as leaves
-  * of a tree are commonly called 'constants' or 'zero-ary functions',
-  * while the internal nodes of the tree would be called 'n-ary functions'
-  * (presuming that they have n children).  The labels on nodes are
-  * strings.  Note that atoms (in the general sense, not the opencog
-  * sense) are terms with truth values (predicates);  however no atoms or
-  * truth values are used here.  See for example, Baader & Nipkow,
-  * 'Term Rewriting and All That', for more information. Or wikipedia.
-  *
-  * Variables are described in terms of 'specs'; there's a disc_spec,
-  * a contin_spec, etc.  All variables are stored in the bit string as
-  * 'raw' fields.  A single disc_spec corresponds to exactly one
-  * 'raw' field; however, a single contin_spec or a single term_spec
-  * usually consists of many 'raw' fields.  Thus, raw fields and field
-  * specs are NOT in 1-1 correspondance.  Note that all raw fields may
-  * be treated as disc fields: the raw field iterator is essentially
-  * the same as the disc field iterator, just ranging over a larger set.
-  *
-  * The raw fields are packed into bit strings, which are chunked
-  * as vector arrays of 32 or 64-bit unsigned ints, depending on the
-  * C library execution environment. Thus, instead of having a single
-  * offset, two are used: a "major offset", pointing to the appropriate
-  * 32/64-bit int, and a "minor offset", ranging over 0-31/63. The
-  * "width" is the width of the raw field, in bits.
-  */
+/**
+ * A field set describes a compact encoding of a set of continuous,
+ * discrete and 'term algebra' variables.  The field set does not
+ * itself hold the values of these variables; it simply describes
+ * how they are packed into a bit-string (the 'instance'). The field
+ * set provides a collection of iterators for walking over the fields
+ * in an instance; the iterators can also be used to extract values
+ * from the instance (or to change them).
+ *
+ * Some terminology:
+ * 'Discrete' variables, or discs, are just variables that range over
+ * a set of n discrete values. These take ciel(log_2(n)) bits to store.
+ *
+ * 'Boolean' or 'bit' variables. This is a special case of the discrete
+ * variables, and are handled distinctly in the code and API's below:
+ * they have their own iterators, etc. Only the multi-bit discrete
+ * variables are called 'disc'.
+ *
+ * 'Continuous' variables are variables that can range over a continuum.
+ * Although one might want to think of these as floats or doubles,
+ * they're not.  They're represented very, very differently: as
+ * variable-length bit strings which encode intervals on the real-number
+ * line. The motivation for this, as opposed to using floats or doubles,
+ * is that EDA algorithms are more efficient for such an encoding.
+ * Further details, motivation and documentation can be found here:
+ * http://code.google.com/p/moses/wiki/ModelingAtomSpaces
+ *
+ * 'Term algebra' variables, or 'term's, are variables that take values
+ * in a term algebra (aka an 'absolutely free algebra').  Terms are
+ * best understood as node-labelled trees. The labels occuring as leaves
+ * of a tree are commonly called 'constants' or 'zero-ary functions',
+ * while the internal nodes of the tree would be called 'n-ary functions'
+ * (presuming that they have n children).  The labels on nodes are
+ * strings.  Note that atoms (in the general sense, not the opencog
+ * sense) are terms with truth values (predicates);  however no atoms or
+ * truth values are used here.  See for example, Baader & Nipkow,
+ * 'Term Rewriting and All That', for more information. Or wikipedia.
+ *
+ * Variables are described in terms of 'specs'; there's a disc_spec,
+ * a contin_spec, etc.  All variables are stored in the bit string as
+ * 'raw' fields.  A single disc_spec corresponds to exactly one
+ * 'raw' field; however, a single contin_spec or a single term_spec
+ * usually consists of many 'raw' fields.  Thus, raw fields and field
+ * specs are NOT in 1-1 correspondance.  Note that all raw fields may
+ * be treated as disc fields: the raw field iterator is essentially
+ * the same as the disc field iterator, just ranging over a larger set.
+ *
+ * The raw fields are packed into bit strings, which are chunked
+ * as vector arrays of 32 or 64-bit unsigned ints, depending on the
+ * C library execution environment. Thus, instead of having a single
+ * offset, two are used: a "major offset", pointing to the appropriate
+ * 32/64-bit int, and a "minor offset", ranging over 0-31/63. The
+ * "width" is the width of the raw field, in bits.
+ */
 struct field_set
 {
     // To avoid the accidental confusion between the multiplicity of
