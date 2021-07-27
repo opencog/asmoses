@@ -30,7 +30,7 @@ namespace opencog { namespace moses {
 
 using combo::combo_tree;
 using combo::arity_t;
-using combo::CTable;
+using combo::CompressedTable;
 using combo::TTable;
 
 /**
@@ -63,11 +63,11 @@ struct ss_bscore : public bscore_base
     // Like ignore_rows but consider timestamps instead of indexes
     void ignore_rows_at_times(const std::set<TTable::value_type>&) const;
 
-    // Return the uncompressed size of the CTable
+    // Return the uncompressed size of the CompressedTable
     unsigned get_ctable_usize() const;
 
-    // Return the original CTable
-    const CTable& get_ctable() const;
+    // Return the original CompressedTable
+    const CompressedTable& get_ctable() const;
 
 protected:
     const bscore_base& _bscorer;

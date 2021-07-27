@@ -154,7 +154,7 @@ unsigned ss_bscore::get_ctable_usize() const {
     return _bscorer.get_ctable_usize();
 }
 
-const CTable& ss_bscore::get_ctable() const {
+const CompressedTable& ss_bscore::get_ctable() const {
     return _bscorer.get_ctable();
 }
 

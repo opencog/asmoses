@@ -48,7 +48,7 @@ namespace moses {
 
 namespace ba = boost::accumulators;
 
-feature_selector::feature_selector(const combo::CTable& ctable,
+feature_selector::feature_selector(const combo::CompressedTable& ctable,
                                    const feature_selector_parameters& festor_params)
     : params(festor_params), _ctable(ctable) {}
 
@@ -118,7 +118,7 @@ void feature_selector::preprocess_params(const combo::combo_tree& xmplr)
 /// table that is different than _ctable? How are these two different
 /// tables used?  Why do we need two different tables?  WTF.  This is 
 /// confusing.
-CTable feature_selector::build_fs_ctable(const combo_tree& xmplr) const
+CompressedTable feature_selector::build_fs_ctable(const combo_tree& xmplr) const
 {
     // set labels and signature
     auto labels = _ctable.get_labels();
@@ -133,7 +133,7 @@ CTable feature_selector::build_fs_ctable(const combo_tree& xmplr) const
         sig.append_child(head, cto);
         logger().debug("Append exemplar feature");
     }
-    combo::CTable fs_ctable(labels, sig);
+    combo::CompressedTable fs_ctable(labels, sig);
 
     // define interpreter visitor
     interpreter_visitor iv(xmplr);
@@ -147,7 +147,7 @@ CTable feature_selector::build_fs_ctable(const combo_tree& xmplr) const
                                       params.ignored_features.end());
 
     // add each considered row
-    for (const combo::CTable::value_type& vct : _ctable) {
+    for (const combo::CompressedTable::value_type& vct : _ctable) {
         vertex predicted_out = ai(vct.first.get_variant());
 
         // determine whether the row should be considered
@@ -213,18 +213,18 @@ CTable feature_selector::build_fs_ctable(const combo_tree& xmplr) const
                 rm_timestamps.insert(rand_element_erase(timestamps));
             fs_ctable.remove_rows_at_times(rm_timestamps);
         } else {
-            subsampleCTable(params.subsampling_ratio, fs_ctable);
+            subsampleCompressedTable(params.subsampling_ratio, fs_ctable);
         }
     }
 
-    logger().debug("CTable size for feature selection = %u",
+    logger().debug("CompressedTable size for feature selection = %u",
                    fs_ctable.size());
 
 #if NOT_NOW_THIS_CREATES_HUGE_LOGFILE
     if (logger().isFineEnabled()) {
         logger().fine("fs_ctable:");
         std::stringstream ss;
-        ostreamCTable(ss, fs_ctable);
+        ostreamCompressedTable(ss, fs_ctable);
         logger().fine() << ss.str();
     }
 #endif
@@ -322,7 +322,7 @@ feature_set_pop feature_selector::operator()(const combo::combo_tree& xmplr)
 
     // Build a ctable, possibly different than _ctable, used for feature
     // selection
-    CTable fs_ctable = build_fs_ctable(xmplr);
+    CompressedTable fs_ctable = build_fs_ctable(xmplr);
 
     // Feature selection itself. Returns a population of feature sets
     feature_set_pop sf_pop = select_feature_sets(fs_ctable, params.fs_params);

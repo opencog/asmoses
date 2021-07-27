@@ -88,7 +88,7 @@ feature_set_pop optimize_deme_select_feature_sets(const field_set& fields,
 // a deme a define the wrap the scorer for that deme. Possibly add
 // cache as well.
 template<typename Optimize, typename Scorer>
-feature_set_pop create_deme_select_feature_sets(const CTable& ctable,
+feature_set_pop create_deme_select_feature_sets(const CompressedTable& ctable,
                                                 Optimize& optimize,
                                                 const Scorer& scorer,
                                                 const feature_selection_parameters& fs_params)
@@ -121,7 +121,7 @@ feature_set_pop create_deme_select_feature_sets(const CTable& ctable,
 
 // run feature selection given a moses optimizer
 template<typename Optimize>
-feature_set_pop moses_select_feature_sets(const CTable& ctable,
+feature_set_pop moses_select_feature_sets(const CompressedTable& ctable,
                                           Optimize& optimize,
                                           const feature_selection_parameters& fs_params)
 {

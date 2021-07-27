@@ -38,7 +38,7 @@
 
 namespace opencog {
 
-feature_set_pop smd_select_feature_sets(const CTable& ctable,
+feature_set_pop smd_select_feature_sets(const CompressedTable& ctable,
                                         const feature_selection_parameters& fs_params);
 
 /**

@@ -69,7 +69,7 @@ vector<double> score_individual_features(const Table& table,
                                          const feature_selection_parameters& fs_params)
 {
     typedef set<arity_t> FS;
-    CTable ctable = table.compressed();
+    CompressedTable ctable = table.compressed();
 
     fs_scorer<FS> fs_sc(ctable, fs_params);
     vector<double> res;
@@ -134,7 +134,7 @@ feature_set initial_features(const vector<string>& ilabels,
     return res;
 }
 
-feature_set_pop select_feature_sets(const CTable& ctable,
+feature_set_pop select_feature_sets(const CompressedTable& ctable,
                                     const feature_selection_parameters& fs_params)
 {
     if (fs_params.algorithm == opencog::hc) {
@@ -175,7 +175,7 @@ feature_set_pop select_feature_sets(const CTable& ctable,
     }
 }
 
-feature_set select_features(const CTable& ctable,
+feature_set select_features(const CompressedTable& ctable,
                             const feature_selection_parameters& fs_params)
 {
     feature_set_pop fs_pop = select_feature_sets(ctable, fs_params);
@@ -186,11 +186,11 @@ feature_set select_features(const CTable& ctable,
 feature_set select_features(const Table& table,
                             const feature_selection_parameters& fs_params)
 {
-    CTable ctable = table.compressed();
+    CompressedTable ctable = table.compressed();
     if (fs_params.subsampling_ratio < 1.0) {
         logger().debug() << "Subsample table (size = "
                          << ctable.uncompressed_size() << ")";
-        subsampleCTable(fs_params.subsampling_ratio, ctable);
+        subsampleCompressedTable(fs_params.subsampling_ratio, ctable);
         logger().debug() << "New size = " << ctable.uncompressed_size();
     }
     return select_features(ctable, fs_params);

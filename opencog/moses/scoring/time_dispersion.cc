@@ -31,7 +31,7 @@ namespace opencog { namespace moses {
 
 using namespace combo;
 
-bscore_ctable_time_dispersion::bscore_ctable_time_dispersion(const CTable& _ctable,
+bscore_ctable_time_dispersion::bscore_ctable_time_dispersion(const CompressedTable& _ctable,
                                                              float time_dispersion_pressure,
                                                              float time_dispersion_exponent,
                                                              TemporalGranularity granularity,
@@ -73,11 +73,11 @@ TTable::value_type bscore_ctable_time_dispersion::get_timestamp_class(const TTab
     }
 }
 
-float bscore_ctable_time_dispersion::get_time_dispersion_penalty(const CTableTime& ctt) const
+float bscore_ctable_time_dispersion::get_time_dispersion_penalty(const CompressedTableTime& ctt) const
 {
     // Log the ctabletime
     if (logger().is_fine_enabled())
-        ostreamCTableTime(logger().fine() << "bscore_ctable_time_dispersion:"
+        ostreamCompressedTableTime(logger().fine() << "bscore_ctable_time_dispersion:"
                           ":get_time_dispersion_penalty ctabletime\n", ctt);
 
     // Define time distribution conditional by activation

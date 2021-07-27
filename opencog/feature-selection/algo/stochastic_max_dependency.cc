@@ -31,7 +31,7 @@ namespace opencog {
 using namespace std;
 
 /// Select features, using the SMD algorithm
-feature_set_pop smd_select_feature_sets(const CTable& ctable,
+feature_set_pop smd_select_feature_sets(const CompressedTable& ctable,
                                         const feature_selection_parameters& fs_params)
 {
     auto ir = boost::irange(0, ctable.get_arity());

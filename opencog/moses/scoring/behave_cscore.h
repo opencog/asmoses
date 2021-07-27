@@ -105,14 +105,14 @@ public:
 		_bscorer.ignore_rows_at_times(timestamps);
 	}
 
-	// Return the uncompressed size of the CTable
+	// Return the uncompressed size of the CompressedTable
 	unsigned get_ctable_usize() const
 	{
 		return _bscorer.get_ctable_usize();
 	}
 
-	// Return the original CTable
-	const CTable &get_ctable() const
+	// Return the original CompressedTable
+	const CompressedTable &get_ctable() const
 	{
 		return _bscorer.get_ctable();
 	}

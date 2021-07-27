@@ -71,7 +71,7 @@ using namespace combo;
  * like bump function.  Such a softened-edge selector could not be
  * mimicked with a pure boolean accuracy scorer.
  */
-select_bscore::select_bscore(const CTable &ctable,
+select_bscore::select_bscore(const CompressedTable &ctable,
                              double lower_percentile,
                              double upper_percentile,
                              double hardness,
@@ -102,11 +102,11 @@ select_bscore::select_bscore(const CTable &ctable,
 	std::map<score_t, score_t> ranked_out;
 
 	score_t total_weight = 0.0;
-	for (const CTable::value_type &io_row : ctable) {
+	for (const CompressedTable::value_type &io_row : ctable) {
 		// io_row.first = input vector
 		// io_row.second = counter of outputs
-		const CTable::counter_t &orow = io_row.second;
-		for (const CTable::counter_t::value_type &tcv : orow) {
+		const CompressedTable::counter_t &orow = io_row.second;
+		for (const CompressedTable::counter_t::value_type &tcv : orow) {
 			score_t val = get_contin(tcv.first.value);
 			if (not _positive) val = -val;
 			score_t weight = tcv.second;
@@ -170,14 +170,14 @@ behavioral_score select_bscore::operator()(const combo_tree &tr) const
 	interpreter_visitor iv(tr);
 	auto interpret_tr = boost::apply_visitor(iv);
 
-	for (const CTable::value_type &io_row : _wrk_ctable) {
+	for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 		// io_row.first = input vector
 		// io_row.second = counter of outputs
 
 		bool predict_inside = (id::logical_true == interpret_tr(io_row.first.get_variant()));
 		score_t fail = 0.0;
-		const CTable::counter_t &orow = io_row.second;
-		for (const CTable::counter_t::value_type &tcv : orow) {
+		const CompressedTable::counter_t &orow = io_row.second;
+		for (const CompressedTable::counter_t::value_type &tcv : orow) {
 			score_t val = get_contin(tcv.first.value);
 			if (not _positive) val = -val;
 			score_t weight = tcv.second;
@@ -206,14 +206,14 @@ behavioral_score select_bscore::operator()(const Handle &handle) const
 	auto link_result = FloatValueCast(result)->value();
 	int i = 0;
 
-	for (const CTable::value_type &io_row : _wrk_ctable) {
+	for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 		// io_row.first = input vector
 		// io_row.second = counter of outputs
 		bool predict_inside = io_row.second.get(link_result.at(i) ?
 		                                        id::logical_false : id::logical_true);
 		score_t fail = 0.0;
-		const CTable::counter_t &orow = io_row.second;
-		for (const CTable::counter_t::value_type &tcv : orow) {
+		const CompressedTable::counter_t &orow = io_row.second;
+		for (const CompressedTable::counter_t::value_type &tcv : orow) {
 			score_t val = get_contin(tcv.first.value);
 			if (not _positive) val = -val;
 			score_t weight = tcv.second;
@@ -245,7 +245,7 @@ behavioral_score select_bscore::operator()(const scored_combo_tree_set &ensemble
 		auto interpret_tr = boost::apply_visitor(iv);
 
 		size_t i = 0;
-		for (const CTable::value_type &io_row : _wrk_ctable) {
+		for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 			// io_row.first = input vector
 			bool select = (interpret_tr(io_row.first.get_variant()) == id::logical_true);
 			hypoth[i] += trweight * (2.0 * ((score_t) select) - 1.0);
@@ -259,14 +259,14 @@ behavioral_score select_bscore::operator()(const scored_combo_tree_set &ensemble
 	// and -1 if incorrect.
 	behavioral_score bs;
 	size_t i = 0;
-	for (const CTable::value_type &io_row : _wrk_ctable) {
+	for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 		// io_row.first = input vector
 		// io_row.second = counter of outputs
 
 		bool predict_inside = (0 < hypoth[i]);
 		score_t fail = 0.0;
-		const CTable::counter_t &orow = io_row.second;
-		for (const CTable::counter_t::value_type &tcv : orow) {
+		const CompressedTable::counter_t &orow = io_row.second;
+		for (const CompressedTable::counter_t::value_type &tcv : orow) {
 			score_t val = get_contin(tcv.first.value);
 			if (not _positive) val = -val;
 			score_t weight = tcv.second;
@@ -291,7 +291,7 @@ behavioral_score select_bscore::best_possible_bscore() const
 
 void select_bscore::set_best_possible_bscore()
 {
-	for (const CTable::value_type &io_row : _wrk_ctable) {
+	for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 		// io_row.first = input vector
 		// io_row.second = counter of outputs
 
@@ -302,8 +302,8 @@ void select_bscore::set_best_possible_bscore()
 		// selection range.
 		score_t n_inside = 0.0;
 		score_t n_outside = 0.0;
-		const CTable::counter_t &orow = io_row.second;
-		for (const CTable::counter_t::value_type &tcv : orow) {
+		const CompressedTable::counter_t &orow = io_row.second;
+		for (const CompressedTable::counter_t::value_type &tcv : orow) {
 			score_t val = get_contin(tcv.first.value);
 			if (not _positive) val = -val;
 			score_t weight = tcv.second;
@@ -324,7 +324,7 @@ void select_bscore::set_best_possible_bscore()
 behavioral_score select_bscore::worst_possible_bscore() const
 {
 	behavioral_score bs;
-	for (const CTable::value_type &io_row : _wrk_ctable) {
+	for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 		// io_row.first = input vector
 		// io_row.second = counter of outputs
 
@@ -335,8 +335,8 @@ behavioral_score select_bscore::worst_possible_bscore() const
 		// selection range.
 		score_t n_inside = 0.0;
 		score_t n_outside = 0.0;
-		const CTable::counter_t &orow = io_row.second;
-		for (const CTable::counter_t::value_type &tcv : orow) {
+		const CompressedTable::counter_t &orow = io_row.second;
+		for (const CompressedTable::counter_t::value_type &tcv : orow) {
 			score_t val = get_contin(tcv.first.value);
 			if (not _positive) val = -val;
 			score_t weight = tcv.second;

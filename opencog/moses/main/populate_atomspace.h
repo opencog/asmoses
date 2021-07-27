@@ -52,7 +52,7 @@ void populate(AtomSpace *as, const ITable &itable);
  * @param Ctable&     ctable
  *
  */
-void populate(AtomSpace *as, const CTable &ctable);
+void populate(AtomSpace *as, const CompressedTable &ctable);
 
 /**
  * Convertes vertex sequences to its corresponding values
@@ -68,7 +68,7 @@ ValuePtr vertex_seq_to_value(const vertex_seq &vseq, id::type_node tnode);
     }
 
 template<typename... HandleArgs>
-void populate_frm_ctable(CTable _ctable, HandleArgs &&... handleArgs)
+void populate_frm_ctable(CompressedTable _ctable, HandleArgs &&... handleArgs)
 {
 	std::vector<Handle> vect1{std::forward<HandleArgs>(handleArgs)...};
 	int index = 0;

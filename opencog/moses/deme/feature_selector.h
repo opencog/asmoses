@@ -177,7 +177,7 @@ typedef std::multimap<composite_score,
  */
 struct feature_selector
 {
-    feature_selector(const combo::CTable& ctable,
+    feature_selector(const combo::CompressedTable& ctable,
                      const feature_selector_parameters& festor_params);
 
     feature_selector(const combo::Table& table,
@@ -195,14 +195,14 @@ struct feature_selector
     // Parameters
     feature_selector_parameters params;
 
-    const combo::CTable _ctable;
+    const combo::CompressedTable _ctable;
 protected:
     /// Overwrite some parameters
     void preprocess_params(const combo::combo_tree& xmplr);
 
     /// Build ctable used for feature selection (possibly different
     /// than _ctable)
-    combo::CTable build_fs_ctable(const combo::combo_tree& xmplr) const;
+    combo::CompressedTable build_fs_ctable(const combo::combo_tree& xmplr) const;
 
     /// Select top n feature sets
     feature_set_pop select_top_feature_sets(const feature_set_pop& fss) const;

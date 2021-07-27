@@ -121,7 +121,7 @@ using namespace combo;
 /// set to false.  TBD XXX document that someday.
 
 
-precision_bscore::precision_bscore(const CTable &ctable_,
+precision_bscore::precision_bscore(const CompressedTable &ctable_,
                                    float activation_pressure_,
                                    float min_activation_,
                                    float max_activation_,
@@ -182,7 +182,7 @@ precision_bscore::precision_bscore(const CTable &ctable_,
 /// in the output.  This sum represents the best possible score
 /// i.e. we found all of the true values correcty.  The 'F's are 
 /// false positives.
-score_t precision_bscore::sum_outputs(const CTable::counter_t &c) const
+score_t precision_bscore::sum_outputs(const CompressedTable::counter_t &c) const
 {
 	return 0.5 * (c.get(_target) - c.get(_neg_target));
 }
@@ -230,11 +230,11 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 	// true (resp. false if positive is false), and fp correspond to
 	// the the target being false (resp. true if positive is false).
 	//
-	// 3. Otherwise build CTable holding the results for dispersion
+	// 3. Otherwise build CompressedTable holding the results for dispersion
 	// penalty
 	map<TTable::value_type, Counter<bool, count_t>> time2res;
-	CTable ctable_res;
-	for (const CTable::value_type &io_row : _wrk_ctable) {
+	CompressedTable ctable_res;
+	for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 		// const auto& irow = io_row.first;
 		const multi_type_seq &irow = io_row.first;
 		const auto &orow = io_row.second;
@@ -250,7 +250,7 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 		}
 
 		if (time_bscore) {
-			for (const CTable::counter_t::value_type &tcv : orow) {
+			for (const CompressedTable::counter_t::value_type &tcv : orow) {
 				bool target = vertex_to_bool(tcv.first.value);
 				if (!positive) target = !target;
 				count_t count = selected ? tcv.second : 0.0;
@@ -261,10 +261,10 @@ behavioral_score precision_bscore::do_score(std::function<bool(const multi_type_
 			ac.push_back(acto);
 		}
 
-		// Build CTable of results
+		// Build CompressedTable of results
 		if (_pressure > 0.0) {
-			CTable::key_type dummy_input;
-			for (const CTable::counter_t::value_type &tcv : orow) {
+			CompressedTable::key_type dummy_input;
+			for (const CompressedTable::counter_t::value_type &tcv : orow) {
 				auto tclass = get_timestamp_class(tcv.first.timestamp);
 				vertex result = selected ? id::logical_true : id::logical_false;
 				TimedValue timed_result({result, tclass});
@@ -433,7 +433,7 @@ behavioral_score precision_bscore::exact_selection(const scored_combo_tree_set &
 		auto interpret_tr = boost::apply_visitor(iv);
 
 		size_t i=0;
-		for (const CTable::value_type& io_row : _wrk_ctable) {
+		for (const CompressedTable::value_type& io_row : _wrk_ctable) {
 			// io_row.first = input vector
 			const auto& irow = io_row.first;
 
@@ -490,7 +490,7 @@ behavioral_score precision_bscore::bias_selection(const scored_combo_tree_set &e
 		auto interpret_tr = boost::apply_visitor(iv);
 
 		size_t i = 0;
-		for (const CTable::value_type &io_row : _wrk_ctable) {
+		for (const CompressedTable::value_type &io_row : _wrk_ctable) {
 			// io_row.first = input vector
 			const auto &irow = io_row.first;
 
@@ -504,8 +504,8 @@ behavioral_score precision_bscore::bias_selection(const scored_combo_tree_set &e
 	// Step 2: find the worst wrong answer; that is our bias.
 	size_t i = 0;
 	double bias = 0.0;
-	for (const CTable::value_type &io_row : _wrk_ctable) {
-		const CTable::counter_t &orow = io_row.second;
+	for (const CompressedTable::value_type &io_row : _wrk_ctable) {
+		const CompressedTable::counter_t &orow = io_row.second;
 
 		// sumo will be negative if it should not be selected.
 		// We look at the negative ones, because they are wrong...
@@ -575,9 +575,9 @@ behavioral_score precision_bscore::best_possible_bscore() const
 					count_t>  // total count
 	> max_precisions_t;
 	max_precisions_t max_precisions;
-	for (CTable::const_iterator it = _wrk_ctable.begin();
+	for (CompressedTable::const_iterator it = _wrk_ctable.begin();
 	     it != _wrk_ctable.end(); ++it) {
-		const CTable::counter_t &c = it->second;
+		const CompressedTable::counter_t &c = it->second;
 		count_t sumo = sum_outputs(c);
 		count_t total = c.total_count();
 		double precision = sumo / total;
@@ -696,13 +696,13 @@ combo_tree precision_bscore::gen_canonical_best_candidate() const
 	// critical if used as a fitness function for feature selection
 	// (which is planned).
 	typedef std::multimap<double, // precision
-			std::pair<CTable::const_iterator,
+			std::pair<CompressedTable::const_iterator,
 					count_t> // total count
 	> precision_to_count_t;
 	precision_to_count_t ptc;
-	for (CTable::const_iterator it = _wrk_ctable.begin();
+	for (CompressedTable::const_iterator it = _wrk_ctable.begin();
 	     it != _wrk_ctable.end(); ++it) {
-		const CTable::counter_t &c = it->second;
+		const CompressedTable::counter_t &c = it->second;
 		count_t total = c.total_count();
 		double precision = sum_outputs(c) / total;
 		ptc.insert(std::make_pair(precision, std::make_pair(it, total)));
@@ -779,14 +779,14 @@ void precision_bscore::update_weights(const std::vector<double> &rew)
 // precision_conj_bscore //
 ///////////////////////////
 
-precision_conj_bscore::precision_conj_bscore(const CTable &_ctable,
+precision_conj_bscore::precision_conj_bscore(const CompressedTable &_ctable,
                                              float hardness_,
                                              bool positive_)
 		: ctable(_ctable), ctable_usize(ctable.uncompressed_size()),
 		  hardness(hardness_), positive(positive_)
 {
 	vertex target = bool_to_vertex(positive);
-	sum_outputs = [target](const CTable::counter_t &c) -> score_t {
+	sum_outputs = [target](const CompressedTable::counter_t &c) -> score_t {
 		return c.get(target);
 	};
 }
@@ -826,7 +826,7 @@ behavioral_score precision_conj_bscore::operator()(const combo_tree &tr) const
 	score_t sao = 0.0;     // sum of all active outputs (in the boolean case)
 	interpreter_visitor iv(tr);
 	auto interpret_tr = boost::apply_visitor(iv);
-	for (const CTable::value_type &vct : ctable) {
+	for (const CompressedTable::value_type &vct : ctable) {
 		// vct.first = input vector
 		// vct.second = counter of outputs
 		if (interpret_tr(vct.first.get_variant()) == id::logical_true) {
@@ -881,7 +881,7 @@ behavioral_score precision_conj_bscore::operator()(const Handle &handle) const
 	const ValuePtr result = interpreter(handle);
 	auto link_result = LinkValueCast(result)->value();
 	int i = 0;
-	for (const CTable::value_type &vct : ctable) {
+	for (const CompressedTable::value_type &vct : ctable) {
 		// vct.first = input vector
 		// vct.second = counter of outputs
 		if (bool_value_to_bool(link_result.at(i))) {

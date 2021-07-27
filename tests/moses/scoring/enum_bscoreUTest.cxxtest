@@ -50,7 +50,7 @@ public:
 	void test_enum_bscore(void)
 	{
 		Table table = loadTable(utest_dir + "enum.ctable");
-		CTable ctt = table.compressed();
+		CompressedTable ctt = table.compressed();
 		enum_table_bscore et_bscore(ctt);
 
 		Handle f1 = createNode(PREDICATE_NODE, "f1");

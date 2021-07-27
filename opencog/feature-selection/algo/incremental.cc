@@ -28,7 +28,7 @@ namespace opencog {
 
 using namespace std;
 
-feature_set_pop incremental_select_feature_sets(const CTable& ctable,
+feature_set_pop incremental_select_feature_sets(const CompressedTable& ctable,
                                                 const feature_selection_parameters& fs_params)
 {
     auto ir = boost::irange(0, ctable.get_arity());

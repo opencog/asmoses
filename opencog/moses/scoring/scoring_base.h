@@ -38,7 +38,7 @@ namespace moses
 using combo::combo_tree;
 using combo::arity_t;
 using combo::count_t;
-using combo::CTable;
+using combo::CompressedTable;
 using combo::TTable;
 
 /// Used to define the complexity scoring component given that p is the
@@ -150,8 +150,8 @@ struct bscore_base
 	/// probably work better if the error is vaguely metric-like and
 	/// quasi-linear.
 	///
-	/// See the notes below, for the CTable sccorer, for special
-	/// considerations that CTable-based scorers must make.
+	/// See the notes below, for the CompressedTable sccorer, for special
+	/// considerations that CompressedTable-based scorers must make.
 	virtual score_t get_error(const behavioral_score &) const;
 
 	virtual score_t get_error(const combo_tree &) const;
@@ -198,17 +198,17 @@ struct bscore_base
 	virtual void ignore_rows_at_times(const std::set<TTable::value_type> &) const
 	{}
 
-	// Return the uncompressed size of the CTable
+	// Return the uncompressed size of the CompressedTable
 	virtual unsigned get_ctable_usize() const
 	{
 		OC_ASSERT(false, "You must implement me in the derived class");
 		return 0U;
 	}
 
-	// Return the original CTable
-	virtual const CTable &get_ctable() const
+	// Return the original CompressedTable
+	virtual const CompressedTable &get_ctable() const
 	{
-		static const CTable empty_ctable;
+		static const CompressedTable empty_ctable;
 		OC_ASSERT(false, "You must implement me in the derived class");
 		return empty_ctable;
 	}
@@ -262,7 +262,7 @@ protected:
 /// table compression.
 struct bscore_ctable_base : public bscore_base
 {
-	bscore_ctable_base(const CTable &);
+	bscore_ctable_base(const CompressedTable &);
 
 	/// Indicate a set of features that should be ignored during scoring,
 	/// The features are indicated as indexes, starting from 0.
@@ -282,13 +282,13 @@ struct bscore_ctable_base : public bscore_base
 	/// Like ignore_rows but consider timestamps instead of indexes
 	void ignore_rows_at_times(const std::set<TTable::value_type> &) const;
 
-	/// Return the uncompressed size of the CTable
+	/// Return the uncompressed size of the CompressedTable
 	unsigned get_ctable_usize() const;
 
-	/// Return the original CTable
-	const CTable &get_ctable() const;
+	/// Return the original CompressedTable
+	const CompressedTable &get_ctable() const;
 
-	/// Implementing get_error() for CTables-based scorers requires some
+	/// Implementing get_error() for CompressedTables-based scorers requires some
 	/// special consideration.  First, the length of the behavioral
 	/// score is needed, for normalization.  The correct "length" is
 	/// kind-of tricky to understand when a table has weighted rows,
@@ -343,18 +343,18 @@ struct bscore_ctable_base : public bscore_base
 	///
 	// score_t get_error(const behavioral_score&) const;
 protected:
-	const CTable &_orig_ctable;  // Reference to the original table.
+	const CompressedTable &_orig_ctable;  // Reference to the original table.
 
 	// The table that is actually used for the evaluation. This is the
 	// the compressed table that results after ignore_cols() and
 	// ignore_rows() have been applied.  Must be mutable to avoid the
 	// const-ness of tables in general.
-	mutable CTable _wrk_ctable;
+	mutable CompressedTable _wrk_ctable;
 
 	// A copy of wrk_ctable prior to ignore_rows() being applied.  This
 	// allows ignore_rows() to be called multiple times, without forcing
 	// a complete recalculation.
-	mutable CTable _all_rows_wrk_ctable; // mutable to work around const bugs.
+	mutable CompressedTable _all_rows_wrk_ctable; // mutable to work around const bugs.
 
 	mutable size_t _ctable_usize;    // uncompressed size of ctable
 	mutable count_t _ctable_weight;  // Total weight of all rows in table.

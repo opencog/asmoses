@@ -33,7 +33,7 @@
 namespace opencog {
 
 using namespace moses;
-using combo::CTable;
+using combo::CompressedTable;
 
 /**
  * Wrapper to use moses scoring precision (see
@@ -50,7 +50,7 @@ struct pre_scorer : public fs_scorer_base<FeatureSet>
 {
     typedef fs_scorer_base<FeatureSet> super;
 
-    pre_scorer(const CTable& ctable,
+    pre_scorer(const CompressedTable& ctable,
                double confi = 100,
                float penalty = 1.0f,
                float min_activation = 0.5f,
@@ -63,7 +63,7 @@ struct pre_scorer : public fs_scorer_base<FeatureSet>
     double operator()(const FeatureSet& fs) const
     {
         // filter the ctable
-        CTable filtered_ctable = super::_ctable.filtered(fs);
+        CompressedTable filtered_ctable = super::_ctable.filtered(fs);
         // create the scorer
         precision_bscore sc(filtered_ctable, _penalty,
                             _min_activation, _max_activation,

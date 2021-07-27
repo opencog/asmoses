@@ -33,7 +33,7 @@
 #include "opencog/utils/valueUtils.h"
 namespace opencog { namespace moses {
 
-using combo::CTable;
+using combo::CompressedTable;
 using combo::type_node;
 
 /// Perform summations commonly used in binary discriminators.
@@ -52,7 +52,7 @@ using combo::type_node;
 /// true_negative_count + false_negative_count.
 struct discriminator
 {
-    discriminator(const CTable&);
+    discriminator(const CompressedTable&);
 
     struct d_counts {
         d_counts();
@@ -74,7 +74,7 @@ struct discriminator
     std::vector<d_counts> counts(const Handle&) const;
 
 protected:
-    const CTable& _ctable;
+    const CompressedTable& _ctable;
     type_node _output_type;
     score_t _true_total;        // total number of Ts in the ctable
     score_t _false_total;       // total number of Fs in the ctable
@@ -86,9 +86,9 @@ protected:
     // weight of the contin value.
 
     // give a ctable's row return the sum of true positives
-    std::function<score_t(const CTable::counter_t&)> sum_true;
+    std::function<score_t(const CompressedTable::counter_t&)> sum_true;
     // give a ctable's row return the sum of false positives
-    std::function<score_t(const CTable::counter_t&)> sum_false;
+    std::function<score_t(const CompressedTable::counter_t&)> sum_false;
 };
 
 /**
@@ -98,7 +98,7 @@ protected:
  */
 struct discriminating_bscore : public bscore_ctable_base, discriminator
 {
-    discriminating_bscore(const CTable& _ctable,
+    discriminating_bscore(const CompressedTable& _ctable,
                   float min_threshold = 0.5f,
                   float max_threshold = 1.0,
                   float hardness = 1.0f);
@@ -170,7 +170,7 @@ protected:
  */
 struct recall_bscore : public discriminating_bscore
 {
-    recall_bscore(const CTable& _ctable,
+    recall_bscore(const CompressedTable& _ctable,
                   float min_precision = 0.8f,
                   float max_precision = 1.0f,
                   float hardness = 1.0f);
@@ -189,7 +189,7 @@ protected:
  */
 struct prerec_bscore : public discriminating_bscore
 {
-    prerec_bscore(const CTable& _ctable,
+    prerec_bscore(const CompressedTable& _ctable,
                   float min_recall = 0.5f,
                   float max_recall = 1.0f,
                   float hardness = 1.0f);
@@ -213,7 +213,7 @@ protected:
  */
 struct bep_bscore : public discriminating_bscore
 {
-    bep_bscore(const CTable& _ctable,
+    bep_bscore(const CompressedTable& _ctable,
                float min_diff = 0.5f,
                float max_diff = 0.5f,
                float hardness = 1.0f);
@@ -232,7 +232,7 @@ protected:
  */
 struct f_one_bscore : public discriminating_bscore
 {
-    f_one_bscore(const CTable& _ctable);
+    f_one_bscore(const CompressedTable& _ctable);
     behavioral_score operator()(const combo_tree& tr) const;
     behavioral_score operator()(const Handle& program) const;
 

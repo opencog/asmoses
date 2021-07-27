@@ -341,8 +341,8 @@ behavioral_score ctruth_table_bscore::operator()(const combo_tree &tr) const
 	interpreter_visitor iv(tr);
 	auto interpret_tr = boost::apply_visitor(iv);
 	// Evaluate the bscore components for all rows of the ctable
-	for (const CTable::value_type &vct : _wrk_ctable) {
-		const CTable::counter_t &c = vct.second;
+	for (const CompressedTable::value_type &vct : _wrk_ctable) {
+		const CompressedTable::counter_t &c = vct.second;
 		score_t sc = c.get(negate_vertex(interpret_tr(vct.first.get_variant())));
 		bs.push_back(-sc);
 	}
@@ -364,8 +364,8 @@ behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
 
 	const ValuePtr result = interpreter(handle);
 	boost::transform(LinkValueCast(result)->value(), _wrk_ctable, back_inserter(bs),
-	                 [&](ValuePtr res, const CTable::value_type &vct){
-		                 const CTable::counter_t &c = vct.second;
+	                 [&](ValuePtr res, const CompressedTable::value_type &vct){
+		                 const CompressedTable::counter_t &c = vct.second;
 		                 // if predicted true return negative of arity of false
 		                 // and vice versa
 		                 return -c.get(bool_value_to_bool(res) ?
@@ -393,7 +393,7 @@ behavioral_score ctruth_table_bscore::operator()(const scored_combo_tree_set &en
 
 		// Evaluate the tree for all rows of the ctable
 		size_t i = 0;
-		for (const CTable::value_type &vct : _wrk_ctable) {
+		for (const CompressedTable::value_type &vct : _wrk_ctable) {
 			// Add +1 if prediction is up and -1 if prediction is down.
 			vertex prediction(interpret_tr(vct.first.get_variant()));
 			hypoth[i] += (id::logical_true == prediction) ? weight : -weight;
@@ -409,8 +409,8 @@ behavioral_score ctruth_table_bscore::operator()(const scored_combo_tree_set &en
 	// the count of the iverted prediction.
 	behavioral_score bs(sz);
 	size_t i = 0;
-	for (const CTable::value_type &vct : _wrk_ctable) {
-		const CTable::counter_t &cnt = vct.second;
+	for (const CompressedTable::value_type &vct : _wrk_ctable) {
+		const CompressedTable::counter_t &cnt = vct.second;
 		vertex inverted_prediction = (hypoth[i] > 0.0) ?
 		                             id::logical_false : id::logical_true;
 		bs[i] = -cnt.get(inverted_prediction);
@@ -430,9 +430,9 @@ void ctruth_table_bscore::set_best_possible_bscore() const
 	_best_possible_score.clear();
 	transform(_wrk_ctable | map_values,
 	          back_inserter(_best_possible_score),
-	          [](const CTable::counter_t &c) {
+	          [](const CompressedTable::counter_t &c) {
 		          // OK, this looks like magic, but here's what it does:
-		          // CTable is a compressed table; different rows may
+		          // CompressedTable is a compressed table; different rows may
 		          // have identical inputs, differing only in output.
 		          // Clearly, in such a case, both outputs cannot be
 		          // simultanously satisfied, but we can try to satisfy
@@ -467,8 +467,8 @@ behavioral_score ctruth_table_bscore::best_possible_bscore() const
 behavioral_score ctruth_table_bscore::worst_possible_bscore() const
 {
 	behavioral_score bs;
-	for (const CTable::value_type &vct : _wrk_ctable) {
-		const CTable::counter_t &cnt = vct.second;
+	for (const CompressedTable::value_type &vct : _wrk_ctable) {
+		const CompressedTable::counter_t &cnt = vct.second;
 
 		// The most that the score can improve is to flip true to false,
 		// or v.v. The worst score is to get the majority wrong.  This
@@ -489,8 +489,8 @@ score_t ctruth_table_bscore::min_improv() const
 	// return 0.5;
 
 	score_t min_weight = FLT_MAX;
-	for (const CTable::value_type &vct : _wrk_ctable) {
-		const CTable::counter_t &cnt = vct.second;
+	for (const CompressedTable::value_type &vct : _wrk_ctable) {
+		const CompressedTable::counter_t &cnt = vct.second;
 
 		// The most that the score can improve is to flip
 		// true to false, or v.v.
@@ -513,8 +513,8 @@ behavioral_score enum_table_bscore::operator()(const combo_tree &tr) const
 	// Evaluate the bscore components for all rows of the ctable
 	interpreter_visitor iv(tr);
 	auto interpret_tr = boost::apply_visitor(iv);
-	for (const CTable::value_type &vct : _ctable) {
-		const CTable::counter_t &c = vct.second;
+	for (const CompressedTable::value_type &vct : _ctable) {
+		const CompressedTable::counter_t &c = vct.second;
 		// The number that are wrong equals total minus num correct.
 		score_t sc = score_t(c.get(interpret_tr(vct.first.get_variant())));
 		sc -= score_t(c.total_count());
@@ -533,8 +533,8 @@ behavioral_score enum_table_bscore::operator()(const Handle &handle) const
 	const ValuePtr result = interpreter(handle);
 	boost::transform(LinkValueCast(result)->value(),
 	                 _ctable, back_inserter(bs),
-	                 [&](ValuePtr res, const CTable::value_type &vct) {
-		                 const CTable::counter_t &c = vct.second;
+	                 [&](ValuePtr res, const CompressedTable::value_type &vct) {
+		                 const CompressedTable::counter_t &c = vct.second;
 		                 // The number that are wrong  equals
 		                 // total minus num correct.
 		                 score_t sc = score_t(c.get(value_to_enum(res)));
@@ -550,15 +550,15 @@ behavioral_score enum_table_bscore::best_possible_bscore() const
 {
 	behavioral_score bs;
 	transform(_ctable | map_values, back_inserter(bs),
-	          [](const CTable::counter_t &c) {
+	          [](const CompressedTable::counter_t &c) {
 		          // OK, this looks like magic, but here's what it does:
-		          // CTable is a compressed table; multiple rows may
+		          // CompressedTable is a compressed table; multiple rows may
 		          // have identical inputs, differing only in output.
 		          // Clearly, in such a case, different outputs cannot be
 		          // simultanously satisfied, but we can try to satisfy
 		          // the one of which there is the most.
 		          unsigned most = 0;
-		          CTable::counter_t::const_iterator it = c.begin();
+		          CompressedTable::counter_t::const_iterator it = c.begin();
 		          for (; it != c.end(); ++it) {
 			          if (most < it->second) most = it->second;
 		          }
@@ -596,8 +596,8 @@ behavioral_score enum_filter_bscore::operator()(const combo_tree &tr) const
 	interpreter_visitor iv_tr(tr), iv_predicate(predicate);
 	auto interpret_tr = boost::apply_visitor(iv_tr);
 	auto interpret_predicate = boost::apply_visitor(iv_predicate);
-	for (const CTable::value_type &vct : _ctable) {
-		const CTable::counter_t &c = vct.second;
+	for (const CompressedTable::value_type &vct : _ctable) {
+		const CompressedTable::counter_t &c = vct.second;
 
 		unsigned total = c.total_count();
 
@@ -668,8 +668,8 @@ behavioral_score enum_graded_bscore::operator()(const combo_tree &tr) const
 	// Evaluate the bscore components for all rows of the ctable
 	// TODO
 	sib_it predicate = it.begin();
-	for (const CTable::value_type &vct : _ctable) {
-		const CTable::counter_t &c = vct.second;
+	for (const CompressedTable::value_type &vct : _ctable) {
+		const CompressedTable::counter_t &c = vct.second;
 
 		unsigned total = c.total_count();
 		score_t weight = 1.0;
@@ -735,8 +735,8 @@ behavioral_score enum_effective_bscore::operator()(const combo_tree &tr) const
 	pre_it it = tr.begin();
 	if (is_enum_type(*it)) {
 		behavioral_score::iterator bit = bs.begin();
-		for (const CTable::value_type &vct : _ctable) {
-			const CTable::counter_t &c = vct.second;
+		for (const CompressedTable::value_type &vct : _ctable) {
+			const CompressedTable::counter_t &c = vct.second;
 
 			// The number that are wrong equals total minus num correct.
 			*bit++ = c.get(*it) - score_t(c.total_count());
@@ -764,9 +764,9 @@ behavioral_score enum_effective_bscore::operator()(const combo_tree &tr) const
 
 			behavioral_score::iterator bit = bs.begin();
 			vector<bool>::iterator dit = done.begin();
-			for (const CTable::value_type &vct : _ctable) {
+			for (const CompressedTable::value_type &vct : _ctable) {
 				if (*dit == false) {
-					const CTable::counter_t &c = vct.second;
+					const CompressedTable::counter_t &c = vct.second;
 
 					// The number that are wrong equals total minus num correct.
 					score_t sc = -score_t(c.total_count());
@@ -788,11 +788,11 @@ behavioral_score enum_effective_bscore::operator()(const combo_tree &tr) const
 		bool effective = false;
 		interpreter_visitor iv(predicate);
 		auto interpret_predicate = boost::apply_visitor(iv);
-		for (const CTable::value_type &vct : _ctable) {
+		for (const CompressedTable::value_type &vct : _ctable) {
 			if (*dit == false) {
 				vertex pr = interpret_predicate(vct.first.get_variant());
 				if (pr == id::logical_true) {
-					const CTable::counter_t &c = vct.second;
+					const CompressedTable::counter_t &c = vct.second;
 					int sc = c.get(consequent);
 					// A predicate is effective if it evaluates to true,
 					// and at least gets a right answr when it does...
@@ -822,7 +822,7 @@ behavioral_score enum_effective_bscore::operator()(const combo_tree &tr) const
 // interesting_predicate_bscore //
 //////////////////////////////////
 
-interesting_predicate_bscore::interesting_predicate_bscore(const CTable &ctable_,
+interesting_predicate_bscore::interesting_predicate_bscore(const CompressedTable &ctable_,
                                                            weight_t kld_w_,
                                                            weight_t skewness_w_,
                                                            weight_t stdU_w_,
@@ -842,8 +842,8 @@ interesting_predicate_bscore::interesting_predicate_bscore(const CTable &ctable_
 	// Define counter (mapping between observation and its number of occurences)
 	// That is, create a historgram showing how often each output value
 	// occurs in the ctable.
-	boost::for_each(_ctable | map_values, [this](const CTable::mapped_type &mv) {
-		boost::for_each(mv, [this](const CTable::counter_t::value_type &v) {
+	boost::for_each(_ctable | map_values, [this](const CompressedTable::mapped_type &mv) {
+		boost::for_each(mv, [this](const CompressedTable::counter_t::value_type &v) {
 			_counter[get_contin(v.first.value)] += v.second;
 		});
 	});
@@ -880,7 +880,7 @@ behavioral_score interesting_predicate_bscore::operator()(const combo_tree &tr) 
 	unsigned actives = 0; // total number of positive (or negative if
 	// positive is false) predicate values
 	boost::for_each(_ctable | map_values, pred_cache,
-	                [&](const CTable::counter_t &c, const vertex &v) {
+	                [&](const CompressedTable::counter_t &c, const vertex &v) {
 		                unsigned tc = c.total_count();
 		                if (v == target)
 			                actives += tc;
@@ -896,7 +896,7 @@ behavioral_score interesting_predicate_bscore::operator()(const combo_tree &tr) 
 	// each distinct output value occurs.
 	counter_t pred_counter;
 	boost::for_each(_ctable | map_values, pred_cache,
-	                [&](const CTable::counter_t &c, const vertex &v) {
+	                [&](const CompressedTable::counter_t &c, const vertex &v) {
 		                if (v == target) {
 			                for (const auto &mv : c)
 				                pred_counter[get_contin(mv.first.value)] = mv.second;

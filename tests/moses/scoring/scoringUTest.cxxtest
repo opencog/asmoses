@@ -46,7 +46,7 @@ public:
     
     void test_precision_bscore_best_possible_bscore() {
         Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
-        CTable ct = tt.compressed();
+        CompressedTable ct = tt.compressed();
 
         float penalty = 1.0, nim_act = 0.5, max_act = 1.0;
         precision_bscore pbsc(ct, penalty, nim_act, max_act);
@@ -58,7 +58,7 @@ public:
 
 	void test_ctruth_table_bscore_best_possible_bscore() {
         Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
-        CTable ct = tt.compressed();
+        CompressedTable ct = tt.compressed();
 
         ctruth_table_bscore ctbsc(ct);
 
@@ -71,7 +71,7 @@ public:
 	
     // disabled till we fix best_possible_bscore
     // void test_precision2_bscore_best_possible_bscore() {
-    //     CTable ct = loadCTable(scoringUTest_dir + "precision2.ctable");
+    //     CompressedTable ct = loadCompressedTable(scoringUTest_dir + "precision2.ctable");
 
     //     cout << "ct =" << ct;
 

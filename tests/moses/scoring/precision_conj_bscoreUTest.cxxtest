@@ -46,7 +46,7 @@ public:
 	void test_precision_conj_bscore(void)
 	{
 		Table t = loadTable(utest_dir + "precision.csv", target_feature);
-		CTable ct = t.compressed();
+		CompressedTable ct = t.compressed();
 		precision_conj_bscore p_c_bscore(ct, 1.0);
 		combo::combo_tree tr = combo::str2combo_tree("or($1 $2)", {});
 		behavioral_score expected_bs = p_c_bscore(tr);
