@@ -432,7 +432,7 @@ void deme_expander::optimize_demes(int max_evals, time_t max_time)
 			}
 
 			if (_params.fstor) {
-				// Attempt to compress the CTable further (to optimize and
+				// Attempt to compress the CompressedTable further (to optimize and
 				// update max score)
 				_cscorer.ignore_cols(_ignore_cols_seq[i]);
 

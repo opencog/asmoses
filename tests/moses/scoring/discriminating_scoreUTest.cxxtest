@@ -45,7 +45,7 @@ class discriminating_scoreUTest : public CxxTest::TestSuite
 {
 public:
 	Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
-	CTable ct = tt.compressed();
+	CompressedTable ct = tt.compressed();
 	Handle f1 = createNode(PREDICATE_NODE, "f1");
 	Handle f2 = createNode(PREDICATE_NODE, "f2");
 	combo::combo_tree tr_or = combo::str2combo_tree("or($1 $2)", {});

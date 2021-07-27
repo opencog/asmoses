@@ -126,7 +126,7 @@ std::istream& istreamTable(std::istream& in, Table& tab,
                            const std::vector<std::string>& ignore_features);
 
 // WARNING: this implementation only supports boolean ctable!!!!
-std::istream& istreamCTable(std::istream& in, CTable& ctable);
+std::istream& istreamCompressedTable(std::istream& in, CompressedTable& ctable);
 
 /**
  * Load a OTable given the file name. Only works for dense DSV data.
@@ -161,7 +161,7 @@ std::istream& istreamDenseTable(std::istream& in, Table& tab,
                                 const type_tree& tt, bool has_header);
 
 // WARNING: this implementation only supports boolean ctable!!!!
-CTable loadCTable(const std::string& file_name);
+CompressedTable loadCompressedTable(const std::string& file_name);
 
 //////////////////
 // ostreamTable //
@@ -228,12 +228,12 @@ Out& ostreamTable(Out& out, const Table& table)
 void saveTable(const std::string& file_name, const Table& table);
 
 /// output a compressed table in pseudo CSV format
-std::ostream& ostreamCTableRow(std::ostream& out, const CTable::value_type& ctv);
-std::ostream& ostreamCTable(std::ostream& out, const CTable& ct);
+std::ostream& ostreamCompressedTableRow(std::ostream& out, const CompressedTable::value_type& ctv);
+std::ostream& ostreamCompressedTable(std::ostream& out, const CompressedTable& ct);
 
 /// Output a compressed table with each row corresponding to a
 /// timestamp, chronologically ordered.
-std::ostream& ostreamCTableTime(std::ostream& out, const CTableTime& ctt);
+std::ostream& ostreamCompressedTableTime(std::ostream& out, const CompressedTableTime& ctt);
 
 std::ostream& operator<<(std::ostream& out, const ITable& it);
 
@@ -241,7 +241,7 @@ std::ostream& operator<<(std::ostream& out, const OTable& ot);
 
 std::ostream& operator<<(std::ostream& out, const Table& table);
 
-std::ostream& operator<<(std::ostream& out, const CTable& ct);
+std::ostream& operator<<(std::ostream& out, const CompressedTable& ct);
 
 std::ostream& operator<<(std::ostream& out, const complete_truth_table& tt);
 
@@ -255,7 +255,7 @@ std::string oc_to_string(const combo::OTable& ot,
                          const std::string& indent=empty_string);
 std::string oc_to_string(const combo::Table& table,
                          const std::string& indent=empty_string);
-std::string oc_to_string(const combo::CTable& ct,
+std::string oc_to_string(const combo::CompressedTable& ct,
                          const std::string& indent=empty_string);
 std::string oc_to_string(const combo::complete_truth_table& tt,
                          const std::string& indent=empty_string);

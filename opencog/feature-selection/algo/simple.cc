@@ -27,10 +27,10 @@
 #include "simple.h"
 
 namespace opencog {
-    
+
 using namespace std;
 
-feature_set_pop simple_select_feature_sets(const CTable& ctable,
+feature_set_pop simple_select_feature_sets(const CompressedTable& ctable,
                                            const feature_selection_parameters& fs_params)
 {
     typedef MutualInformation<feature_set> FeatureScorer;
@@ -39,7 +39,7 @@ feature_set_pop simple_select_feature_sets(const CTable& ctable,
     feature_set all_features(ir.begin(), ir.end());
     if (0 == fs_params.target_size) {
         // Nothing happened, return all features by default
-        
+
         // XXX: fsc(all_features) is skipped because that algorithm is
         // used in combination with contin MI in
         // feature_selectionUTest.cxxtest and contin MI does not

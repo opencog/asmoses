@@ -28,7 +28,7 @@
 
 namespace opencog { namespace moses {
 
-using combo::CTableTime;
+using combo::CompressedTableTime;
 
 enum class TemporalGranularity {day, month};
 
@@ -39,7 +39,7 @@ enum class TemporalGranularity {day, month};
  */
 struct bscore_ctable_time_dispersion : public bscore_ctable_base
 {
-    bscore_ctable_time_dispersion(const CTable& ctable,
+    bscore_ctable_time_dispersion(const CompressedTable& ctable,
                                   float time_dispersion_pressure = 0.0,
                                   float time_dispersion_exponent = 1.0,
                                   TemporalGranularity granularity =
@@ -100,7 +100,7 @@ protected:
      * Hmax is the maximum entropy, that is the entropy of the uniform
      * distribution over timestamps.
      */
-    score_t get_time_dispersion_penalty(const CTableTime& ctt) const;
+    score_t get_time_dispersion_penalty(const CompressedTableTime& ctt) const;
 };
 
 } //~namespace moses

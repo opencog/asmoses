@@ -25,7 +25,7 @@ void populate(AtomSpace *as, const ITable &itable)
 	}
 }
 
-void populate(AtomSpace *as, const CTable &ctable)
+void populate(AtomSpace *as, const CompressedTable &ctable)
 {
 	const string_seq &labels = ctable.get_input_labels();
 	const type_tree_seq &types = get_signature_inputs(ctable.get_signature());

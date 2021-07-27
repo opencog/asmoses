@@ -34,7 +34,7 @@ template<typename FeatureSet>
 struct fs_scorer_base : public std::unary_function<FeatureSet, double>
 {
     // ctor
-    fs_scorer_base(const CTable& ctable, double confi)
+    fs_scorer_base(const CompressedTable& ctable, double confi)
         : _ctable(ctable), _confi(confi), _usize(_ctable.uncompressed_size()) {}
 
     // dtor
@@ -50,7 +50,7 @@ protected:
         return _usize / (_usize + exp(-_confi*fs_size));
     }
     
-    const CTable& _ctable;
+    const CompressedTable& _ctable;
     double _confi;              // confidence intensity
     unsigned _usize;             // uncompressed ctable size
 };

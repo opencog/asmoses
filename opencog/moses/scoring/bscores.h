@@ -264,7 +264,7 @@ private:
 /**
  * ctruth_table_bscore -- compute behavioral score for boolean truth tables.
  *
- * The CTable ctt holds the "compressed" data table, consisting of
+ * The CompressedTable ctt holds the "compressed" data table, consisting of
  * rows of input (independent) variables, and a single output
  * (dependent) variable. Scoring is performed by evaluating the
  * combo tree for each input row, and comparing the evaluation results
@@ -375,7 +375,7 @@ private:
  */
 struct ctruth_table_bscore : public bscore_ctable_base
 {
-	ctruth_table_bscore(const CTable &ctt)
+	ctruth_table_bscore(const CompressedTable &ctt)
 			: bscore_ctable_base(ctt)
 	{
 		_size = _wrk_ctable.size();
@@ -415,7 +415,7 @@ protected:
  * any hints as to when a given predicate is correct or not.  Use the
  * enum_graded_bascore instead; see there for further explanation.
  *
- * The CTable ctt holds the "compressed" data table, consisting of
+ * The CompressedTable ctt holds the "compressed" data table, consisting of
  * rows of input (independent) variables, and a single output
  * (dependent) variable. Scoring is performed by evaluating the
  * combo tree for each input row, and comparing the evaluation results
@@ -429,7 +429,7 @@ protected:
  */
 struct enum_table_bscore : public bscore_base
 {
-	enum_table_bscore(const CTable &ctt) : _ctable(ctt)
+	enum_table_bscore(const CompressedTable &ctt) : _ctable(ctt)
 	{ _size = _ctable.size(); }
 
 	behavioral_score operator()(const combo_tree &tr) const;
@@ -442,7 +442,7 @@ struct enum_table_bscore : public bscore_base
 	virtual score_t min_improv() const;
 
 protected:
-	CTable _ctable;
+	CompressedTable _ctable;
 };
 
 /**
@@ -467,7 +467,7 @@ protected:
  */
 struct enum_filter_bscore : public enum_table_bscore
 {
-	enum_filter_bscore(const CTable &ctt)
+	enum_filter_bscore(const CompressedTable &ctt)
 			: enum_table_bscore(ctt), punish(1.0)
 	{}
 
@@ -511,7 +511,7 @@ struct enum_filter_bscore : public enum_table_bscore
  */
 struct enum_graded_bscore : public enum_table_bscore
 {
-	enum_graded_bscore(const CTable &ctt)
+	enum_graded_bscore(const CompressedTable &ctt)
 			: enum_table_bscore(ctt), grading(0.9)
 	{}
 
@@ -538,7 +538,7 @@ protected:
  */
 struct enum_effective_bscore : public enum_graded_bscore
 {
-	enum_effective_bscore(const CTable &ctt)
+	enum_effective_bscore(const CompressedTable &ctt)
 			: enum_graded_bscore(ctt), _ctable_usize(ctt.uncompressed_size())
 	{ _size = _ctable_usize; }
 
@@ -584,7 +584,7 @@ struct interesting_predicate_bscore : public bscore_base
 					boost::accumulators::tag::weighted_skewness
 			>, contin_t> accumulator_t;
 
-	interesting_predicate_bscore(const CTable &ctable,
+	interesting_predicate_bscore(const CompressedTable &ctable,
 	                             weight_t kld_weight = 1.0,
 	                             weight_t skewness_weight = 1.0,
 	                             weight_t stdU_weight = 1.0,
@@ -613,7 +613,7 @@ protected:
 	counter_t _counter; // counter of the unconditioned distribution
 	pdf_t _pdf;     // pdf of the unconditioned distribution
 	mutable KLDS<contin_t> _klds; /// @todo dangerous: not thread safe!!!
-	CTable _ctable;
+	CompressedTable _ctable;
 	contin_t _skewness;   // skewness of the unconditioned distribution
 
 	// weights of the various features

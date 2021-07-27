@@ -33,7 +33,7 @@ namespace opencog
 namespace moses
 {
 
-using combo::CTable;
+using combo::CompressedTable;
 using combo::count_t;
 using combo::multi_type_seq;
 using combo::type_node;
@@ -109,7 +109,7 @@ using combo::type_node;
  */
 struct precision_bscore : public bscore_ctable_time_dispersion
 {
-	precision_bscore(const CTable &_ctable,
+	precision_bscore(const CompressedTable &_ctable,
 	                 float activation_pressure = 1.0f,
 	                 float min_activation = 0.5f,
 	                 float max_activation = 1.0f,
@@ -201,7 +201,7 @@ private:
 
 	// function to calculate the total weight of the observations
 	// associated to an input vector
-	score_t sum_outputs(const CTable::counter_t &) const;
+	score_t sum_outputs(const CompressedTable::counter_t &) const;
 
 	behavioral_score exact_selection(const scored_combo_tree_set &) const;
 
@@ -214,7 +214,7 @@ private:
  */
 struct precision_conj_bscore : public bscore_base
 {
-	precision_conj_bscore(const CTable &_ctable, float hardness,
+	precision_conj_bscore(const CompressedTable &_ctable, float hardness,
 	                      bool positive = true);
 
 	behavioral_score operator()(const combo_tree& tr) const;
@@ -231,7 +231,7 @@ struct precision_conj_bscore : public bscore_base
 	virtual void set_complexity_coef(unsigned alphabet_size, float stddev);
 
 protected:
-	const CTable &ctable;
+	const CompressedTable &ctable;
 
 	size_t ctable_usize;   // uncompressed size of ctable
 
@@ -241,7 +241,7 @@ protected:
 private:
 	// function to calculate the total weight of the observations
 	// associated to an input vector
-	std::function<score_t(const CTable::counter_t &)> sum_outputs;
+	std::function<score_t(const CompressedTable::counter_t &)> sum_outputs;
 };
 
 } // ~namespace moses

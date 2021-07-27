@@ -34,7 +34,7 @@ namespace opencog
 namespace moses
 {
 
-using combo::CTable;
+using combo::CompressedTable;
 using combo::count_t;
 
 /**
@@ -52,7 +52,7 @@ using combo::count_t;
  */
 struct select_bscore : public bscore_ctable_base
 {
-	select_bscore(const CTable &ctable,
+	select_bscore(const CompressedTable &ctable,
 	              double lower_percentile = 0.8f,
 	              double upper_percentile = 0.9f,
 	              double hardness = 1.0f,

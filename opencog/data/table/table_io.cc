@@ -1227,9 +1227,9 @@ istream& istreamDenseTable(istream& in, Table& tab,
 
 // ==================================================================
 
-// Parse a CTable row
+// Parse a CompressedTable row
 // TODO: implement timestamp support
-CTable::value_type parseCTableRow(const type_tree& tt, const std::string& row_str)
+CompressedTable::value_type parseCompressedTableRow(const type_tree& tt, const std::string& row_str)
 {
     // split the string between input and output
     unsigned end_outputs_pos = row_str.find("}");
@@ -1244,9 +1244,9 @@ CTable::value_type parseCTableRow(const type_tree& tt, const std::string& row_st
     from_tokens_visitor ftv(tns);
     multi_type_seq input_values = ftv(input_seq);
 
-    // convert the outputs string into CTable::counter_t
+    // convert the outputs string into CompressedTable::counter_t
     vector<string> output_pair_seq = tokenizeRow<string>(outputs);
-    CTable::counter_t counter;
+    CompressedTable::counter_t counter;
     for (const string& pair_str : output_pair_seq) {
         unsigned sep_pos = pair_str.find(":");
         string key_str = pair_str.substr(0, sep_pos),
@@ -1256,11 +1256,11 @@ CTable::value_type parseCTableRow(const type_tree& tt, const std::string& row_st
         count_t count = atof(value_str.c_str());
         counter[TimedValue(v)] = count;
     }
-    return CTable::value_type(input_values, counter);
+    return CompressedTable::value_type(input_values, counter);
 }
 
 // WARNING: this implementation only supports boolean ctable!!!!
-std::istream& istreamCTable(std::istream& in, CTable& ctable)
+std::istream& istreamCompressedTable(std::istream& in, CompressedTable& ctable)
 {
     ////////////////
     // set header //
@@ -1288,7 +1288,7 @@ std::istream& istreamCTable(std::istream& in, CTable& ctable)
     }
     // parse each line and fill the ctable
     for (const string& line : lines)
-        ctable.insert(parseCTableRow(ctable.get_signature(), line));
+        ctable.insert(parseCompressedTableRow(ctable.get_signature(), line));
 
     return in;
 }
@@ -1307,12 +1307,12 @@ Table loadTable(const std::string& file_name,
     return res;
 }
 
-CTable loadCTable(const string& file_name)
+CompressedTable loadCompressedTable(const string& file_name)
 {
-    CTable ctable;
+    CompressedTable ctable;
     OC_ASSERT(!file_name.empty(), "No filename specified!");
     ifstream in(file_name.c_str());
-    istreamCTable(in, ctable);
+    istreamCompressedTable(in, ctable);
     return ctable;
 }
 
@@ -1328,14 +1328,14 @@ void saveTable(const string& file_name, const Table& table)
 }
 
 // ===========================================================
-// ostream CTables
+// ostream CompressedTables
 
-ostream& ostreamCTableHeader(ostream& out, const CTable& ct)
+ostream& ostreamCompressedTableHeader(ostream& out, const CompressedTable& ct)
 {
     return ostreamln_container(out, ct.get_labels(), ",");
 }
 
-ostream& ostreamCTableRow(ostream& out, const CTable::value_type& ctv)
+ostream& ostreamCompressedTableRow(ostream& out, const CompressedTable::value_type& ctv)
 {
     to_strings_visitor tsv;
     auto ats = boost::apply_visitor(tsv);
@@ -1356,24 +1356,24 @@ ostream& ostreamCTableRow(ostream& out, const CTable::value_type& ctv)
     return ostreamln_container(out, ats(ctv.first.get_variant()), ",");
 }
 
-ostream& ostreamCTable(ostream& out, const CTable& ct)
+ostream& ostreamCompressedTable(ostream& out, const CompressedTable& ct)
 {
     // print header
-    ostreamCTableHeader(out, ct);
+    ostreamCompressedTableHeader(out, ct);
     // print data
     for (const auto& v : ct)
-        ostreamCTableRow(out, v);
+        ostreamCompressedTableRow(out, v);
 
     return out;
 }
 
-ostream& ostreamCTableTimeHeader(ostream& out, const CTableTime& ctt)
+ostream& ostreamCompressedTableTimeHeader(ostream& out, const CompressedTableTime& ctt)
 {
     out << "timestamp,output" << endl;
     return out;
 }
 
-ostream& ostreamCTableTimeRow(ostream& out, const CTableTime::value_type& tio)
+ostream& ostreamCompressedTableTimeRow(ostream& out, const CompressedTableTime::value_type& tio)
 {
     out << tio.first << ",{";
     for (auto it = tio.second.cbegin(); it != tio.second.cend();) {
@@ -1386,14 +1386,14 @@ ostream& ostreamCTableTimeRow(ostream& out, const CTableTime::value_type& tio)
     return out;
 }
 
-ostream& ostreamCTableTime(ostream& out, const CTableTime& ctt)
+ostream& ostreamCompressedTableTime(ostream& out, const CompressedTableTime& ctt)
 {
     // print header
-    ostreamCTableTimeHeader(out, ctt);
+    ostreamCompressedTableTimeHeader(out, ctt);
 
     // print data by time
     for (const auto& tio : ctt)
-        ostreamCTableTimeRow(out, tio);
+        ostreamCompressedTableTimeRow(out, tio);
 
     return out;
 }
@@ -1433,9 +1433,9 @@ ostream& operator<<(ostream& out, const complete_truth_table& tt)
     return ostream_container(out, tt);
 }
 
-ostream& operator<<(ostream& out, const CTable& ct)
+ostream& operator<<(ostream& out, const CompressedTable& ct)
 {
-    return ostreamCTable(out, ct);
+    return ostreamCompressedTable(out, ct);
 }
 
 } // ~namespaces combo
@@ -1461,7 +1461,7 @@ std::string oc_to_string(const combo::Table& table, const std::string& indent)
     return ss.str();
 }
 
-std::string oc_to_string(const combo::CTable& ct, const std::string& indent)
+std::string oc_to_string(const combo::CompressedTable& ct, const std::string& indent)
 {
     std::stringstream ss;
     ss << ct;

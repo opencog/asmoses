@@ -326,7 +326,7 @@ void metapopulation::ss_tanimoto_stats(const combo_tree_seq& trs,
     // Compute all weighted activations for all combo tree. Grouped by
     // input rows and/or timestamps.
     std::vector<std::vector<float>> weighted_activations(trs.size());
-    std::vector<CTable> weighted_activations_grouped_by_timestamps(trs.size());
+    std::vector<CompressedTable> weighted_activations_grouped_by_timestamps(trs.size());
 
     for (const auto& io_row : _cscorer.get_ctable()) {
         const auto& irow = io_row.first;
@@ -341,9 +341,9 @@ void metapopulation::ss_tanimoto_stats(const combo_tree_seq& trs,
             weighted_activations[i].push_back(weight);
 
             // Fill weighted activations grouped by timestamps
-            for (const CTable::counter_t::value_type& tcv : orow) {
-                CTable& ctable = weighted_activations_grouped_by_timestamps[i];
-                CTable::key_type dummy_input;
+            for (const CompressedTable::counter_t::value_type& tcv : orow) {
+                CompressedTable& ctable = weighted_activations_grouped_by_timestamps[i];
+                CompressedTable::key_type dummy_input;
                 TimedValue timed_result({result, tcv.first.timestamp});
                 ctable[dummy_input][timed_result] += tcv.second;
             }
@@ -351,16 +351,16 @@ void metapopulation::ss_tanimoto_stats(const combo_tree_seq& trs,
     }
 
 #ifdef DOESNT_COMPILE
-    // Log the CTable associated with the evaluations, to see the
+    // Log the CompressedTable associated with the evaluations, to see the
     // patterns of activations grouped by timestamps
     if (logger().isFineEnabled()) {
         for (unsigned i = 0;
              i < weighted_activations_grouped_by_timestamps.size();
              ++i) {
-            const CTable& ctable = weighted_activations_grouped_by_timestamps[i];
+            const CompressedTable& ctable = weighted_activations_grouped_by_timestamps[i];
             const combo_tree& tr = trs[i];
-            ostreamCTableTime(logger().fine()
-                              << "CTable (grouped by time) of tree "
+            ostreamCompressedTableTime(logger().fine()
+                              << "CompressedTable (grouped by time) of tree "
                               << tr << ":" << std::endl,
                               ctable.ordered_by_time());
         }

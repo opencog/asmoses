@@ -357,7 +357,7 @@ OTable::OTable(const combo_tree &tr, const ITable &itable, const string &ol)
 	type = get_type_node(get_type_tree((*this)[0]));
 }
 
-OTable::OTable(const combo_tree &tr, const CTable &ctable, const string &ol)
+OTable::OTable(const combo_tree &tr, const CompressedTable &ctable, const string &ol)
 		: label(ol)
 {
 	arity_set as = get_argument_abs_idx_set(tr);
@@ -513,13 +513,13 @@ vector<string> Table::get_input_labels() const
 }
 // -------------------------------------------------------
 
-CTable Table::compressed(const std::string weight_col) const
+CompressedTable Table::compressed(const std::string weight_col) const
 {
 	logger().debug("Compress the dataset, current size is %d", itable.size());
 
 	// If no weight column, then its straight-forward
 	if (weight_col.empty()) {
-		CTable res(otable.get_label(), itable.get_labels(), get_signature());
+		CompressedTable res(otable.get_label(), itable.get_labels(), get_signature());
 
 		ITable::const_iterator in_it = itable.begin();
 		OTable::const_iterator out_it = otable.begin();
@@ -539,7 +539,7 @@ CTable Table::compressed(const std::string weight_col) const
 		ITable trimmed(itable);
 		trimmed.delete_column(weight_col);
 
-		CTable res(otable.get_label(), trimmed.get_labels(), get_signature());
+		CompressedTable res(otable.get_label(), trimmed.get_labels(), get_signature());
 
 		size_t widx = itable.get_column_offset(weight_col);
 		ITable::const_iterator w_it = itable.begin();
@@ -638,32 +638,32 @@ vertex TimedCounter::mode() const
 	return untimedCounter().mode();
 }
 
-////////////
-// CTable //
-////////////
+/////////////////////
+// CompressedTable //
+/////////////////////
 
-CTable::CTable(const std::string &_olabel)
+CompressedTable::CompressedTable(const std::string &_olabel)
 		: olabel(_olabel)
 {}
 
-CTable::CTable(const string_seq &labs, const type_tree &tt)
+CompressedTable::CompressedTable(const string_seq &labs, const type_tree &tt)
 		: tsig(tt), olabel(labs[0]), ilabels(labs)
 {
 	ilabels.erase(ilabels.begin());
 }
 
-CTable::CTable(const std::string &_olabel, const string_seq &_ilabels,
+CompressedTable::CompressedTable(const std::string &_olabel, const string_seq &_ilabels,
                const type_tree &tt)
 		: tsig(tt), olabel(_olabel), ilabels(_ilabels)
 {}
 
 
-void CTable::remove_rows(const set<unsigned> &idxs)
+void CompressedTable::remove_rows(const set<unsigned> &idxs)
 {
 	// iterator of the set of row indexes to remove
 	auto idx_it = idxs.begin();
 
-	// iterator index of the CTable from the perspective of an
+	// iterator index of the CompressedTable from the perspective of an
 	// uncompressed table
 	unsigned i = 0;
 
@@ -719,13 +719,13 @@ void CTable::remove_rows(const set<unsigned> &idxs)
 	}
 }
 
-void CTable::remove_rows_at_times(const set<TTable::value_type> &timestamps)
+void CompressedTable::remove_rows_at_times(const set<TTable::value_type> &timestamps)
 {
 	for (const TTable::value_type &timestamp : timestamps)
 		remove_rows_at_time(timestamp);
 }
 
-void CTable::remove_rows_at_time(const TTable::value_type &timestamp)
+void CompressedTable::remove_rows_at_time(const TTable::value_type &timestamp)
 {
 	for (auto row_it = begin(); row_it != end();) {
 		auto &outputs = row_it->second;
@@ -747,10 +747,10 @@ void CTable::remove_rows_at_time(const TTable::value_type &timestamp)
 	}
 }
 
-set<TTable::value_type> CTable::get_timestamps() const
+set<TTable::value_type> CompressedTable::get_timestamps() const
 {
 	set<TTable::value_type> res;
-	for (const CTable::value_type &row : *this)
+	for (const CompressedTable::value_type &row : *this)
 		for (const auto &vtc : row.second)
 			if (vtc.first.timestamp != boost::gregorian::date())
 				res.insert(vtc.first.timestamp);
@@ -758,41 +758,41 @@ set<TTable::value_type> CTable::get_timestamps() const
 	return res;
 }
 
-void CTable::set_labels(const vector<string> &labels)
+void CompressedTable::set_labels(const vector<string> &labels)
 {
 	olabel = labels.front();
 	ilabels.clear();
 	ilabels.insert(ilabels.begin(), labels.begin() + 1, labels.end());
 }
 
-vector<string> CTable::get_labels() const
+vector<string> CompressedTable::get_labels() const
 {
 	vector<string> labels = ilabels;
 	labels.insert(labels.begin(), olabel);
 	return labels;
 }
 
-const string &CTable::get_output_label() const
+const string &CompressedTable::get_output_label() const
 {
 	return olabel;
 }
 
-const string_seq &CTable::get_input_labels() const
+const string_seq &CompressedTable::get_input_labels() const
 {
 	return ilabels;
 }
 
-void CTable::set_signature(const type_tree &tt)
+void CompressedTable::set_signature(const type_tree &tt)
 {
 	tsig = tt;
 }
 
-const type_tree &CTable::get_signature() const
+const type_tree &CompressedTable::get_signature() const
 {
 	return tsig;
 }
 
-count_t CTable::uncompressed_size() const
+count_t CompressedTable::uncompressed_size() const
 {
 	count_t res = 0.0;
 	for (const value_type &v : *this) {
@@ -801,16 +801,16 @@ count_t CTable::uncompressed_size() const
 	return res;
 }
 
-type_node CTable::get_output_type() const
+type_node CompressedTable::get_output_type() const
 {
 	return get_type_node(get_signature_output(tsig));
 }
 
-CTableTime CTable::ordered_by_time() const
+CompressedTableTime CompressedTable::ordered_by_time() const
 {
 	// Turn the input to timestamped output map into timetamp to
 	// output map
-	CTableTime res;
+	CompressedTableTime res;
 	for (const auto &v : *this)
 		for (const auto &tcv : v.second)
 			res[tcv.first.timestamp] +=
@@ -818,7 +818,7 @@ CTableTime CTable::ordered_by_time() const
 	return res;
 }
 
-void CTable::balance()
+void CompressedTable::balance()
 {
 	type_node otype = get_output_type();
 	if (otype == id::boolean_type or otype == id::enum_type) {
@@ -846,13 +846,13 @@ void CTable::balance()
 			for (auto tvc : iorow.second)
 				tvc.second *= (usize / n) / class_count[tvc.first.value];
 	} else {
-		logger().warn() << "CTable::balance() - "
+		logger().warn() << "CompressedTable::balance() - "
 		                << "cannot balance non discrete output type "
 		                << otype;
 	}
 }
 
-vertex_seq CTable::get_input_col_data(int offset) const
+vertex_seq CompressedTable::get_input_col_data(int offset) const
 {
 	vertex_seq col;
 
@@ -984,7 +984,7 @@ void subsampleTable(float ratio, Table &table)
 	subsampleTable(ratio * table.size(), table.itable, table.otable, table.ttable);
 }
 
-void subsampleCTable(float ratio, CTable &ctable)
+void subsampleCompressedTable(float ratio, CompressedTable &ctable)
 {
 	OC_ASSERT(0.0 <= ratio and ratio <= 1.0,
 	          "Ratio must be in [0.0, 1.0], but is %f", ratio);

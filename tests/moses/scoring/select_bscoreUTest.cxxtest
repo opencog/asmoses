@@ -47,7 +47,7 @@ public:
 	{
 
 		Table t = loadTable(utest_dir + "dataset.csv", target_feature);
-		CTable ct = t.compressed();
+		CompressedTable ct = t.compressed();
 		select_bscore s_bscore(ct);
 
 		combo::combo_tree tr = combo::str2combo_tree("+($1 $2)", {});

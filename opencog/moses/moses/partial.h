@@ -41,7 +41,7 @@ using namespace reduct;
 class partial_solver
 {
     public:
-        partial_solver(const CTable &ctable,
+        partial_solver(const CompressedTable &ctable,
                        const combo_tree_seq& exemplars,
                        const rule& reduct,
                        const optim_parameters& opt_params,
@@ -98,7 +98,7 @@ class partial_solver
         void effective(combo_tree::iterator,
                        unsigned& good_count,  // return value
                        unsigned& fail_count); //return value
-        void trim_table(CTable&,
+        void trim_table(CompressedTable&,
                         const combo_tree::iterator,
                         unsigned& deleted,   // return value
                         unsigned& total);    // return value
@@ -109,8 +109,8 @@ class partial_solver
 
         // Copy, more or less, our arguments, so that moses
         // can be called with these values.
-        CTable _ctable;
-        const CTable& _orig_ctable;
+        CompressedTable _ctable;
+        const CompressedTable& _orig_ctable;
         const type_tree& _table_type_signature;
         combo_tree_seq _exemplars;
         combo_tree _leader;

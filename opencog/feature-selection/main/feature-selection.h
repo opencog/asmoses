@@ -159,13 +159,13 @@ struct iscorer_cache : public iscorer_base
 template<typename FeatureSet>
 struct fs_scorer : public std::unary_function<FeatureSet, double>
 {
-    fs_scorer(const CTable& ctable,
+    fs_scorer(const CompressedTable& ctable,
               const feature_selection_parameters& fs_params)
         : _ptr_mi_scorer(nullptr), _ptr_pre_scorer(nullptr)
     {
         if (fs_params.scorer == mi) { // mutual information
             _ptr_mi_scorer =
-                new MICScorerCTable<FeatureSet>(ctable, fs_params.mi_confi);
+                new MICScorerCompressedTable<FeatureSet>(ctable, fs_params.mi_confi);
         } else if (fs_params.scorer == pre) { // precision (see
             // moses/moses/scoring/scoring.h)
             _ptr_pre_scorer =
@@ -195,24 +195,24 @@ struct fs_scorer : public std::unary_function<FeatureSet, double>
         }
     }
 protected:
-    MICScorerCTable<FeatureSet>* _ptr_mi_scorer;
+    MICScorerCompressedTable<FeatureSet>* _ptr_mi_scorer;
     pre_scorer<FeatureSet>* _ptr_pre_scorer;
 };
 
 /**
  * Select a population of feature sets
  */
-feature_set_pop select_feature_sets(const CTable& ctable,
+feature_set_pop select_feature_sets(const CompressedTable& ctable,
                                     const feature_selection_parameters& fs_params);
 
 /**
  * Select the features according to the method described in fs_params.
  */
-feature_set select_features(const CTable& ctable,
+feature_set select_features(const CompressedTable& ctable,
                             const feature_selection_parameters& fs_params);
 
 /**
- * Like above but using Table instead of CTable
+ * Like above but using Table instead of CompressedTable
  */
 feature_set select_features(const Table& table,
                             const feature_selection_parameters& fs_params);

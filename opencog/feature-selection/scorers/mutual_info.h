@@ -46,7 +46,7 @@ template<typename FeatureSet>
 struct MutualInformation : public std::unary_function<FeatureSet, double>
 {
 
-    MutualInformation(const CTable& ctable)
+    MutualInformation(const CompressedTable& ctable)
         : _ctable(ctable) {}
 
     double operator()(const FeatureSet& features) const
@@ -55,7 +55,7 @@ struct MutualInformation : public std::unary_function<FeatureSet, double>
     }
 
 protected:
-    const CTable& _ctable;
+    const CompressedTable& _ctable;
 };
 
 /**
@@ -102,14 +102,14 @@ struct MICScorer : public std::unary_function<FeatureSet, double>
     double _confi; //  confidence intensity
 };
 
-/// like above but using CTable instead of input and output table
+/// like above but using CompressedTable instead of input and output table
 template<typename FeatureSet>
-struct MICScorerCTable : public fs_scorer_base<FeatureSet>
+struct MICScorerCompressedTable : public fs_scorer_base<FeatureSet>
 {
     typedef fs_scorer_base<FeatureSet> super;
 
     // ctor
-    MICScorerCTable(const CTable& ctable, double confi = 100)
+    MICScorerCompressedTable(const CompressedTable& ctable, double confi = 100)
         : super(ctable, confi) {}
 
     /**
@@ -122,7 +122,7 @@ struct MICScorerCTable : public fs_scorer_base<FeatureSet>
         double MI = mutualInformation(super::_ctable, fs);
         // double confidence = usize / (usize + confi*fs.size());
         double confidence = super::confidence(fs.size());
-        logger().fine("MICScorerCTable MI = %g, confidence = %g",
+        logger().fine("MICScorerCompressedTable MI = %g, confidence = %g",
                       MI, confidence);
         return MI * confidence;
     }

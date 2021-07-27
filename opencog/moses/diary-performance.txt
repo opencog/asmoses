@@ -3970,7 +3970,7 @@ coupled with the fact that adding more cores results in a pathetic
 speedup indicates that performance is memory-bus bound.
 
 I am guessing that if feature-selection re-arranged the columns of  the
-CTable according to some feature-selection score, that locality of
+CompressedTable according to some feature-selection score, that locality of
 reference would improve during scoring, and so evaluation time would
 speed up.  
  

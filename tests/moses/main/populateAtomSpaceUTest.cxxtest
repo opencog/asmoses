@@ -86,7 +86,7 @@ public:
 	void test_populate_compressed() {
 		AtomSpace as;
 		string input_file = populateAtomSpaceUTest_dir + "dataset.ctable";
-		CTable ct = loadCTable(input_file);
+		CompressedTable ct = loadCompressedTable(input_file);
 		populate(&as, ct);
 		const string_seq labels = ct.get_input_labels();
 

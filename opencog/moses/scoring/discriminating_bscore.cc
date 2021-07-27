@@ -52,37 +52,37 @@ using namespace boost::accumulators;
 // discriminator //
 ///////////////////
 
-discriminator::discriminator(const CTable& ct)
+discriminator::discriminator(const CompressedTable& ct)
     : _ctable(ct)
 {
     _output_type = ct.get_output_type();
     if (_output_type == id::boolean_type) {
         // For boolean tables, sum the total number of 'T' values
         // in the output.
-        sum_true = [](const CTable::counter_t& c)->score_t
+        sum_true = [](const CompressedTable::counter_t& c)->score_t
         {
             return c.get(id::logical_true);
         };
         // For boolean tables, sum the total number of 'F' values
         // in the output.
-        sum_false = [](const CTable::counter_t& c)->score_t
+        sum_false = [](const CompressedTable::counter_t& c)->score_t
         {
             return c.get(id::logical_false);
         };
     } else if (_output_type == id::contin_type) {
         // For contin tables, we return the sum of the row values > 0
-        sum_true = [](const CTable::counter_t& c)->score_t
+        sum_true = [](const CompressedTable::counter_t& c)->score_t
         {
             score_t res = 0.0;
-            for (const CTable::counter_t::value_type& cv : c)
+            for (const CompressedTable::counter_t::value_type& cv : c)
                 res += std::max(0.0, get_contin(cv.first.value) * cv.second);
             return res;
         };
         // For contin tables, we return the sum of the row values < 0
-        sum_false = [](const CTable::counter_t& c)->score_t
+        sum_false = [](const CompressedTable::counter_t& c)->score_t
         {
             score_t res = 0.0;
-            for (const CTable::counter_t::value_type& cv : c)
+            for (const CompressedTable::counter_t::value_type& cv : c)
                 res += std::min(0.0, get_contin(cv.first.value) * cv.second);
             return res;
         };
@@ -93,7 +93,7 @@ discriminator::discriminator(const CTable& ct)
 
     _true_total = 0.0;
     _false_total = 0.0;
-    for (const CTable::value_type& vct : _ctable) {
+    for (const CompressedTable::value_type& vct : _ctable) {
         // vct.first = input vector
         // vct.second = counter of outputs
         _true_total += sum_true(vct.second);
@@ -121,7 +121,7 @@ discriminator::d_counts discriminator::count(const combo_tree& tr) const
     interpreter_visitor iv(tr);
     auto interpret_tr = boost::apply_visitor(iv);
 
-    for (const CTable::value_type& vct : _ctable) {
+    for (const CompressedTable::value_type& vct : _ctable) {
         // vct.first = input vector
         // vct.second = counter of outputs
 
@@ -172,7 +172,7 @@ discriminator::d_counts discriminator::count(const Handle& program) const
     auto link_result = LinkValueCast(_result)->value();
 
     int i = 0;
-    for (const CTable::value_type& vct : _ctable) {
+    for (const CompressedTable::value_type& vct : _ctable) {
         // vct.first = input vector
         // vct.second = counter of outputs
 
@@ -222,7 +222,7 @@ vector<discriminator::d_counts> discriminator::counts(const combo_tree& tr) cons
     interpreter_visitor iv(tr);
     auto interpret_tr = boost::apply_visitor(iv);
 
-    for (const CTable::value_type& vct : _ctable) {
+    for (const CompressedTable::value_type& vct : _ctable) {
         // vct.first = input vector
         // vct.second = counter of outputs
 
@@ -259,7 +259,7 @@ vector<discriminator::d_counts> discriminator::counts(const Handle& program) con
     auto link_result = LinkValueCast(_result)->value();
     int i = 0;
 
-    for (const CTable::value_type& vct : _ctable) {
+    for (const CompressedTable::value_type& vct : _ctable) {
         // vct.first = input vector
         // vct.second = counter of outputs
 
@@ -291,7 +291,7 @@ vector<discriminator::d_counts> discriminator::counts(const Handle& program) con
 // disciminating_bscore //
 //////////////////////////
 
-discriminating_bscore::discriminating_bscore(const CTable& ct,
+discriminating_bscore::discriminating_bscore(const CompressedTable& ct,
                                              float min_threshold,
                                              float max_threshold,
                                              float hardness)
@@ -331,7 +331,7 @@ discriminating_bscore::discriminating_bscore(const CTable& ct,
         _max_output = very_worst_score;
         _min_output = very_best_score;
         for (const auto& cr : _ctable) {
-            const CTable::counter_t& c = cr.second;
+            const CompressedTable::counter_t& c = cr.second;
             for (const auto& cv : c) {
                 score_t val = get_contin(cv.first.value);
                 _max_output = std::max(_max_output, val);
@@ -365,9 +365,9 @@ behavioral_score discriminating_bscore::best_possible_bscore() const
     typedef std::multimap<double, pos_neg_cnt> max_vary_t;
 
     max_vary_t max_vary;
-    for (CTable::const_iterator it = _ctable.begin(); it != _ctable.end(); ++it)
+    for (CompressedTable::const_iterator it = _ctable.begin(); it != _ctable.end(); ++it)
     {
-        const CTable::counter_t& c = it->second;
+        const CompressedTable::counter_t& c = it->second;
 
         double pos = sum_true(c);
         double neg = sum_false(c);
@@ -500,7 +500,7 @@ void discriminating_bscore::set_complexity_coef(score_t ratio)
 // recall_bscore //
 ///////////////////
 
-recall_bscore::recall_bscore(const CTable& ct,
+recall_bscore::recall_bscore(const CompressedTable& ct,
                   float min_precision,
                   float max_precision,
                   float hardness)
@@ -595,7 +595,7 @@ score_t recall_bscore::get_variable(score_t pos, score_t neg, unsigned cnt) cons
 // prerec_bscore //
 ///////////////////
 
-prerec_bscore::prerec_bscore(const CTable& ct,
+prerec_bscore::prerec_bscore(const CompressedTable& ct,
                   float min_recall,
                   float max_recall,
                   float hardness)
@@ -766,7 +766,7 @@ score_t prerec_bscore::get_fixed(score_t pos, score_t neg, unsigned cnt) const
 // bep_bscore //
 ////////////////
 
-bep_bscore::bep_bscore(const CTable& ct,
+bep_bscore::bep_bscore(const CompressedTable& ct,
                        float min_diff,
                        float max_diff,
                        float hardness)
@@ -858,7 +858,7 @@ score_t bep_bscore::get_fixed(score_t pos, score_t neg, unsigned cnt) const
 /// While it might be nice to hold the ratio of precision to recall
 /// within some given thresholds, this turns out to be complicated,
 /// so we are not going to bother.
-f_one_bscore::f_one_bscore(const CTable& ct)
+f_one_bscore::f_one_bscore(const CompressedTable& ct)
     : discriminating_bscore(ct, 0.5, 1.0, 1.0e-20)
 {
     // XXX Currently, this scorer does not return a true behavioral score

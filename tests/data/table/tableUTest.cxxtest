@@ -179,7 +179,7 @@ public:
 				                 "0,2012-03-23,7\n")
 	}
 
-	void test_filterCTable()
+	void test_filterCompressedTable()
 	{
 		std::cout << "\n----------------------------" << std::endl;
 		type_node_seq ts(2, id::boolean_type);
@@ -190,14 +190,14 @@ public:
 		vertex_seq o{id::logical_true, id::logical_false,};
 		OTable ot(o, "troc");
 		Table table(ot, it);
-		// Generate CTable
-		CTable ctable = table.compressed();
+		// Generate CompressedTable
+		CompressedTable ctable = table.compressed();
 		// ignore second argument trac
 		vector<arity_t> args{0};
-		CTable filtered_ctable = ctable.filtered(args);
+		CompressedTable filtered_ctable = ctable.filtered(args);
 		stringstream ss;
-		ostreamCTable(ss, filtered_ctable);
-		cout << "test_filterCTable result:" << endl;
+		ostreamCompressedTable(ss, filtered_ctable);
+		cout << "test_filterCompressedTable result:" << endl;
 		cout << ss.str();
 		TS_ASSERT_EQUALS(ss.str(),
 		                 "troc,truc\n"
@@ -205,7 +205,7 @@ public:
 				                 "{0:1},0\n");
 	}
 
-	void test_weightCTable()
+	void test_weightCompressedTable()
 	{
 		std::cout << "\n----------------------------" << std::endl;
 		string target_feature("r");
@@ -214,7 +214,7 @@ public:
 		Table tt = loadTable(tableUTest_dir + "weighted.csv",
 		                     target_feature, timestamp_feature,
 		                     ignore_features);
-		CTable ctt = tt.compressed("wgt");
+		CompressedTable ctt = tt.compressed("wgt");
 
 		cout << "weighted result:\n" << ctt << endl;
 		stringstream ss;
@@ -331,7 +331,7 @@ public:
 		Table tt = loadTable(tableUTest_dir + "dataset.csv",
 		                     target_feature, timestamps_feature);
 		set<arity_t> fs{0, 1};
-		CTable ctt = tt.compressed();
+		CompressedTable ctt = tt.compressed();
 		double mi = mutualInformation(ctt, fs);
 		cout << "mi = " << mi << endl;
 		TS_ASSERT_DELTA(0.419973, mi, 0.0001);
@@ -347,7 +347,7 @@ public:
 		std::cout << "tt = " << tt << std::endl;
 		set<arity_t> fs1{0};
 		set<arity_t> fs2{1};
-		CTable ctt = tt.compressed();
+		CompressedTable ctt = tt.compressed();
 		double mi = mutualInformationBtwSets(ctt, fs1, fs2);
 		cout << "mi = " << mi << endl;
 		TS_ASSERT_DELTA(0.3219, mi, 0.0001);
@@ -380,10 +380,10 @@ public:
 		}
 	}
 
-	void test_loadCTable()
+	void test_loadCompressedTable()
 	{
 		string input_file = tableUTest_dir + "dataset.ctable";
-		CTable ct = loadCTable(input_file);
+		CompressedTable ct = loadCompressedTable(input_file);
 
 		stringstream ss;
 		ss << ct;
@@ -496,7 +496,7 @@ public:
 	void test_get_input_col_data()
 	{
 		string input_file = tableUTest_dir + "dataset.ctable";
-		CTable ct = loadCTable(input_file);
+		CompressedTable ct = loadCompressedTable(input_file);
 
 		vertex_seq first_col = ct.get_input_col_data(0);
 

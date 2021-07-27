@@ -31,7 +31,7 @@ using namespace std;
 typedef combo_tree::sibling_iterator sib_it;
 typedef combo_tree::iterator pre_it;
 
-partial_solver::partial_solver(const CTable &ctable,
+partial_solver::partial_solver(const CompressedTable &ctable,
                                const combo_tree_seq& exemplars,
                                const rule& reduct,
                                const optim_parameters& opt_params,
@@ -204,10 +204,10 @@ void partial_solver::effective(combo_tree::iterator pred,
     // Count how many items the first predicate mis-identifies.
     interpreter_visitor iv(predicate);
     auto interpret_predicate = boost::apply_visitor(iv);
-    CTable::iterator cend = _ctable.end();
-    for (CTable::iterator cit = _ctable.begin(); cit != cend; ++cit) {
+    CompressedTable::iterator cend = _ctable.end();
+    for (CompressedTable::iterator cit = _ctable.begin(); cit != cend; ++cit) {
         vertex pr = interpret_predicate(cit->first.get_variant());
-        const CTable::counter_t& c = cit->second;
+        const CompressedTable::counter_t& c = cit->second;
         total_count += c.total_count();
         if (pr == id::logical_true) {
             unsigned num_right = c.get(consequent);
@@ -225,7 +225,7 @@ void partial_solver::effective(combo_tree::iterator pred,
 
 
 /// Remove all rows from the table that satisfy the predicate.
-void partial_solver::trim_table(CTable& taby,
+void partial_solver::trim_table(CompressedTable& taby,
                                 const combo_tree::iterator predicate,
                                 unsigned& deleted,   // return value
                                 unsigned& total)    // return value
@@ -233,9 +233,9 @@ void partial_solver::trim_table(CTable& taby,
 {
     interpreter_visitor iv(predicate);
     auto interpret_predicate = boost::apply_visitor(iv);
-    for (CTable::iterator cit = taby.begin(); cit != taby.end(); ) {
+    for (CompressedTable::iterator cit = taby.begin(); cit != taby.end(); ) {
         vertex pr = interpret_predicate(cit->first.get_variant());
-        const CTable::counter_t& c = cit->second;
+        const CompressedTable::counter_t& c = cit->second;
         unsigned tc = c.total_count();
         total += tc;
 

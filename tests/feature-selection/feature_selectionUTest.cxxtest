@@ -233,7 +233,7 @@ private:
     void test_incremental_selection(unsigned n_jobs) {
         setting_omp(n_jobs);
 
-        CTable ctable = big_table.compressed();
+        CompressedTable ctable = big_table.compressed();
         FeatureScorer fs(ctable);
         set<arity_t> features(counting_iterator<arity_t>(0),
                               counting_iterator<arity_t>(big_table.get_arity()));
@@ -249,7 +249,7 @@ private:
     void test_redundant_features_small_table(unsigned n_jobs) {
         setting_omp(n_jobs);
 
-        CTable ctable = small_table.compressed();
+        CompressedTable ctable = small_table.compressed();
         FeatureScorer fs(ctable);
 
         {
@@ -269,7 +269,7 @@ private:
     void test_redundant_features_small_table_swap_f2_f3(unsigned n_jobs) {
         setting_omp(n_jobs);
 
-        CTable ctable = small_table_swap_f2_f3.compressed();
+        CompressedTable ctable = small_table_swap_f2_f3.compressed();
         FeatureScorer fs(ctable);
 
         {
@@ -289,7 +289,7 @@ private:
     void test_redundant_features_big_table(unsigned n_jobs) {
         setting_omp(n_jobs);
 
-        CTable ctable = big_table.compressed();
+        CompressedTable ctable = big_table.compressed();
         FeatureScorer fs(ctable);
         set<arity_t> features{3, 4, 10, 17};
         set<arity_t> redundant = redundant_features(features, fs, 0.001);

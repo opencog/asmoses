@@ -207,7 +207,7 @@ void bscore_base::update_weights(const std::vector<double> &rew)
 // bscore_ctable_base //
 ////////////////////////
 
-bscore_ctable_base::bscore_ctable_base(const CTable &ctable)
+bscore_ctable_base::bscore_ctable_base(const CompressedTable &ctable)
 		: _orig_ctable(ctable), _wrk_ctable(_orig_ctable),
 		  _all_rows_wrk_ctable(_wrk_ctable),
 		  _ctable_usize(_orig_ctable.uncompressed_size())
@@ -221,8 +221,8 @@ void bscore_ctable_base::recompute_weight() const
 	// Sum of all of the weights in the working table.
 	// Note that these weights can be fractional!
 	_ctable_weight = 0.0;
-	for (const CTable::value_type &vct : _wrk_ctable) {
-		const CTable::counter_t &cnt = vct.second;
+	for (const CompressedTable::value_type &vct : _wrk_ctable) {
+		const CompressedTable::counter_t &cnt = vct.second;
 
 		_ctable_weight += cnt.total_count();
 	}
@@ -237,7 +237,7 @@ void bscore_ctable_base::ignore_cols(const std::set<arity_t> &idxs) const
 
 	if (logger().is_debug_enabled()) {
 		std::stringstream ss;
-		ss << "Compress CTable for optimization by ignoring features: ";
+		ss << "Compress CompressedTable for optimization by ignoring features: ";
 		ostream_container(ss, idxs, ",");
 		logger().debug(ss.str());
 	}
@@ -254,18 +254,18 @@ void bscore_ctable_base::ignore_cols(const std::set<arity_t> &idxs) const
 	// for debugging, keep that around till we fix best_possible_bscore
 	// fully_filtered_ctable = _orig_ctable.filtered(permitted_idxs);
 
-	logger().debug("Original CTable size = %u", _orig_ctable.size());
-	logger().debug("Working CTable size = %u", _wrk_ctable.size());
+	logger().debug("Original CompressedTable size = %u", _orig_ctable.size());
+	logger().debug("Working CompressedTable size = %u", _wrk_ctable.size());
 
 	if (logger().is_fine_enabled()) {
 		std::stringstream ss;
 		ss << "Contents of _wrk_ctable =" << std::endl;
-		ostreamCTable(ss, _wrk_ctable);
+		ostreamCompressedTable(ss, _wrk_ctable);
 		logger().fine(ss.str());
 		// for debugging, keep that around till we fix best_possible_bscore
 		//     std::stringstream ss2;
 		//     ss2 << "fully_filtered_ctable =" << std::endl;
-		//     ostreamCTable(ss2, fully_filtered_ctable);
+		//     ostreamCompressedTable(ss2, fully_filtered_ctable);
 		//     logger().fine(ss2.str());
 	}
 
@@ -330,7 +330,7 @@ unsigned bscore_ctable_base::get_ctable_usize() const
 	return _ctable_usize;
 }
 
-const CTable &bscore_ctable_base::get_ctable() const
+const CompressedTable &bscore_ctable_base::get_ctable() const
 {
 	return _orig_ctable;
 }

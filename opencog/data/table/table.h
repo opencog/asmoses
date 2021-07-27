@@ -453,7 +453,7 @@ struct interpreter_visitor : public boost::static_visitor<vertex>
 
 /**
  * multi_type_seq is a variant of sequences of primitive combo types,
- * vertex and tree. That way the Table, ITable or CTable can store
+ * vertex and tree. That way the Table, ITable or CompressedTable can store
  * primitive inputs without the boost.variant overhead for each
  * entry. combo_tree_seq is also present to store combo_trees as
  * inputs instead of vertex (or primitive types) to have inputs of
@@ -662,16 +662,16 @@ struct TimedCounter : public Counter<TimedValue, count_t>
 };
 
 /**
- * Like CTable (defined below) but the keys are timestamps.
+ * Like CompressedTable (defined below) but the keys are timestamps.
  *
  * Inputs are currently not supported.
  *
  * For the moment it is a mere typedef, but it will probably have to
  * be turned into a class eventually.
  */
-typedef std::map<TTable::value_type, Counter<vertex, count_t>> CTableTime;
+typedef std::map<TTable::value_type, Counter<vertex, count_t>> CompressedTableTime;
 
-/// CTable is a "compressed" table.  Compression is done by removing
+/// CompressedTable is a "compressed" table.  Compression is done by removing
 /// duplicated inputs, and the output column is replaced by a counter
 /// of the duplicated outputs.  That is, the output column is of the
 /// form {(v1,t1):c1, {(v2,t2):c2, ...} where c1 is the number of
@@ -698,11 +698,11 @@ typedef std::map<TTable::value_type, Counter<vertex, count_t>> CTableTime;
 ///   {0:1,1:2},1,0
 ///   {0:1},1,1
 ///
-/// Most scoring functions work on CTable, as it avoids re-evaluating a
+/// Most scoring functions work on CompressedTable, as it avoids re-evaluating a
 /// combo program on duplicated inputs.
 //
-class CTable : public std::map<multi_type_seq, TimedCounter>
-	// , public boost::equality_comparable<CTable>
+class CompressedTable : public std::map<multi_type_seq, TimedCounter>
+	// , public boost::equality_comparable<CompressedTable>
 {
 public:
 	typedef multi_type_seq key_type;
@@ -714,13 +714,13 @@ public:
 
 	// Definition is delayed until after Table, as it uses Table.
 	template<typename Func>
-	CTable(const Func &func, arity_t arity, int nsamples = -1);
+	CompressedTable(const Func &func, arity_t arity, int nsamples = -1);
 
-	CTable(const std::string &_olabel = "output");
+	CompressedTable(const std::string &_olabel = "output");
 
-	CTable(const string_seq &labs, const type_tree &tt);
+	CompressedTable(const string_seq &labs, const type_tree &tt);
 
-	CTable(const std::string &_olabel, const string_seq &_ilabels,
+	CompressedTable(const std::string &_olabel, const string_seq &_ilabels,
 	       const type_tree &tt);
 
 	arity_t get_arity() const
@@ -739,11 +739,11 @@ public:
 	/// either a set or a vector (or an iterable, in general) that
 	/// holds the index numbers of the columns to be kept.
 	///
-	/// Note that the filtered CTable can typically be further
+	/// Note that the filtered CompressedTable can typically be further
 	/// compressed, and so the compressed size will be smaller. This
 	/// can be exploted to obtain performance gains.
 	template<typename F>
-	CTable filtered(const F &filter) const
+	CompressedTable filtered(const F &filter) const
 	{
 		typedef type_tree::iterator pre_it;
 		typedef type_tree::sibling_iterator sib_it;
@@ -768,15 +768,15 @@ public:
 		fsig.replace(fsig.append_child(head_dst), head_src.last_child());
 
 		// Filter the labels
-		CTable res(olabel, seq_filtered(ilabels, filter), fsig);
+		CompressedTable res(olabel, seq_filtered(ilabels, filter), fsig);
 
 		// Filter the content
 		seq_filtered_visitor <F> sfv(filter);
 		auto asfv = boost::apply_visitor(sfv);
-		for (const CTable::value_type& v : *this)
+		for (const CompressedTable::value_type& v : *this)
 			res[asfv(v.first.get_variant())] += v.second;
 
-		// return the filtered CTable
+		// return the filtered CompressedTable
 		return res;
 	}
 
@@ -810,21 +810,21 @@ public:
 	 * column index numbers. The specified columns are kept; all others
 	 * are blanked.
 	 *
-	 *  Note that the filtered CTable can typically be further
+	 *  Note that the filtered CompressedTable can typically be further
 	 *  compressed, and so the compressed size will be smaller. This
 	 *  can be exploted to obtain performance gains.
 	 */
 	template<typename F>
-	CTable filtered_preserve_idxs(const F &filter) const
+	CompressedTable filtered_preserve_idxs(const F &filter) const
 	{
-		// Set new CTable
-		CTable res(olabel, ilabels, tsig);
+		// Set new CompressedTable
+		CompressedTable res(olabel, ilabels, tsig);
 
 		// Filter the rows (replace filtered out values by id::null_vertex)
-		for (const CTable::value_type& v : *this)
+		for (const CompressedTable::value_type& v : *this)
 			res[filtered_preserve_idxs(filter, v.first)] += v.second;
 
-		// return the filtered CTable
+		// return the filtered CompressedTable
 		return res;
 	}
 
@@ -868,7 +868,7 @@ public:
 
 	type_node get_output_type() const;
 
-	CTableTime ordered_by_time() const;
+	CompressedTableTime ordered_by_time() const;
 
 	// Balance the ctable, so that, in case the output type is
 	// discrete, all class counts are equal, but the uncompressed size
@@ -876,7 +876,7 @@ public:
 	void balance();
 
 	// hmmm, it doesn't compile, I give up
-	// bool operator==(const CTable& r) const {
+	// bool operator==(const CompressedTable& r) const {
 	//     return super::operator==(static_cast<super>(r))
 	//         && get_labels() == r.get_labels()
 	//         && get_signature() == r.get_signature();
@@ -1052,8 +1052,8 @@ public:
 	       const std::string &ol = default_output_label);
 
 	/// Construct the OTable by evaluating the combo tree @tr for each
-	/// row in the input CTable.
-	OTable(const combo_tree &tr, const CTable &ctable,
+	/// row in the input CompressedTable.
+	OTable(const combo_tree &tr, const CompressedTable &ctable,
 	       const std::string &ol = default_output_label);
 
 	template<typename Func>
@@ -1192,7 +1192,7 @@ struct Table : public boost::equality_comparable<Table>
 	/// Return the corresponding compressed table.
 	/// The named column, if not empty, will be used to provide weights
 	/// for each row, during compression.
-	CTable compressed(const std::string= "") const;
+	CompressedTable compressed(const std::string= "") const;
 
 	ITable itable;
 	OTable otable;
@@ -1209,7 +1209,7 @@ struct Table : public boost::equality_comparable<Table>
 };
 
 template<typename Func>
-CTable::CTable(const Func &func, arity_t arity, int nsamples)
+CompressedTable::CompressedTable(const Func &func, arity_t arity, int nsamples)
 {
 	Table table(func, arity, nsamples);
 	*this = table.compressed();
@@ -1222,7 +1222,7 @@ CTable::CTable(const Func &func, arity_t arity, int nsamples)
 // Randomly remove rows so that the new size is ratio * table size
 void subsampleTable(float ratio, Table &table);
 
-void subsampleCTable(float ratio, CTable &ctable);
+void subsampleCompressedTable(float ratio, CompressedTable &ctable);
 
 ////////////////////////
 // Mutual Information //
@@ -1255,7 +1255,7 @@ double OTEntropy(const OTable &ot);
  *   H(...) are the joint entropies.
  *
  * @note currently, only works for boolean output columns.
- * to add enum support, cut-n-paste from CTable code below.
+ * to add enum support, cut-n-paste from CompressedTable code below.
  *
  * XXX TODO -- this also should probably support the weight column,
  * since not all rows are important, and the ones that are not
@@ -1264,7 +1264,7 @@ double OTEntropy(const OTable &ot);
 template<typename FeatureSet>
 double mutualInformation(const ITable &it, const OTable &ot, const FeatureSet &fs)
 {
-	// XXX TODO to implement enum support, cut-n-paste from CTable
+	// XXX TODO to implement enum support, cut-n-paste from CompressedTable
 	// mutual info code, below.
 	type_node otype = ot.get_type();
 	OC_ASSERT(id::boolean_type == otype, "Only boolean types supported");
@@ -1320,7 +1320,7 @@ double mutualInformation(const Table &table, const FeatureSet &fs)
  * correct, we really should use Fisher information. @todo this).
  */
 template<typename FeatureSet>
-double mutualInformation(const CTable &ctable, const FeatureSet &fs)
+double mutualInformation(const CompressedTable &ctable, const FeatureSet &fs)
 {
 	// declare useful visitors
 	seq_filtered_visitor <FeatureSet> sfv(fs);
@@ -1352,7 +1352,7 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
 		// (X1, ..., Xn) occurs. This count is kept in "ic". Likewise, the
 		// "ioc" counter counts how often the vertex_seq (Y, X1, ..., Xn)
 		// occurs.
-		typedef Counter<CTable::key_type, count_t> VSCounter;
+		typedef Counter<CompressedTable::key_type, count_t> VSCounter;
 		VSCounter ic;  // for H(X1, ..., Xn)
 		VSCounter ioc; // for H(Y, X1, ..., Xn)
 		double total = 0.0;
@@ -1381,7 +1381,7 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
 
 		for (const auto &row : ctable) {
 			// Create the filtered row.
-			CTable::key_type vec = asf(row.first.get_variant());
+			CompressedTable::key_type vec = asf(row.first.get_variant());
 
 			// update ic (input counter)
 			count_t row_total = row.second.total_count();
@@ -1442,7 +1442,7 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
 		}
 		std::multimap<contin_t, contin_t> sorted_list;
 		for (const auto &row : ctable) {
-			CTable::key_type vec = asf(row.first.get_variant());
+			CompressedTable::key_type vec = asf(row.first.get_variant());
 			contin_t x = vec.get_at<contin_t>(0);
 
 			// for each contin counted in the row,
@@ -1496,7 +1496,7 @@ double mutualInformation(const CTable &ctable, const FeatureSet &fs)
  * discrete types are supported.
  */
 template<typename FeatureSet>
-double mutualInformationBtwSets(const CTable &ctable,
+double mutualInformationBtwSets(const CompressedTable &ctable,
                                 const FeatureSet &fs_l,
                                 const FeatureSet &fs_r)
 {
@@ -1537,7 +1537,7 @@ double mutualInformationBtwSets(const CTable &ctable,
 		// MI(fs_l, fs_r) = H(L1, ..., Lm) + H(R1, ..., Rl) - H(U1, ..., Un)
 		//
 		// To do this, we need to count how often those events occurs.
-		typedef Counter<CTable::key_type, count_t> VSCounter;
+		typedef Counter<CompressedTable::key_type, count_t> VSCounter;
 		VSCounter
 				uc, // for H(U1, ..., Un)
 				lc, // for H(L1, ..., Lm)
@@ -1546,7 +1546,7 @@ double mutualInformationBtwSets(const CTable &ctable,
 
 		for (const auto &row : ctable) {
 			// Create the filtered row.
-			CTable::key_type vec_u = asf_u(row.first.get_variant()),
+			CompressedTable::key_type vec_u = asf_u(row.first.get_variant()),
 					vec_l = asf_l(row.first.get_variant()),
 					vec_r = asf_r(row.first.get_variant());
 			count_t row_total = row.second.total_count();
