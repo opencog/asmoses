@@ -10,5 +10,5 @@ INSTALL(FILES
 
 	DESTINATION
 
-	"include/opencog/${PROJECT_NAME}/comboreduct/ant_combo_vocabulary"
+	"include/opencog/${PROJECT_NAME}/combo/ant_combo_vocabulary"
 )

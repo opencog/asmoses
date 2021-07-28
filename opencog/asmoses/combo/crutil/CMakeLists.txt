@@ -22,5 +22,5 @@ INSTALL(FILES
 
 	DESTINATION
 
-	"include/opencog/${PROJECT_NAME}/comboreduct/crutil"
+	"include/opencog/${PROJECT_NAME}/combo/crutil"
 )

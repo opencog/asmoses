@@ -5,5 +5,5 @@ INSTALL(FILES
 
 	DESTINATION
 
-	"include/opencog/${PROJECT_NAME}/comboreduct/interpreter"
+	"include/opencog/${PROJECT_NAME}/combo/interpreter"
 )

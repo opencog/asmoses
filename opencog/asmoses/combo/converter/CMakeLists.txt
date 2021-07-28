@@ -5,5 +5,5 @@ INSTALL(FILES
 
     DESTINATION
 
-    "include/opencog/${PROJECT_NAME}/comboreduct/converter"
+    "include/opencog/${PROJECT_NAME}/combo/converter"
 )

@@ -6,5 +6,5 @@ INSTALL(FILES
 
 	DESTINATION
 
-	"include/opencog/${PROJECT_NAME}/comboreduct/type_checker"
+	"include/opencog/${PROJECT_NAME}/combo/type_checker"
 )
