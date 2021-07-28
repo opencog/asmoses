@@ -30,16 +30,16 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/oc_omp.h>
 
-#include <opencog/combo/combo/vertex.h>
-#include <opencog/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
+#include <opencog/asmoses/combo/combo/vertex.h>
+#include <opencog/asmoses/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
 #include <opencog/reduct/reduct/reduct.h>
 
-#include <opencog/moses/deme/deme_expander.h>
-#include <opencog/moses/metapopulation/metapopulation.h>
-#include <opencog/moses/moses/moses_main.h>
-#include <opencog/moses/optimization/optimization.h>
-#include <opencog/moses/scoring/scoring_base.h>
-#include <opencog/moses/scoring/behave_cscore.h>
+#include <opencog/asmoses/moses/deme/deme_expander.h>
+#include <opencog/asmoses/moses/metapopulation/metapopulation.h>
+#include <opencog/asmoses/moses/moses/moses_main.h>
+#include <opencog/asmoses/moses/optimization/optimization.h>
+#include <opencog/asmoses/moses/scoring/scoring_base.h>
+#include <opencog/asmoses/moses/scoring/behave_cscore.h>
 #include "ant_scoring.h"
 
 
