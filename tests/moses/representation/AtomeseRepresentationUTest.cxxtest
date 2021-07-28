@@ -26,8 +26,8 @@
 #include <sstream>
 #include <string>
 
-#include <opencog/moses/representation/AtomeseRepresentation.h>
-#include <opencog/reduct/reduct/reduct.h>
+#include <opencog/asmoses/moses/representation/AtomeseRepresentation.h>
+#include <opencog/asmoses/reduct/reduct/reduct.h>
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/Logger.h>
 #include <opencog/atoms/execution/Instantiator.h>
@@ -35,12 +35,12 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/core/TypeNode.h>
 
-#include <opencog/moses/representation/KnobLink.h>
+#include <opencog/asmoses/moses/representation/KnobLink.h>
 
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/guile/SchemeEval.h>
-#include <opencog/combo/type_checker/type_tree.h>
-#include <opencog/moses/eda/initialization.h>
+#include <opencog/asmoses/combo/type_checker/type_tree.h>
+#include <opencog/asmoses/moses/eda/initialization.h>
 #include <opencog/util/mt19937ar.h>
 
 using namespace opencog;

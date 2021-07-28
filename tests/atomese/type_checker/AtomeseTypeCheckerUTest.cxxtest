@@ -21,12 +21,12 @@
  */
 
 
-#include <opencog/combo/type_checker/type_tree.h>
+#include <opencog/asmoses/combo/type_checker/type_tree.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Handle.h>
-#include <opencog/atomese/atom_types/atom_types.h>
-#include <opencog/combo/converter/combo_atomese.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
+#include <opencog/asmoses/combo/converter/combo_atomese.h>
 
 using namespace opencog;
 using namespace opencog::combo;

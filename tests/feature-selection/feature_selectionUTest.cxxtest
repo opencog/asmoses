@@ -25,12 +25,12 @@
 #include <cxxtest/TestSuite.h>
 
 #include <opencog/util/oc_omp.h>
-#include <opencog/data/table/table.h>
-#include <opencog/data/table/table_io.h>
+#include <opencog/asmoses/data/table/table.h>
+#include <opencog/asmoses/data/table/table_io.h>
 
-#include <opencog/feature-selection/algo/incremental.h>
-#include <opencog/feature-selection/main/feature-selection.h>
-#include <opencog/moses/optimization/optimization.h>  // for opencog::hc
+#include <opencog/asmoses/feature-selection/algo/incremental.h>
+#include <opencog/asmoses/feature-selection/main/feature-selection.h>
+#include <opencog/asmoses/moses/optimization/optimization.h>  // for opencog::hc
 
 #define FEATURE_SELECTION_TEST_DIR PROJECT_SOURCE_DIR"/tests/feature-selection/"
 

@@ -1,10 +1,10 @@
 #include <cxxtest/TestSuite.h>
-#include <opencog/moses/main/populate_atomspace.h>
-#include <opencog/data/table/table.h>
-#include <opencog/data/table/table_io.h>
+#include <opencog/asmoses/moses/main/populate_atomspace.h>
+#include <opencog/asmoses/data/table/table.h>
+#include <opencog/asmoses/data/table/table_io.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/value/Value.h>
-#include <opencog/utils/valueUtils.h>
+#include <opencog/asmoses/utils/valueUtils.h>
 
 using namespace opencog;
 using namespace moses;

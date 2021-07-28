@@ -8,7 +8,7 @@ if sys.version_info >= (3, 0):
 print ("The package search path is:" '\n'.join(sys.path))
 
 from nose.tools import *
-from opencog.pyasmoses import moses, MosesException, MosesCandidate
+from opencog.asmoses.pyasmoses import moses, MosesException, MosesCandidate
 
 
 class TestMOSES(unittest.TestCase):

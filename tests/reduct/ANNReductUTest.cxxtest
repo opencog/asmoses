@@ -20,8 +20,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <opencog/reduct/reduct/reduct.h>
-#include <opencog/combo/combo/combo.h>
+#include <opencog/asmoses/reduct/reduct/reduct.h>
+#include <opencog/asmoses/combo/combo/combo.h>
 
 using namespace std;
 using namespace opencog::combo;

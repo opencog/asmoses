@@ -1,12 +1,12 @@
 #include <opencog/util/tree.h>
 #include <opencog/util/mt19937ar.h>
 
-#include <opencog/combo/combo/vertex.h>
-#include <opencog/combo/interpreter/eval.h>
-#include <opencog/data/table/table.h>
-#include <opencog/data/table/table_io.h>
-#include <opencog/reduct/reduct/reduct.h>
-#include <opencog/combo/combo/combo.h>
+#include <opencog/asmoses/combo/combo/vertex.h>
+#include <opencog/asmoses/combo/interpreter/eval.h>
+#include <opencog/asmoses/data/table/table.h>
+#include <opencog/asmoses/data/table/table_io.h>
+#include <opencog/asmoses/reduct/reduct/reduct.h>
+#include <opencog/asmoses/combo/combo/combo.h>
 
 // This is almost, but not quite, a verbatim copy of the FullReductUTest
 // test case.  Two big differences: we start by calling bool_reduce and

@@ -23,9 +23,9 @@
 
 #include <cxxtest/TestSuite.h>
 #include <opencog/util/Logger.h>
-#include <opencog/moses/main/moses_exec.h>
-#include <opencog/data/table/table.h>
-#include <opencog/data/table/table_io.h>
+#include <opencog/asmoses/moses/main/moses_exec.h>
+#include <opencog/asmoses/data/table/table.h>
+#include <opencog/asmoses/data/table/table_io.h>
 #include "moses-framework.h"
 
 using namespace opencog::moses;

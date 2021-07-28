@@ -21,7 +21,7 @@
  */
 
 #include <cxxtest/TestSuite.h>
-#include <opencog/moses/scoring/bscores.h>
+#include <opencog/asmoses/moses/scoring/bscores.h>
 #include <examples/example-progs/scoring_iterators.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/util/Logger.h>
