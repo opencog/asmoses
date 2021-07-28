@@ -43,7 +43,7 @@ ENDMACRO(CYTHON_ADD_MODULE_PYX)
 # https://github.com/OpenKinect/libfreenect/blob/master/wrappers/python/CMakeLists.txt
 IF (HAVE_MOSES)
 	CYTHON_ADD_MODULE_PYX(pyasmoses
-		# "<opencog/moses/main/moses_exec.h>"
+		# "<opencog/asmoses/moses/main/moses_exec.h>"
 	)
 
 	# opencog.pyasmoses Python bindings

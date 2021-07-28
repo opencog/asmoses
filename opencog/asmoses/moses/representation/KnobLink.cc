@@ -24,7 +24,7 @@
 #include <opencog/atoms/core/NumberNode.h>
 #include <opencog/atoms/core/CondLink.h>
 #include <opencog/atoms/core/TypeNode.h>
-#include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 #include <opencog/util/oc_assert.h>
 
 #include "KnobLink.h"

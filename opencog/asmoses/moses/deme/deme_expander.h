@@ -31,7 +31,7 @@
 #include "opencog/asmoses/moses/scoring/behave_cscore.h"
 #include "opencog/asmoses/moses/metapopulation/metapop_params.h"
 #include "deme_params.h"
-#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/asmoses/atomese/atomese_utils/constants.h>
 
 namespace opencog {
 namespace moses {

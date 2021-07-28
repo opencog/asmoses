@@ -30,7 +30,7 @@
 #include <opencog/asmoses/combo/combo/vertex.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
-#include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 
 namespace opencog
 {

@@ -24,7 +24,7 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/asmoses/combo/combo/combo.h>
 #include <opencog/atoms/core/NumberNode.h>
-#include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 #include <opencog/asmoses/utils/valueUtils.h>
 
 #include "complexity.h"

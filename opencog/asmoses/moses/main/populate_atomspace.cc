@@ -1,7 +1,7 @@
 #include <opencog/asmoses/data/table/table.h>
 #include <opencog/asmoses/data/table/table_io.h>
 #include <opencog/atomspace/AtomSpace.h>
-#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/asmoses/atomese/atomese_utils/constants.h>
 #include <opencog/atoms/base/Link.h>
 #include "populate_atomspace.h"
 

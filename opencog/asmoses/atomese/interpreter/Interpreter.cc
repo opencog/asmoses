@@ -28,7 +28,7 @@
 #include <opencog/atoms/base/Link.h>
 #include <opencog/asmoses/atomese/interpreter/logical_interpreter.h>
 #include <opencog/asmoses/atomese/interpreter/condlink_interpreter.h>
-#include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 
 #include "Interpreter.h"
 

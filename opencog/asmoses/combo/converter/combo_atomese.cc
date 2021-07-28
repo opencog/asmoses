@@ -28,7 +28,7 @@
 #include <opencog/asmoses/combo/combo/vertex.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/asmoses/combo/combo/iostream_combo.h>
-#include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 #include <opencog/asmoses/utils/valueUtils.h>
 #include "combo_atomese.h"
 

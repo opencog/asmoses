@@ -5,7 +5,7 @@
 #include <opencog/atoms/base/Link.h>
 #include <opencog/asmoses/combo/combo/vertex.h>
 
-#include "opencog/atomese/atomese_utils/constants.h"
+#include <opencog/asmoses/atomese/atomese_utils/constants.h>
 
 namespace opencog
 {

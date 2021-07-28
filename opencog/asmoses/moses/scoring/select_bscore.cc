@@ -24,9 +24,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/asmoses/atomese/interpreter/Interpreter.h>
 #include <opencog/asmoses/utils/valueUtils.h>
-#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/asmoses/atomese/atomese_utils/constants.h>
 
 #include "select_bscore.h"
 

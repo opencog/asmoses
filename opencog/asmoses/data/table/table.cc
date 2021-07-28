@@ -38,12 +38,12 @@
 #include <opencog/util/Logger.h>
 #include <opencog/util/lazy_random_selector.h>
 #include <opencog/atoms/base/Link.h>
-#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/asmoses/atomese/interpreter/Interpreter.h>
 
 #include <opencog/asmoses/combo/combo/ann.h>
 #include <opencog/asmoses/combo/combo/simple_nn.h>
 #include <opencog/asmoses/combo/combo/convert_ann_combo.h>
-#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/asmoses/atomese/atomese_utils/constants.h>
 #include <opencog/asmoses/utils/valueUtils.h>
 
 #include "table.h"

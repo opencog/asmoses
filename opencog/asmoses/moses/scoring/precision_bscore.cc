@@ -27,13 +27,13 @@
 #include <boost/range/adaptor/reversed.hpp>
 
 #include <opencog/asmoses/data/table/table_io.h>
-#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/asmoses/atomese/interpreter/Interpreter.h>
 #include <opencog/asmoses/utils/valueUtils.h>
-#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/asmoses/atomese/atomese_utils/constants.h>
 
-#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/asmoses/atomese/interpreter/Interpreter.h>
 #include <opencog/asmoses/utils/valueUtils.h>
-#include <opencog/atomese/atomese_utils/constants.h>
+#include <opencog/asmoses/atomese/atomese_utils/constants.h>
 
 #include "precision_bscore.h"
 

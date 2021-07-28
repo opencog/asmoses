@@ -25,7 +25,7 @@
 
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Link.h>
-#include <opencog/atomese/atom_types/atom_types.h>
+#include <opencog/asmoses/atomese/atom_types/atom_types.h>
 #include <opencog/asmoses/combo/type_checker/type_tree_def.h>
 #include <opencog/asmoses/combo/type_checker/type_tree.h>
 #include <opencog/atoms/base/Node.h>

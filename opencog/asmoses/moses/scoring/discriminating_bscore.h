@@ -26,7 +26,7 @@
 #define _DISCRIMINATING_BSCORE_H
 
 #include <opencog/asmoses/data/table/table.h>
-#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/asmoses/atomese/interpreter/Interpreter.h>
 #include <boost/phoenix/core/argument.hpp>
 #include "scoring_base.h"
 #include "opencog/atomese/atomese_utils/constants.h"
