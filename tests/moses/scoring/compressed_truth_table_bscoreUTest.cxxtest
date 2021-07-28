@@ -1,4 +1,4 @@
-/** ctruth_table_bscoreUTest.cxxtest ---
+/** compressed_truth_table_bscoreUTest.cxxtest ---
  *
  * Copyright (C) 2019 OpenCog Foundation
  *
@@ -38,14 +38,14 @@ using namespace std;
 
 const string utest_dir=string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
 
-class ctruth_table_bscoreUTest : public CxxTest::TestSuite
+class compressed_truth_table_bscoreUTest : public CxxTest::TestSuite
 {
 public:
-	void test_ctruth_table_bscore(void)
+	void test_compressed_truth_table_bscore(void)
 	{
 		string input_file = utest_dir + "dataset.ctable";
 		CompressedTable ct = loadCompressedTable(input_file);
-		ctruth_table_bscore ct_bscore(ct);
+		compressed_truth_table_bscore ct_bscore(ct);
 
 		Handle f1 = createNode(PREDICATE_NODE, "f1");
 		Handle f2 = createNode(PREDICATE_NODE, "f2");

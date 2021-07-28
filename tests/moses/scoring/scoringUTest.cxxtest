@@ -56,11 +56,11 @@ public:
         TS_ASSERT_EQUALS(bsc.front(), precision + act_penalty);
     }
 
-	void test_ctruth_table_bscore_best_possible_bscore() {
+	void test_compressed_truth_table_bscore_best_possible_bscore() {
         Table tt = loadTable(scoringUTest_dir + "precision.csv", target_feature);
         CompressedTable ct = tt.compressed();
 
-        ctruth_table_bscore ctbsc(ct);
+        compressed_truth_table_bscore ctbsc(ct);
 
         behavioral_score bsc = ctbsc.best_possible_bscore(),
             expected_bsc = {0.0, 0.0, -2.0};

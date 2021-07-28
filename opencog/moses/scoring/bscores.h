@@ -95,7 +95,7 @@ protected:
  * weighted so that each class overall has the same weight in the
  * scoring function.
  *
- * The Occam's razor function is identical to ctruth_table_bscore
+ * The Occam's razor function is identical to compressed_truth_table_bscore
  */
 struct discretize_contin_bscore : public bscore_base
 {
@@ -262,7 +262,7 @@ private:
 };
 
 /**
- * ctruth_table_bscore -- compute behavioral score for boolean truth tables.
+ * compressed_truth_table_bscore -- compute behavioral score for boolean truth tables.
  *
  * The CompressedTable ctt holds the "compressed" data table, consisting of
  * rows of input (independent) variables, and a single output
@@ -373,9 +373,9 @@ private:
  * Note that, since p<1, that log(p) is negative, and so the second
  * term is negative.  It can be understood as a "complexity penalty".
  */
-struct ctruth_table_bscore : public bscore_ctable_base
+struct compressed_truth_table_bscore : public bscore_ctable_base
 {
-	ctruth_table_bscore(const CompressedTable &ctt)
+	compressed_truth_table_bscore(const CompressedTable &ctt)
 			: bscore_ctable_base(ctt)
 	{
 		_size = _wrk_ctable.size();
@@ -404,7 +404,7 @@ protected:
 };
 
 /**
- * Like ctruth_table_bscore, but for enums.
+ * Like compressed_truth_table_bscore, but for enums.
  * That is, the output column of the table is assumed to be enum-valued.
  * The only "tricky" thing here is to correctly count the number of
  * wrong answers in a compressed enum table.
