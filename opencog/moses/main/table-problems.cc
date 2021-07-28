@@ -488,7 +488,7 @@ void it_table_problem::run(option_base* ob)
 	common_type_setup(pms);
 	// --------- Boolean output type
 	if (output_type == id::boolean_type) {
-		REGRESSION(ctable, ctruth_table_bscore, (ctable));
+		REGRESSION(ctable, compressed_truth_table_bscore, (ctable));
 	}
 
 	// --------- Enumerated output type

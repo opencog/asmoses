@@ -43,7 +43,7 @@ using combo::TTable;
 
 /// Used to define the complexity scoring component given that p is the
 /// probability of having an observation being wrong (see the comment
-/// regarding ctruth_table_bscore for more information).
+/// regarding compressed_truth_table_bscore for more information).
 ///
 /// Note: this returns NEGATIVE values.
 score_t discrete_complexity_coef(unsigned alphabet_size, double p);

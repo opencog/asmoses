@@ -330,7 +330,7 @@ int main(int argc, char** argv)
         bscore = new f_one_bscore(table.compressed());
     }
     else if ("it" == ecp.problem) {
-        bscore = new ctruth_table_bscore(table.compressed());
+        bscore = new compressed_truth_table_bscore(table.compressed());
     }
     else if ("pre" == ecp.problem) {
         bscore = new precision_bscore(table.compressed(),

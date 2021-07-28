@@ -330,11 +330,11 @@ behavioral_score discretize_contin_bscore::operator()(const Handle &handle) cons
 	return bs;
 }
 
-/////////////////////////
-// ctruth_table_bscore //
-/////////////////////////
+///////////////////////////////////
+// compressed_truth_table_bscore //
+///////////////////////////////////
 
-behavioral_score ctruth_table_bscore::operator()(const combo_tree &tr) const
+behavioral_score compressed_truth_table_bscore::operator()(const combo_tree &tr) const
 {
 	behavioral_score bs;
 
@@ -357,7 +357,7 @@ behavioral_score ctruth_table_bscore::operator()(const combo_tree &tr) const
 	return bs;
 }
 
-behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
+behavioral_score compressed_truth_table_bscore::operator()(const Handle &handle) const
 {
 	behavioral_score bs;
 	atomese::Interpreter interpreter(Constants::compressed_value_key, _size);
@@ -378,7 +378,7 @@ behavioral_score ctruth_table_bscore::operator()(const Handle &handle) const
 /// a boolean value.  All of the trees in the ensmble get a weighted vote,
 /// that vote is totalled to get the prediction of the ensemble, and then
 /// compared to the desired output.
-behavioral_score ctruth_table_bscore::operator()(const scored_combo_tree_set &ensemble) const
+behavioral_score compressed_truth_table_bscore::operator()(const scored_combo_tree_set &ensemble) const
 {
 	size_t sz = _wrk_ctable.size();
 
@@ -425,7 +425,7 @@ behavioral_score ctruth_table_bscore::operator()(const scored_combo_tree_set &en
 	return bs;
 }
 
-void ctruth_table_bscore::set_best_possible_bscore() const
+void compressed_truth_table_bscore::set_best_possible_bscore() const
 {
 	_best_possible_score.clear();
 	transform(_wrk_ctable | map_values,
@@ -448,11 +448,11 @@ void ctruth_table_bscore::set_best_possible_bscore() const
 		                               c.get(id::logical_false)));
 	          });
 
-	logger().info() << "ctruth_table_bscore: Best possible: "
+	logger().info() << "compressed_truth_table_bscore: Best possible: "
 	                << _best_possible_score;
 }
 
-behavioral_score ctruth_table_bscore::best_possible_bscore() const
+behavioral_score compressed_truth_table_bscore::best_possible_bscore() const
 {
 	if (_return_weighted_score) {
 		// The returned best score will always be zero, because the actual
@@ -464,7 +464,7 @@ behavioral_score ctruth_table_bscore::best_possible_bscore() const
 	return _best_possible_score;
 }
 
-behavioral_score ctruth_table_bscore::worst_possible_bscore() const
+behavioral_score compressed_truth_table_bscore::worst_possible_bscore() const
 {
 	behavioral_score bs;
 	for (const CompressedTable::value_type &vct : _wrk_ctable) {
@@ -481,7 +481,7 @@ behavioral_score ctruth_table_bscore::worst_possible_bscore() const
 	return bs;
 }
 
-score_t ctruth_table_bscore::min_improv() const
+score_t compressed_truth_table_bscore::min_improv() const
 {
 	// A return value of 0.5 would be correct only if all rows had
 	// a weight of exactly 1.0.  Otherwise, we look for the row with

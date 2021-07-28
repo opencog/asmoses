@@ -192,7 +192,7 @@ void precision_bscore::set_complexity_coef(unsigned alphabet_size, float p)
 	_complexity_coef = 0.0;
 	// Both p==0.0 and p==0.5 are singularity points in the Occam's
 	// razor formula for discrete outputs (see the explanation in the
-	// comment above ctruth_table_bscore)
+	// comment above compressed_truth_table_bscore)
 	if (p > 0.0f and p < 0.5f)
 		_complexity_coef = discrete_complexity_coef(alphabet_size, p)
 		                   / _ctable_weight;   // normalized by the size of the table
@@ -796,7 +796,7 @@ void precision_conj_bscore::set_complexity_coef(unsigned alphabet_size, float p)
 	_complexity_coef = 0.0;
 	// Both p==0.0 and p==0.5 are singularity points in the Occam's
 	// razor formula for discrete outputs (see the explanation in the
-	// comment above ctruth_table_bscore)
+	// comment above compressed_truth_table_bscore)
 	if (p > 0.0f and p < 0.5f)
 		_complexity_coef = discrete_complexity_coef(alphabet_size, p)
 		                   / ctable_usize;     // normalized by the size of the table

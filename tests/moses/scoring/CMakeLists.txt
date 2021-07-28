@@ -27,8 +27,8 @@ TARGET_LINK_LIBRARIES(contin_bscoreUTest
 	${COGUTIL_LIBRARY}
 	)
 
-ADD_CXXTEST(ctruth_table_bscoreUTest)
-TARGET_LINK_LIBRARIES(ctruth_table_bscoreUTest
+ADD_CXXTEST(compressed_truth_table_bscoreUTest)
+TARGET_LINK_LIBRARIES(compressed_truth_table_bscoreUTest
 	moses
 	ascombo
 	atomese

@@ -54,7 +54,7 @@ score_t contin_complexity_coef(unsigned alphabet_size, double stdev)
 void bscore_base::set_complexity_coef(unsigned alphabet_size, float p)
 {
 	// Both p==0.0 and p==0.5 are singularities in the forumla.
-	// See the explanation in the comment above ctruth_table_bscore.
+	// See the explanation in the comment above compressed_truth_table_bscore.
 	_complexity_coef = 0.0;
 	if (p > 0.0f && p < 0.5f)
 		_complexity_coef = discrete_complexity_coef(alphabet_size, p);
