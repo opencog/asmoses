@@ -6,5 +6,5 @@ INSTALL(FILES
 
 	DESTINATION
 
-	"include/opencog/${PROJECT_NAME}/combo/table"
+	"include/opencog/${PROJECT_NAME}/data/table"
 )
