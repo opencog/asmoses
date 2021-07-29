@@ -27,10 +27,10 @@
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "opencog/asmoses/combo/combo/iostream_combo.h"
-#include "opencog/asmoses/combo/type_checker/type_tree.h"
-#include "opencog/asmoses/data/table/table.h"
-#include "opencog/asmoses/data/table/table_io.h"
+#include "../combo/iostream_combo.h"
+#include "../type_checker/type_tree.h"
+#include "../../data/table/table.h"
+#include "../../data/table/table_io.h"
 
 using namespace boost::program_options;
 using namespace boost::algorithm;

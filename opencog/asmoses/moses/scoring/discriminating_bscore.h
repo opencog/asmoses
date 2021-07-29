@@ -29,8 +29,8 @@
 #include <opencog/asmoses/atomese/interpreter/Interpreter.h>
 #include <boost/phoenix/core/argument.hpp>
 #include "scoring_base.h"
-#include "opencog/atomese/atomese_utils/constants.h"
-#include "opencog/asmoses/utils/valueUtils.h"
+#include "opencog/asmoses/atomese/atomese_utils/constants.h"
+#include "opencog/asmoses/asmoses/utils/valueUtils.h"
 namespace opencog { namespace moses {
 
 using combo::CompressedTable;
