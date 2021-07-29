@@ -2,6 +2,7 @@ ADD_SUBDIRECTORY(interpreter)
 ADD_SUBDIRECTORY(atom_types)
 ADD_SUBDIRECTORY(atomese_utils)
 ADD_SUBDIRECTORY(scm)
+ADD_SUBDIRECTORY(type_checker)
 
 ADD_LIBRARY(atomese SHARED
 		interpreter/Interpreter
