@@ -1,11 +1,11 @@
 #include "util/tree.h"
 #include "util/mt19937ar.h"
 
-#include "comboreduct/combo/vertex.h"
-#include "comboreduct/combo/type_tree.h"
-#include "comboreduct/combo/eval.h"
-#include "comboreduct/reduct/reduct.h"
-#include "comboreduct/ant_combo_vocabulary/ant_combo_vocabulary.h"
+#include "opencog/asmoses/combo/combo/vertex.h"
+#include "opencog/asmoses/combo/combo/type_tree.h"
+#include "opencog/asmoses/combo/combo/eval.h"
+#include "opencog/asmoses/reduct/reduct.h"
+#include "opencog/asmoses/combo/ant_combo_vocabulary/ant_combo_vocabulary.h"
 
 using namespace reduct;
 using namespace ant_combo;

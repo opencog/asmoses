@@ -9,6 +9,7 @@ TARGET_LINK_LIBRARIES(BooleanReductUTest
 	asreduct
 	ascombo
 	ascomboant
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -17,6 +18,7 @@ TARGET_LINK_LIBRARIES(BooleanFullUTest
 	asreduct
 	ascombo
 	ascomboant
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -25,6 +27,7 @@ TARGET_LINK_LIBRARIES(ContinReductUTest
 	asreduct
 	ascombo
 	ascomboant
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -33,6 +36,7 @@ TARGET_LINK_LIBRARIES(FullReductUTest
 	asreduct
 	ascombo
 	ascomboant
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -41,6 +45,7 @@ TARGET_LINK_LIBRARIES(MixedReductUTest
 	asreduct
 	ascombo
 	ascomboant
+	data
 	${COGUTIL_LIBRARY}
 )
 

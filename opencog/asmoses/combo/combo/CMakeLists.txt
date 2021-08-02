@@ -19,6 +19,7 @@ INSTALL(FILES
         perception.h
         procedure_call.h
         procedure_repository.h
+		similarity.h
         simple_nn.h
         vertex.h
 
