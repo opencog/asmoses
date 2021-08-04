@@ -25,6 +25,7 @@
 #include "headers.h"
 
 using boost::lexical_cast;
+using namespace boost::placeholders;
 
 // Demonstration program for the "univariate trap" optimization problem.
 // This is a standard optimization demonstraton problem: a 

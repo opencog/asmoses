@@ -32,7 +32,7 @@
 
 #include <opencog/asmoses/combo/combo/vertex.h>
 #include <opencog/asmoses/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
-#include <opencog/reduct/reduct/reduct.h>
+#include <opencog/asmoses/reduct/reduct/reduct.h>
 
 #include <opencog/asmoses/moses/deme/deme_expander.h>
 #include <opencog/asmoses/moses/metapopulation/metapopulation.h>
