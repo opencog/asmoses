@@ -160,6 +160,20 @@ public:
 		TS_ASSERT(content_eq(program, result));
 	}
 
+	void test_atomese_combo_impulse(void)
+	{
+		combo::combo_tree tr = combo::str2combo_tree("impulse($1)", {});
+
+		combo::ComboToAtomese to_atomese;
+		Handle result = to_atomese(tr);
+
+		HandleSeq out1 = {createNode(PREDICATE_NODE, "$1")};
+		Handle imp_lnk = createLink(out1, IMPULSE_LINK);
+
+		TS_ASSERT(content_eq(result, imp_lnk))
+
+	}
+
 	void test_combo_atomese_predicate1()
 	{
 		Handle p1 = createNode(PREDICATE_NODE, "$x");
@@ -236,6 +250,18 @@ public:
 		auto expected = std::make_pair(exp, std::vector<string>{});
 
 		TS_ASSERT_EQUALS(result, expected);
+	}
+
+	void test_combo_atomese_impulse(void)
+	{
+		HandleSeq seq = {createNode(PREDICATE_NODE, "$1")};
+		Handle imp_lnk = createLink(seq, IMPULSE_LINK);
+
+		combo::AtomeseToCombo to_combo;
+		auto result = to_combo(imp_lnk);
+
+		combo_tree tr = combo::str2combo_tree("impulse($1)", {});
+		TS_ASSERT_EQUALS(result.first, tr);
 	}
 
 	void test_combo_atomese()
