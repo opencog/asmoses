@@ -26,6 +26,7 @@
 #include <opencog/util/random.h>
 #include <opencog/util/empty_string.h>
 #include <opencog/asmoses/reduct/reduct/reduct.h>
+#include <boost/operators.hpp>
 #include "field_set.h"
 
 namespace opencog
@@ -40,7 +41,7 @@ namespace moses
  * provides a mechanism to run the representation with knob settings to
  * get candidate programs.
  */
-struct AtomeseRepresentation : public boost::noncopyable
+struct AtomeseRepresentation : public boost::noncopyable, boost::equality_comparable<AtomeseRepresentation>
 {
 	AtomeseRepresentation(const reduct::rule& simplify_candidate,
 	                       const reduct::rule& simplify_knob_building,
@@ -76,6 +77,10 @@ public:
 	}
 	void set_variables(HandleSeq);
 	void clean_atomese_prog(Handle&, bool reduce, bool knob_building=false);
+	bool operator==(const AtomeseRepresentation& other) const;
+	const Handle rep() const {
+		return _rep;
+	}
 
 	typedef std::multimap<field_set::disc_spec, Handle> disc_map;
 	typedef std::multimap<field_set::contin_spec, Handle> contin_map;

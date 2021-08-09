@@ -138,6 +138,10 @@ void AtomeseRepresentation::clean_atomese_prog(Handle &prog,
 	}
 }
 
+bool AtomeseRepresentation::operator==(const AtomeseRepresentation& other) const
+{
+	return this->_rep == other.rep();
+}
 std::ostream &AtomeseRepresentation::ostream_rep(std::ostream &out) const
 {
 	using std::endl;
