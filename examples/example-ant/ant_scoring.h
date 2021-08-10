@@ -27,10 +27,10 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/mt19937ar.h>
 
-#include <opencog/combo/combo/vertex.h>
-#include <opencog/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
+#include <opencog/asmoses/combo/combo/vertex.h>
+#include <opencog/asmoses/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
 
-#include <opencog/moses/scoring/scoring_base.h>
+#include <opencog/asmoses/moses/scoring/scoring_base.h>
 
 using namespace ant_combo;
 using namespace opencog::moses;

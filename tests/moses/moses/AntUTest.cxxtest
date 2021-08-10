@@ -22,14 +22,14 @@
 
 #include <cxxtest/TestSuite.h>
 
-#include <opencog/moses/moses/moses_main.h>
+#include <opencog/asmoses/moses/moses/moses_main.h>
 #include <examples/example-ant/ant_scoring.h>
-#include <opencog/moses/metapopulation/metapopulation.h>
-#include <opencog/moses/optimization/hill-climbing.h>
-#include <opencog/moses/scoring/behave_cscore.h>
-#include <opencog/reduct/reduct/reduct.h>
-#include <opencog/combo/combo/vertex.h>
-#include <opencog/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
+#include <opencog/asmoses/moses/metapopulation/metapopulation.h>
+#include <opencog/asmoses/moses/optimization/hill-climbing.h>
+#include <opencog/asmoses/moses/scoring/behave_cscore.h>
+#include <opencog/asmoses/reduct/reduct/reduct.h>
+#include <opencog/asmoses/combo/combo/vertex.h>
+#include <opencog/asmoses/combo/ant_combo_vocabulary/ant_combo_vocabulary.h>
 #include <opencog/util/Logger.h>
 #include <opencog/util/oc_omp.h>
 

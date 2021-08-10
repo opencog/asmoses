@@ -21,14 +21,14 @@
  */
 
 
-#include <opencog/combo/converter/combo_atomese.h>
-#include <opencog/combo/combo/combo.h>
+#include <opencog/asmoses/combo/converter/combo_atomese.h>
+#include <opencog/asmoses/combo/combo/combo.h>
 #include <opencog/atoms/atom_types/atom_types.h>
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/core/NumberNode.h>
-#include <opencog/atomese/type_checker/AtomeseTypeChecker.h>
+#include <opencog/asmoses/atomese/type_checker/AtomeseTypeChecker.h>
 
 
 using namespace std;

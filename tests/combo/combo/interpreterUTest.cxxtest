@@ -1,6 +1,6 @@
 #include <opencog/util/iostreamContainer.h>
-#include <opencog/combo/interpreter/interpreter.h>
-#include <opencog/combo/combo/combo.h>
+#include <opencog/asmoses/combo/interpreter/interpreter.h>
+#include <opencog/asmoses/combo/combo/combo.h>
 
 using namespace opencog;
 using namespace opencog::combo;

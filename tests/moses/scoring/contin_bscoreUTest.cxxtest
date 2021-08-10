@@ -22,13 +22,13 @@
 
 
 #include <cxxtest/TestSuite.h>
-#include <opencog/moses/scoring/bscores.h>
+#include <opencog/asmoses/moses/scoring/bscores.h>
 #include <opencog/atoms/base/Link.h>
-#include <opencog/data/table/table.h>
-#include <opencog/data/table/table_io.h>
+#include <opencog/asmoses/data/table/table.h>
+#include <opencog/asmoses/data/table/table_io.h>
 
-#include "opencog/atomese/atomese_utils/constants.h"
-#include "opencog/moses/main/populate_atomspace.h"
+#include "opencog/asmoses/atomese/atomese_utils/constants.h"
+#include "opencog/asmoses/moses/main/populate_atomspace.h"
 
 using namespace opencog;
 using namespace combo;

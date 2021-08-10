@@ -22,14 +22,14 @@
 #include <iostream>
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/Logger.h>
-#include <opencog/combo/interpreter/eval.h>
+#include <opencog/asmoses/combo/interpreter/eval.h>
 
-#include <opencog/moses/deme/deme_expander.h>
-#include <opencog/moses/metapopulation/metapopulation.h>
-#include <opencog/moses/moses/moses_main.h>
-#include <opencog/moses/representation/representation.h>
-#include <opencog/moses/optimization/optimization.h>
-#include <opencog/moses/scoring/scoring_base.h>
+#include <opencog/asmoses/moses/deme/deme_expander.h>
+#include <opencog/asmoses/moses/metapopulation/metapopulation.h>
+#include <opencog/asmoses/moses/moses/moses_main.h>
+#include <opencog/asmoses/moses/representation/representation.h>
+#include <opencog/asmoses/moses/optimization/optimization.h>
+#include <opencog/asmoses/moses/scoring/scoring_base.h>
 
 #include "pole_scoring.h"
 

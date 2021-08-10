@@ -1,11 +1,11 @@
 #include "util/mt19937ar.h"
 #include "util/tree.h"
 
-#include "comboreduct/combo/vertex.h"
-#include "comboreduct/reduct/reduct.h"
-#include "comboreduct/combo/eval.h"
-#include "comboreduct/combo/action.h"
-#include "comboreduct/reduct/action_rules.h"
+#include "opencog/asmoses/combo/combo/vertex.h"
+#include "opencog/asmoses/reduct/reduct.h"
+#include "opencog/asmoses/combo/combo/eval.h"
+#include "opencog/asmoses/combo/combo/action.h"
+#include "opencog/asmoses/reduct/action_rules.h"
 
 using namespace reduct;
 using namespace combo;

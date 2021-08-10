@@ -24,12 +24,12 @@
 
 #include "NeighborhoodGenerator.h"
 #include "ant_combo_vocabulary.h"
-#include "comboreduct/reduct/reduct.h"
-#include "comboreduct/reduct/meta_rules.h"
-#include "comboreduct/reduct/general_rules.h"
-#include "comboreduct/reduct/action_rules.h"
-#include "comboreduct/reduct/perception_rules.h"
-#include "comboreduct/reduct/logical_rules.h"
+#include <opencog/asmoses/reduct/reduct.h>
+#include <opencog/asmoses/reduct/meta_rules.h>
+#include <opencog/asmoses/reduct/general_rules.h>
+#include <opencog/asmoses/reduct/action_rules.h>
+#include <opencog/asmoses/reduct/perception_rules.h>
+#include <opencog/asmoses/reduct/logical_rules.h>
 
 #include <iostream>
 

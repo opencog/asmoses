@@ -1,5 +1,5 @@
-#include <opencog/combo/interpreter/eval.h>
-#include <opencog/combo/combo/combo.h>
+#include <opencog/asmoses/combo/interpreter/eval.h>
+#include <opencog/asmoses/combo/combo/combo.h>
 
 using namespace opencog::combo;
 using namespace std;

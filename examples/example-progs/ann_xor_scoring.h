@@ -27,9 +27,9 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/mt19937ar.h>
 
-#include <opencog/combo/combo/vertex.h>
-#include <opencog/combo/combo/simple_nn.h>
-#include <opencog/reduct/rules/ann_rules.h>
+#include <opencog/asmoses/combo/combo/vertex.h>
+#include <opencog/asmoses/combo/combo/simple_nn.h>
+#include <opencog/asmoses/reduct/rules/ann_rules.h>
 
 
 using namespace opencog;

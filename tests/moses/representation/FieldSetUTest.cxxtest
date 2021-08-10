@@ -1,7 +1,7 @@
 #include <vector>
 #include <cxxtest/TestSuite.h>
-#include <opencog/moses/representation/field_set.h>
-#include <opencog/moses/eda/initialization.h>
+#include <opencog/asmoses/moses/representation/field_set.h>
+#include <opencog/asmoses/moses/eda/initialization.h>
 #include <opencog/util/mt19937ar.h>
 
 using namespace opencog;

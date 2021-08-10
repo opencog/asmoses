@@ -30,12 +30,12 @@
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/selection.h>
 
-#include <opencog/moses/eda/initialization.h>
-#include <opencog/moses/eda/local_structure.h>
-#include <opencog/moses/eda/logging.h>
-#include <opencog/moses/eda/optimize.h>
-#include <opencog/moses/eda/replacement.h>
-#include <opencog/moses/eda/termination.h>
+#include <opencog/asmoses/moses/eda/initialization.h>
+#include <opencog/asmoses/moses/eda/local_structure.h>
+#include <opencog/asmoses/moses/eda/logging.h>
+#include <opencog/asmoses/moses/eda/optimize.h>
+#include <opencog/asmoses/moses/eda/replacement.h>
+#include <opencog/asmoses/moses/eda/termination.h>
 
 #include "edaopt.h"
 #include "scoring_functions.h"

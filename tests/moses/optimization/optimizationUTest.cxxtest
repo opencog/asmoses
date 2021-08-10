@@ -27,12 +27,12 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/mt19937ar.h>
 
-#include <opencog/moses/eda/initialization.h>
-#include <opencog/moses/scoring/scoring_base.h>
-#include <opencog/moses/moses/types.h>
-#include <opencog/moses/optimization/hill-climbing.h>
-#include <opencog/moses/optimization/optimization.h>
-#include <opencog/moses/representation/field_set.h>
+#include <opencog/asmoses/moses/eda/initialization.h>
+#include <opencog/asmoses/moses/scoring/scoring_base.h>
+#include <opencog/asmoses/moses/moses/types.h>
+#include <opencog/asmoses/moses/optimization/hill-climbing.h>
+#include <opencog/asmoses/moses/optimization/optimization.h>
+#include <opencog/asmoses/moses/representation/field_set.h>
 
 using namespace opencog;
 using namespace moses;
