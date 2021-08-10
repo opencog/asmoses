@@ -1,6 +1,6 @@
 #SET_DIRECTORY_PROPERTIES(PROPERTIES CLEAN_NO_CUSTOM true)
 OPENCOG_ADD_ATOM_TYPES(
-        atom_types.script
+		atom_types.script
 		atom_types.h
 		atom_types.definitions
 		atom_types.inheritance
@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 
 ADD_LIBRARY (reduct-types SHARED
 		atom_types
-        ReductTypes.cc
+		ReductTypes.cc
 		)
 ADD_GUILE_EXTENSION(SCM_CONFIG reduct-types "reduct_types_path")
 

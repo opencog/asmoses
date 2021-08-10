@@ -1,9 +1,9 @@
 #install header files
 INSTALL(FILES
 
-        Interpreter.h
-        logical_interpreter.h
-        condlink_interpreter.h
+		Interpreter.h
+		logical_interpreter.h
+		condlink_interpreter.h
 
 		DESTINATION
 

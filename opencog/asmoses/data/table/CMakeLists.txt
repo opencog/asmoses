@@ -1,8 +1,8 @@
 #install header files
 INSTALL(FILES
 
-        table.h
-        table_io.h
+	table.h
+	table_io.h
 
 	DESTINATION
 

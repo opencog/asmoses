@@ -1,4 +1,4 @@
 ADD_GUILE_MODULE (FILES
-        asmoses.scm
+		asmoses.scm
 	MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/asmoses"
 )

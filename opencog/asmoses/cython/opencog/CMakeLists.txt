@@ -77,5 +77,5 @@ IF (HAVE_MOSES)
 ENDIF (HAVE_MOSES)
 
 INSTALL (FILES
-        __init__.py
+	__init__.py
 	DESTINATION "${PYTHON_DEST}")

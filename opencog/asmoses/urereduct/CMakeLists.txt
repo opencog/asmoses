@@ -1,6 +1,6 @@
 ADD_GUILE_MODULE(FILES
-        reduct.scm
-        utilities.scm
+		reduct.scm
+		utilities.scm
 		MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog"
 		)
 

@@ -1,8 +1,8 @@
 #install header files
 INSTALL(FILES
 
-        flat_normal_form.h
-        reduct.h
+		flat_normal_form.h
+		reduct.h
 
 		DESTINATION
 
