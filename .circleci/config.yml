@@ -70,6 +70,9 @@ jobs:
           name: Build examples
           command: cd build && make -j2 examples
       - run:
+          name: Install ASMOSES
+          command: cd build && make install
+      - run:
           name: Build tests
           command: cd build && make -j2 tests
       - run:

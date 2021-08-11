@@ -176,7 +176,7 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			type = FALSE_LINK;
 			break;
 		case id::impulse:
-			*_parent = id::schema;
+			*_parent = id::predicate;
 			type = IMPULSE_LINK;
 			break;
 		case id::greater_than_zero:

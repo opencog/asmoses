@@ -44,7 +44,7 @@ public:
 		logger().set_print_to_stdout_flag(true);
 
 		const string UREreductUTest_rules_dir=string(PROJECT_SOURCE_DIR) + "/tests/urereduct/rules";
-		const string UREreduct_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/urereduct/rules";
+		const string UREreduct_rules_dir=string(PROJECT_SOURCE_DIR) + "/opencog/asmoses/urereduct/rules";
 
 		eval.eval(string("(add-to-load-path \"") + UREreductUTest_rules_dir + string("\")"));
 		eval.eval(string("(add-to-load-path \"") + UREreduct_rules_dir + string("\")"));

@@ -27,7 +27,7 @@
 
 #include <opencog/asmoses/reduct/reduct/reduct.h>
 #include <opencog/asmoses/combo/type_checker/type_tree.h>
-
+#include <boost/operators.hpp>
 #include "knob_mapper.h"
 
 namespace opencog { namespace moses {
@@ -44,7 +44,7 @@ combo_tree type_to_exemplar(type_node type);
 /**
  * Do the representation-building, create a field_set
  */
-struct representation : public knob_mapper, boost::noncopyable
+struct representation : public knob_mapper, boost::noncopyable, boost::equality_comparable<representation>
 {
     typedef std::set<combo::vertex> operator_set;
     typedef std::set<combo::combo_tree, size_tree_order<combo::vertex>>
@@ -105,7 +105,15 @@ struct representation : public knob_mapper, boost::noncopyable
                            combo_tree::iterator src,
                            combo_tree::iterator parent_dst,
                            combo_tree& candidate) const;
-    
+
+    /**
+     * Compare two representations for equality by comparing the exemplars
+     * @return bool
+     */
+     bool operator==(const representation& other) const {
+     	return this->_exemplar == other.exemplar();
+     }
+
     //* return _simplify_candidate
     const reduct::rule* get_simplify_candidate() const {
         return _simplify_candidate;
