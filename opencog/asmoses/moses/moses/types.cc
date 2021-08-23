@@ -294,7 +294,8 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 		+ "penalized score=" + float_re + ", "
 		+ "complexity=" + "(\\d+)" + ", "
 		+ "complexity penalty=" + float_re + ", "
-		+ "uniformity penalty=" + float_re + "\\]";
+		+ "uniformity penalty=" + float_re + ", "
+        + "inconsistency penalty=" + float_re +"\\]";
 
 	static const string demeID_re = string("( demeID: ")
 		+ "([0-9]+)(\\.([0-9]+))?(\\.SS-([0-9]+))?)?";
@@ -331,8 +332,9 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 	// Parse composite score
 	complexity_t cpx = std::stoi(sct_match[5].str());
 	score_t cpx_penalty = std::stof(sct_match[6].str()),
-		uniformity_penalty = std::stof(sct_match[7].str());
-	composite_score cs(sc, cpx, cpx_penalty, uniformity_penalty);
+		uniformity_penalty = std::stof(sct_match[7].str()),
+		inconsistency_penalty = std::stof(sct_match[8].str());
+	composite_score cs(sc, cpx, cpx_penalty, uniformity_penalty, inconsistency_penalty);
 
 	// Parse demeID
 	demeID_t demeID;

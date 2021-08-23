@@ -94,10 +94,12 @@ struct composite_score:
 	// subtraction in the comparison operator.
 	composite_score(score_t scor, complexity_t cpxy,
 	                score_t complexity_penalty_=0.0,
-	                score_t uniformity_penalty_=0.0)
+	                score_t uniformity_penalty_=0.0,
+	                score_t inconsistency_penalty_=0.0)
 		: multiply_diversity(false), score(scor), complexity(cpxy),
 		  complexity_penalty(complexity_penalty_),
-		  uniformity_penalty(uniformity_penalty_)
+		  uniformity_penalty(uniformity_penalty_),
+		  inconsistency_penalty(inconsistency_penalty_)
 	{
 		update_penalized_score();
 	}
@@ -108,6 +110,7 @@ struct composite_score:
 	score_t get_score() const { return score; }
 	complexity_t get_complexity() const { return complexity; }
 	score_t get_penalized_score() const { return penalized_score; }
+	score_t get_inconsistency_penalty() const { return inconsistency_penalty;}
 
 	// returns the composite score as a handle.
 	Handle as_handle() const {
@@ -117,6 +120,7 @@ struct composite_score:
 		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity)));
 		seq.push_back(createNode(NUMBER_NODE, std::to_string(complexity_penalty)));
 		seq.push_back(createNode(NUMBER_NODE, std::to_string(uniformity_penalty)));
+		seq.push_back(createNode(NUMBER_NODE, std::to_string(inconsistency_penalty)));
 		return createLink(seq, LIST_LINK);
 	}
 
@@ -141,9 +145,15 @@ struct composite_score:
 		uniformity_penalty = penalty;
 		update_penalized_score();
 	}
+	void set_inconsistency_penalty(score_t penalty)
+	{
+		inconsistency_penalty = penalty;
+		update_penalized_score();
+	}
+
 	score_t get_penalty() const
 	{
-		return complexity_penalty + uniformity_penalty;
+		return complexity_penalty + uniformity_penalty + inconsistency_penalty;
 	}
 
 	/// Compare penalized scores.  That is, we compare score-penalty
@@ -177,12 +187,14 @@ protected:
 	score_t complexity_penalty;
 	score_t uniformity_penalty;
 	score_t penalized_score;
-
+	score_t inconsistency_penalty;
 	/// Update penalized_score, i.e. substract the complexity and
 	/// uniformity penalty from the raw score.
+	// Add the inconsistency penalty as it is a negative value
 	void update_penalized_score()
 	{
 		penalized_score = score - complexity_penalty;
+		penalized_score = penalized_score + inconsistency_penalty;
 		if (multiply_diversity)
 			penalized_score *= uniformity_penalty;
 		else
@@ -580,6 +592,7 @@ inline std::ostream& operator<<(std::ostream& out,
 	           << ", complexity=" << ts.get_complexity()
 	           << ", complexity penalty=" << ts.get_complexity_penalty()
 	           << ", uniformity penalty=" << ts.get_uniformity_penalty()
+	           << ", inconsistency penalty=" << ts.get_inconsistency_penalty()
 	           << "]";
 }
 

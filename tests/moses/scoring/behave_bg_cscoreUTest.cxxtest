@@ -1,0 +1,163 @@
+/** behave_bg_cscoreUTest.cxxtest ---
+ *
+ * Copyright (C) 2021 SingularityNET Foundation
+ *
+ * Author: Abdulrahman Semrie <hsamireh@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+#include <opencog/asmoses/moses/scoring/behave_bg_cscore.h>
+#include <iostream>
+#include <opencog/util/Logger.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/guile/SchemeEval.h>
+#include <opencog/asmoses/combo/combo/combo.h>
+#include <opencog/asmoses/combo/combo/iostream_combo.h>
+#include <opencog/atoms/atom_types/atom_types.h>
+#include <opencog/asmoses/data/table/table.h>
+#include <opencog/asmoses/data/table/table_io.h>
+#include <opencog/asmoses/moses/scoring/bscores.h>
+#include <string>
+#include <opencog/asmoses/moses/moses/background_feature.h>
+#include <opencog/asmoses/moses/main/populate_atomspace.h>
+#include "opencog/asmoses/utils/generate_table.h"
+
+using namespace opencog;
+using namespace std;
+using namespace opencog::combo;
+using namespace opencog::atomese;
+using namespace opencog::moses;
+
+typedef compressed_truth_table_bscore table_bscore;
+
+const string utest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/scoring/";
+const string target_feature = "out";
+
+class BehaveBGCscoreUTest : public CxxTest::TestSuite
+{
+private:
+	AtomSpace _as;
+public:
+	BehaveBGCscoreUTest() {
+
+	}
+
+	~BehaveBGCscoreUTest() {
+		if (!CxxTest::TestTracker::tracker().suiteFailed())
+			std::remove(logger().get_filename().c_str());
+
+	}
+
+	void setUp();
+
+	void tearDown();
+
+	void load_scm_file(const string& path, SchemeEval& eval);
+
+	void test_atomese_program();
+
+	void test_combo_program();
+
+	void test_gen_table();
+
+};
+
+void BehaveBGCscoreUTest::setUp()
+{
+	_as.clear();
+}
+
+void BehaveBGCscoreUTest::tearDown() {}
+
+void BehaveBGCscoreUTest::load_scm_file(const string &path, SchemeEval& eval)
+{
+	eval.eval("");
+	eval.eval(string("(add-to-load-path \"") + utest_dir + string("\")"));
+	string rv = eval.eval("(use-modules (opencog))");
+	TS_ASSERT(not eval.eval_error());
+
+	rv = eval.eval(string("(load-from-path \"") + path + string("\")"));
+	cout << "Result from loading file is %s\n" << rv << endl;
+    TS_ASSERT(not eval.eval_error());
+}
+
+void BehaveBGCscoreUTest::test_atomese_program()
+{
+	Table tt = loadTable(utest_dir + "data_bg.csv", target_feature);
+	CompressedTable ctt = tt.compressed();
+	table_bscore ct_bscore(ctt);
+	Types tts = {ATTRACTION_LINK};
+	vector<string> labels = {"f1", "f2", "f3", "f4"};
+	behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels, 2.5);
+
+	SchemeEval eval(&_as);
+	load_scm_file("data.scm", eval);
+
+	Handle f1 = createNode(PREDICATE_NODE, "f1"), f2 = createNode(PREDICATE_NODE, "f2"),
+		f3 =  createNode(PREDICATE_NODE, "f3"),
+		f4 = createNode(PREDICATE_NODE, "f4"), f5 =  createNode(PREDICATE_NODE, "f5");
+
+	populate_frm_ctable(ctt, f1, f2, f3, f4, f5);
+	HandleSeq seq1 = {f2, f5};
+	Handle orLnk = createLink(seq1, OR_LINK);
+	HandleSeq seq2 = {f1, orLnk, f3, f4};
+	Handle prog1 = createLink(seq2, AND_LINK);
+
+	Handle prog2 = createLink(seq1, AND_LINK);
+
+	composite_score cscore1 = bscore.get_cscore(prog1);
+	composite_score cscore2 = bscore.get_cscore(prog2);
+
+	TS_ASSERT(-cscore2.get_inconsistency_penalty() > -cscore1.get_inconsistency_penalty());
+
+	cout << "composite score 1: " << cscore1.get_penalized_score()
+			<< " inconsistency penalty 1: " << cscore1.get_inconsistency_penalty() << endl;
+
+	cout << "composite score 2: " << cscore2.get_penalized_score()
+	                 << " inconsistency penalty 2: " << cscore2.get_inconsistency_penalty() << endl;
+}
+
+void BehaveBGCscoreUTest::test_combo_program()
+{
+    Table tt = loadTable(utest_dir + "data_bg.csv", target_feature);
+    CompressedTable ctt = tt.compressed();
+    table_bscore ct_bscore(ctt);
+    Types tts = {ATTRACTION_LINK};
+    vector<string> labels = {"f1", "f2", "f3", "f4", "f5"};
+    behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels, 2.5);
+
+    SchemeEval eval(&_as);
+    load_scm_file("data.scm", eval);
+
+    string combo_str_1 = "and($f1 or($f2 $f5) $f3 $f4)";
+    string combo_str_2 = "and($f2 $f5)";
+
+    combo_tree tr1 = str2combo_tree(combo_str_1, labels);
+    combo_tree tr2 = str2combo_tree(combo_str_2, labels);
+
+    composite_score cscore1 = bscore.get_cscore(tr1);
+    composite_score cscore2 = bscore.get_cscore(tr2);
+
+    TS_ASSERT(-cscore2.get_inconsistency_penalty() > -cscore1.get_inconsistency_penalty());
+
+    cout << "composite score 1: " << cscore1.get_penalized_score()
+         << " inconsistency penalty 1: " << cscore1.get_inconsistency_penalty() << endl;
+
+    cout << "composite score 2: " << cscore2.get_penalized_score()
+         << " inconsistency penalty 2: " << cscore2.get_inconsistency_penalty() << endl;
+}

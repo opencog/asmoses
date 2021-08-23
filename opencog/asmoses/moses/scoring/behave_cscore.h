@@ -56,17 +56,19 @@ class behave_cscore
 public:
 	behave_cscore(bscore_base &b, size_t initial_cache_size = 0);
 
+	virtual ~behave_cscore() = default;
+
 	behavioral_score get_bscore(const combo_tree &) const;
 
 	behavioral_score get_bscore(const scored_combo_tree_set &) const;
 
 	behavioral_score get_bscore(const Handle &) const;
 
-	composite_score get_cscore(const combo_tree &);
+	virtual composite_score get_cscore(const combo_tree &);
 
-	composite_score get_cscore(const scored_combo_tree_set &);
+	virtual composite_score get_cscore(const scored_combo_tree_set &);
 
-	composite_score get_cscore(const Handle &);
+	virtual composite_score get_cscore(const Handle &);
 
 	/// Returns the best score reachable for this problem. Used as
 	/// termination condition.
@@ -117,7 +119,7 @@ public:
 		return _bscorer.get_ctable();
 	}
 
-private:
+protected:
 	bscore_base &_bscorer;
 
 	// Below follows some assorted infrastructure to allow composite

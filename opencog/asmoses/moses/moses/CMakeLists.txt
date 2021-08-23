@@ -1,5 +1,6 @@
 #install header files
 INSTALL(FILES
+		background_feature.h
         complexity.h
         distributed_moses.h
         neighborhood_sampling.h

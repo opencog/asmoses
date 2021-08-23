@@ -30,4 +30,13 @@ TARGET_LINK_LIBRARIES(atomese_complexityUTest
         ascombo
         ${COGUTIL_LIBRARY}
         )
+
+ADD_CXXTEST(background_featureUTest)
+TARGET_LINK_LIBRARIES(background_featureUTest
+        moses
+        ascombo
+        ${COGUTIL_LIBRARY}
+        ${ATOMSPACE_LIBRARIES}
+        )
+
         

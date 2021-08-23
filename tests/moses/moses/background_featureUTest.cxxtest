@@ -1,0 +1,118 @@
+/** background_featureUTest.cxxtest ---
+ *
+ * Copyright (C) 2021 SingularityNET Foundation
+ *
+ * Author: Abdulrahman Semrie <hsamireh@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <cxxtest/TestSuite.h>
+#include <iostream>
+#include <opencog/util//Logger.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/guile/SchemeEval.h>
+#include <opencog/asmoses/combo/combo/combo.h>
+#include <opencog/asmoses/combo/combo/iostream_combo.h>
+#include <opencog/atoms/atom_types/atom_types.h>
+#include <string>
+#include <opencog/asmoses/moses/moses/background_feature.h>
+
+using namespace opencog;
+using namespace std;
+using namespace opencog::combo;
+using namespace opencog::moses;
+
+#define al _as.add_link
+#define an _as.add_node
+
+class BackgroundFeatureUTest : public CxxTest::TestSuite
+{
+private:
+	AtomSpace _as;
+public:
+	BackgroundFeatureUTest() {}
+
+	~BackgroundFeatureUTest() {
+		if (!CxxTest::TestTracker::tracker().suiteFailed())
+			std::remove(logger().get_filename().c_str());
+	}
+
+	void setUp();
+
+	void tearDown();
+
+	void test_atomese_program();
+	void test_combo_program();
+};
+
+void BackgroundFeatureUTest::setUp() {
+	_as.clear();
+}
+
+void BackgroundFeatureUTest::tearDown() {}
+
+void BackgroundFeatureUTest::test_atomese_program() {
+	SchemeEval eval(&_as);
+	eval.eval("");
+	eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
+	string rv = eval.eval("(use-modules (opencog))");
+	TS_ASSERT(not eval.eval_error());
+	printf("Result from use-modules is %s\n", rv.c_str());
+	rv = eval.eval("(load-from-path \"tests/moses/moses/data.scm\")");
+	TS_ASSERT(not eval.input_pending());
+	TS_ASSERT(not eval.eval_error());
+	printf("Result from loading is %s\n", rv.c_str());
+
+	Types tts = {ATTRACTION_LINK};
+	BackgroundFeature bf(&_as, CONCEPT_NODE, tts);
+	Handle prog = al(AND_LINK,
+					 an(PREDICATE_NODE, "$f1"),
+					 al(OR_LINK, an(PREDICATE_NODE, "$f2"), an(PREDICATE_NODE, "$f3")),
+                     an(PREDICATE_NODE, "$f3"),
+					 an(PREDICATE_NODE, "$f4"));
+	score_t val = bf(prog);
+
+	TS_ASSERT(val < 0);
+
+	cout << "inconsistency penalty: " << val << endl;
+}
+
+void BackgroundFeatureUTest::test_combo_program()
+{
+	SchemeEval eval(&_as);
+	eval.eval("");
+	eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
+	string rv = eval.eval("(use-modules (opencog))");
+	TS_ASSERT(not eval.eval_error());
+	printf("Result from use-modules is %s\n", rv.c_str());
+	rv = eval.eval("(load-from-path \"tests/moses/moses/data.scm\")");
+	TS_ASSERT(not eval.input_pending());
+	TS_ASSERT(not eval.eval_error());
+	printf("Result from loading is %s\n", rv.c_str());
+
+	string s = "and($f1 or($f2 $f3) $f4)";
+	vector<string> labels = {"f1", "f2", "f3", "f4"};
+	combo_tree tr = str2combo_tree(s, labels);
+	Types tts = {ATTRACTION_LINK};
+	BackgroundFeature bf(&_as, CONCEPT_NODE, tts);
+
+	score_t val = bf(tr, labels);
+
+	TS_ASSERT(val < 0);
+
+	cout << "consistency val: " << val << endl;
+}

@@ -74,3 +74,11 @@ TARGET_LINK_LIBRARIES(precision_conj_bscoreUTest
 	atomese
 	${COGUTIL_LIBRARY}
 	)
+
+ADD_CXXTEST(behave_bg_cscoreUTest)
+TARGET_LINK_LIBRARIES(behave_bg_cscoreUTest
+		moses
+		ascombo
+		atomese
+		${COGUTIL_LIBRARY}
+		)

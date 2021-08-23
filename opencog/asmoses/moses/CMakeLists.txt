@@ -34,6 +34,7 @@ ADD_LIBRARY (moses SHARED
 	metapopulation/metapop_params
 	metapopulation/subsample
 	main/populate_atomspace
+	moses/background_feature
 	moses/complexity
 	moses/distributed_moses
 	moses/local_moses
@@ -68,7 +69,7 @@ ADD_LIBRARY (moses SHARED
 	scoring/ss_bscore
 	scoring/scoring_base
 	scoring/select_bscore
-)
+	scoring/behave_bg_cscore)
 
 TARGET_LINK_LIBRARIES (moses
 	data
