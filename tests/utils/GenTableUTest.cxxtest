@@ -35,7 +35,7 @@ using namespace opencog;
 using namespace std;
 using namespace opencog::combo;
 
-const string utest_dir = "/Users/xabush/code/work/snet/opencog/asmoses/tests/utils/";
+const string utest_dir = string(PROJECT_SOURCE_DIR) + "/tests/utils/";
 const string target_feature = "out";
 
 class GenTableUTest : public CxxTest::TestSuite
@@ -83,13 +83,15 @@ void GenTableUTest::test_gen_table()
 
     unsigned num_samples = 50;
 
-    gen_table(tr1, &_as, tt, labels,num_samples);
+    gen_table(tr1, &_as, tt, labels, num_samples);
     tt.itable.set_labels(labels);
     tt.otable.set_label("out");
 
     TS_ASSERT(tt.size() == num_samples);
-
+    ofstream out_table(utest_dir + "out.csv");
+    ostreamTable(out_table, tt);
     cout << "Table size: " << tt.size() << endl;
 
     cout << tt << endl;
+
 }

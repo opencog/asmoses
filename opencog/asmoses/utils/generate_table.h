@@ -33,25 +33,20 @@
 #include <opencog/asmoses/data/table/table_io.h>
 #include <opencog/atoms/atom_types/atom_types.h>
 #include <opencog/util/random.h>
-#include <dlib/bayes_utils.h>
-#include <dlib/graph_utils.h>
-#include <dlib/graph.h>
-#include <dlib/directed_graph.h>
+#include <dai/alldai.h>
+#include <dai/jtree.h>
+#include <dai/factorgraph.h>
 
 using namespace opencog;
 using namespace opencog::combo;
-using namespace dlib;
-using namespace dlib::bayes_node_utils;
+using namespace dai;
+using namespace std;
 
 namespace opencog
 {
 
-typedef std::unordered_map<vertex, Handle> vertex_map;
-typedef directed_graph<bayes_node>::kernel_1a_c BaysNet;
-typedef dlib::set<unsigned long>::compare_1a_c set_t;
-typedef graph<set_t, set_t>::kernel_1a_c join_tree_t;
-
-
+typedef std::unordered_map<vertex, Factor> vertex_map;
+typedef vector<Factor> Factors;
 
 void get_features(const combo_tree& tr, vertex_set& features)
 {
@@ -65,23 +60,24 @@ void get_features(const combo_tree& tr, vertex_set& features)
  * using its strength if it is not related to any other atom, and if it has a relation with an other atom
  * ,the strength of the stv of its relation will be used
  */
-void build_bayes_net(const vertex_set& features, AtomSpace* as, BaysNet& bn, const string_seq& labels)
+void build_bayes_net(const vertex_set& features, AtomSpace* as, Factors& factors, vertex_map& vmap, const string_seq& labels)
 {
-    unsigned long i = 0, j = 0;
-    assignment parent_state;
+    int i = 0, j = 0;
 
     //Set the mean of the stvs of each feature as its probability before adding node dependencies
     HandleSeq nodes;
     for(const vertex& f : features) {
         Handle h = as->get_handle(CONCEPT_NODE, (labels.at(boost::get<argument>(f).abs_idx_from_zero())));
-        OC_ASSERT(h != Handle::UNDEFINED, "All features are assumed to exist in "
-                                          "the Atomspace as ConceptNodes! " + h->get_name() + " not found!");
+        OC_ASSERT(h != Handle::UNDEFINED, "Feature " + h->get_name() + " doesn't exist in the "
+                     "Atomspace. All features must exist in the AtomSpace!!")
         TruthValuePtr tv = h->getTruthValue();
         strength_t stv = tv->get_mean();
-        set_node_num_values(bn, i, 2);
-        set_node_probability(bn, i, 1, parent_state, stv); // P(f = 1);
-        set_node_probability(bn, i, 0, parent_state, 1 - stv); // P(f = 0);
         nodes.push_back(h);
+        Factor fact(Var(i, 2));
+        fact.set(0, stv);
+        fact.set(1, 1 - stv);
+        factors.push_back(fact);
+        vmap[f] = fact;
         i++;
     }
 
@@ -89,41 +85,72 @@ void build_bayes_net(const vertex_set& features, AtomSpace* as, BaysNet& bn, con
 
     for(const vertex& f1 : features) {
         Handle h1 = nodes[i];
+
         for(const vertex& f2: features) {
             if(f1 != f2){
                 Handle h2 = nodes[j];
                 Handle res = as->get_link(IMPLICATION_LINK, {h2, h1});
                 if(res != Handle::UNDEFINED) {
+                    Factor fact1 = factors[i];
+                    Factor fact2 = factors[j];
                     TruthValuePtr tv = res->getTruthValue();
-                    double stv = tv->get_mean();
-                    if(not bn.has_edge(j, i))
-                        bn.add_edge(j, i);
-                    parent_state.add(j, 1);
+                    strength_t stv = tv->get_mean();
 
-                    set_node_probability(bn, i, 1, parent_state, stv); // P(f1 = 1 | f2 = 1)
-                    set_node_probability(bn, i, 0, parent_state, 1 - stv); // P(f1 = 0 | f2 = 1);
-                    parent_state.clear();
-                }
-                //Check for Implication(not(A) B) case;
-                res = as->get_link(IMPLICATION_LINK, {createLink(NOT_LINK, h2), h1});
-                if(res != Handle::UNDEFINED) {
-                    if(not bn.has_edge(j, i))
-                        bn.add_edge(j, i);
-                    TruthValuePtr tv = res->getTruthValue();
-                    double stv = tv->get_mean();
-                    parent_state.add(j, 0);
+                    Var f1_var = *(fact1.vars().begin());
+                    Var f2_var = *(fact2.vars().begin());
+                    
+                    cout << "f1_var: "  << f1_var << endl;
+                    cout << "f2_var: " << f2_var << endl;
 
-                    set_node_probability(bn, i, 1, parent_state, stv); //P(f1 = 1 | f2 = 0)
-                    set_node_probability(bn, i, 0, parent_state, 1 - stv); //P(f1 = 0 | f2 = 0);
-                    parent_state.clear();
+                    Factor f3(VarSet(f1_var, f2_var));
+                    f3.set(2, 1 - stv); // P(f1 = 0 | f2 = 1)
+                    f3.set(3, stv); // P(f1 = 1 | f2 = 1)
+                    vmap[f1] = f3;
+                    factors.push_back(f3);
                 }
             }
             j++;
-
         }
         j = 0;
         i++;
     }
+}
+
+bool run_jt(FactorGraph& bn, JTree& jt, BP& bp)
+{
+    size_t maxstates = 1000000;
+    // Store the constants in a PropertySet object
+    size_t maxiter = 10000;
+    Real tol = 1e-9;
+    size_t verb = 1;
+
+    PropertySet opts;
+    opts.set("maxiter", maxiter);  // Maximum number of iterations
+    opts.set("tol", tol);          // Tolerance for convergence
+    opts.set("verbose", verb);     // Verbosity (amount of output generated)
+
+    // Bound treewidth for junctiontree
+    bool do_jt = true;
+    try {
+        boundTreewidth(bn, &eliminationCost_MinFill, maxstates );
+    } catch( Exception &e ) {
+        if( e.getCode() == Exception::OUT_OF_MEMORY ) {
+            do_jt = false;
+            cout << "Skipping junction tree (need more than " << maxstates << " states)." << endl;
+            return do_jt;
+        }
+        else
+            throw;
+    }
+    jt = JTree(bn, opts("updates", string("HUGIN")));
+    jt.init();
+    jt.run();
+
+    bp = BP(bn, opts("updates",string("SEQRND"))("logdomain",false) );
+	bp.init();
+	bp.run();
+
+    return do_jt;
 }
 
 /*
@@ -143,32 +170,45 @@ void gen_table(const combo_tree& tr, AtomSpace* as, Table& table, const string_s
     get_features(tr, feats);
 
     //Define the bayesian network
-    BaysNet bays_net;
-    bays_net.set_number_of_nodes(feats.size());
+    vertex_map vmap;
+    Factors factors;
+    build_bayes_net(feats, as, factors, vmap, labels);
 
-    build_bayes_net(feats, as, bays_net, labels);
-
+    FactorGraph baysNet(factors);
+    JTree jt;
     //We are going to use the Junction tree algorithm to get exact prior probabilities of
     // the nodes in the bayesian network. Read about the algorithm here https://en.wikipedia.org/wiki/Junction_tree_algorithm
-    join_tree_t join_tree;
-    create_moral_graph(bays_net, join_tree);
-    create_join_tree(join_tree, join_tree);
+    BP bp;
+    run_jt(baysNet, jt, bp);
+    
+	cout << "JIT Belief" << endl;
 
-    bayesian_network_join_tree solution(bays_net, join_tree);
+    for( size_t i = 0; i < baysNet.nrVars(); i++  ) { // iterate over all variables in fg
+        cout << "JT: " << jt.belief(baysNet.var(i)) << endl; // display the "belief" of jt for that variable
+        cout << "BP: " << bp.belief(baysNet.var(i)) << endl;
+    }
+    
+    cout << "Factor Belief" << endl;
 
-    int i;
+	for(auto& pr : vmap) { // iterate over all variables in fg
+        Factor f = pr.second;
+        cout << "JT: " << jt.belief(f.vars()) << endl; // display the belief of bp for that variable
+        cout << "BP: "<< bp.belief(f.vars()) << endl; // display the belief of bp for that variable
+    }
+
+	int i;
     for(unsigned n = 0; n < num_samples; ++n) {
         vertex_seq row;
         i = 0;
         for(const vertex& f : feats) {
-            double prob = solution.probability(i)(1);
+            float prob = jt.belief(baysNet.var(i))[1];
             row.push_back(bool_to_vertex(biased_randbool(prob)));
             i++;
         }
 
         mixed_interpreter mit(row);
-        table.otable[i] = (mit(tr));
-        table.itable[i] = row;
+        table.otable[n] = (mit(tr));
+        table.itable[n] = row;
     }
 
 }

@@ -115,6 +115,7 @@ struct problem_params : public option_base
     double noise;
     score_t complexity_temperature;
     score_t complexity_ratio;
+    score_t inconsistency_coef;
     double cap_coef;
     unsigned cache_size;
     double perm_ratio;
@@ -225,6 +226,8 @@ struct problem_params : public option_base
     subsample_deme_filter_parameters filter_params;
     metapop_parameters meta_params;
     metapop_printer mmr_pa;
+
+    std::string scm_path;
 protected:
     const unsigned int max_filename_size;
 

@@ -341,6 +341,12 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "where x is the number of generations so far. The default usually works "
          "well but if you run out of memory you may decrease that value.\n")
 
+         (opt_desc_str(inconsistency_coef_opt).c_str(),
+          po::value<score_t>(&inconsistency_coef)->default_value(1.0),
+          "Scaling coefficient to apply to inconsistency penalty. The inconsistency penalty is "
+          "calculated using the features of program and checking them against a background knowledge, "
+          "i.e Atomspace to see if they are related. A program that has more features related will incur "
+          "a less inconsistency penalty that one which has less features related.")
         // Large problem parameters
         ("hc-max-nn-evals",
          po::value<unsigned>(&hc_max_nn)->default_value(20000),
@@ -1148,6 +1154,12 @@ problem_params::add_options(boost::program_options::options_description& desc)
           po::value<bool>(&deme_params.atomspace_port)->default_value(0),
           "If atomspace port is enable then run codes related to"
            " Atomspace.")
+
+           //path to scm files
+         (opt_desc_str(scm_path_opt).c_str(),
+          po::value<string>(&scm_path),
+          "Path to directory containing scheme/atomese files to load into background knowledge")
+
         // ========== THE END of the options; note semicolon ===========
         ;
 

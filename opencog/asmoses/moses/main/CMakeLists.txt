@@ -14,6 +14,8 @@ TARGET_LINK_LIBRARIES (asmoses-exec
 	asmoses_exec
 	moses
 	ascomboant
+	${COGUTIL_LIBRARY}
+	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 SET_TARGET_PROPERTIES(asmoses-exec PROPERTIES OUTPUT_NAME "asmoses")
 

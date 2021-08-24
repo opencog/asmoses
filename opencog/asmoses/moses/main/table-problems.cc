@@ -26,11 +26,12 @@
 
 #include <opencog/util/Logger.h>
 #include <opencog/asmoses/data/table/table_io.h>
-
+#include <opencog/persist/file/fast_load.h>
 #include "opencog/asmoses/moses/moses/partial.h"
 #include "opencog/asmoses/moses/scoring/bscores.h"
 #include "opencog/asmoses/moses/scoring/discriminating_bscore.h"
 #include "opencog/asmoses/moses/scoring/select_bscore.h"
+#include "opencog/asmoses/moses/scoring/behave_bg_cscore.h"
 
 #include "moses_exec_def.h"
 #include "table-problems.h"
@@ -286,15 +287,15 @@ void ip_problem::run(option_base* ob)
 
 static combo_tree ann_exemplar(combo::arity_t arity)
 {
-	combo_tree ann_tr(ann_type(0, id::ann));
+	combo_tree ann_tr(combo::ann_type(0, id::ann));
 	// ann root
 	combo_tree::iterator root_node = ann_tr.begin();
 	// output node
 	combo_tree::iterator output_node =
-		ann_tr.append_child(root_node, ann_type(1, id::ann_node));
+		ann_tr.append_child(root_node, combo::ann_type(1, id::ann_node));
 	// input nodes
 	for (combo::arity_t i = 0; i <= arity; ++i)
-		ann_tr.append_child(output_node, ann_type(i + 2, id::ann_input));
+		ann_tr.append_child(output_node, combo::ann_type(i + 2, id::ann_input));
 	// input nodes' weights
 	ann_tr.append_children(output_node, 0.0, arity + 1);
 
@@ -350,7 +351,18 @@ void ann_table_problem::run(option_base* ob)
 	/* When boosting, cache must not be used, as otherwise, stale */ \
 	/* composite scores get cached and returned.*/                   \
 	if (pms.meta_params.do_boosting) pms.cache_size = 0;             \
-	behave_cscore mbcscore(bscore, pms.cache_size);                  \
+	string_seq labels = TABLE.get_input_labels();\
+    /*Check if the scm path has been specified */                    \
+    AtomSpace _bas;                                                  \
+    behave_cscore* mbcscore;\
+	if (pms.scm_path.empty()) {                                      \
+	    mbcscore = new behave_cscore(bscore, pms.cache_size);        \
+	} else {                                                         \
+	        /*TODO Use it as a directory*/\
+           load_file(pms.scm_path, _bas);                            \
+           Types links = {IMPLICATION_LINK};\
+           mbcscore = new behave_bg_cscore(bscore, &_bas, CONCEPT_NODE, links, labels); \
+	}                                                            	 \
 	reduct::rule* reduct_cand = pms.bool_reduct;                     \
 	reduct::rule* reduct_rep = pms.bool_reduct_rep;		             \
 	/* Use the contin reductors for everything else */               \
@@ -358,12 +370,13 @@ void ann_table_problem::run(option_base* ob)
 		reduct_cand = pms.contin_reduct;                             \
 		reduct_rep = pms.contin_reduct;                              \
 	}                                                                \
-	string_seq labels = TABLE.get_input_labels();                          \
+	                                                                 \
 	metapop_moses_results(pms.exemplars, cand_type_signature,        \
-					  *reduct_cand, *reduct_rep, mbcscore,           \
+					  *reduct_cand, *reduct_rep, *mbcscore,          \
 					  pms.opt_params, pms.hc_params, pms.ps_params,  \
 					  pms.deme_params, pms.filter_params, pms.meta_params,          \
-					  pms.moses_params, pms.mmr_pa,output_type,labels);                  \
+					  pms.moses_params, pms.mmr_pa,output_type,labels);    \
+    delete mbcscore;                                                    \
 }
 
 void pre_table_problem::run(option_base* ob)
