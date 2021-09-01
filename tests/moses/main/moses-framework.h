@@ -61,10 +61,13 @@ pair<score_t, string> cheap_parse_result(const string& tempfile);
 // Parse all results, including the composite and behavioral
 // scores. It is assumed the file contains the output of the scores,
 // the composite and behavioral scores.
-vector<scored_combo_tree> parse_scored_combo_trees(const string& tempfile);
+vector<scored_combo_tree> parse_scored_combo_trees(const string& tempfile, const vector<string>& labels = {});
 
 // Test passes only if the score is exactly equal to expected_sc
 void moses_test_score(vector<string> arguments, score_t expected_sc = 0);
+
+//A version of the above where the ouput file is specified
+void moses_test_score(pair<vector<string>, string>& cmd, score_t expected_sc = 0);
 
 // Same as above, except that we accept any score that is better
 // than the expected score.

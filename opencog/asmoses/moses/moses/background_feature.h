@@ -58,7 +58,11 @@ public:
 private:
 
 	void get_features(const Handle& prog, HandleSet& features);
-	score_t get_relationship(HandleSet& features);
+	score_t get_relationshipness(HandleSet& features);
+    std::pair<score_t, int> get_pairwise_relationshipness(const Handle& f1, const Handle& f2);
+    score_t check_logical(const Handle& h1, const Handle& h2, Type t);
+
+    static score_t get_cons_prob(const Handle& ln);
 
 	inline std::string arg2str(const std::string& arg)
 	{

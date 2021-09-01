@@ -125,7 +125,7 @@ pair<score_t, string> cheap_parse_result(const string& tempfile)
 // Parse all results, including the composite and behavioral
 // scores. It is assumed the file contains the output of the scores,
 // the composite and behavioral scores.
-vector<scored_combo_tree> parse_scored_combo_trees(const string& tempfile)
+vector<scored_combo_tree> parse_scored_combo_trees(const string& tempfile, const vector<string>& labels)
 {
 	cout << "tempfile " << tempfile << endl;
 
@@ -133,7 +133,7 @@ vector<scored_combo_tree> parse_scored_combo_trees(const string& tempfile)
 	ifstream in(tempfile);
 
 	vector<scored_combo_tree> scts;
-	istream_scored_combo_trees(in, scts);
+	istream_scored_combo_trees(in, scts, labels);
 
 	return scts;
 }
@@ -157,6 +157,20 @@ void moses_test_score(vector<string> arguments, score_t expected_sc)
 	// Unlink only if test passed.
 	if (fabs(result.first - expected_sc) < 1.0e-3)
 		unlink(cmd_tmp.second.c_str());
+}
+
+void moses_test_score(pair<vector<string>, string>& cmd, score_t expected_sc)
+{
+    auto arguments = cmd.first;
+    arguments.push_back(" --output-format=combo");
+    auto t1 = microsec_clock::local_time();
+    moses_exec(arguments);
+    // parse the result
+    auto result = parse_result(cmd.second);
+    // check that the result is the expected one
+    TS_ASSERT_LESS_THAN(fabs(result.first - expected_sc), 1.0e-3);
+    auto t2 = microsec_clock::local_time();
+    std::cout << "Wallclock time: " << (t2 - t1) << std::endl;
 }
 
 // Same as above, except that we accept any score that is better

@@ -75,7 +75,7 @@ static const pair<string, string> max_candidates_per_deme_opt("max-candidates-pe
 static const pair<string, string> complexity_temperature_opt("complexity-temperature", "v");
 static const pair<string, string> complexity_ratio_opt("complexity-ratio", "z");
 static const pair<string, string> discretize_threshold_opt("discretize-threshold", "R");
-static const pair<string, string> inconsistency_coef_opt("inconsistency-coef", "ic");
+static const pair<string, string> inconsistency_coef_opt("inconsistency-coefficient", "");
 
 // options specific to a particular fitness function
 static const pair<string, string> alpha_opt("alpha", "Q");
@@ -92,7 +92,7 @@ static const pair<string, string> atomspace_store_opt("atomspace-store","I");
 static const pair<string, string> atomspace_port_opt("atomspace-port", "O");
 
 //option for the path to scheme files that contain the atomese to load to background knowledge atomspace
-static const pair<string, string> scm_path_opt("scm-path", "SP");
+static const pair<string, string> scm_path_opt("scm-path", "");
 
 // Returns a string interpretable by Boost.Program_options
 // "name,abbreviation"

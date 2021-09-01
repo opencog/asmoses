@@ -354,14 +354,15 @@ void ann_table_problem::run(option_base* ob)
 	string_seq labels = TABLE.get_input_labels();\
     /*Check if the scm path has been specified */                    \
     AtomSpace _bas;                                                  \
-    behave_cscore* mbcscore;\
+    behave_cscore* mbcscore;                                         \
 	if (pms.scm_path.empty()) {                                      \
 	    mbcscore = new behave_cscore(bscore, pms.cache_size);        \
 	} else {                                                         \
 	        /*TODO Use it as a directory*/\
            load_file(pms.scm_path, _bas);                            \
            Types links = {IMPLICATION_LINK};\
-           mbcscore = new behave_bg_cscore(bscore, &_bas, CONCEPT_NODE, links, labels); \
+           mbcscore = new behave_bg_cscore(bscore, &_bas, CONCEPT_NODE, links, labels, pms.inconsistency_coef);\
+           logger().info() << "Using Background feature behavorial scorer"; \
 	}                                                            	 \
 	reduct::rule* reduct_cand = pms.bool_reduct;                     \
 	reduct::rule* reduct_rep = pms.bool_reduct_rep;		             \

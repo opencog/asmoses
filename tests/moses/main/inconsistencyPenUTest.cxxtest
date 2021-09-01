@@ -1,0 +1,70 @@
+// /** inconsistencyPenUTest.cxxtest ---
+//  *
+//  * Copyright (C) 2021 SingularityNET Foundation
+//  *
+//  * Author: Abdulrahman Semrie <hsamireh@gmail.com>
+//  *
+//  * This program is free software; you can redistribute it and/or modify
+//  * it under the terms of the GNU Affero General Public License v3 as
+//  * published by the Free Software Foundation and including the exceptions
+//  * at http://opencog.org/wiki/Licenses
+//  *
+//  * This program is distributed in the hope that it will be useful,
+//  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  * GNU General Public License for more details.
+//  *
+//  * You should have received a copy of the GNU Affero General Public License
+//  * along with this program; if not, write to:
+//  * Free Software Foundation, Inc.,
+//  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  *
+#include <exception>
+#include <cxxtest/TestSuite.h>
+#include <chrono>
+#include <opencog/asmoses/moses/main/moses_exec.h>
+#include <opencog/util/Logger.h>
+#include "moses-framework.h"
+
+using namespace opencog;
+using namespace opencog::moses;
+
+const string utest_dir = string(PROJECT_SOURCE_DIR) + "/tests/";
+const float MAX_PENALTY = -10000.0;
+
+class InconsistencyPenUTest : public CxxTest::TestSuite
+{
+public:
+    InconsistencyPenUTest() {
+        logger().set_print_to_stdout_flag(true);
+    }
+
+    void test_simple_problem();
+};
+
+void InconsistencyPenUTest::test_simple_problem()
+{
+    string outfile = mkstemp_moses_output();
+    string opts = "moses-exec -i" + utest_dir + "utils/out1.csv" + " -o" + outfile +
+                " -m1000 -uout --inconsistency-coefficient=1 --output-cscore=1 --output-deme-id=1 -W1 -c15 --output-format=combo --scm-path=" + utest_dir + "utils/test2.scm";
+    auto start = std::chrono::system_clock::now();
+    moses_exec(opts);
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff = end - start;
+    try{
+        vector<scored_combo_tree> scs = parse_scored_combo_trees(outfile, {"f1", "f2", "f3", "f4", "f5",
+        "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13"});
+
+        for(const scored_combo_tree& sc : scs) {
+            logger().info() << sc << endl;
+            TS_ASSERT(sc.get_inconsistency_penalty() > MAX_PENALTY);
+        }
+    }
+    catch(std::exception& e) {
+        logger().info() << e.what();
+    }
+
+    logger().info() << "Elapsed time in seconds: " << diff.count();
+
+
+}

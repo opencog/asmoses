@@ -3,9 +3,10 @@
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * Copyright (C) 2014 Aidyia Limited
+ * Copyright (C) 2021 SingularityNET Foundation
  * All Rights Reserved
  *
- * Written by Moshe Looks, Nil Geisweiller, Linas Vepstas
+ * Written by Moshe Looks, Nil Geisweiller, Linas Vepstas, Abdulrahman Semrie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -31,7 +32,7 @@
 // std::regex will only be implemented in gcc 4.9. Meanwhile we use
 // boost::regex
 #include <boost/regex.hpp>
-
+#include <opencog/asmoses/combo/combo/iostream_combo.h>
 #include "types.h"
 #include "complexity.h"
 
@@ -158,7 +159,7 @@ const composite_score worst_composite_score = composite_score();
 
 composite_score::composite_score()
 	: score(very_worst_score), complexity(least_complexity),
-	  complexity_penalty(0.0), uniformity_penalty(0.0),
+	  complexity_penalty(0.0), uniformity_penalty(0.0), inconsistency_penalty(-1000),
 	  penalized_score(very_worst_score)
 {}
 
@@ -169,6 +170,7 @@ composite_score& composite_score::operator=(const composite_score &r)
 	penalized_score = r.penalized_score;
 	complexity_penalty = r.complexity_penalty;
 	uniformity_penalty = r.uniformity_penalty;
+	inconsistency_penalty = r.inconsistency_penalty;
 	multiply_diversity = r.multiply_diversity;
 	return *this;
 }
@@ -205,6 +207,7 @@ bool composite_score::operator==(const composite_score &r) const
 		and complexity == r.get_complexity()
 		and is_approx_eq(complexity_penalty, r.get_complexity_penalty(), EPSILON)
 		and is_approx_eq(uniformity_penalty, r.get_uniformity_penalty(), EPSILON)
+		and is_approx_eq(inconsistency_penalty, r.get_inconsistency_penalty(), EPSILON)
 		and is_approx_eq(penalized_score, r.get_penalized_score(), EPSILON);
 }
 
@@ -279,7 +282,7 @@ std::ostream& ostream_scored_atomese(std::ostream& out,
 /// ostream_scored_combo_tree. Score, combo tree and composite score
 /// must be present. Bscore is optional.
 ///
-scored_combo_tree string_to_scored_combo_tree(const std::string& line)
+scored_combo_tree string_to_scored_combo_tree(const std::string& line, const std::vector<std::string>& labels)
 {
 	// cout << "line = " << line << "END" << endl;
 
@@ -318,7 +321,7 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 
 	OC_ASSERT(match_result, "Line '%s' doesn't match regex '%s'",
 	          line.c_str(), scored_combo_tree_re.c_str());
-	OC_ASSERT(sct_match.size() == 16,
+	OC_ASSERT(sct_match.size() == 17,
 	          "Wrong number of sub-matches %u, 10 are expected",
 	          sct_match.size());
 
@@ -326,8 +329,7 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 	score_t sc = std::stof(sct_match[1]);
 
 	// Parse combo tree
-	combo::combo_tree tr;
-	std::stringstream(sct_match[2].str()) >> tr;
+	combo::combo_tree tr = combo::str2combo_tree(sct_match[2].str(), labels);
 
 	// Parse composite score
 	complexity_t cpx = std::stoi(sct_match[5].str());
@@ -338,14 +340,14 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 
 	// Parse demeID
 	demeID_t demeID;
-	if (sct_match[8].length() > 0) {
-		unsigned expansion = stoi(sct_match[9].str());
+	if (sct_match[9].length() > 0) {
+		unsigned expansion = stoi(sct_match[10].str());
 		demeID = demeID_t(expansion);
-		if (sct_match[10].length() > 0) {
-			unsigned breadth_first = stoi(sct_match[11].str());
+		if (sct_match[11].length() > 0) {
+			unsigned breadth_first = stoi(sct_match[12].str());
 			demeID = demeID_t(expansion, breadth_first);
-			if (sct_match[12].length() > 0) {
-				unsigned ss_deme = stoi(sct_match[13].str());
+			if (sct_match[13].length() > 0) {
+				unsigned ss_deme = stoi(sct_match[14].str());
 				demeID = demeID_t(expansion, breadth_first, ss_deme);
 			}
 		}
@@ -353,8 +355,8 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 
 	// Parse behavioral score
 	behavioral_score bs;
-	if (sct_match[15].length() > 0) {
-		istringstream iss(sct_match[15].str());
+	if (sct_match[16].length() > 0) {
+		istringstream iss(sct_match[16].str());
 		istream_container(iss, back_inserter(bs), "[", "]");
 	}
 
@@ -363,9 +365,9 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 
 // Fill a vector of scored_combo_tree parsed from stream
 std::istream& istream_scored_combo_trees(std::istream& in,
-                                         std::vector<scored_combo_tree>& scts) {
+                                         std::vector<scored_combo_tree>& scts, const std::vector<std::string>& labels) {
 	for (std::string line; std::getline(in, line); )
-		scts.push_back(string_to_scored_combo_tree(line));
+		scts.push_back(string_to_scored_combo_tree(line, labels));
 	return in;
 }
 

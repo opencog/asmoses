@@ -88,26 +88,26 @@ void BackgroundFeatureUTest::test_atomese_program() {
 
 	TS_ASSERT(val < 0);
 
-	cout << "inconsistency penalty: " << val << endl;
+//	cout << "inconsistency penalty: " << val << endl;
 }
 
 void BackgroundFeatureUTest::test_combo_program()
 {
 	SchemeEval eval(&_as);
 	eval.eval("");
+    string rv = eval.eval("(use-modules (opencog))");
 	eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
-	string rv = eval.eval("(use-modules (opencog))");
 	TS_ASSERT(not eval.eval_error());
 	printf("Result from use-modules is %s\n", rv.c_str());
-	rv = eval.eval("(load-from-path \"tests/moses/moses/data.scm\")");
+	rv = eval.eval("(load-from-path \"tests/utils/test.scm\")");
 	TS_ASSERT(not eval.input_pending());
 	TS_ASSERT(not eval.eval_error());
 	printf("Result from loading is %s\n", rv.c_str());
 
-	string s = "and($f1 or($f2 $f3) $f4)";
-	vector<string> labels = {"f1", "f2", "f3", "f4"};
+	string s = "and(or($1 !$4) $2 $3 !$5)";
+	vector<string> labels = {"f1", "f2", "f3", "f4", "f5"};
 	combo_tree tr = str2combo_tree(s, labels);
-	Types tts = {ATTRACTION_LINK};
+	Types tts = {IMPLICATION_LINK};
 	BackgroundFeature bf(&_as, CONCEPT_NODE, tts);
 
 	score_t val = bf(tr, labels);

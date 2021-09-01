@@ -89,3 +89,11 @@ TARGET_LINK_LIBRARIES(diversityUTest
 	     ascombo
 	     ${COGUTIL_LIBRARY}
         )
+
+ADD_CXXTEST(inconsistencyPenUTest)
+TARGET_LINK_LIBRARIES(inconsistencyPenUTest
+		asmoses_exec
+		moses
+		moses-framework
+		ascombo
+		${COGUTIL_LIBRARY})

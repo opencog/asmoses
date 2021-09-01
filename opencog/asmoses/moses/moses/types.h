@@ -186,15 +186,15 @@ protected:
 	complexity_t complexity;
 	score_t complexity_penalty;
 	score_t uniformity_penalty;
+    score_t inconsistency_penalty;
 	score_t penalized_score;
-	score_t inconsistency_penalty;
 	/// Update penalized_score, i.e. substract the complexity and
 	/// uniformity penalty from the raw score.
 	// Add the inconsistency penalty as it is a negative value
 	void update_penalized_score()
 	{
 		penalized_score = score - complexity_penalty;
-		penalized_score = penalized_score + inconsistency_penalty;
+		penalized_score = penalized_score - inconsistency_penalty;
 		if (multiply_diversity)
 			penalized_score *= uniformity_penalty;
 		else
@@ -355,6 +355,7 @@ public:
 	score_t get_penalized_score() const { return _cscore.get_penalized_score(); }
 	score_t get_complexity_penalty() const { return _cscore.get_complexity_penalty(); }
 	score_t get_uniformity_penalty() const { return _cscore.get_uniformity_penalty(); }
+	score_t get_inconsistency_penalty() const {return _cscore.get_inconsistency_penalty();}
 	score_t get_penalty() const { return _cscore.get_penalty(); }
 
 	bool operator==(const scored_combo_tree& r) const;
@@ -568,7 +569,7 @@ std::ostream& ostream_scored_atomese(std::ostream& out,
 scored_combo_tree string_to_scored_combo_tree(const std::string& line);
 
 std::istream& istream_scored_combo_trees(std::istream& in,
-                                         std::vector<scored_combo_tree>& scts);
+                                         std::vector<scored_combo_tree>& scts, const std::vector<std::string>& labels = {});
 
 inline std::ostream& operator<<(std::ostream& out,
                                 const moses::scored_combo_tree& sct)
