@@ -78,17 +78,15 @@ void BackgroundFeatureUTest::test_atomese_program() {
 	printf("Result from loading is %s\n", rv.c_str());
 
 	Types tts = {ATTRACTION_LINK};
-	BackgroundFeature bf(&_as, CONCEPT_NODE, tts);
+	BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2, 0.1);
 	Handle prog = al(AND_LINK,
 					 an(PREDICATE_NODE, "$f1"),
-					 al(OR_LINK, an(PREDICATE_NODE, "$f2"), an(PREDICATE_NODE, "$f3")),
-                     an(PREDICATE_NODE, "$f3"),
 					 an(PREDICATE_NODE, "$f4"));
 	score_t val = bf(prog);
 
-	TS_ASSERT(val < 0);
+	TS_ASSERT(abs(val - 3.32) < 0.01); //we expect val to be 3.321
 
-//	cout << "inconsistency penalty: " << val << endl;
+	cout << "inconsistency penalty: " << val << endl;
 }
 
 void BackgroundFeatureUTest::test_combo_program()
@@ -99,20 +97,22 @@ void BackgroundFeatureUTest::test_combo_program()
 	eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
 	TS_ASSERT(not eval.eval_error());
 	printf("Result from use-modules is %s\n", rv.c_str());
-	rv = eval.eval("(load-from-path \"tests/utils/test.scm\")");
+    rv = eval.eval("(load-from-path \"tests/moses/moses/data.scm\")");
 	TS_ASSERT(not eval.input_pending());
 	TS_ASSERT(not eval.eval_error());
 	printf("Result from loading is %s\n", rv.c_str());
 
-	string s = "and(or($1 !$4) $2 $3 !$5)";
+	string prog_str = "and(or($1 !$4) $2 $3 !$5)";
+	stringstream ss(prog_str);
 	vector<string> labels = {"f1", "f2", "f3", "f4", "f5"};
-	combo_tree tr = str2combo_tree(s, labels);
-	Types tts = {IMPLICATION_LINK};
-	BackgroundFeature bf(&_as, CONCEPT_NODE, tts);
+	combo_tree tr;
+	ss >> tr;
+	Types tts = {ATTRACTION_LINK};
+	BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2, 0.1);
 
 	score_t val = bf(tr, labels);
 
-	TS_ASSERT(val < 0);
+	TS_ASSERT(abs(val - 3.36) < 0.01); //we expect val to be 3.363
 
-	cout << "consistency val: " << val << endl;
+	cout << "inconsistency penalty: " << val << endl;
 }

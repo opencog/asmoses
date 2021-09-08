@@ -76,6 +76,8 @@ static const pair<string, string> complexity_temperature_opt("complexity-tempera
 static const pair<string, string> complexity_ratio_opt("complexity-ratio", "z");
 static const pair<string, string> discretize_threshold_opt("discretize-threshold", "R");
 static const pair<string, string> inconsistency_coef_opt("inconsistency-coefficient", "");
+static const pair<string, string> reflexive_rel_penalty("reflexive-rel-penalty", "");
+static const pair<string, string> inconsistency_pen_log_base("inconsistency-pen-log-base", "");
 
 // options specific to a particular fitness function
 static const pair<string, string> alpha_opt("alpha", "Q");

@@ -341,12 +341,20 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "where x is the number of generations so far. The default usually works "
          "well but if you run out of memory you may decrease that value.\n")
 
-         (opt_desc_str(inconsistency_coef_opt).c_str(),
+         ("inconsistency-coefficient",
           po::value<score_t>(&inconsistency_coef)->default_value(1.0),
           "Scaling coefficient to apply to inconsistency penalty. The inconsistency penalty is "
           "calculated using the features of program and checking them against a background knowledge, "
           "i.e Atomspace to see if they are related. A program that has more features related will incur "
           "a less inconsistency penalty that one which has less features related.")
+          ("reflexive-rel-penalty",
+            po::value<score_t>(&reflexive_rel_penalty)->default_value(0.1),
+            "The value to add to the inconsistency penalty for reflexive relationship between features. Setting it very high value will turn the inconsistency "
+            "penalty into a complexity penalty and setting to a very low value will result in programs with no unrelated features receiving a high penalty.")
+         ("inconsistency-pen-log-base",
+            po::value<score_t>(&inconsistency_pen_log_base)->default_value(2),
+            "The value to add to the inconsistency penalty for reflexive relationship between features. Setting it very high value will turn the inconsistency "
+            "penalty into a complexity penalty and setting to a very low value will result in programs with no unrelated features receiving a high penalty.")
         // Large problem parameters
         ("hc-max-nn-evals",
          po::value<unsigned>(&hc_max_nn)->default_value(20000),

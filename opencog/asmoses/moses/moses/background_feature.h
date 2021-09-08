@@ -44,8 +44,8 @@ typedef std::vector<Type> Types;
 class BackgroundFeature
 {
 public:
-	BackgroundFeature(AtomSpace* atmSpace, Type feature, Types& relations): _comboAtomese
-	(type_node::boolean_type), relationsType(relations)
+	BackgroundFeature(AtomSpace* atmSpace, Type feature, Types& relations, score_t logBase, score_t reflexive_pen):
+	        _comboAtomese(type_node::boolean_type), relationsType(relations), _logBase(logBase), _reflexive_penalty(reflexive_pen)
 	{
 		_as = atmSpace;
 		featureType = feature;
@@ -59,8 +59,8 @@ private:
 
 	void get_features(const Handle& prog, HandleSet& features);
 	score_t get_relationshipness(HandleSet& features);
-    std::pair<score_t, int> get_pairwise_relationshipness(const Handle& f1, const Handle& f2);
-    score_t check_logical(const Handle& h1, const Handle& h2, Type t);
+    void get_pairwise_relationshipness(const Handle& f1, const Handle& f2, std::pair<score_t, int>& score);
+    virtual score_t get_pairwise_relationshipness(const Handle& h1, const Handle& h2, Type t);
 
     static score_t get_cons_prob(const Handle& ln);
 
@@ -74,6 +74,8 @@ private:
 	ComboToAtomese _comboAtomese;
 	Type featureType;
 	Types relationsType;
+	score_t _logBase;
+	score_t _reflexive_penalty;
 	};
 } // ~namespace moses
 } // ~namespace opencog

@@ -359,10 +359,13 @@ void ann_table_problem::run(option_base* ob)
 	    mbcscore = new behave_cscore(bscore, pms.cache_size);        \
 	} else {                                                         \
 	        /*TODO Use it as a directory*/\
-           load_file(pms.scm_path, _bas);                            \
+           load_file(pms.scm_path, _bas);                   \
            Types links = {IMPLICATION_LINK};\
-           mbcscore = new behave_bg_cscore(bscore, &_bas, CONCEPT_NODE, links, labels, pms.inconsistency_coef);\
-           logger().info() << "Using Background feature behavorial scorer"; \
+           mbcscore = new behave_bg_cscore(bscore, &_bas, CONCEPT_NODE, links, labels, \
+                                pms.inconsistency_coef, pms.inconsistency_pen_log_base,\
+                                pms.reflexive_rel_penalty);\
+           logger().info() << "Using Background feature behavorial scorer";            \
+           logger().info() << "Background knowledge Atomspace size: " << _bas.get_size(); \
 	}                                                            	 \
 	reduct::rule* reduct_cand = pms.bool_reduct;                     \
 	reduct::rule* reduct_rep = pms.bool_reduct_rep;		             \
