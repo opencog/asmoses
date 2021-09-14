@@ -30,7 +30,7 @@ using namespace opencog;
 using namespace opencog::moses;
 
 const string utest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
-const float MAX_PENALTY = -10000.0;
+const float MAX_PENALTY = 2.0;
 
 class InconsistencyPenUTest : public CxxTest::TestSuite
 {
@@ -57,7 +57,7 @@ void InconsistencyPenUTest::test_simple_problem()
 
         for(const scored_combo_tree& sc : scs) {
             logger().info() << sc << endl;
-            TS_ASSERT(sc.get_inconsistency_penalty() > MAX_PENALTY);
+            TS_ASSERT(sc.get_inconsistency_penalty() < 4.0); //because the weight sum is 3.45
         }
     }
     catch(std::exception& e) {

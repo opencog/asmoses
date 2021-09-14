@@ -31,7 +31,7 @@ namespace moses {
 
 behave_bg_cscore::behave_bg_cscore(bscore_base &b, AtomSpace* as, Type feature_type,
                                    Types& relations, std::vector<std::string>& labels,
-                                   score_t incons_coef, score_t logBase, score_t reflexive_pen, size_t initial_cache_size)
+                                   score_t incons_coef, score_t logBase, size_t initial_cache_size)
 		:  behave_cscore(b, initial_cache_size),
 		  _bf(as, feature_type, relations, logBase),
 		  _ilabels(labels),

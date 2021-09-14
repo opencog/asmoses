@@ -34,7 +34,6 @@ namespace moses {
 using namespace opencog;
 using namespace opencog::combo;
 
-const score_t MAX_PENALTY = 10000.0;
 const score_t degenerate_val = 0.1;
 
 score_t BackgroundFeature::operator()(const Handle& prog)

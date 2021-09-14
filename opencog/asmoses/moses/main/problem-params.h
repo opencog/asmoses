@@ -116,7 +116,6 @@ struct problem_params : public option_base
     score_t complexity_temperature;
     score_t complexity_ratio;
     score_t inconsistency_coef;
-    score_t reflexive_rel_penalty;
     score_t inconsistency_pen_log_base;
     double cap_coef;
     unsigned cache_size;

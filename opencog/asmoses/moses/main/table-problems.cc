@@ -362,8 +362,7 @@ void ann_table_problem::run(option_base* ob)
            load_file(pms.scm_path, _bas);                   \
            Types links = {IMPLICATION_LINK};\
            mbcscore = new behave_bg_cscore(bscore, &_bas, CONCEPT_NODE, links, labels, \
-                                pms.inconsistency_coef, pms.inconsistency_pen_log_base,\
-                                pms.reflexive_rel_penalty);\
+                                pms.inconsistency_coef, pms.inconsistency_pen_log_base);\
            logger().info() << "Using Background feature behavorial scorer";            \
            logger().info() << "Background knowledge Atomspace size: " << _bas.get_size(); \
 	}                                                            	 \
