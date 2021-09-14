@@ -41,14 +41,43 @@ using namespace opencog::combo::id;
 
 typedef std::vector<Type> Types;
 
+/**
+ * Implements the code to penalize programs based on the relationship between their features.
+ * The following are the three assumptions about the penalty
+ * AS1 = penalty ceiling that depends on the atomspace
+ * AS2 = invariant to number of standalone features in the program
+ * AS3 = differentiate weight of relationship of features in the program only
+ *
+ * weight of a relationship is defined as the product of strength and confidence of the relationship
+ * weight = strength x confidence
+ *
+ * AS1 - we can take the average weight of the relevant relationships as a penalty ceiling. Here, by relevant
+ * we mean the types of relationships the user provided to look in the programs.
+ *
+ * AS2 - The penalty is log(P) where P = (average_weight_in_atomspace) / (1 - average_weight_in_prog_i )
+ * In the above equation, if a program has a single feature or n standalone feature (no relationship b/n the features) the penalty
+ * will be log(average_weight) - this is inline with AS2
+ *
+ * AS3 - Suppose we have two programs, prog1 and prog2 with the same feature size between the weights of the relationships of prog1
+ * are greater than that of prog2. Using the above formula, P_of_prog1 > P_of_prog2, hence Penalty_of_prog1 < Penalty_of_prog2, thereby
+ * satisfying AS3
+ *
+ * A corollary of AS1 is given two programs with the same features and feature size but different background knowledge bases (aka atomsapces),
+ * they will be penalized differently. Suppose we have two atomspaces A1 and A2 where there are relationships between the features in A1 and there
+ * are no relationships A2. If we have a simple program prog1:= and(f1 f2 f3) where there is no relationship between f1, f2 and f3 in both atomspaces,
+ * Penalty of prog1 when using A1 as background knowledge will be greater than that of using A2, where it will be 0 in the case of using A2. This makes
+ * sense because in A2 since there are no relationships, the penalty, which will be 0 for all programs, becomes irrelevant to program learning.
+ */
+
 class BackgroundFeature
 {
 public:
-	BackgroundFeature(AtomSpace* atmSpace, Type feature, Types& relations, score_t logBase, score_t reflexive_pen):
-	        _comboAtomese(type_node::boolean_type), relationsType(relations), _logBase(logBase), _reflexive_penalty(reflexive_pen)
+	BackgroundFeature(AtomSpace* atmSpace, Type feature, Types& relations, score_t logBase):
+	        _comboAtomese(type_node::boolean_type), relationsType(relations), _logBase(logBase)
 	{
 		_as = atmSpace;
 		featureType = feature;
+		calculate_total_weight();
 	}
 
 	score_t operator()(const Handle& prog);
@@ -64,6 +93,8 @@ private:
 
     static score_t get_cons_prob(const Handle& ln);
 
+    void calculate_total_weight();
+
 	inline std::string arg2str(const std::string& arg)
 	{
 		if(arg[0] == '$') return arg.substr(1);
@@ -75,7 +106,9 @@ private:
 	Type featureType;
 	Types relationsType;
 	score_t _logBase;
-	score_t _reflexive_penalty;
+	score_t _weight_sum = 0.0;
+	int _total_rels = 0;
+	score_t _floor;
 	};
 } // ~namespace moses
 } // ~namespace opencog

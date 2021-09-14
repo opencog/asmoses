@@ -63,9 +63,25 @@ void BackgroundFeature::get_features(const Handle& prog, HandleSet& features)
 
 }
 
+void BackgroundFeature::calculate_total_weight()
+{
+    int n = 0;
+    for(Type t : relationsType) {
+        HandleSeq rels;
+        _as->get_handles_by_type(rels, t);
+        n += rels.size();
+        for(const Handle& h : rels) {
+            _weight_sum += get_cons_prob(h);
+        }
+    }
+    _total_rels = n;
+    _floor = std::pow(_logBase, -_weight_sum) * _weight_sum;
+    logger().info() << "Found " << n << " relationships, with total weight sum = " << _weight_sum
+                        << " Floor value = " << _floor;
+}
+
 score_t BackgroundFeature::get_relationshipness(HandleSet& features)
 {
-    logger().info() << "Atomspace size: " << _as->get_size();
 	score_t cons = 0;
 	int total = 0;
 	for(const Handle& h1 : features)
@@ -79,12 +95,16 @@ score_t BackgroundFeature::get_relationshipness(HandleSet& features)
 		}
 	}
 
-	if (cons == 0) { //There is no relationship between the features
-		return MAX_PENALTY;
+	score_t p;
+	if(total > 0) {
+        p  = _weight_sum / std::max(cons, _floor);
+        return std::log2(p)/std::log2(_logBase);
 	}
-	cons = cons / total;
-
-	return -std::min(std::log2(cons)/std::log2(_logBase), MAX_PENALTY);
+	else if (total == 0 && _total_rels == 0) {
+	    return 0;
+	} else {
+	    return _weight_sum;
+	}
 }
 
 
@@ -104,12 +124,10 @@ void BackgroundFeature::get_pairwise_relationshipness(const Handle& h1, const Ha
         for(Type t : relationsType){
             score_t cons_prob = get_pairwise_relationshipness(f1, f2, t);
             prob += cons_prob;
-            if(cons_prob > 0)
+            if(cons_prob > 0) {
                 i++;
+            }
         }
-    } else {
-        prob += _reflexive_penalty;
-        i++;
     }
 
     score.first = prob;

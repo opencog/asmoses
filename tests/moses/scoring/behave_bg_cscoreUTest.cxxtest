@@ -96,15 +96,15 @@ void BehaveBGCscoreUTest::load_scm_file(const string &path, SchemeEval& eval)
 
 void BehaveBGCscoreUTest::test_atomese_program()
 {
+    logger().set_print_to_stdout_flag(true);
 	Table tt = loadTable(utest_dir + "data_bg.csv", target_feature);
 	CompressedTable ctt = tt.compressed();
 	table_bscore ct_bscore(ctt);
 	Types tts = {ATTRACTION_LINK};
 	vector<string> labels = {"f1", "f2", "f3", "f4"};
-	behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels, 2.5);
-
 	SchemeEval eval(&_as);
 	load_scm_file("data.scm", eval);
+    behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels);
 
 	Handle f1 = createNode(PREDICATE_NODE, "f1"), f2 = createNode(PREDICATE_NODE, "f2"),
 		f3 =  createNode(PREDICATE_NODE, "f3"),
@@ -121,7 +121,7 @@ void BehaveBGCscoreUTest::test_atomese_program()
 	composite_score cscore1 = bscore.get_cscore(prog1);
 	composite_score cscore2 = bscore.get_cscore(prog2);
 
-	TS_ASSERT(cscore2.get_inconsistency_penalty() < cscore1.get_inconsistency_penalty());
+	TS_ASSERT(cscore1.get_inconsistency_penalty() < cscore2.get_inconsistency_penalty());
 
 	cout << "composite score 1: " << cscore1.get_penalized_score()
 			<< " inconsistency penalty 1: " << cscore1.get_inconsistency_penalty() << endl;
@@ -152,7 +152,7 @@ void BehaveBGCscoreUTest::test_combo_program()
     composite_score cscore1 = bscore.get_cscore(tr1);
     composite_score cscore2 = bscore.get_cscore(tr2);
 
-    TS_ASSERT(cscore2.get_inconsistency_penalty() < cscore1.get_inconsistency_penalty());
+    TS_ASSERT(cscore1.get_inconsistency_penalty() < cscore2.get_inconsistency_penalty());
 
     cout << "composite score 1: " << cscore1.get_penalized_score()
          << " inconsistency penalty 1: " << cscore1.get_inconsistency_penalty() << endl;
