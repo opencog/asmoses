@@ -54,7 +54,9 @@ typedef std::vector<Type> Types;
  * AS1 - we can take the average weight of the relevant relationships as a penalty ceiling. Here, by relevant
  * we mean the types of relationships the user provided to look in the programs.
  *
- * AS2 - The penalty is log(P) where P = (average_weight_in_atomspace) / (1 - average_weight_in_prog_i )
+ * AS2 - The penalty is log(P) where P = _weight_sum / std::max(average_weight_prog_i, floor). Here floor value is used
+ * so that the penalty for programs that have very weak relationships between the featurews is not not greater than that of programs
+ * with standalone features.
  * In the above equation, if a program has a single feature or n standalone feature (no relationship b/n the features) the penalty
  * will be log(average_weight) - this is inline with AS2
  *
