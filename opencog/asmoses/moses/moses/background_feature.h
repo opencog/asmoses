@@ -51,11 +51,15 @@ typedef std::vector<Type> Types;
  * weight of a relationship is defined as the product of strength and confidence of the relationship
  * weight = strength x confidence
  *
- * AS1 - we can take the average weight of the relevant relationships as a penalty ceiling. Here, by relevant
+ * AS1 - we can take the sum weight of the relevant relationships as a penalty ceiling. Here, by relevant
  * we mean the types of relationships the user provided to look in the programs.
  *
- * AS2 - The penalty is log(P) where P = _weight_sum / std::max(average_weight_prog_i, floor). Here floor value is used
- * so that the penalty for programs that have very weak relationships between the featurews is not not greater than that of programs
+ *
+ *
+ * -log(sum_weight_prog / weight_sum)
+ *
+ * AS2 - The penalty is log(P) where P = _weight_sum / std::max(sum_weight_prog_i, floor). Here floor value is used
+ * so that the penalty for programs that have very weak relationships between the features is not not greater than that of programs
  * with standalone features.
  * In the above equation, if a program has a single feature or n standalone feature (no relationship b/n the features) the penalty
  * will be log(average_weight) - this is inline with AS2
