@@ -51,9 +51,9 @@ void diversityUTest::test_diversity_5_parity_no_autoscale()
 {
 	// Define expected candidates
 	vector<scored_combo_tree> scts;
-	scts.push_back(string_to_scored_combo_tree("-9 or(and(or(and(or(and(!$3 !$4) $5) or(!$1 $2)) and($3 $4)) or(!$1 $2 $5) or($3 $4 !$5)) and(!$1 $2))  [score=-9, penalized score=-12.3333330154418945, complexity=15, complexity penalty=3.33333325386047363, uniformity penalty=0]"));
-	scts.push_back(string_to_scored_combo_tree("-10 or(and(or(and(!$3 !$4) and($3 $4) $5) or(!$1 $2) or($3 $4 !$5)) and(!$1 $2))  [score=-10, penalized score=-12.9166669845581055, complexity=12, complexity penalty=2.66666674613952637, uniformity penalty=0.25]"));
-	scts.push_back(string_to_scored_combo_tree("-10 or(and(or(and(or(and(!$3 !$4) $5) or(!$1 $2)) and($3 $4)) or($3 $4 !$5)) and(!$1 $2))  [score=-10, penalized score=-12.9166669845581055, complexity=12, complexity penalty=2.66666674613952637, uniformity penalty=0.25]"));
+	scts.push_back(string_to_scored_combo_tree("-9 or(and(or(and(or(and(!$3 !$4) $5) or(!$1 $2)) and($3 $4)) or(!$1 $2 $5) or($3 $4 !$5)) and(!$1 $2))  [score=-9, penalized score=-12.3333330154418945, complexity=15, complexity penalty=3.33333325386047363, uniformity penalty=0, inconsistency penalty=0]"));
+	scts.push_back(string_to_scored_combo_tree("-10 or(and(or(and(!$3 !$4) and($3 $4) $5) or(!$1 $2) or($3 $4 !$5)) and(!$1 $2))  [score=-10, penalized score=-12.9166669845581055, complexity=12, complexity penalty=2.66666674613952637, uniformity penalty=0.25, inconsistency penalty=0]"));
+	scts.push_back(string_to_scored_combo_tree("-10 or(and(or(and(or(and(!$3 !$4) $5) or(!$1 $2)) and($3 $4)) or($3 $4 !$5)) and(!$1 $2))  [score=-10, penalized score=-12.9166669845581055, complexity=12, complexity penalty=2.66666674613952637, uniformity penalty=0.25, inconsistency penalty=0]"));
 
 	// Run test
 	moses_test_scored_combo_trees(
@@ -66,9 +66,9 @@ void diversityUTest::test_diversity_5_parity_autoscale()
 {
 	// Define expected candidates
 	vector<scored_combo_tree> scts;
-	scts.push_back(string_to_scored_combo_tree("-16 true  [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0]"));
-	scts.push_back(string_to_scored_combo_tree("-16 false  [score=-16, penalized score=-18.4035377502441406, complexity=0, complexity penalty=0, uniformity penalty=2.40353775024414062]"));
-	scts.push_back(string_to_scored_combo_tree("-16 !$1  [score=-16, penalized score=-19.4857158660888672, complexity=1, complexity penalty=0.285714298486709595, uniformity penalty=3.20000004768371582]"));
+	scts.push_back(string_to_scored_combo_tree("-16 true  [score=-16, penalized score=-16, complexity=0, complexity penalty=0, uniformity penalty=0, inconsistency penalty=0]"));
+	scts.push_back(string_to_scored_combo_tree("-16 false  [score=-16, penalized score=-18.4035377502441406, complexity=0, complexity penalty=0, uniformity penalty=2.40353775024414062, inconsistency penalty=0]"));
+	scts.push_back(string_to_scored_combo_tree("-16 !$1  [score=-16, penalized score=-19.4857158660888672, complexity=1, complexity penalty=0.285714298486709595, uniformity penalty=3.20000004768371582, inconsistency penalty=0]"));
 
 	// Run test
 	moses_test_scored_combo_trees(

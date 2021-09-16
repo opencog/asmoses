@@ -566,7 +566,7 @@ std::ostream& ostream_scored_atomese(std::ostream& out,
 									 bool output_demeID=true,
 									 bool output_bscore=true);
 
-scored_combo_tree string_to_scored_combo_tree(const std::string& line);
+scored_combo_tree string_to_scored_combo_tree(const std::string& line, const std::vector<std::string>& labels = {});
 
 std::istream& istream_scored_combo_trees(std::istream& in,
                                          std::vector<scored_combo_tree>& scts, const std::vector<std::string>& labels = {});
