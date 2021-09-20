@@ -355,6 +355,12 @@ problem_params::add_options(boost::program_options::options_description& desc)
             po::value<score_t>(&inconsistency_pen_log_base)->default_value(2),
             "The value to add to the inconsistency penalty for reflexive relationship between features. Setting it very high value will turn the inconsistency "
             "penalty into a complexity penalty and setting to a very low value will result in programs with no unrelated features receiving a high penalty.")
+         ("rel-types",
+            po::value<vector<string>>(&rel_types)->default_value(vector<string>(1, "ImplicationLink"), "ImplicationLink"),
+            "The types of relationships between the features for inconsistency penalty. Default link is ImplicationLink")
+         ("feature-type",
+            po::value<string>(&feature_type)->default_value("ConceptNode"),
+            "The type of features in the background atomspace. Default feature type is ConceptNode")
         // Large problem parameters
         ("hc-max-nn-evals",
          po::value<unsigned>(&hc_max_nn)->default_value(20000),

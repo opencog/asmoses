@@ -27,6 +27,7 @@
 #include <opencog/util/Logger.h>
 #include <opencog/asmoses/data/table/table_io.h>
 #include <opencog/persist/file/fast_load.h>
+#include <opencog/atoms/atom_types/NameServer.h>
 #include "opencog/asmoses/moses/moses/partial.h"
 #include "opencog/asmoses/moses/scoring/bscores.h"
 #include "opencog/asmoses/moses/scoring/discriminating_bscore.h"
@@ -358,12 +359,33 @@ void ann_table_problem::run(option_base* ob)
 	if (pms.scm_path.empty()) {                                      \
 	    mbcscore = new behave_cscore(bscore, pms.cache_size);        \
 	} else {                                                         \
-	        /*TODO Use it as a directory*/\
-           load_file(pms.scm_path, _bas);                   \
-           Types links = {IMPLICATION_LINK};\
-           mbcscore = new behave_bg_cscore(bscore, &_bas, CONCEPT_NODE, links, labels, \
-                                pms.inconsistency_coef, pms.inconsistency_pen_log_base);\
-           logger().info() << "Using Background feature behavorial scorer";            \
+	        /*TODO Use it as a directory*/                           \
+           Type t;                                                   \
+           Types relTypes;                                           \
+           for(const std::string& typeName : pms.rel_types) {         \
+                t = nameserver().getType(typeName);                  \
+                if(t == NOTYPE) {                                   \
+                    logger().error() << "Error: Unknown Link Type: " \
+                    << typeName << "! Exiting ASMOSES...";               \
+                    std::cerr << "Error: Unknown Link Type: " <<     \
+                    typeName << ". Exiting ASMOSES";                   \
+                    exit(1);                                         \
+                }                                                    \
+                relTypes.push_back(t);                               \
+           }                                                         \
+           Type featType = nameserver().getType(pms.feature_type);    \
+           if(featType == NOTYPE) {                                 \
+                logger().error() << "Error: Unknown Node Type: "     \
+                << featType << "! Exiting ASMOSES...";                   \
+                std::cerr << "Error: Unknown Node Type: " <<         \
+                featType << ". Exiting ASMOSES...";                       \
+                exit(1);\
+            }                                                        \
+           load_file(pms.scm_path, _bas);                            \
+           mbcscore = new behave_bg_cscore(bscore, &_bas,  featType, \
+                            relTypes, labels, pms.inconsistency_coef, \
+                            pms.inconsistency_pen_log_base);          \
+           logger().info() << "Using Background feature behavorial scorer"; \
            logger().info() << "Background knowledge Atomspace size: " << _bas.get_size(); \
 	}                                                            	 \
 	reduct::rule* reduct_cand = pms.bool_reduct;                     \
@@ -377,9 +399,9 @@ void ann_table_problem::run(option_base* ob)
 	metapop_moses_results(pms.exemplars, cand_type_signature,        \
 					  *reduct_cand, *reduct_rep, *mbcscore,          \
 					  pms.opt_params, pms.hc_params, pms.ps_params,  \
-					  pms.deme_params, pms.filter_params, pms.meta_params,          \
-					  pms.moses_params, pms.mmr_pa,output_type,labels);    \
-    delete mbcscore;                                                    \
+					  pms.deme_params, pms.filter_params, pms.meta_params, \
+					  pms.moses_params, pms.mmr_pa,output_type,labels);\
+    delete mbcscore;                                                  \
 }
 
 void pre_table_problem::run(option_base* ob)

@@ -75,7 +75,6 @@ static const pair<string, string> max_candidates_per_deme_opt("max-candidates-pe
 static const pair<string, string> complexity_temperature_opt("complexity-temperature", "v");
 static const pair<string, string> complexity_ratio_opt("complexity-ratio", "z");
 static const pair<string, string> discretize_threshold_opt("discretize-threshold", "R");
-static const pair<string, string> inconsistency_coef_opt("inconsistency-coefficient", "");
 static const pair<string, string> inconsistency_pen_log_base("inconsistency-pen-log-base", "");
 
 // options specific to a particular fitness function

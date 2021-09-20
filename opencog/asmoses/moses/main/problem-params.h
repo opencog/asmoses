@@ -117,6 +117,8 @@ struct problem_params : public option_base
     score_t complexity_ratio;
     score_t inconsistency_coef;
     score_t inconsistency_pen_log_base;
+    vector<string> rel_types;
+    string feature_type;
     double cap_coef;
     unsigned cache_size;
     double perm_ratio;
