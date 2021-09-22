@@ -211,6 +211,41 @@ void table_problem_base::common_type_setup(problem_params& pms,
 	logger().info() << "Inferred output type: " << output_type;
 }
 
+behave_cscore* table_problem_base::get_background_bcscorer(AtomSpace* bas, problem_params& pms,
+                                                           bscore_base& bscore, const string_seq& labels) {
+
+    /*TODO Use it as a directory*/
+    Type t;
+    Types relTypes;
+    for(const std::string& typeName : pms.rel_types) {
+        t = nameserver().getType(typeName);
+        if(t == NOTYPE) {
+            logger().error() << "Error: Unknown Link Type: "
+                             << typeName << "! Exiting ASMOSES...";
+            std::cerr << "Error: Unknown Link Type: " <<
+                      typeName << ". Exiting ASMOSES";
+            exit(1);
+        }
+        relTypes.push_back(t);
+    }
+    Type featType = nameserver().getType(pms.feature_type);
+    if(featType == NOTYPE) {
+        logger().error() << "Error: Unknown Node Type: "
+                         << featType << "! Exiting ASMOSES...";
+        std::cerr << "Error: Unknown Node Type: " <<
+                  featType << ". Exiting ASMOSES...";
+        exit(1);
+    }
+    load_file(pms.scm_path, *bas);
+    behave_cscore* mbcscore = new behave_bg_cscore(bscore, bas, featType,
+                                                   relTypes, labels, pms.inconsistency_coef,
+                                                   pms.inconsistency_pen_log_base);
+    logger().info() << "Using Background feature behavorial scorer";
+    logger().info() << "Background knowledge Atomspace size: " << bas->get_size();
+
+    return mbcscore;
+}
+
 // ==================================================================
 
 void ip_problem_params::add_options(boost::program_options::options_description& desc)
@@ -352,41 +387,14 @@ void ann_table_problem::run(option_base* ob)
 	/* When boosting, cache must not be used, as otherwise, stale */ \
 	/* composite scores get cached and returned.*/                   \
 	if (pms.meta_params.do_boosting) pms.cache_size = 0;             \
-	string_seq labels = TABLE.get_input_labels();\
     /*Check if the scm path has been specified */                    \
-    AtomSpace _bas;                                                  \
     behave_cscore* mbcscore;                                         \
+    AtomSpace bas;                                                   \
 	if (pms.scm_path.empty()) {                                      \
 	    mbcscore = new behave_cscore(bscore, pms.cache_size);        \
 	} else {                                                         \
-	        /*TODO Use it as a directory*/                           \
-           Type t;                                                   \
-           Types relTypes;                                           \
-           for(const std::string& typeName : pms.rel_types) {         \
-                t = nameserver().getType(typeName);                  \
-                if(t == NOTYPE) {                                   \
-                    logger().error() << "Error: Unknown Link Type: " \
-                    << typeName << "! Exiting ASMOSES...";               \
-                    std::cerr << "Error: Unknown Link Type: " <<     \
-                    typeName << ". Exiting ASMOSES";                   \
-                    exit(1);                                         \
-                }                                                    \
-                relTypes.push_back(t);                               \
-           }                                                         \
-           Type featType = nameserver().getType(pms.feature_type);    \
-           if(featType == NOTYPE) {                                 \
-                logger().error() << "Error: Unknown Node Type: "     \
-                << featType << "! Exiting ASMOSES...";                   \
-                std::cerr << "Error: Unknown Node Type: " <<         \
-                featType << ". Exiting ASMOSES...";                       \
-                exit(1);\
-            }                                                        \
-           load_file(pms.scm_path, _bas);                            \
-           mbcscore = new behave_bg_cscore(bscore, &_bas,  featType, \
-                            relTypes, labels, pms.inconsistency_coef, \
-                            pms.inconsistency_pen_log_base);          \
-           logger().info() << "Using Background feature behavorial scorer"; \
-           logger().info() << "Background knowledge Atomspace size: " << _bas.get_size(); \
+        mbcscore = get_background_bcscorer(&bas, pms, bscore,        \
+                                    TABLE.get_input_labels());       \
 	}                                                            	 \
 	reduct::rule* reduct_cand = pms.bool_reduct;                     \
 	reduct::rule* reduct_rep = pms.bool_reduct_rep;		             \
@@ -400,7 +408,7 @@ void ann_table_problem::run(option_base* ob)
 					  *reduct_cand, *reduct_rep, *mbcscore,          \
 					  pms.opt_params, pms.hc_params, pms.ps_params,  \
 					  pms.deme_params, pms.filter_params, pms.meta_params, \
-					  pms.moses_params, pms.mmr_pa,output_type,labels);\
+					  pms.moses_params, pms.mmr_pa,output_type);\
     delete mbcscore;                                                  \
 }
 
@@ -446,13 +454,21 @@ void pre_table_problem::run(option_base* ob)
 	// composite scores get cached and returned.
 	if (pms.meta_params.do_boosting) pms.cache_size = 0;
 
-	behave_cscore mbcscore(bscore, pms.cache_size);
+    behave_cscore* mbcscore;
+    AtomSpace bas;
+    if (pms.scm_path.empty()) {
+        mbcscore = new behave_cscore(bscore, pms.cache_size);
+    } else {
+        mbcscore = get_background_bcscorer(&bas, pms, bscore, ctable.get_input_labels());
+    }
+
 	metapop_moses_results(pms.exemplars, cand_type_signature,
 						  *pms.bool_reduct, *pms.bool_reduct_rep,
-						  mbcscore,
+						  *mbcscore,
 						  pms.opt_params, pms.hc_params, pms.ps_params,
 						  pms.deme_params, pms.filter_params, pms.meta_params,
 						  pms.moses_params, pms.mmr_pa);
+    delete mbcscore;
 }
 
 void pre_conj_table_problem::run(option_base* ob)

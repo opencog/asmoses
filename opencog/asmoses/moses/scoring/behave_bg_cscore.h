@@ -33,7 +33,7 @@ class behave_bg_cscore : public behave_cscore
 {
 public:
 	behave_bg_cscore(bscore_base &b, AtomSpace* as, Type feature_type,
-					 Types& relations, std::vector<std::string>& labels,
+					 Types& relations, const std::vector<std::string>& labels,
                      score_t incons_coef = 1, score_t logBase = 2, size_t initial_cache_size = 0);
 
 	composite_score get_cscore(const combo_tree &tr);

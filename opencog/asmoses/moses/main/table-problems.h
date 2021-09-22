@@ -61,7 +61,8 @@ protected:
 	typedef boost::ptr_vector<bscore_base> BScorerSeq;
 
 	void common_setup(problem_params &);
-
+    behave_cscore* get_background_bcscorer(AtomSpace* bas, problem_params& pms,
+                                           bscore_base& bscore, const string_seq& labels);
 	void common_type_setup(problem_params &, type_node = id::unknown_type);
 
 	// Input data for table-based problems.
