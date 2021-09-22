@@ -42,77 +42,77 @@ using namespace opencog::moses;
 class BackgroundFeatureUTest : public CxxTest::TestSuite
 {
 private:
-	AtomSpace _as;
+    AtomSpace _as;
 public:
-	BackgroundFeatureUTest() {}
+    BackgroundFeatureUTest() {}
 
-	~BackgroundFeatureUTest() {
-		if (!CxxTest::TestTracker::tracker().suiteFailed())
-			std::remove(logger().get_filename().c_str());
-	}
+    ~BackgroundFeatureUTest() {
+        if (!CxxTest::TestTracker::tracker().suiteFailed())
+            std::remove(logger().get_filename().c_str());
+    }
 
-	void setUp();
+    void setUp();
 
-	void tearDown();
+    void tearDown();
 
-	void test_atomese_program();
-	void test_combo_program();
+    void test_atomese_program();
+    void test_combo_program();
 };
 
 void BackgroundFeatureUTest::setUp() {
-	_as.clear();
+    _as.clear();
 }
 
 void BackgroundFeatureUTest::tearDown() {}
 
 void BackgroundFeatureUTest::test_atomese_program() {
-	SchemeEval eval(&_as);
-	eval.eval("");
-	eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
-	string rv = eval.eval("(use-modules (opencog))");
-	TS_ASSERT(not eval.eval_error());
-	printf("Result from use-modules is %s\n", rv.c_str());
-	rv = eval.eval("(load-from-path \"tests/moses/moses/data.scm\")");
-	TS_ASSERT(not eval.input_pending());
-	TS_ASSERT(not eval.eval_error());
-	printf("Result from loading is %s\n", rv.c_str());
+    SchemeEval eval(&_as);
+    eval.eval("");
+    eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
+    string rv = eval.eval("(use-modules (opencog))");
+    TS_ASSERT(not eval.eval_error());
+    printf("Result from use-modules is %s\n", rv.c_str());
+    rv = eval.eval("(load-from-path \"tests/moses/moses/data.scm\")");
+    TS_ASSERT(not eval.input_pending());
+    TS_ASSERT(not eval.eval_error());
+    printf("Result from loading is %s\n", rv.c_str());
 
-	Types tts = {ATTRACTION_LINK};
-	BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2);
-	Handle prog = al(AND_LINK,
-					 an(PREDICATE_NODE, "$f1"),
-					 an(PREDICATE_NODE, "$f4"));
-	score_t val = bf(prog);
+    Types tts = {ATTRACTION_LINK};
+    BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2);
+    Handle prog = al(AND_LINK,
+                     an(PREDICATE_NODE, "$f1"),
+                     an(PREDICATE_NODE, "$f4"));
+    score_t val = bf(prog);
 
     TS_ASSERT(abs(val - 0.18) < 0.000001); //we expect val to be 0.18 (max penalty)
 
-	cout << "inconsistency penalty: " << val << endl;
+    cout << "inconsistency penalty: " << val << endl;
 }
 
 void BackgroundFeatureUTest::test_combo_program()
 {
-	SchemeEval eval(&_as);
-	eval.eval("");
+    SchemeEval eval(&_as);
+    eval.eval("");
     string rv = eval.eval("(use-modules (opencog))");
-	eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
-	TS_ASSERT(not eval.eval_error());
-	printf("Result from use-modules is %s\n", rv.c_str());
+    eval.eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
+    TS_ASSERT(not eval.eval_error());
+    printf("Result from use-modules is %s\n", rv.c_str());
     rv = eval.eval("(load-from-path \"tests/moses/moses/data.scm\")");
-	TS_ASSERT(not eval.input_pending());
-	TS_ASSERT(not eval.eval_error());
-	printf("Result from loading is %s\n", rv.c_str());
+    TS_ASSERT(not eval.input_pending());
+    TS_ASSERT(not eval.eval_error());
+    printf("Result from loading is %s\n", rv.c_str());
 
-	string prog_str = "and(or($1 !$4) $2 $3 !$5)";
-	stringstream ss(prog_str);
-	vector<string> labels = {"f1", "f2", "f3", "f4", "f5"};
-	combo_tree tr;
-	ss >> tr;
-	Types tts = {ATTRACTION_LINK};
-	BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2);
+    string prog_str = "and(or($1 !$4) $2 $3 !$5)";
+    stringstream ss(prog_str);
+    vector<string> labels = {"f1", "f2", "f3", "f4", "f5"};
+    combo_tree tr;
+    ss >> tr;
+    Types tts = {ATTRACTION_LINK};
+    BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2);
 
-	score_t val = bf(tr, labels);
+    score_t val = bf(tr, labels);
 
     TS_ASSERT_EQUALS(val, 0); //no penalty as the above program captures all the relationships in the atomspace
 
-	cout << "inconsistency penalty: " << val << endl;
+    cout << "inconsistency penalty: " << val << endl;
 }

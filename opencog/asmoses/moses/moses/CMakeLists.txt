@@ -1,6 +1,6 @@
 #install header files
 INSTALL(FILES
-		background_feature.h
+        background_feature.h
         complexity.h
         distributed_moses.h
         neighborhood_sampling.h
@@ -11,7 +11,7 @@ INSTALL(FILES
         partial.h
         types.h
 
-	DESTINATION
+    DESTINATION
 
-	"include/opencog/${PROJECT_NAME}/moses/moses"
+    "include/opencog/${PROJECT_NAME}/moses/moses"
 )

@@ -91,7 +91,7 @@ static const pair<string, string> atomspace_store_opt("atomspace-store","I");
 // option for running codes related to Atomspace
 static const pair<string, string> atomspace_port_opt("atomspace-port", "O");
 
-//option for the path to scheme files that contain the atomese to load to background knowledge atomspace
+// option for the path to scheme files that contain the atomese to load to background knowledge atomspace
 static const pair<string, string> scm_path_opt("scm-path", "");
 
 // Returns a string interpretable by Boost.Program_options

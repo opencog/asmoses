@@ -78,22 +78,22 @@ typedef std::vector<Type> Types;
 class BackgroundFeature
 {
 public:
-	BackgroundFeature(AtomSpace* atmSpace, Type feature, Types& relations, score_t logBase):
-	        _comboAtomese(type_node::boolean_type), relationsType(relations), _logBase(logBase)
-	{
-		_as = atmSpace;
-		featureType = feature;
-		calculate_total_weight();
-	}
+    BackgroundFeature(AtomSpace* atmSpace, Type feature, Types& relations, score_t logBase):
+            _comboAtomese(type_node::boolean_type), relationsType(relations), _logBase(logBase)
+    {
+        _as = atmSpace;
+        featureType = feature;
+        calculate_total_weight();
+    }
 
-	score_t operator()(const Handle& prog);
-	score_t operator()(const combo_tree& prog, const std::vector<std::string>& labels);
+    score_t operator()(const Handle& prog);
+    score_t operator()(const combo_tree& prog, const std::vector<std::string>& labels);
 
 
 private:
 
-	void get_features(const Handle& prog, HandleSet& features);
-	score_t get_relationshipness(HandleSet& features);
+    void get_features(const Handle& prog, HandleSet& features);
+    score_t get_relationshipness(HandleSet& features);
     void get_pairwise_relationshipness(const Handle& f1, const Handle& f2, std::pair<score_t, int>& score);
     virtual score_t get_pairwise_relationshipness(const Handle& h1, const Handle& h2, Type t);
 
@@ -101,21 +101,21 @@ private:
 
     void calculate_total_weight();
 
-	inline std::string arg2str(const std::string& arg)
-	{
-		if(arg[0] == '$') return arg.substr(1);
-		return arg;
-	}
+    inline std::string arg2str(const std::string& arg)
+    {
+        if(arg[0] == '$') return arg.substr(1);
+        return arg;
+    }
 
-	AtomSpace* _as;
-	ComboToAtomese _comboAtomese;
-	Type featureType;
-	Types relationsType;
-	score_t _logBase;
-	score_t _weight_sum = 0.0;
-	int _total_rels = 0;
-	score_t _floor;
-	};
+    AtomSpace* _as;
+    ComboToAtomese _comboAtomese;
+    Type featureType;
+    Types relationsType;
+    score_t _logBase;
+    score_t _weight_sum = 0.0;
+    int _total_rels = 0;
+    score_t _floor;
+    };
 } // ~namespace moses
 } // ~namespace opencog
 
