@@ -63,9 +63,12 @@ opencog::ValuePtr Interpreter::operator()(const opencog::Handle &program)
 	}
 
 	ValueSeq params;
-	for (const Handle &h : program->getOutgoingSet()) {
-		params.push_back((*this)(h));
+	if(program->is_link()){
+		for (const Handle &h : program->getOutgoingSet()) {
+			params.push_back((*this)(h));
+		}
 	}
+
 
 	ValuePtr result = execute(program->get_type(), params);
 
@@ -82,7 +85,7 @@ ValuePtr Interpreter::unwrap_constant(const Handle &handle)
 	Type t = handle->get_type();
 	if (NUMBER_NODE == t) {
 		std::vector<double> constant_value(_problem_data_size,
-		                                   NumberNodeCast(handle)->get_value());
+										   NumberNodeCast(handle)->get_value());
 		ValuePtr constant(new FloatValue(constant_value));
 		return constant;
 	}
@@ -169,7 +172,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		std::vector<double> f_result, f_result2;
 		if (params.size() == 0) {
 			throw SyntaxException(TRACE_INFO,
-			                      "CondLink is expected to be arity greater-than 0!");
+								  "CondLink is expected to be arity greater-than 0!");
 		}
 		if (params.size() == 1) {
 			default_exp.push_back(params[0]);
@@ -194,18 +197,18 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 			auto f_value = FloatValueCast(exps[i]);
 			if (f_value) {
 				f_result2 = condlink_exec_floatvalue(LinkValueCast(conds[i]),
-				                                     FloatValueCast(exps[i]),
-				                                     FloatValueCast
-						                                     (default_exp[i]));
+													 FloatValueCast(exps[i]),
+													 FloatValueCast
+															 (default_exp[i]));
 				f_result.insert(f_result.end(),
-				                f_result2.begin(), f_result2.end());
+								f_result2.begin(), f_result2.end());
 			} else {
 				l_result2 = condlink_exec_linkvalue(LinkValueCast(conds[i]),
-				                                    LinkValueCast(exps[i]),
-				                                    LinkValueCast
-						                                    (default_exp[i]));
+													LinkValueCast(exps[i]),
+													LinkValueCast
+															(default_exp[i]));
 				l_result.insert(l_result.end(),
-				                l_result2.begin(), l_result2.end());
+								l_result2.begin(), l_result2.end());
 			}
 		}
 		if (l_result.empty()) {
@@ -227,7 +230,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		OC_ASSERT(params.size() == 2)
 
 		ValuePtr result = greater_than(FloatValueCast(params[0]),
-		                               FloatValueCast(params[1]));
+									   FloatValueCast(params[1]));
 		return result;
 	}
 

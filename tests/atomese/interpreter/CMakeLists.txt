@@ -1,5 +1,5 @@
-ADD_CXXTEST(InterpreterUTest)
-TARGET_LINK_LIBRARIES(InterpreterUTest
+ADD_CXXTEST(AtomeseInterpreterUTest)
+TARGET_LINK_LIBRARIES(AtomeseInterpreterUTest
 	-Wl,--no-as-needed
 	atomese
 	moses
