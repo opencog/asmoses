@@ -77,14 +77,14 @@ void BackgroundFeatureUTest::test_atomese_program() {
     TS_ASSERT(not eval.eval_error());
     printf("Result from loading is %s\n", rv.c_str());
 
-    Types tts = {ATTRACTION_LINK};
-    BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2);
+    TypeSet tts = {ATTRACTION_LINK};
+    BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 0.0, 2.0);
     Handle prog = al(AND_LINK,
                      an(PREDICATE_NODE, "$f1"),
                      an(PREDICATE_NODE, "$f4"));
     score_t val = bf(prog);
 
-    TS_ASSERT(abs(val - 0.18) < 0.000001); //we expect val to be 0.18 (max penalty)
+    TS_ASSERT(abs(val + 0.63) < 0.01); //we expect val to be 0.18 (max penalty)
 
     cout << "inconsistency penalty: " << val << endl;
 }
@@ -107,12 +107,12 @@ void BackgroundFeatureUTest::test_combo_program()
     vector<string> labels = {"f1", "f2", "f3", "f4", "f5"};
     combo_tree tr;
     ss >> tr;
-    Types tts = {ATTRACTION_LINK};
-    BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 2);
+    TypeSet tts = {ATTRACTION_LINK};
+    BackgroundFeature bf(&_as, CONCEPT_NODE, tts, 0.0, 2.0);
 
     score_t val = bf(tr, labels);
 
-    TS_ASSERT_EQUALS(val, 0); //no penalty as the above program captures all the relationships in the atomspace
+    TS_ASSERT(abs(val + 1.11) < 0.001); //no penalty as the above program captures all the relationships in the atomspace
 
     cout << "inconsistency penalty: " << val << endl;
 }

@@ -34,19 +34,28 @@ namespace moses {
 using namespace opencog;
 using namespace opencog::combo;
 
-const score_t degenerate_val = 0.1;
+const score_t degenerate_val = 0.01;
+
+BackgroundFeature::BackgroundFeature(AtomSpace* atmSpace, Type feature, TypeSet& relations, score_t alpha, score_t logBase):
+    _comboAtomese(type_node::boolean_type), relationsType(relations), _logBase(logBase)
+{
+        _as = atmSpace;
+        featureType = feature;
+        set_alpha(alpha);
+        calculate_max_weights();
+}
 
 score_t BackgroundFeature::operator()(const Handle& prog)
 {
-	HandleSet feats;;
-	get_features(prog, feats);
-	return get_relationshipness(feats);
+    HandleSet feats;;
+    get_features(prog, feats);
+    return get_relationshipness(feats);
 }
 
 score_t BackgroundFeature::operator()(const combo_tree& prog, const std::vector<std::string>& labels)
 {
-	Handle h = _comboAtomese(prog, labels);
-	return (*this)(h);
+    Handle h = _comboAtomese(prog, labels);
+    return (*this)(h);
 }
 
 void BackgroundFeature::get_features(const Handle& prog, HandleSet& features)
@@ -62,57 +71,131 @@ void BackgroundFeature::get_features(const Handle& prog, HandleSet& features)
 
 }
 
-void BackgroundFeature::calculate_total_weight()
+void BackgroundFeature::set_alpha(score_t alpha)
 {
+    logger().info() << "alpha: " << alpha << std::endl;
+    OC_ASSERT(alpha >= 0.0f, "BackgroundFeature: alpha value cannot be negative!");
+    if(alpha != 0.0f){
+        _alpha = alpha;
+        return;
+    }
+    HandleSeq feats;
+    _as->get_handles_by_type(feats, featureType);
+
+    float total_weight = 0.0f;
     int n = 0;
-    for(Type t : relationsType) {
-        HandleSeq rels;
-        _as->get_handles_by_type(rels, t);
-        n += rels.size();
-        for(const Handle& h : rels) {
-            _weight_sum += get_cons_prob(h);
+    for(const Handle& h1 : feats) {
+        for(const Handle& h2 : feats) {
+            score_t p = get_pairwise_relationshipness(h1, h2);
+            if(p > 0.0f) {
+                total_weight += p;
+                n += 1;
+            }
         }
     }
-    _total_rels = n;
-    _floor = std::pow(_logBase, -_weight_sum) * _weight_sum;
-    logger().info() << "Found " << n << " relationships, with total weight sum = " << _weight_sum
-                        << " Floor value = " << _floor;
+
+    if(n > 0) //there is at least one relationship in the atomspace
+    {
+        float avg = total_weight / n;
+        _alpha = avg;
+    }
+
+    logger().info() << "Setting alpha value to: " << _alpha << std::endl;
+
+}
+
+void BackgroundFeature::calculate_max_weights()
+{
+    float max_score = 0.0;
+
+    HandleSeq feats;
+    _as->get_handles_by_type(feats, featureType);
+
+    int curr_m_i, curr_m_j = 0;
+    //Find size two maximum relationship
+    for(int i = 0; i < feats.size(); i++)
+    {
+        for(int j = 0; j < feats.size(); j++)
+        {
+            float cons1 = get_pairwise_relationshipness(feats[i], feats[j]);
+            float cons2 = get_pairwise_relationshipness(feats[j], feats[i]);
+            if(std::max(cons1, cons2) > max_score) {
+                curr_m_i = i;
+                curr_m_j = j;
+                max_score = std::max(cons1, cons2);
+            }
+        }
+    }
+
+    std::set<int> emptyS;
+    MaxRel relData1(_alpha, emptyS);
+
+    std::set<int> indxs = {curr_m_i, curr_m_j};
+    max_score = max_score + 2*_alpha;
+    MaxRel relData2{max_score, indxs};
+
+    maxRelSeq.push_back(relData1);
+    maxRelSeq.push_back(relData2);
+
+    for (int k = 2; k < feats.size(); k++) {
+        ScoreIdx sIdx;
+        select_max_feat(feats, maxRelSeq[k-1], sIdx);
+        float mscore = maxRelSeq[k-1].maxScore + sIdx.first + (k + 1)*_alpha;
+        std::set<int> idxs = maxRelSeq[k-1].featIdxs;
+        indxs.insert(sIdx.second);
+        maxRelSeq.push_back(MaxRel(mscore, indxs));
+    }
+
+}
+
+void BackgroundFeature::select_max_feat(HandleSeq& features, MaxRel& data, ScoreIdx& scoreIdx) {
+
+    float max_score = 0.0;
+
+    int curr_m_j = 0;
+
+    for(int i : data.featIdxs) {
+        for(int j = 0; j < features.size(); j++) {
+            if (data.featIdxs.find(j) != data.featIdxs.end()) continue;
+
+            float cons1 = get_pairwise_relationshipness(features.at(i), features.at(j));
+            float cons2 = get_pairwise_relationshipness(features.at(j), features.at(i));
+
+            if(std::max(cons1, cons2) > max_score) {
+                curr_m_j = j;
+                max_score = std::max(cons1, cons2);
+            }
+        }
+    }
+
+    scoreIdx.first = max_score;
+    scoreIdx.second = curr_m_j;
 }
 
 score_t BackgroundFeature::get_relationshipness(HandleSet& features)
 {
-	score_t cons = 0;
-	int total = 0;
-	for(const Handle& h1 : features)
-	{
-		for(const Handle& h2 : features)
-		{
-            std::pair<score_t, int> res;
-            get_pairwise_relationshipness(h1, h2, res);
-            cons += res.first;
-            total += res.second;
-		}
-	}
+    if (features.empty() || features.size() == 1) return log2(maxRelSeq[0].maxScore);
+    score_t cons = 0;
 
-	score_t p;
-	if(total > 0) {
-        p  = _weight_sum / std::max(cons, _floor);
-        return std::log2(p)/std::log2(_logBase);
-	}
-	else if (total == 0 && _total_rels == 0) {
-	    return 0;
-	} else {
-	    return _weight_sum;
-	}
+    for(const Handle& h1 : features)
+    {
+        for(const Handle& h2 : features)
+        {
+            cons += get_pairwise_relationshipness(h1, h2);
+        }
+    }
+
+    score_t maxScore = maxRelSeq[features.size()-1].maxScore;
+    score_t p = cons / maxScore;
+    return log2(p)/ log2(_logBase);;
 }
 
 
-void BackgroundFeature::get_pairwise_relationshipness(const Handle& h1, const Handle& h2, std::pair<score_t, int>& score)
+score_t BackgroundFeature::get_pairwise_relationshipness(const Handle& h1, const Handle& h2)
 {
-    score_t prob = 0.0;
-    int i = 0;
 
     if(!content_eq(h1, h2)) {
+        score_t prob = 0.0;
         Handle f1 = _as->get_handle(featureType, arg2str(h1->get_name()));
         Handle f2 = _as->get_handle(featureType, arg2str(h2->get_name()));
         OC_ASSERT(f1 != Handle::UNDEFINED, "There is no such feature in the Atomspace named %s with type %s. All features must be present in the Atomspace!",
@@ -121,16 +204,12 @@ void BackgroundFeature::get_pairwise_relationshipness(const Handle& h1, const Ha
                   arg2str(h2->get_name()).c_str(), nameserver().getTypeName(featureType).c_str());
 
         for(Type t : relationsType){
-            score_t cons_prob = get_pairwise_relationshipness(f1, f2, t);
-            prob += cons_prob;
-            if(cons_prob > 0) {
-                i++;
-            }
+            prob += get_pairwise_relationshipness(f1, f2, t);
         }
+        return prob;
     }
 
-    score.first = prob;
-    score.second = i;
+    return _alpha;
 }
 
 score_t BackgroundFeature::get_pairwise_relationshipness(const Handle &h1, const Handle &h2, Type t)

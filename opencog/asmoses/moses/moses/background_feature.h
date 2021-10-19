@@ -75,16 +75,23 @@ typedef std::vector<Type> Types;
  * sense because in A2 since there are no relationships, the penalty, which will be 0 for all programs, becomes irrelevant to program learning.
  */
 
+struct MaxRel {
+
+    MaxRel(float score, std::set<int>& fts): maxScore(score), featIdxs(fts)
+    {}
+
+    float maxScore;
+    std::set<int> featIdxs;
+};
+
+typedef std::vector<MaxRel> MaxRelSeq;
+typedef std::pair<float, int> ScoreIdx;
+
+
 class BackgroundFeature
 {
 public:
-    BackgroundFeature(AtomSpace* atmSpace, Type feature, Types& relations, score_t logBase):
-            _comboAtomese(type_node::boolean_type), relationsType(relations), _logBase(logBase)
-    {
-        _as = atmSpace;
-        featureType = feature;
-        calculate_total_weight();
-    }
+    BackgroundFeature(AtomSpace* atmSpace, Type feature, TypeSet& relations, score_t alpha, score_t logBase);
 
     score_t operator()(const Handle& prog);
     score_t operator()(const combo_tree& prog, const std::vector<std::string>& labels);
@@ -94,12 +101,15 @@ private:
 
     void get_features(const Handle& prog, HandleSet& features);
     score_t get_relationshipness(HandleSet& features);
-    void get_pairwise_relationshipness(const Handle& f1, const Handle& f2, std::pair<score_t, int>& score);
+    score_t get_pairwise_relationshipness(const Handle& f1, const Handle& f2);
     virtual score_t get_pairwise_relationshipness(const Handle& h1, const Handle& h2, Type t);
 
     static score_t get_cons_prob(const Handle& ln);
 
-    void calculate_total_weight();
+    void calculate_max_weights();
+    void select_max_feat(HandleSeq& features, MaxRel& data, ScoreIdx& scoreIdx);
+    void set_alpha(score_t alpha);
+
 
     inline std::string arg2str(const std::string& arg)
     {
@@ -110,11 +120,10 @@ private:
     AtomSpace* _as;
     ComboToAtomese _comboAtomese;
     Type featureType;
-    Types relationsType;
+    TypeSet relationsType;
+    score_t _alpha = 0.0;
     score_t _logBase;
-    score_t _weight_sum = 0.0;
-    int _total_rels = 0;
-    score_t _floor;
+    MaxRelSeq maxRelSeq;
     };
 } // ~namespace moses
 } // ~namespace opencog

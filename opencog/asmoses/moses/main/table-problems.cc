@@ -216,7 +216,7 @@ behave_cscore* table_problem_base::get_background_bcscorer(AtomSpace* bas, probl
 
 	/*TODO Use it as a directory*/
 	Type t;
-	Types relTypes;
+	TypeSet relTypes;
 	for(const std::string& typeName : pms.rel_types) {
 		t = nameserver().getType(typeName);
 		if(t == NOTYPE) {
@@ -226,7 +226,7 @@ behave_cscore* table_problem_base::get_background_bcscorer(AtomSpace* bas, probl
 					  typeName << ". Exiting ASMOSES";
 			exit(1);
 		}
-		relTypes.push_back(t);
+		relTypes.insert(t);
 	}
 	Type featType = nameserver().getType(pms.feature_type);
 	if(featType == NOTYPE) {
@@ -238,9 +238,10 @@ behave_cscore* table_problem_base::get_background_bcscorer(AtomSpace* bas, probl
 	}
 	load_file(pms.scm_path, *bas);
 	behave_cscore* mbcscore = new behave_bg_cscore(bscore, bas, featType,
-												   relTypes, labels, pms.inconsistency_coef,
-												   pms.inconsistency_pen_log_base);
+												   relTypes, labels, pms.incons_alpha,
+												   pms.inconsistency_coef, pms.inconsistency_pen_log_base);
 	logger().info() << "Using Background feature behavorial scorer";
+	logger().info() << "Alpha: " << pms.incons_alpha;
 	logger().info() << "Background knowledge Atomspace size: " << bas->get_size();
 
 	return mbcscore;

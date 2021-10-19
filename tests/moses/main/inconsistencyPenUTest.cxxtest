@@ -30,7 +30,6 @@ using namespace opencog;
 using namespace opencog::moses;
 
 const string utest_dir = string(PROJECT_SOURCE_DIR) + "/tests/moses/main/";
-const float MAX_PENALTY = 2.0;
 
 class InconsistencyPenUTest : public CxxTest::TestSuite
 {
@@ -47,7 +46,7 @@ void InconsistencyPenUTest::test_simple_problem()
     string outfile = mkstemp_moses_output();
     string opts = "moses-exec -i" + utest_dir + "out_pen.csv" + " -o" + outfile +
                 " -m10000 -uout --inconsistency-coefficient=1 --output-cscore=1 --output-deme-id=1 -W1 -c20 --output-format=combo --scm-path=" + utest_dir + "test.scm"
-                + " --rel-types Implication --feature-type ConceptNode";
+                + " --rel-types Implication --feature-type ConceptNode ";
     auto start = std::chrono::system_clock::now();
     moses_exec(opts);
     auto end = std::chrono::system_clock::now();

@@ -20,7 +20,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <cxxtest/TestSuite.h>
+#include
+<cxxtest/TestSuite.h>
 #include <opencog/asmoses/moses/scoring/behave_bg_cscore.h>
 #include <iostream>
 #include <opencog/util/Logger.h>
@@ -100,7 +101,7 @@ void BehaveBGCscoreUTest::test_atomese_program()
     Table tt = loadTable(utest_dir + "data_bg.csv", target_feature);
     CompressedTable ctt = tt.compressed();
     table_bscore ct_bscore(ctt);
-    Types tts = {ATTRACTION_LINK};
+    TypeSet tts = {ATTRACTION_LINK};
     vector<string> labels = {"f1", "f2", "f3", "f4"};
     SchemeEval eval(&_as);
     load_scm_file("data.scm", eval);
@@ -137,7 +138,7 @@ void BehaveBGCscoreUTest::test_combo_program()
     Table tt = loadTable(utest_dir + "data_bg.csv", target_feature);
     CompressedTable ctt = tt.compressed();
     table_bscore ct_bscore(ctt);
-    Types tts = {ATTRACTION_LINK};
+    TypeSet tts = {ATTRACTION_LINK};
     vector<string> labels = {"f1", "f2", "f3", "f4", "f5"};
 
     SchemeEval eval(&_as);

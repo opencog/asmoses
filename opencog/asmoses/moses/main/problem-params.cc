@@ -361,6 +361,10 @@ problem_params::add_options(boost::program_options::options_description& desc)
          ("feature-type",
             po::value<string>(&feature_type)->default_value("ConceptNode"),
             "The type of features in the background atomspace. Default feature type is ConceptNode")
+         ("inconsistency-alpha",
+            po::value<score_t>(&incons_alpha)->default_value(0.0),
+            "The weight of reflexive relationships. Setting it too high will make the reflexive relationships to have more effect in "
+            "penalty than pairwise relationships. If set to 0, the average weight will be used as alpha value.")
         // Large problem parameters
         ("hc-max-nn-evals",
          po::value<unsigned>(&hc_max_nn)->default_value(20000),
