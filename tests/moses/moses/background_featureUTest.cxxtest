@@ -61,6 +61,7 @@ public:
 
 void BackgroundFeatureUTest::setUp() {
     _as.clear();
+    logger().set_print_to_stdout_flag(true);
 }
 
 void BackgroundFeatureUTest::tearDown() {}
@@ -112,7 +113,7 @@ void BackgroundFeatureUTest::test_combo_program()
 
     score_t val = bf(tr, labels);
 
-    TS_ASSERT(abs(val + 1.11) < 0.001); //no penalty as the above program captures all the relationships in the atomspace
+    TS_ASSERT(val == 0.0); //no penalty as the above program captures all the relationships in the atomspace
 
     cout << "inconsistency penalty: " << val << endl;
 }

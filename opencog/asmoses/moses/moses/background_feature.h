@@ -100,15 +100,15 @@ public:
 private:
 
     void get_features(const Handle& prog, HandleSet& features);
-    score_t get_relationshipness(HandleSet& features);
+    score_t get_relationshipness(const HandleSet& features);
     score_t get_pairwise_relationshipness(const Handle& f1, const Handle& f2);
     virtual score_t get_pairwise_relationshipness(const Handle& h1, const Handle& h2, Type t);
 
     static score_t get_cons_prob(const Handle& ln);
 
     void calculate_max_weights();
-    void select_max_feat(HandleSeq& features, MaxRel& data, ScoreIdx& scoreIdx);
-    void set_alpha(score_t alpha);
+    void select_max_feat(const HandleSeq& features, const MaxRel& data, ScoreIdx& scoreIdx);
+    void set_alpha(const score_t alpha);
 
 
     inline std::string arg2str(const std::string& arg)

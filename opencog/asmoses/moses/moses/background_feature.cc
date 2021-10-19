@@ -71,9 +71,8 @@ void BackgroundFeature::get_features(const Handle& prog, HandleSet& features)
 
 }
 
-void BackgroundFeature::set_alpha(score_t alpha)
+void BackgroundFeature::set_alpha(const score_t alpha)
 {
-    logger().info() << "alpha: " << alpha << std::endl;
     OC_ASSERT(alpha >= 0.0f, "BackgroundFeature: alpha value cannot be negative!");
     if(alpha != 0.0f){
         _alpha = alpha;
@@ -111,7 +110,8 @@ void BackgroundFeature::calculate_max_weights()
     HandleSeq feats;
     _as->get_handles_by_type(feats, featureType);
 
-    int curr_m_i, curr_m_j = 0;
+    int curr_m_i = 0;
+    int curr_m_j = 0;
     //Find size two maximum relationship
     for(int i = 0; i < feats.size(); i++)
     {
@@ -140,7 +140,7 @@ void BackgroundFeature::calculate_max_weights()
     for (int k = 2; k < feats.size(); k++) {
         ScoreIdx sIdx;
         select_max_feat(feats, maxRelSeq[k-1], sIdx);
-        float mscore = maxRelSeq[k-1].maxScore + sIdx.first + (k + 1)*_alpha;
+        float mscore = maxRelSeq[k-1].maxScore + sIdx.first + _alpha;
         std::set<int> idxs = maxRelSeq[k-1].featIdxs;
         indxs.insert(sIdx.second);
         maxRelSeq.push_back(MaxRel(mscore, indxs));
@@ -148,31 +148,37 @@ void BackgroundFeature::calculate_max_weights()
 
 }
 
-void BackgroundFeature::select_max_feat(HandleSeq& features, MaxRel& data, ScoreIdx& scoreIdx) {
+void BackgroundFeature::select_max_feat(const HandleSeq& features, const MaxRel& data, ScoreIdx& scoreIdx) {
 
     float max_score = 0.0;
 
     int curr_m_j = 0;
 
-    for(int i : data.featIdxs) {
-        for(int j = 0; j < features.size(); j++) {
-            if (data.featIdxs.find(j) != data.featIdxs.end()) continue;
 
-            float cons1 = get_pairwise_relationshipness(features.at(i), features.at(j));
-            float cons2 = get_pairwise_relationshipness(features.at(j), features.at(i));
+    for(int j = 0; j < features.size(); j++) {
+        float weight_sum = 0.0;
+        if(data.featIdxs.find(j) == data.featIdxs.end()) //not found in the previous indices
+        {
+            for (int i : data.featIdxs) {
+                float cons1 = get_pairwise_relationshipness(features.at(i), features.at(j));
+                float cons2 = get_pairwise_relationshipness(features.at(j), features.at(i));
 
-            if(std::max(cons1, cons2) > max_score) {
-                curr_m_j = j;
-                max_score = std::max(cons1, cons2);
+                weight_sum += std::max(cons1, cons2);
             }
         }
+
+        if (weight_sum > max_score) {
+            curr_m_j = j;
+            max_score = weight_sum;
+        }
     }
+
 
     scoreIdx.first = max_score;
     scoreIdx.second = curr_m_j;
 }
 
-score_t BackgroundFeature::get_relationshipness(HandleSet& features)
+score_t BackgroundFeature::get_relationshipness(const HandleSet& features)
 {
     if (features.empty() || features.size() == 1) return log2(maxRelSeq[0].maxScore);
     score_t cons = 0;
@@ -186,6 +192,11 @@ score_t BackgroundFeature::get_relationshipness(HandleSet& features)
     }
 
     score_t maxScore = maxRelSeq[features.size()-1].maxScore;
+    if(cons > maxScore) {
+        maxRelSeq[features.size()-1].maxScore = cons;
+        return 0;
+    }
+
     score_t p = cons / maxScore;
     return log2(p)/ log2(_logBase);;
 }
@@ -195,7 +206,7 @@ score_t BackgroundFeature::get_pairwise_relationshipness(const Handle& h1, const
 {
 
     if(!content_eq(h1, h2)) {
-        score_t prob = 0.0;
+        score_t weight = 0.0;
         Handle f1 = _as->get_handle(featureType, arg2str(h1->get_name()));
         Handle f2 = _as->get_handle(featureType, arg2str(h2->get_name()));
         OC_ASSERT(f1 != Handle::UNDEFINED, "There is no such feature in the Atomspace named %s with type %s. All features must be present in the Atomspace!",
@@ -204,9 +215,9 @@ score_t BackgroundFeature::get_pairwise_relationshipness(const Handle& h1, const
                   arg2str(h2->get_name()).c_str(), nameserver().getTypeName(featureType).c_str());
 
         for(Type t : relationsType){
-            prob += get_pairwise_relationshipness(f1, f2, t);
+            weight += get_pairwise_relationshipness(f1, f2, t);
         }
-        return prob;
+        return weight;
     }
 
     return _alpha;

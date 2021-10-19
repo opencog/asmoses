@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include
-<cxxtest/TestSuite.h>
+#include <cxxtest/TestSuite.h>
 #include <opencog/asmoses/moses/scoring/behave_bg_cscore.h>
 #include <iostream>
 #include <opencog/util/Logger.h>
@@ -105,7 +104,7 @@ void BehaveBGCscoreUTest::test_atomese_program()
     vector<string> labels = {"f1", "f2", "f3", "f4"};
     SchemeEval eval(&_as);
     load_scm_file("data.scm", eval);
-    behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels);
+    behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels, 0.0);
 
     Handle f1 = createNode(PREDICATE_NODE, "f1"), f2 = createNode(PREDICATE_NODE, "f2"),
         f3 =  createNode(PREDICATE_NODE, "f3"),
@@ -122,7 +121,7 @@ void BehaveBGCscoreUTest::test_atomese_program()
     composite_score cscore1 = bscore.get_cscore(prog1);
     composite_score cscore2 = bscore.get_cscore(prog2);
 
-    TS_ASSERT(cscore1.get_inconsistency_penalty() < cscore2.get_inconsistency_penalty());
+    TS_ASSERT(cscore2.get_inconsistency_penalty() < cscore1.get_inconsistency_penalty());
 
     cout << "composite score 1: " << cscore1.get_penalized_score()
                                   << " inconsistency penalty 1: "
@@ -144,10 +143,10 @@ void BehaveBGCscoreUTest::test_combo_program()
     SchemeEval eval(&_as);
     load_scm_file("data.scm", eval);
 
-    behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels);
+    behave_bg_cscore bscore(ct_bscore, &_as, CONCEPT_NODE, tts, labels, 0.0);
 
-    string combo_str_1 = "and($f1 or($f2 $f5) $f3 $f4)";
-    string combo_str_2 = "and($f2 $f5)";
+    string combo_str_1 = "and($f1 or($f2 $f5))";
+    string combo_str_2 = "and($f2 $f4)";
 
     combo_tree tr1 = str2combo_tree(combo_str_1, labels);
     combo_tree tr2 = str2combo_tree(combo_str_2, labels);
