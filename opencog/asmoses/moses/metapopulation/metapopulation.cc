@@ -46,6 +46,7 @@ metapopulation::metapopulation(const combo_tree_seq& bases,
 		_cscorer(sc),
 		_merge_count(0),
 		_best_cscore(worst_composite_score),
+		_as(createAtomSpace()),
 		_ensemble(sc, pa.ensemble_params)
 {
 	init(bases);
