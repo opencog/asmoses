@@ -15,18 +15,19 @@ using namespace std;
 using namespace opencog;
 using namespace reduct;
 
-#define al _as.add_link
-#define an _as.add_node
+#define al _as->add_link
+#define an _as->add_node
 
 class BooleanReductUTest : public CxxTest::TestSuite
 {
 private:
-	AtomSpace _as;
+	AtomSpacePtr _as;
 	Handle X, Y, XandX, YandY;
 
 public:
 	BooleanReductUTest()
 	{
+		_as = createAtomSpace();
 		X = an(PREDICATE_NODE, "$1");
 		Y = an(PREDICATE_NODE, "$2");
 		XandX = al(AND_LINK, {X, X});
@@ -55,7 +56,7 @@ private:
 	void test_simplify_handle(Handle &handle)
 	{
 		HandleSet ignore_ops;
-		logical_reduce(3, handle, ignore_ops, &_as);
+		logical_reduce(3, handle, ignore_ops, _as);
 
 		TS_ASSERT_EQUALS(handle, X);
 	}
@@ -63,7 +64,7 @@ private:
 	void test_simplify_handle_labeled(Handle &handle)
 	{
 		HandleSet ignore_ops;
-		logical_reduce(3, handle, ignore_ops, &_as);
+		logical_reduce(3, handle, ignore_ops, _as);
 
 		TS_ASSERT_EQUALS(handle, Y);
 	}

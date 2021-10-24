@@ -33,18 +33,19 @@ using namespace opencog::combo;
 using namespace opencog::reduct;
 using namespace opencog;
 
-#define al _as.add_link
-#define an _as.add_node
+#define al _as->add_link
+#define an _as->add_node
 
 class ContinReductUTest : public CxxTest::TestSuite
 {
 private:
-	AtomSpace _as;
+	AtomSpacePtr _as;
 	Handle ZERO, X, XPLUS0;
 
 public:
 	ContinReductUTest()
 	{
+		_as = createAtomSpace();
 		ZERO = an(NUMBER_NODE, "0");
 		X = an(NUMBER_NODE, "5");
 		XPLUS0 = al(PLUS_LINK, {X, ZERO});

@@ -9,7 +9,7 @@ using namespace std;
 
 class load_tableUTest : public CxxTest::TestSuite {
 private:
-	AtomSpace *as;
+	AtomSpacePtr as;
 	SchemeEval *eval;
 	const string load_tableUTest_dir =
 		string(PROJECT_SOURCE_DIR) + "/tests/data/representation/";
@@ -60,7 +60,7 @@ load_tableUTest::load_tableUTest()
 	logger().set_level(Logger::DEBUG);
 	logger().set_print_to_stdout_flag(true);
 
-	as = new AtomSpace();
+	as = createAtomSpace();
 	eval = new SchemeEval(as);
 	eval->eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
 	eval->eval("(use-modules (opencog exec))");
@@ -71,7 +71,6 @@ load_tableUTest::load_tableUTest()
 load_tableUTest::~load_tableUTest()
 {
 	delete eval;
-	delete as;
 	// Erase the log file if no assertions failed.
 	if (!CxxTest::TestTracker::tracker().suiteFailed())
 		std::remove(logger().get_filename().c_str());
