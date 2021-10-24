@@ -45,7 +45,7 @@ AtomeseRepresentation::AtomeseRepresentation(const reduct::rule &simplify_candid
                                              const reduct::rule &simplify_knob_building,
                                              const Handle &exemplar,
                                              const Handle &t,
-                                             AtomSpace* as,
+                                             AtomSpacePtr as,
                                              const HandleSet &ignore_ops,
                                              float perm_ratio,
                                              bool linear_contin)
@@ -100,7 +100,7 @@ Handle AtomeseRepresentation::get_candidate(const Handle &h)
 {
 	Handle ex = _as->add_atom(createLink(HandleSeq{_DSN, h}, PUT_LINK));
 
-	Instantiator inst(_as);
+	Instantiator inst(_as.get());
 	return HandleCast(inst.execute(ex));
 }
 

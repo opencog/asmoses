@@ -35,7 +35,7 @@ private:
 public:
     AtomeseComplexityUTest()
     {
-            as = creatteAtomSpace();
+            as = createAtomSpace();
             // Logger setting
             logger().set_print_to_stdout_flag(true);
             // logger().set_level(Logger::DEBUG);

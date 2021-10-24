@@ -47,7 +47,7 @@ struct AtomeseRepresentation : public boost::noncopyable, boost::equality_compar
 	                       const reduct::rule& simplify_knob_building,
 	                       const Handle& exemplar_,
 	                       const Handle& t,
-	                       AtomSpace* as,
+	                       AtomSpacePtr as,
 	                       const HandleSet& ignore_ops={},
 	                       float perm_ratio=0.0,
 	                       bool linear_contin=true);
@@ -56,7 +56,7 @@ protected:
 	field_set _fields;
 	const reduct::rule* _simplify_candidate; // used to simplify candidates
 	const reduct::rule* _simplify_knob_building;
-	AtomSpace* _as;
+	AtomSpacePtr _as;
 	const Handle _DSN =
 			createNode(DEFINED_SCHEMA_NODE, randstr(std::string("REP") + "-"));
 	Handle _rep;
