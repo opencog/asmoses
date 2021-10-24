@@ -157,7 +157,7 @@ INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogFunctions.cmake")
 
 # ----------------------------------------------------------
 # MPI is needed for MOSES on compute clusters.
-FIND_PACKAGE(MPI)
+# FIND_PACKAGE(MPI)
 
 IF (MPI_FOUND)
 	ADD_DEFINITIONS(-DHAVE_MPI)

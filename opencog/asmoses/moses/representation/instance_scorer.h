@@ -87,7 +87,7 @@ struct atomese_based_scorer : public iscorer_base
 	atomese_based_scorer(behave_cscore &cs, representation &rep, bool reduce,
 	                     ComboToAtomese& to_atomese,
 	                     const std::vector<std::string> &labels={},
-	                     AtomSpace* as=nullptr)
+	                     AtomSpacePtr as=nullptr)
 			: _as(as), _cscorer(cs), _rep(rep), _reduce(reduce), _labels(labels),
 			  _to_atomese(to_atomese)
 	{}
@@ -95,7 +95,7 @@ struct atomese_based_scorer : public iscorer_base
 	composite_score operator()(const instance &inst) const;
 
 protected:
-	AtomSpace* _as;
+	AtomSpacePtr _as;
 	behave_cscore &_cscorer;
 	representation &_rep;
 	bool _reduce; // whether the exemplar should be reduced before being
