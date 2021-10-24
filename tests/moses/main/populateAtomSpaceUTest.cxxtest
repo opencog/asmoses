@@ -24,19 +24,19 @@ public:
 	ValueSeq values_vec2;
 
 	void test_contin_type() {
-		AtomSpace as;
+		AtomSpacePtr as = createAtomSpace();
 		//create  a table of inputs
 		ITable it(vector<type_node>(2, id::contin_type));
 		it.push_back({0.4, 244.2});
 		it.push_back({9.5, 4.2});
-		populate(&as, it);
+		populate(as, it);
 
 		f1 = it.get_labels().at(0);
 		f2 = it.get_labels().at(1);
 
 		//Get the value from Atomspace
-		feature1 = as.get_handle(SCHEMA_NODE, "$"+f1)->getValue(Constants::value_key);
-		feature2 = as.get_handle(SCHEMA_NODE, "$"+f2)->getValue(Constants::value_key);
+		feature1 = as->get_handle(SCHEMA_NODE, "$"+f1)->getValue(Constants::value_key);
+		feature2 = as->get_handle(SCHEMA_NODE, "$"+f2)->getValue(Constants::value_key);
 
 		//Get the value
 		vector<double> results1 = FloatValueCast(feature1)->value();
@@ -50,20 +50,20 @@ public:
 	}
 
 	void test_boolean_type() {
-		AtomSpace as;
+		AtomSpacePtr as = createAtomSpace();
 		//create a table of inputs
 		vector<string> labels{"f1", "f2"};
 		ITable it(vector<type_node>(2, id::boolean_type), labels);
 		it.push_back({id::logical_true, id::logical_false});
 		it.push_back({id::logical_false, id::logical_true});
-		populate(&as, it);
+		populate(as, it);
 
 		f1 = it.get_labels().at(0);
 		f2 = it.get_labels().at(1);
 
 		//get the inputs from AtomSpace
-		feature1 = as.get_handle(PREDICATE_NODE, "$"+f1)->getValue(Constants::value_key);
-		feature2 = as.get_handle(PREDICATE_NODE, "$"+f2)->getValue(Constants::value_key);
+		feature1 = as->get_handle(PREDICATE_NODE, "$"+f1)->getValue(Constants::value_key);
+		feature2 = as->get_handle(PREDICATE_NODE, "$"+f2)->getValue(Constants::value_key);
 
 		//Get the values
 		values_vec1 = LinkValueCast(feature1)->value();
@@ -84,17 +84,17 @@ public:
 	}
 
 	void test_populate_compressed() {
-		AtomSpace as;
+		AtomSpacePtr as = createAtomSpace();
 		string input_file = populateAtomSpaceUTest_dir + "dataset.ctable";
 		CompressedTable ct = loadCompressedTable(input_file);
-		populate(&as, ct);
+		populate(as, ct);
 		const string_seq labels = ct.get_input_labels();
 
 		f1 = labels[0];
 		f2 = labels[1];
 		//get the inputs from AtomSpace
-		feature1 = as.get_handle(PREDICATE_NODE, "$"+f1)->getValue(Constants::compressed_value_key);
-		feature2 = as.get_handle(PREDICATE_NODE, "$"+f2)->getValue(Constants::compressed_value_key);
+		feature1 = as->get_handle(PREDICATE_NODE, "$"+f1)->getValue(Constants::compressed_value_key);
+		feature2 = as->get_handle(PREDICATE_NODE, "$"+f2)->getValue(Constants::compressed_value_key);
 
 		//Get the values
 		values_vec1 = LinkValueCast(feature1)->value();
