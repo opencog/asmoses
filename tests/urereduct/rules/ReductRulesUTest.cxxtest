@@ -33,11 +33,11 @@ using namespace std;
 class ReductRulesUTest : public CxxTest::TestSuite
 {
 private:
-	AtomSpace as;
+	AtomSpacePtr as;
 	SchemeEval eval;
 
 public:
-	ReductRulesUTest() : eval(&as)
+	ReductRulesUTest() : as(createAtomSpace()), eval(as)
 	{
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
@@ -84,7 +84,7 @@ void ReductRulesUTest::tearDown()
 
 void ReductRulesUTest::setUp()
 {
-	as.clear();
+	as->clear();
 }
 
 void ReductRulesUTest::load_scm_files(std::vector<std::string> files)

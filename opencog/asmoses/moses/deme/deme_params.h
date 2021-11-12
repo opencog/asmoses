@@ -91,7 +91,7 @@ struct deme_parameters
     bool atomspace_port;
 
     // Atomspace used for storing candidate programs and input features
-    AtomSpace *as;
+    AtomSpacePtr as;
 };
 
 } // ~namespace moses

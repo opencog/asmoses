@@ -108,7 +108,7 @@ void bool_problem_base::run(option_base* ob)
 	// create atomspace if the code is running through port atomspace
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = new AtomSpace();
+		pms.deme_params.as = createAtomSpace();
 	}
 
 	logical_bscore bscore = get_bscore(_dparms.problem_size);
@@ -266,7 +266,7 @@ void polynomial_problem::run(option_base* ob)
 
     if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-        pms.deme_params.as = new AtomSpace();
+        pms.deme_params.as = createAtomSpace();
         type_node_seq tt_seq = type_tree_to_tyn_seq(tt);
         it.set_types(tt_seq);
         populate(pms.deme_params.as, it);
@@ -401,7 +401,7 @@ void combo_problem::run(option_base* ob)
 
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = new AtomSpace();
+		pms.deme_params.as = createAtomSpace();
 	}
 
 	if (output_type == id::boolean_type) {
@@ -494,7 +494,7 @@ void ann_combo_problem::run(option_base* ob)
 
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = new AtomSpace();
+		pms.deme_params.as = createAtomSpace();
 	}
 
 	if (pms.nsamples <= 0)

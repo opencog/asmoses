@@ -37,7 +37,7 @@ using namespace std;
 class ImpulseLinkUTest : public CxxTest::TestSuite
 {
 private:
-	AtomSpace *_as;
+	AtomSpacePtr _as;
 	SchemeEval *eval;
 
 public:
@@ -46,7 +46,7 @@ public:
 		logger().set_level(Logger::DEBUG);
 		logger().set_print_to_stdout_flag(true);
 
-		_as = new AtomSpace();
+		_as = createAtomSpace();
 		eval = new SchemeEval(_as);
 		eval->eval("(add-to-load-path \"" PROJECT_SOURCE_DIR "\")");
 		eval->eval("(use-modules (opencog exec))");
@@ -56,7 +56,6 @@ public:
 	~ImpulseLinkUTest()
 	{
 		delete eval;
-		delete _as;
 		// Erase the log file if no assertions failed.
 		if (!CxxTest::TestTracker::tracker().suiteFailed())
 			std::remove(logger().get_filename().c_str());

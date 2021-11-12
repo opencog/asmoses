@@ -28,6 +28,7 @@
 
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/asmoses/combo/combo/vertex.h>
+#include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/asmoses/atomese/atom_types/atom_types.h>
@@ -52,7 +53,7 @@ enum __attribute__((packed)) procedure_type
 struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 {
 public:
-	vertex_2_atom(id::procedure_type *parent, AtomSpace *as=nullptr,
+	vertex_2_atom(id::procedure_type *parent, AtomSpacePtr as=nullptr,
 	              const std::vector<std::string> &labels={},
 	              type_node output_type = id::boolean_type);
 	std::pair<Type, Handle> operator()(const argument &a) const;
@@ -71,7 +72,7 @@ public:
 	}
 
 private:
-	AtomSpace *_as;
+	AtomSpacePtr _as;
 	const std::vector<std::string> &_labels;
 	mutable id::procedure_type *_parent;
 	type_node _out_type;
@@ -81,7 +82,7 @@ class ComboToAtomese
 {
 public:
 	ComboToAtomese();
-	ComboToAtomese(AtomSpace *as);
+	ComboToAtomese(AtomSpacePtr as);
 	ComboToAtomese(type_node output_type);
 
 	/**
@@ -93,7 +94,7 @@ public:
 	Handle operator()(const combo_tree &tr, const std::vector<std::string> &labels={});
 
 private:
-	AtomSpace *_as;
+	AtomSpacePtr _as;
 	type_node _output_type;
 
 protected:

@@ -31,9 +31,11 @@ using namespace moses;
 class AtomeseComplexityUTest : public CxxTest::TestSuite
 {
 private:
-    AtomSpace as;
+    AtomSpacePtr as;
 public:
-    AtomeseComplexityUTest() {
+    AtomeseComplexityUTest()
+    {
+            as = createAtomSpace();
             // Logger setting
             logger().set_print_to_stdout_flag(true);
             // logger().set_level(Logger::DEBUG);
@@ -50,14 +52,14 @@ public:
     void test_times_link();
     void test_multiple_number_node();
 };
-#define an as.add_node
-#define al as.add_link
+#define an as->add_node
+#define al as->add_link
 void AtomeseComplexityUTest::setUp()
 {
 }
 void AtomeseComplexityUTest::tearDown()
 {
-        as.clear();
+        as->clear();
 }
 
 // Test NumberNode Complexity

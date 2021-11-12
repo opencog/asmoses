@@ -46,6 +46,7 @@ metapopulation::metapopulation(const combo_tree_seq& bases,
 		_cscorer(sc),
 		_merge_count(0),
 		_best_cscore(worst_composite_score),
+		_as(createAtomSpace()),
 		_ensemble(sc, pa.ensemble_params)
 {
 	init(bases);
@@ -61,6 +62,7 @@ metapopulation::metapopulation(const HandleSeq& bases,
 		_cscorer(sc),
 		_merge_count(0),
 		_best_cscore(worst_composite_score),
+		_as(createAtomSpace()),
 		_ensemble(sc, pa.ensemble_params)
 {
 	init(bases);
@@ -76,6 +78,7 @@ metapopulation::metapopulation(const combo_tree& base,
 		_cscorer(sc),
 		_merge_count(0),
 		_best_cscore(worst_composite_score),
+		_as(createAtomSpace()),
 		_ensemble(sc, pa.ensemble_params)
 {
 	combo_tree_seq bases(1, base);
@@ -92,6 +95,7 @@ metapopulation::metapopulation(const Handle& base,
 		_cscorer(sc),
 		_merge_count(0),
 		_best_cscore(worst_composite_score),
+		_as(createAtomSpace()),
 		_ensemble(sc, pa.ensemble_params)
 {
 	HandleSeq bases(1, base);

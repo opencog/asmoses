@@ -45,7 +45,7 @@ ComboToAtomese::ComboToAtomese()
 	_as = nullptr;
 }
 
-ComboToAtomese::ComboToAtomese(AtomSpace *as)
+ComboToAtomese::ComboToAtomese(AtomSpacePtr as)
 		:_as(as)
 {}
 
@@ -66,7 +66,7 @@ Handle ComboToAtomese::operator()(const combo_tree &ct,
 	return handle;
 }
 
-vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpace *as,
+vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpacePtr as,
                              const std::vector<std::string> &labels, type_node output_type)
 		: _as(as), _parent(parent), _labels(labels), _out_type(output_type)
 {}

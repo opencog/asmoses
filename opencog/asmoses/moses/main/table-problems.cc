@@ -166,7 +166,7 @@ void table_problem_base::common_setup(problem_params& pms)
 	// and populate it with the input data
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for populating features
-		pms.deme_params.as = new AtomSpace();
+		pms.deme_params.as = createAtomSpace();
 		populate(pms.deme_params.as, table.itable);
 		populate(pms.deme_params.as, ctable);
 	}

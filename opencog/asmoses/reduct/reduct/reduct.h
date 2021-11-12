@@ -61,7 +61,7 @@ struct rule
 			(*this)(tr, tr.begin());
 	}
 
-	void operator()(Handle &handle, AtomSpace *as=nullptr) const
+	void operator()(Handle &handle, AtomSpacePtr as=nullptr) const
 	{
 		AtomeseToCombo to_combo;
 		auto conv_result = to_combo(handle);
@@ -190,7 +190,7 @@ inline void logical_reduce(int effort, combo_tree &tr)
 
 inline void logical_reduce(int effort, Handle &handle,
                            const HandleSet &a_ignore_ops,
-                           AtomSpace *as=nullptr)
+                           AtomSpacePtr as=nullptr)
 {
 	logical_reduction r(a_ignore_ops);
 	r(effort)(handle, as);
