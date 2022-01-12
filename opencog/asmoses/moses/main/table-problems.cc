@@ -394,8 +394,8 @@ void pre_table_problem::run(option_base* ob)
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 	if (pms.meta_params.do_boosting) bscore.use_weighted_scores();
 
-	if (pms.gen_best_tree) {
-		// experimental: use some canonically generated
+	if (pms.gen_best_candidate) {
+		// Experimental: use some canonically generated
 		// candidate as exemplar seed
 		combo_tree tr = bscore.gen_canonical_best_candidate();
 		logger().info() << "Canonical program tree (non reduced) maximizing precision = " << tr;

@@ -180,7 +180,7 @@ struct problem_params : public option_base
 
     // pre params
     bool pre_positive;
-    bool gen_best_tree;
+    bool gen_best_candidate;
 
     // it params
     bool it_abs_err;
