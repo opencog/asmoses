@@ -87,8 +87,12 @@ struct bscore_base
 
 	/// Return the worst possible bscore achievable with this fitness
 	/// function. This is needed during boosting, to ascertain if at
-	// least half the answers are correct.
+	/// least half the answers are correct.
 	virtual behavioral_score worst_possible_bscore() const;
+
+	/// Generate, if possible, cannonically best candidate to maximize
+	/// the score.
+	virtual combo_tree gen_canonical_best_candidate() const;
 
 	/// Return the smallest change in the score which can be considered
 	/// to be an improvement over the previous score. This is useful for

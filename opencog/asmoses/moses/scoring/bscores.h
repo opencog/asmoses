@@ -395,6 +395,10 @@ struct compressed_truth_table_bscore : public bscore_ctable_base
 
 	behavioral_score worst_possible_bscore() const;
 
+	// Generate the candidate that best fit the table regardless of its
+	// complexity, here, a disjunctive normal form.
+	combo_tree gen_canonical_best_candidate() const;
+
 	score_t min_improv() const;
 
 protected:

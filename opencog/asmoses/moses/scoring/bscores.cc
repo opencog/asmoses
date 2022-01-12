@@ -481,6 +481,31 @@ behavioral_score compressed_truth_table_bscore::worst_possible_bscore() const
 	return bs;
 }
 
+combo_tree compressed_truth_table_bscore::gen_canonical_best_candidate() const
+{
+	// Generate a disjunctive normal form such
+	combo_tree tr;
+	auto head = tr.set_head(id::logical_or);
+	for (const CompressedTable::value_type &vct : _wrk_ctable) {
+		const CompressedTable::counter_t &cnt = vct.second;
+
+		// If the table output is predominantly true then create a
+		// corresponding conjunction
+		if (cnt.get(id::logical_false) < cnt.get(id::logical_true)) {
+			// Build and insert the corresponding conjunction
+			const builtin_seq& truth_row = vct.first.get_seq<builtin>();
+			combo_tree cnj = conjunction_from_truth_row(truth_row);
+			tr.replace(tr.append_child(head), cnj.begin());
+		}
+	}
+
+	// Return false if there are no conjunction
+	if (head.is_childless())
+		tr.set_head(id::logical_false);
+
+	return tr;
+}
+
 score_t compressed_truth_table_bscore::min_improv() const
 {
 	// A return value of 0.5 would be correct only if all rows had
