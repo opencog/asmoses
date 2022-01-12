@@ -104,10 +104,6 @@ std::vector<unsigned> get_indices(const std::vector<std::string> &labels,
 // realized, while also allowing different types for different columns.
 // XXX FIXME TODO: change the implementation, per the above note.
 
-typedef std::vector<builtin> builtin_seq;
-typedef std::vector<contin_t> contin_seq;
-typedef std::vector<std::string> string_seq;
-
 // Push back to a multi_type_seq
 template<typename T /* type being pushed */>
 struct push_back_visitor : public boost::static_visitor<>
