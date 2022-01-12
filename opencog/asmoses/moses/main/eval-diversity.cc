@@ -42,7 +42,7 @@ using namespace moses;
 void log_output_error_exit(string err_msg) {
     logger().info() << "Error: " << err_msg;
     cerr << "Error: " << err_msg << endl;
-    exit(1);    
+    exit(1);
 }
 
 /**
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 {
     namespace po = boost::program_options;
     eval_diversity_params edp;
-    
+
     // Declare the supported options.
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
          "File containing the candidates as output by moses. The output "
          "must contain the bscores (see option -t or moses). "
          "Can be used several times for several files.\n")
-        
+
         ("output-file,o", po::value<string>(&edp.output_file),
          "File to write the results. If none is given it write on the stdout.\n")
 

@@ -57,21 +57,17 @@ output_format parse_output_format(const std::string& fmt_str);
 std::ostream& ostream_builtin(std::ostream&, const builtin&,
                               output_format fmt = output_format::combo);
 std::ostream& ostream_argument(std::ostream&, const argument&,
-                               const std::vector<std::string>& labels =
-                               std::vector<std::string>(),
+                               const string_seq& labels=string_seq(),
                                output_format fmt = output_format::combo);
 std::ostream& ostream_vertex(std::ostream&, const vertex&,
-                             const std::vector<std::string>& labels =
-                             std::vector<std::string>(),
+                             const string_seq& labels=string_seq(),
                              output_format fmt = output_format::combo);
 std::ostream& ostream_combo_tree(std::ostream&, const combo_tree&,
-                                 const std::vector<std::string>& labels =
-                                 std::vector<std::string>(),
+                                 const string_seq& labels=string_seq(),
                                  output_format fmt = output_format::combo);
 template<typename Iter>
 std::ostream& ostream_combo_it(std::ostream& out, Iter it,
-                               const std::vector<std::string>& labels =
-                               std::vector<std::string>(),
+                               const string_seq& labels=string_seq(),
                                output_format fmt = output_format::combo)
 {
 	switch(fmt) {
@@ -237,7 +233,7 @@ std::istream& stream_to_combo_tree(std::istream& in, combo_tree& tr)
  * @return                 the combo_tree
  */
 combo_tree str2combo_tree(const std::string& combo_prog_str,
-                          const std::vector<std::string>& labels);
+                          const string_seq& labels);
 
 /**
  * ph2l where ph == "place holder" and l == "label"
@@ -249,7 +245,7 @@ combo_tree str2combo_tree(const std::string& combo_prog_str,
  * given the vector of labels {"fat", "pretty"}
  */
 std::string ph2l(const std::string& ce,
-                 const std::vector<std::string>& labels);
+                 const string_seq& labels);
 
 /**
  * l2ph where ph == "place holder" and l == "label"
@@ -260,7 +256,7 @@ std::string ph2l(const std::string& ce,
  * correspond to a place holder) an OC_ASSERT is raised.
  */
 std::string l2ph(const std::string& ce,
-                 const std::vector<std::string>& labels);
+                 const string_seq& labels);
 
 /**
  * return the list of variables in a combo tree. Note that if some
@@ -273,7 +269,7 @@ std::string l2ph(const std::string& ce,
  *
  * {"small", "fat", "small"}
  */
-std::vector<std::string> parse_combo_variables(const std::string& ce);
+string_seq parse_combo_variables(const std::string& ce);
 
 std::ostream& operator<<(std::ostream&, const ann_type&);
 std::ostream& operator<<(std::ostream&, const builtin&);
@@ -281,8 +277,7 @@ std::ostream& operator<<(std::ostream&, const wild_card&);
 std::ostream& operator<<(std::ostream&, const argument&);
 // output argument $n when positive, !$n when negative
 std::ostream& ostream_abbreviate_literal(std::ostream&, const argument&,
-                                         const std::vector<std::string>& labels =
-                                         std::vector<std::string>());
+                                         const string_seq& labels=string_seq());
 std::ostream& operator<<(std::ostream&, const vertex&);
 
 }} // ~ namespace opencog::combo

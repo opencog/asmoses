@@ -427,7 +427,7 @@ Handle mk_unfolded_table(const Table& table)
 Handle load_atomese_io(const string& file_name,
                        const std::string& target_feature,
                        const std::string& timestamp_feature,
-                       const std::vector<std::string>& ignore_features)
+                       const string_seq& ignore_features)
 {
 	const Table& t = loadTable(file_name, target_feature,
 	                           timestamp_feature, ignore_features);
@@ -440,7 +440,7 @@ Handle load_atomese_io(const string& file_name,
 Handle load_atomese_compact(const string& file_name,
                             const std::string& target_feature,
                             const std::string& timestamp_feature,
-                            const std::vector<std::string>& ignore_features)
+                            const string_seq& ignore_features)
 {
 	const Table& t = loadTable(file_name, target_feature,
 	                           timestamp_feature, ignore_features);
@@ -456,7 +456,7 @@ Handle load_atomese_compact(const string& file_name,
 Handle load_atomese_similarity(const string& file_name,
                                const std::string& target_feature,
                                const std::string& timestamp_feature,
-                               const std::vector<std::string>& ignore_features)
+                               const string_seq& ignore_features)
 {
 	const Table& t = loadTable(file_name, target_feature,
 	                           timestamp_feature, ignore_features);
@@ -469,7 +469,7 @@ Handle load_atomese_similarity(const string& file_name,
 Handle load_atomese_unfolded(const string& file_name,
                              const std::string& target_feature,
                              const std::string& timestamp_feature,
-                             const std::vector<std::string>& ignore_features,
+                             const string_seq& ignore_features,
                              const bool use_eval)
 {
 	const Table& t = loadTable(file_name, target_feature,

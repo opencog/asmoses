@@ -44,7 +44,7 @@ string opt_desc_str(const pair<string, string>& opt) {
 
 combo_tree str2combo_tree_label(const std::string& combo_prog_str,
                                 bool has_labels,
-                                const std::vector<std::string>& labels);
+                                const string_seq& labels);
 
 // structure containing the options for the eval-table program
 struct evalTableParameters

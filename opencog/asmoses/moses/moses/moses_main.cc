@@ -74,7 +74,7 @@ metapop_printer::metapop_printer(long _result_count,
                                  bool _output_eval_number,
                                  bool _output_with_labels,
                                  bool _output_demeID,
-                                 const std::vector<std::string>& _ilabels,
+                                 const string_seq& _ilabels,
                                  const std::string& _output_file,
                                  combo::output_format _fmt,
                                  bool _is_mpi) :
@@ -126,8 +126,7 @@ void metapop_printer::operator()(metapopulation &metapop,
 			for (const scored_combo_tree& sct : tree_set)
 				ostream_combo_tree(ss << "      + " << sct.get_weight()
 				                   << " * ", sct.get_tree(),
-				                   output_with_labels? ilabels :
-				                   std::vector<std::string>(),
+				                   output_with_labels? ilabels : string_seq(),
 				                   fmt) << "\\\n";
 			ss << "\n    return (0.0 < val)\n";
 		} else {
@@ -178,16 +177,14 @@ void metapop_printer::operator()(metapopulation &metapop,
 				   << "def moses_eval(i):\n"
 				   << "    return ";
 				ostream_combo_tree(ss, sct.get_tree(),
-				                   output_with_labels? ilabels :
-				                   std::vector<std::string>(),
+				                   output_with_labels? ilabels : string_seq(),
 				                   fmt);
 				ss << std::endl;
 			} else {
 				ostream_scored_combo_tree(ss, sct, output_score,
 				                          output_cscore, output_demeID,
 				                          output_bscore,
-				                          output_with_labels? ilabels :
-				                          std::vector<std::string>(),
+				                          output_with_labels? ilabels : string_seq(),
 				                          fmt);
 			}
 		}

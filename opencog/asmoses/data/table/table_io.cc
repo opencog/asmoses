@@ -1296,7 +1296,7 @@ std::istream& istreamCompressedTable(std::istream& in, CompressedTable& ctable)
 Table loadTable(const std::string& file_name,
                 const std::string& target_feature,
                 const std::string& timestamp_feature,
-                const std::vector<std::string>& ignore_features)
+                const string_seq& ignore_features)
 {
     OC_ASSERT(!file_name.empty(), "the file name is empty");
     ifstream in(file_name.c_str());

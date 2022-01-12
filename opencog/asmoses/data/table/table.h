@@ -64,19 +64,19 @@ namespace opencog
 namespace combo
 {
 
-std::vector<contin_t> discretize_contin_feature(contin_t min, contin_t max);
+contin_seq discretize_contin_feature(contin_t min, contin_t max);
 
 // builtin is not used to represent builtins but to trick vertex to
 // represent discretized contin values
-builtin get_discrete_bin(std::vector<contin_t> disc_intvs, contin_t val);
+builtin get_discrete_bin(contin_seq disc_intvs, contin_t val);
 
 /**
  * Get indices (aka positions or offsets) of a list of labels given a
  * header. The labels can be sequenced in any order, it will always
  * return the order consistent with the header.
  */
-std::vector<unsigned> get_indices(const std::vector<std::string> &labels,
-                                  const std::vector<std::string> &header);
+std::vector<unsigned> get_indices(const string_seq &labels,
+                                  const string_seq &header);
 
 ///////////////////
 // Generic table //
@@ -103,10 +103,6 @@ std::vector<unsigned> get_indices(const std::vector<std::string> &labels,
 // design here should be changed, so that the space-savings is still
 // realized, while also allowing different types for different columns.
 // XXX FIXME TODO: change the implementation, per the above note.
-
-typedef std::vector<builtin> builtin_seq;
-typedef std::vector<contin_t> contin_seq;
-typedef std::vector<std::string> string_seq;
 
 // Push back to a multi_type_seq
 template<typename T /* type being pushed */>
@@ -416,13 +412,13 @@ struct interpreter_visitor : public boost::static_visitor<vertex>
 		if (not mixed) mixed = (id::greater_than_zero == *_it);
 	}
 
-	vertex operator()(const std::vector<builtin> &inputs)
+	vertex operator()(const builtin_seq &inputs)
 	{
 		if (mixed) return mixed_interpreter(inputs)(_it);
 		return boolean_interpreter(inputs)(_it);
 	}
 
-	vertex operator()(const std::vector<contin_t> &inputs)
+	vertex operator()(const contin_seq &inputs)
 	{
 		// Can't use contin, since the output might be non-contin,
 		// e.g. a boolean, or an enum.
@@ -430,7 +426,7 @@ struct interpreter_visitor : public boost::static_visitor<vertex>
 		return mixed_interpreter(inputs)(_it);
 	}
 
-	vertex operator()(const std::vector<vertex> &inputs)
+	vertex operator()(const vertex_seq &inputs)
 	{
 		return mixed_interpreter(inputs)(_it);
 	}
@@ -541,7 +537,7 @@ struct multi_type_seq : public boost::less_than_comparable<multi_type_seq>,
 		boost::apply_visitor(insert_at_visitor<T>(pos, v), _variant);
 	}
 
-	std::vector<std::string> to_strings() const
+	string_seq to_strings() const
 	{
 		to_strings_visitor tsv;
 		return boost::apply_visitor(tsv, _variant);
@@ -710,7 +706,6 @@ public:
 	typedef TimedCounter counter_t;
 	typedef std::map<key_type, TimedCounter> super;
 	typedef typename super::value_type value_type;
-	typedef std::vector<std::string> string_seq;
 
 	// Definition is delayed until after Table, as it uses Table.
 	template<typename Func>
@@ -903,7 +898,6 @@ class ITable : public std::vector<multi_type_seq>
 public:
 	typedef std::vector<multi_type_seq> super;
 	typedef super::value_type value_type;
-	typedef std::vector<std::string> string_seq;
 	typedef type_node_seq type_seq;
 
 	ITable();
@@ -1099,7 +1093,6 @@ protected:
  */
 struct Table : public boost::equality_comparable<Table>
 {
-	typedef std::vector<std::string> string_seq;
 	typedef vertex value_type;
 
 	Table();
@@ -1357,7 +1350,7 @@ double mutualInformation(const CompressedTable &ctable, const FeatureSet &fs)
 		VSCounter ioc; // for H(Y, X1, ..., Xn)
 		double total = 0.0;
 
-		std::vector<contin_t> disc_intvs;
+		contin_seq disc_intvs;
 
 		if (id::contin_type == otype) {
 			contin_t min = 100000.0;
@@ -1460,7 +1453,7 @@ double mutualInformation(const CompressedTable &ctable, const FeatureSet &fs)
 
 		// XXX TODO, it would be easier if KLD took a sorted list
 		// as the argument.
-		std::vector<contin_t> p, q;
+		contin_seq p, q;
 		for (auto pr : sorted_list) {
 			p.push_back(pr.first);
 			q.push_back(pr.second);

@@ -58,7 +58,7 @@ using boost::math::binomial_coefficient;
  * @return                 the combo_tree
  */
 combo_tree str2combo_tree_label(const std::string& combo_prog_str,
-                                const std::vector<std::string>& labels)
+                                const string_seq& labels)
 {
     // combo pogram with place holders
     std::string combo_prog_ph_str = l2ph(combo_prog_str, labels);

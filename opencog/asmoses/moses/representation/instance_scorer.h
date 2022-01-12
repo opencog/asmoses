@@ -86,7 +86,7 @@ struct atomese_based_scorer : public iscorer_base
 {
 	atomese_based_scorer(behave_cscore &cs, representation &rep, bool reduce,
 	                     ComboToAtomese& to_atomese,
-	                     const std::vector<std::string> &labels={},
+	                     const string_seq &labels={},
 	                     AtomSpacePtr as=nullptr)
 			: _as(as), _cscorer(cs), _rep(rep), _reduce(reduce), _labels(labels),
 			  _to_atomese(to_atomese)
@@ -102,7 +102,7 @@ protected:
 	// evaluated.  This is advantagous when _cscorer is
 	// also a cache; the reduced form will have more cache
 	// hits.
-	std::vector<std::string> _labels;
+	string_seq _labels;
 	ComboToAtomese &_to_atomese;
 };
 

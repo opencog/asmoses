@@ -57,7 +57,7 @@ ComboToAtomese::ComboToAtomese(type_node output_type)
 }
 
 Handle ComboToAtomese::operator()(const combo_tree &ct,
-                                  const std::vector<std::string> &labels)
+                                  const string_seq &labels)
 {
 	Handle handle;
 	combo_tree::iterator it = ct.begin();
@@ -67,7 +67,7 @@ Handle ComboToAtomese::operator()(const combo_tree &ct,
 }
 
 vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpacePtr as,
-                             const std::vector<std::string> &labels, type_node output_type)
+                             const string_seq &labels, type_node output_type)
 		: _as(as), _parent(parent), _labels(labels), _out_type(output_type)
 {}
 
@@ -198,7 +198,7 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const enum_t &e) const
 	return pair<Type, Handle>();
 }
 
-std::pair<combo_tree, std::vector<std::string>> AtomeseToCombo::operator()(const Handle &h)
+std::pair<combo_tree, string_seq> AtomeseToCombo::operator()(const Handle &h)
 {
 	combo_tree tr;
 	auto begin = tr.begin();
@@ -208,7 +208,7 @@ std::pair<combo_tree, std::vector<std::string>> AtomeseToCombo::operator()(const
 	return std::make_pair(tr, labels);
 }
 
-void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &labels,
+void AtomeseToCombo::atom2combo(const Handle &h, string_seq &labels,
                                 combo_tree &tr, combo_tree::iterator &iter)
 {
 	const auto prev = iter;
@@ -230,7 +230,7 @@ void AtomeseToCombo::atom2combo(const Handle &h, std::vector<std::string> &label
 	iter = prev;
 }
 
-void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &labels,
+void AtomeseToCombo::link2combo(const Handle &h, string_seq &labels,
                                 combo_tree &tr, combo_tree::iterator &iter)
 {
 	const Type t = h->get_type();
@@ -293,7 +293,7 @@ void AtomeseToCombo::link2combo(const Handle &h, std::vector<std::string> &label
 	}
 }
 
-void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &labels,
+void AtomeseToCombo::node2combo(const Handle &h, string_seq &labels,
                                 combo_tree &tr, combo_tree::iterator &iter)
 {
 	Type t = h->get_type();
@@ -325,7 +325,7 @@ void AtomeseToCombo::node2combo(const Handle &h, std::vector<std::string> &label
 
 }  // ~namespace combo
 
-std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
+std::string oc_to_string(const std::pair<combo::combo_tree, string_seq>& ctr_labels,
                          const std::string& indent)
 {
 	std::stringstream ss;

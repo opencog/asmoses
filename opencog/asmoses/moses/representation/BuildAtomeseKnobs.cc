@@ -548,7 +548,7 @@ HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
 	}
 
 	if (!in_SLE) {
-		std::vector<std::string> func_strs = {"SinLink", "LogLink", "ExpLink"};
+		string_seq func_strs = {"SinLink", "LogLink", "ExpLink"};
 		for (unsigned i=0; i < func_strs.size(); i++)
 		{
 			Handle imp_t = createNode(TYPE_NODE, func_strs[i]);

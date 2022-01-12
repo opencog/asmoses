@@ -111,19 +111,19 @@ static std::vector<T> tokenizeRow(
 //////////////////
 
 // some hacky function to get the header of a DSV file (assuming there is one)
-std::vector<std::string> get_header(const std::string& input_file);
-        
+string_seq get_header(const std::string& input_file);
+
 std::istream& istreamRawITable(
     std::istream& in, ITable& tab,
     const std::vector<unsigned>& ignored_indices=std::vector<unsigned>());
 
 std::istream& istreamITable(std::istream& in, ITable& tab,
-                           const std::vector<std::string>& ignore_features);
+                           const string_seq& ignore_features);
 
 std::istream& istreamTable(std::istream& in, Table& tab,
                            const std::string& target_feature,
                            const std::string& timestamp_feature,
-                           const std::vector<std::string>& ignore_features);
+                           const string_seq& ignore_features);
 
 // WARNING: this implementation only supports boolean ctable!!!!
 std::istream& istreamCompressedTable(std::istream& in, CompressedTable& ctable);
@@ -138,11 +138,11 @@ OTable loadOTable(const std::string& file_name,
 // remove loadITable_optimized
 ITable loadITable(
     const std::string& file_name,
-    const std::vector<std::string>& ignore_features=std::vector<std::string>());
+    const string_seq& ignore_features=string_seq());
 
 ITable loadITable_optimized(
     const std::string& file_name,
-    const std::vector<std::string>& ignore_features=std::vector<std::string>());
+    const string_seq& ignore_features=string_seq());
 
 /**
  * If target_feature is empty then, in case there is no header, it is
@@ -152,12 +152,12 @@ Table loadTable(
     const std::string& file_name,
     const std::string& target_feature=std::string(),
     const std::string& timestamp_feature=std::string(),
-    const std::vector<std::string>& ignore_features=std::vector<std::string>());
+    const string_seq& ignore_features=string_seq());
 
 std::istream& istreamDenseTable(std::istream& in, Table& tab,
                                 const std::string& target_feature,
                                 const std::string& timestamp_feature,
-                                const std::vector<std::string>& ignore_features,
+                                const string_seq& ignore_features,
                                 const type_tree& tt, bool has_header);
 
 // WARNING: this implementation only supports boolean ctable!!!!
@@ -172,7 +172,7 @@ template<typename Out>
 Out& ostreamTableHeader(Out& out, const Table& table)
 {
     // Add input features in header
-    std::vector<std::string> header = table.itable.get_labels();
+    string_seq header = table.itable.get_labels();
     unsigned hsize = header.size();
 
     // Add target feature in header
@@ -203,7 +203,7 @@ Out& ostreamTable(Out& out, const Table& table)
     OC_ASSERT(table.itable.empty() || isize == osize);
     for (size_t row = 0; row < osize; ++row) {
         // Add input values
-        std::vector<std::string> content;
+        string_seq content;
         if (!table.itable.empty())
             content = table.itable[row].to_strings();
         unsigned csize = content.size();

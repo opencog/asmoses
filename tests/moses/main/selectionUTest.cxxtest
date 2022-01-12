@@ -67,8 +67,7 @@ public:
 
         // Re-read the data file
         Table datatable;
-        datatable = loadTable(data_file_path, "output", "",
-                              std::vector<std::string>());
+        datatable = loadTable(data_file_path, "output", "", string_seq());
 
         OTable predicted(comtr, datatable.itable);
 
@@ -108,7 +107,7 @@ public:
     {
         // The expected output is this:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1663.795))))";
-        // Maximum reachable score is 12, and should be reachable in 
+        // Maximum reachable score is 12, and should be reachable in
         // about 32K evaluations.
         frame("select-less-dupe.csv", true, expstr, 12, {"-m50000"});
     }

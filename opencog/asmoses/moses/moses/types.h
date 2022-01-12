@@ -541,8 +541,7 @@ std::ostream& ostream_scored_combo_tree(std::ostream& out,
                                         bool output_cscore=true,
                                         bool output_demeID=true,
                                         bool output_bscore=true,
-                                        const std::vector<std::string>& labels
-                                        = std::vector<std::string>(),
+                                        const combo::string_seq& labels=combo::string_seq(),
                                         combo::output_format fmt
                                         = combo::output_format::combo);
 

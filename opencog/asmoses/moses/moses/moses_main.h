@@ -69,7 +69,7 @@ struct metapop_printer
 	                bool output_eval_number,
 	                bool output_with_labels,
 	                bool output_demeID,
-	                const std::vector<std::string>& ilabels,
+	                const string_seq& ilabels,
 	                const std::string& output_file,
 	                combo::output_format fmt,
 	                bool is_mpi);
@@ -92,7 +92,7 @@ private:
 	bool output_with_labels;
 	bool output_demeID;
 public:
-	std::vector<std::string> ilabels;
+	string_seq ilabels;
 private:
 	string output_file;
 	output_format fmt;

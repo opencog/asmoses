@@ -50,7 +50,7 @@ deme_expander::deme_expander(const type_tree& type_signature,
 string_seq deme_expander::fs_to_names(const std::set<arity_t>& fs,
                                       const string_seq& ilabels) const
 {
-	std::vector<std::string> fs_names;
+	string_seq fs_names;
 	for (arity_t i : fs)
 		fs_names.push_back(ilabels[i]);
 	return fs_names;

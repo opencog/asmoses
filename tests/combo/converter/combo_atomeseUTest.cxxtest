@@ -144,7 +144,7 @@ public:
 		combo::combo_tree tr = combo::str2combo_tree("+($1 +($2 $3))", {});
 
 		combo::ComboToAtomese to_atomese;
-		const std::vector<std::string> labels = {"z", "x", "y"};
+		const string_seq labels = {"z", "x", "y"};
 		Handle result = to_atomese(tr, labels);
 
 		Handle p1 = createNode(SCHEMA_NODE, "$x");

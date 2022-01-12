@@ -495,7 +495,7 @@ std::ostream& ostream_combo_tree(std::ostream& out, const combo_tree& ct,
 }
 
 combo_tree str2combo_tree(const std::string& combo_tree_str,
-                          const std::vector<std::string>& labels)
+                          const string_seq& labels)
 {
 	// Combo program with place holders
 	std::string combo_tree_ph_str =
@@ -537,7 +537,7 @@ string ph2l(const string& ce, const vector<string>& labels)
 }
 
 std::string l2ph(const std::string& ce,
-                 const std::vector<std::string>& labels)
+                 const string_seq& labels)
 {
 	/// @todo the implementation could be done in 2 lines with
 	/// boost.regex with boost version 1.42 or above because then we

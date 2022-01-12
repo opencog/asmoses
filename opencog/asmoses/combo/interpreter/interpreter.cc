@@ -34,7 +34,7 @@ namespace opencog { namespace combo {
 // Boolean interpreter //
 /////////////////////////
 
-boolean_interpreter::boolean_interpreter(const std::vector<builtin>& inputs)
+boolean_interpreter::boolean_interpreter(const builtin_seq& inputs)
     : boolean_inputs(inputs) {}
 
 builtin boolean_interpreter::operator()(const combo_tree& tr) const {
@@ -80,10 +80,10 @@ builtin boolean_interpreter::boolean_eval(combo_tree::iterator it) const
                     return id::logical_true;
             return id::logical_false;
         }
-            
+
         case id::logical_not :
             return negate_builtin(boolean_eval(it.begin()));
-            
+
         default: {
             std::stringstream ss;
             ss << *b;
@@ -105,7 +105,7 @@ builtin boolean_interpreter::boolean_eval(combo_tree::iterator it) const
 // Contin interpreter //
 ////////////////////////
 
-contin_interpreter::contin_interpreter(const std::vector<contin_t>& inputs)
+contin_interpreter::contin_interpreter(const contin_seq& inputs)
     : contin_inputs(inputs) {}
 
 contin_t contin_interpreter::operator()(const combo_tree& tr) const {
@@ -193,7 +193,7 @@ contin_t contin_interpreter::contin_eval(combo_tree::iterator it) const
 
         case id::rand :
             return randGen().randfloat();
-            
+
         default: {
             std::stringstream ss;
             ss << *b;
@@ -224,20 +224,20 @@ contin_t contin_interpreter::contin_eval(combo_tree::iterator it) const
 // Mixed interpreter //
 ///////////////////////
 
-mixed_interpreter::mixed_interpreter(const std::vector<vertex>& inputs) :
+mixed_interpreter::mixed_interpreter(const vertex_seq& inputs) :
     _use_boolean_inputs(false),
     _use_contin_inputs(false),
     _mixed_inputs(inputs)
 {}
 
-mixed_interpreter::mixed_interpreter(const std::vector<contin_t>& inputs) :
+mixed_interpreter::mixed_interpreter(const contin_seq& inputs) :
     contin_interpreter(inputs),
     _use_boolean_inputs(false),
     _use_contin_inputs(true),
     _mixed_inputs(empty_vertex_seq)
 {}
 
-mixed_interpreter::mixed_interpreter(const std::vector<builtin>& inputs) :
+mixed_interpreter::mixed_interpreter(const builtin_seq& inputs) :
     boolean_interpreter(inputs),
     _use_boolean_inputs(true),
     _use_contin_inputs(false),
@@ -278,7 +278,7 @@ vertex mixed_interpreter::mixed_eval(combo_tree::iterator it) const
         if (_use_contin_inputs)
             return contin_inputs[idx - 1];
 
-        // The mixed interpreter could be getting an array of 
+        // The mixed interpreter could be getting an array of
         // all booleans, if the signature of the problem is
         // ->(bool ... bool contin) or ->(bool ... bool enum)
         // so deal with this case.
@@ -286,7 +286,7 @@ vertex mixed_interpreter::mixed_eval(combo_tree::iterator it) const
             return idx > 0 ? boolean_inputs[idx - 1]
                 : negate_builtin(boolean_inputs[-idx - 1]);
 
-        // A negative index means boolean-negate. 
+        // A negative index means boolean-negate.
         return idx > 0 ? _mixed_inputs[idx - 1]
             : negate_vertex(_mixed_inputs[-idx - 1]);
     }
@@ -311,7 +311,7 @@ vertex mixed_interpreter::mixed_eval(combo_tree::iterator it) const
         case id::sin :
         case id::rand :
             return contin_interpreter::contin_eval(it);
-            
+
         // Mixed operators
         case id::greater_than_zero : {
             sib_it sib = it.begin();

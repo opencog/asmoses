@@ -56,7 +56,7 @@ struct eval_diversity_params
 static const std::string p_norm = "p_norm";
 static const std::string tanimoto = "tanimoto";
 static const std::string angular = "angular";
-        
+
 // define accumulator to gather stats
 typedef accumulator_set<double, stats<tag::count,
                                      tag::mean,

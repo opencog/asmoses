@@ -140,6 +140,7 @@ typedef boost::variant < contin_t,
                          action_symbol,
                          ann_type > vertex;
 
+// Typedef helpers for various collections of vertex types
 typedef std::set<vertex> vertex_set;
 typedef vertex_set::iterator vertex_set_it;
 typedef vertex_set::const_iterator vertex_set_const_it;
@@ -159,6 +160,10 @@ typedef argument_list::const_iterator argument_list_const_it;
 typedef std::vector<argument_list> argument_list_list;
 typedef argument_list_list::iterator argument_list_list_it;
 typedef argument_list_list::const_iterator argument_list_list_const_it;
+
+typedef std::vector<builtin> builtin_seq;
+typedef std::vector<contin_t> contin_seq;
+typedef std::vector<std::string> string_seq;
 
 // Disambiguate stream operator; use the one declared in util/tree.h
 std::istream& operator>>(std::istream& in, combo::vertex& v);

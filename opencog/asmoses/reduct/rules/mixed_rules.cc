@@ -1406,7 +1406,7 @@ bool reduce_inequality_from_assumptions::gaussianElimination2(double_matrix& dm,
         //swap row i and row
         if(ipivot==-1)
             return false;
-        std::vector<contin_t> tmp = dm[i];
+        contin_seq tmp = dm[i];
         dm[i] = dm[ipivot];
         dm[ipivot] = tmp;
         //divide pivot by itself to be 1
@@ -1460,7 +1460,7 @@ void reduce_inequality_from_assumptions::operator()
     // the size of a row is |assumptions|+1
     // the last column of the matrix contains the coef associated with its
     // expression
-    typedef std::map<pre_it, std::vector<contin_t>, opencog::lexicographic_subtree_order<vertex>> subtree_row;
+    typedef std::map<pre_it, contin_seq, opencog::lexicographic_subtree_order<vertex>> subtree_row;
     typedef subtree_row::iterator subtree_row_it;
     typedef subtree_row::const_iterator subtree_row_const_it;
     //true if the main term is strictly positive false otherwise
@@ -1524,7 +1524,7 @@ void reduce_inequality_from_assumptions::operator()
             if(!assumptions.empty()) {
                 subtree_row sr;
                 //coefs alone without term
-                std::vector<contin_t> free_coefs(assumptions.size()+2, 0.0);
+                contin_seq free_coefs(assumptions.size()+2, 0.0);
                 //for the constant term in the linear combination
                 free_coefs[assumptions.size()] = 1.0;
                 //this reduction only handle linear combination
@@ -1559,13 +1559,13 @@ void reduce_inequality_from_assumptions::operator()
                         if(ctr.is_valid(expression)) {
                             subtree_row_it sr_it = sr.find(expression);
                             if(sr_it==sr.end()) {
-                                std::vector<contin_t> v(assumptions.size()+1, 0.0);
+                                contin_seq v(assumptions.size()+1, 0.0);
                                 v.push_back(coef);
-                                std::pair<pre_it, std::vector<contin_t>> p(expression, v);
+                                std::pair<pre_it, contin_seq> p(expression, v);
                                 sr.insert(p);
                             }
                             else { //update coef
-                                std::vector<contin_t>& v_sr = sr_it->second;
+                                contin_seq& v_sr = sr_it->second;
                                 v_sr[assumptions.size()+1] = v_sr[assumptions.size()+1]+coef;
                             }
                         }
@@ -1589,9 +1589,9 @@ void reduce_inequality_from_assumptions::operator()
                     pre_it expression = term_it;
                     contin_t coef = splitCoefExpression(ctr, expression) * main_coef;
                     if(ctr.is_valid(expression)) {
-                        std::vector<contin_t> v(assumptions.size()+1, 0.0);
+                        contin_seq v(assumptions.size()+1, 0.0);
                         v.push_back(coef);
-                        std::pair<pre_it, std::vector<contin_t>> p(expression, v);
+                        std::pair<pre_it, contin_seq> p(expression, v);
                         sr.insert(p);
                     }
                     //add coef to the last entry of free_coefs
@@ -1633,14 +1633,14 @@ void reduce_inequality_from_assumptions::operator()
                             if(ctr.is_valid(expression)) {
                                 subtree_row_it sr_it = sr.find(expression);
                                 if(sr_it==sr.end()) {
-                                    std::vector<contin_t> v(assumptions.size()+2, 0.0);
+                                    contin_seq v(assumptions.size()+2, 0.0);
                                     v[i] = coef;
-                                    std::pair<pre_it, std::vector<contin_t>>
+                                    std::pair<pre_it, contin_seq>
                                         p(expression, v);
                                     sr.insert(p);
                                 }
                                 else { //update coef
-                                    std::vector<contin_t>& v_sr = sr_it->second;
+                                    contin_seq& v_sr = sr_it->second;
                                     v_sr[i] = v_sr[i] + coef;
                                 }
                             }
@@ -1665,13 +1665,13 @@ void reduce_inequality_from_assumptions::operator()
                         if(ctr.is_valid(expression)) {
                             subtree_row_it sr_it = sr.find(expression);
                             if(sr_it==sr.end()) {
-                                std::vector<contin_t> v(assumptions.size()+2, 0.0);
+                                contin_seq v(assumptions.size()+2, 0.0);
                                 v[i] = coef;
-                                std::pair<pre_it, std::vector<contin_t>> p(expression, v);
+                                std::pair<pre_it, contin_seq> p(expression, v);
                                 sr.insert(p);
                             }
                             else { //update coef
-                                std::vector<contin_t>& v_sr = sr_it->second;
+                                contin_seq& v_sr = sr_it->second;
                                 v_sr[i] = v_sr[i] + coef;
                             }
                         }
@@ -1680,7 +1680,7 @@ void reduce_inequality_from_assumptions::operator()
                     }  
                 }
                 //generate matrix to be solved
-                std::vector< std::vector<contin_t>> mat;
+                std::vector< contin_seq> mat;
                 for(subtree_row_const_it sci = sr.begin(); sci != sr.end(); ++sci)
                     mat.push_back(sci->second);
                 mat.push_back(free_coefs);
@@ -1705,7 +1705,7 @@ void reduce_inequality_from_assumptions::operator()
                     return;
                 }
                 //check if the linear decomposition is positive or negative
-                std::vector<contin_t> solution;
+                contin_seq solution;
                 bool BSres = backSubstitution(mat, solution);
                 //print vector solution
                 /*std::cout << "SOLUTION :" << std::endl;
