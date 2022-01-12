@@ -197,7 +197,7 @@ unsigned alphabet_size(const type_tree& tt, const vertex_set ignore_ops)
     }
 
     logger().info() << "Alphabet size = " << as
-                    << " output = " << output_type;
+                    << ", output = " << output_type;
     return as;
 }
 
