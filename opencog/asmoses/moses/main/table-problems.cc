@@ -347,12 +347,20 @@ void ann_table_problem::run(option_base* ob)
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio); \
 	if (pms.meta_params.do_boosting) bscore.use_weighted_scores();   \
 	                                                                 \
+	if (pms.gen_best_candidate) {                                    \
+		/* Experimental: use canonically generated candidate */       \
+		/* as exemplar seed */                                        \
+		combo_tree tr = bscore.gen_canonical_best_candidate();        \
+		logger().info() << "Canonical program tree (non reduced) maximizing score = " << tr; \
+		pms.exemplars.push_back(tr);                                  \
+	}                                                                \
+                                                                    \
 	/* When boosting, cache must not be used, as otherwise, stale */ \
 	/* composite scores get cached and returned.*/                   \
 	if (pms.meta_params.do_boosting) pms.cache_size = 0;             \
 	behave_cscore mbcscore(bscore, pms.cache_size);                  \
 	reduct::rule* reduct_cand = pms.bool_reduct;                     \
-	reduct::rule* reduct_rep = pms.bool_reduct_rep;		             \
+	reduct::rule* reduct_rep = pms.bool_reduct_rep;             \
 	/* Use the contin reductors for everything else */               \
 	if (id::boolean_type != output_type) {                           \
 		reduct_cand = pms.contin_reduct;                             \
@@ -394,8 +402,8 @@ void pre_table_problem::run(option_base* ob)
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 	if (pms.meta_params.do_boosting) bscore.use_weighted_scores();
 
-	if (pms.gen_best_tree) {
-		// experimental: use some canonically generated
+	if (pms.gen_best_candidate) {
+		// Experimental: use some canonically generated
 		// candidate as exemplar seed
 		combo_tree tr = bscore.gen_canonical_best_candidate();
 		logger().info() << "Canonical program tree (non reduced) maximizing precision = " << tr;

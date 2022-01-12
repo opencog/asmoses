@@ -97,6 +97,14 @@ bscore_base::worst_possible_bscore() const
 	return behavioral_score();
 }
 
+combo_tree
+bscore_base::gen_canonical_best_candidate() const
+{
+	OC_ASSERT(false, "--gen-best-candidate is not implemented for bscorer %s",
+	          typeid(*this).name());
+	return combo_tree();
+}
+
 /**
  * Compute the average (weighted) complexity of all the trees in the
  * ensemble.  XXX this is probably wrong, we should probably do something

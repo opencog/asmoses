@@ -181,7 +181,6 @@ protected:
 	double wnorm;
 	bool exact_experts;
 
-
 	bool time_bscore;           // whether the bscore is spread over
 	// the temporal axis
 	type_node output_type;

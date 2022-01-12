@@ -180,10 +180,12 @@ struct problem_params : public option_base
 
     // pre params
     bool pre_positive;
-    bool gen_best_tree;
 
     // it params
     bool it_abs_err;
+
+    // Generate canonically best candidate head-on
+    bool gen_best_candidate;
 
     // Subsample deme params
     unsigned ss_n_subsample_demes,

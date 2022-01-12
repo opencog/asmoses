@@ -785,9 +785,9 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "Set the granularity of timestamp, in case the bscore is spread "
          "across time. Options are 'day' and 'month'.\n")
 
-        ("gen-best-tree",
-         po::value<bool>(&gen_best_tree)->default_value(false),
-         "Attempts to generate the best candidate (possibly huge and overfit) head-on. Only works combined with -Hpre for now.\n")
+        ("gen-best-candidate",
+         po::value<bool>(&gen_best_candidate)->default_value(false),
+         "Attempts to generate the best candidate (possibly huge and overfit) head-on.\n")
 
         // ======= Fitness specific params =======
         ("it-abs-err",

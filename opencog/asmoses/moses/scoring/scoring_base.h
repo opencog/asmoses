@@ -87,8 +87,12 @@ struct bscore_base
 
 	/// Return the worst possible bscore achievable with this fitness
 	/// function. This is needed during boosting, to ascertain if at
-	// least half the answers are correct.
+	/// least half the answers are correct.
 	virtual behavioral_score worst_possible_bscore() const;
+
+	/// Generate, if possible, cannonically best candidate to maximize
+	/// the score.
+	virtual combo_tree gen_canonical_best_candidate() const;
 
 	/// Return the smallest change in the score which can be considered
 	/// to be an improvement over the previous score. This is useful for
@@ -362,7 +366,30 @@ protected:
 	void recompute_weight() const;   // recompute _ctable_weight
 };
 
-// helper to log a combo_tree and its behavioral score
+/**
+ * Generate a conjunction representing a row of truth values
+ *
+ * For instance
+ *
+ * conjunction_from_truth_row({T, F, T})
+ *
+ * returns
+ *
+ * and($1 !$2 $3)
+ */
+static inline combo_tree conjunction_from_truth_row(const combo::builtin_seq& row)
+{
+	combo_tree tr;
+	auto head = tr.set_head(combo::id::logical_and);
+	arity_t idx = 1;
+	for (const combo::builtin cell : row) {
+		combo::argument arg(cell == combo::id::logical_true ? idx++ : -idx++);
+		tr.append_child(head, arg);
+	}
+	return tr;
+}
+
+// Helper to log a combo_tree and its behavioral score
 static inline void log_candidate_bscore(const combo_tree &tr,
                                         const behavioral_score &bs)
 {
