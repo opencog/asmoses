@@ -73,9 +73,9 @@ struct feature_selection_parameters
     std::string input_file;
     std::string target_feature_str;
     std::string timestamp_feature_str;
-    std::vector<std::string> ignore_features_str;
-    std::vector<std::string> force_features_str;
-    std::vector<std::string> initial_features;
+    string_seq ignore_features_str;
+    string_seq force_features_str;
+    string_seq initial_features;
     std::string output_file;
     unsigned target_size;
     bool exp_distrib;
@@ -132,7 +132,7 @@ void write_results(const Table& table,
 /**
  * Convert the initial features into feature_set (set of indices)
  */
-feature_set initial_features(const std::vector<std::string>& labels,
+feature_set initial_features(const string_seq& labels,
                              const feature_selection_parameters& fs_params);
 
 // A wrapper, simply so that optimizer gets the iscorer_base base class.

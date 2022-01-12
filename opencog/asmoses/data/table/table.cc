@@ -581,17 +581,17 @@ vector<unsigned> get_indices(const vector<string> &labels,
 	return res;
 }
 
-std::vector<contin_t> discretize_contin_feature(contin_t min,
-                                                contin_t max)
+contin_seq discretize_contin_feature(contin_t min,
+                                     contin_t max)
 {
-	std::vector<contin_t> res;
+	contin_seq res;
 	contin_t interval = (max - min) / TARGET_DISCRETIZED_BINS_NUM;
 	for (unsigned i = 0; i < TARGET_DISCRETIZED_BINS_NUM; ++i)
 		res.push_back(min + i * interval);
 	return res;
 }
 
-builtin get_discrete_bin(std::vector<contin_t> disc_intvs, contin_t val)
+builtin get_discrete_bin(contin_seq disc_intvs, contin_t val)
 {
 	unsigned i;
 	for (i = 1; i < TARGET_DISCRETIZED_BINS_NUM; i++) {
@@ -652,8 +652,9 @@ CompressedTable::CompressedTable(const string_seq &labs, const type_tree &tt)
 	ilabels.erase(ilabels.begin());
 }
 
-CompressedTable::CompressedTable(const std::string &_olabel, const string_seq &_ilabels,
-               const type_tree &tt)
+CompressedTable::CompressedTable(const std::string &_olabel,
+                                 const string_seq &_ilabels,
+                                 const type_tree &tt)
 		: tsig(tt), olabel(_olabel), ilabels(_ilabels)
 {}
 

@@ -100,13 +100,13 @@ protected:
 struct discretize_contin_bscore : public bscore_base
 {
 	discretize_contin_bscore(const OTable &ot, const ITable &it,
-	                         const std::vector<contin_t> &thres,
+	                         const contin_seq &thres,
 	                         bool weighted_average);
 
 	// @todo when switching to gcc 4.6 use constructor delagation to
 	// simplify that
 	// discretize_contin_bscore(const Table& table,
-	//                          const std::vector<contin_t>& thres,
+	//                          const contin_seq& thres,
 	//                          bool weighted_average,
 	//                          float alphabet_size, float p);
 
@@ -124,7 +124,7 @@ struct discretize_contin_bscore : public bscore_base
 protected:
 	OTable target;
 	ITable cit;
-	std::vector<contin_t> thresholds;
+	contin_seq thresholds;
 	bool weighted_accuracy;     // Whether the bscore is weighted to
 	// deal with unbalanced data.
 

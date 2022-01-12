@@ -72,7 +72,7 @@ public:
 		it.push_back({id::logical_false, id::logical_true});
 		Table table(ot, it);
 		testIStreamTable("1,1,0\n"
-				                 "0,0,1\n",
+		                 "0,0,1\n",
 		                 table);
 	}
 
@@ -85,7 +85,7 @@ public:
 		it.push_back({9.5, 4.2});
 		Table table(ot, it);
 		testIStreamTable("10.1,0.4,244.2\n"
-				                 "6.5,9.5,4.2\n", table);
+		                 "6.5,9.5,4.2\n", table);
 	}
 
 	void test_ContinTable_type_inference()
@@ -99,9 +99,9 @@ public:
 		it.push_back({9.5, 4.2});
 		Table table(ot, it);
 		testIStreamTable("0,1,1\n"
-				                 "1,0,1\n"
-				                 "10.1,0.4,244.2\n"
-				                 "6.5,9.5,4.2\n", table);
+		                 "1,0,1\n"
+		                 "10.1,0.4,244.2\n"
+		                 "6.5,9.5,4.2\n", table);
 	}
 
 	void test_ContinTableLabels()
@@ -116,9 +116,9 @@ public:
 		it.set_labels(il);
 		Table table(ot, it);
 		testIStreamTable("happiness,price,temperature\n"
-				                 "0,1,1\n"
-				                 "10.1,0.4,244.2\n"
-				                 "6.5,9.5,4.2\n", table);
+		                 "0,1,1\n"
+		                 "10.1,0.4,244.2\n"
+		                 "6.5,9.5,4.2\n", table);
 	}
 
 	void test_EnumTableLabels()
@@ -133,9 +133,9 @@ public:
 		it.push_back(vertex_seq({9.5, 4.2, id::logical_false}));
 		Table table(ot, it);
 		testIStreamTable("happiness,price,temperature,truth\n"
-				                 "sad,1,1,0\n"
-				                 "bored,0.44,244.2,T\n"
-				                 "super-happy,9.5,4.2,F\n", table);
+		                 "sad,1,1,0\n"
+		                 "bored,0.44,244.2,T\n"
+		                 "super-happy,9.5,4.2,F\n", table);
 	}
 
 	void test_filterITable()
@@ -161,8 +161,8 @@ public:
 		cout << ot;
 		TS_ASSERT_EQUALS(ss.str(),
 		                 "troc,truc\n"
-				                 "1,1\n"
-				                 "0,0\n");
+		                 "1,1\n"
+		                 "0,0\n");
 	}
 
 	void test_filterTable()
@@ -175,8 +175,8 @@ public:
 		ostreamTable(ss, filtered_table);
 		TS_ASSERT_EQUALS(ss.str(),
 		                 "input1,time,target\n"
-				                 "1,2012-03-11,6\n"
-				                 "0,2012-03-23,7\n")
+		                 "1,2012-03-11,6\n"
+		                 "0,2012-03-23,7\n")
 	}
 
 	void test_filterCompressedTable()
@@ -201,8 +201,8 @@ public:
 		cout << ss.str();
 		TS_ASSERT_EQUALS(ss.str(),
 		                 "troc,truc\n"
-				                 "{1:1},1\n"
-				                 "{0:1},0\n");
+		                 "{1:1},1\n"
+		                 "{0:1},0\n");
 	}
 
 	void test_weightCompressedTable()
@@ -222,10 +222,10 @@ public:
 
 		TS_ASSERT_EQUALS(ss.str(),
 		                 "r,a,b,c,d,e\n"
-				                 "{1:3.5},1,1,1,1,1\n"
-				                 "{1:2.66},1,1,1,0,0\n"
-				                 "{0:2.5},0,1,1,1,1\n"
-				                 "{1:0.4,0:0.8},0,0,0,0,0\n");
+		                 "{1:3.5},1,1,1,1,1\n"
+		                 "{1:2.66},1,1,1,0,0\n"
+		                 "{0:2.5},0,1,1,1,1\n"
+		                 "{1:0.4,0:0.8},0,0,0,0,0\n");
 	}
 
 	// Set target Price, and ignore column Temperature
@@ -241,8 +241,8 @@ public:
 		table.target_pos = 1;
 
 		testIStreamTable("happiness,price,temperature\n"
-				                 "10.1,0.4,244.2\n"
-				                 "6.5,9.5,4.2\n", table,
+		                 "10.1,0.4,244.2\n"
+		                 "6.5,9.5,4.2\n", table,
 		                 "price", "", {"temperature"});
 	}
 
@@ -260,9 +260,9 @@ public:
 		table.target_pos = 1;
 
 		testIStreamTable("happiness,price,temperature,truth\n"
-				                 "sad,1,1,0\n"
-				                 "bored,0.44,244.2,T\n"
-				                 "super-happy,9.5,4.2,F\n", table,
+		                 "sad,1,1,0\n"
+		                 "bored,0.44,244.2,T\n"
+		                 "super-happy,9.5,4.2,F\n", table,
 		                 "price", "", {"temperature"});
 	}
 
@@ -298,10 +298,10 @@ public:
 		                     ignore_features);
 
 		testIStreamTable("target1,date,d,e,f,g,x,y,z\n"
-				                 "thing,12-04-2012,0.0,0.0,0.0,0.0,0.0,0.0,0.0\n"
-				                 "some,12-05-2012,4.0,0.0,6.0,0.0,0.0,0.0,0.0\n"
-				                 "other,12-06-2012T14:35:02-0500,0.0,5.0,0.0,7.0,0.0,0.0,0.0\n"
-				                 "last,12-07-2012T16:00:00-0500,4.0,5.0,0.0,0.0,24.0,25.0,26.0\n",
+		                 "thing,12-04-2012,0.0,0.0,0.0,0.0,0.0,0.0,0.0\n"
+		                 "some,12-05-2012,4.0,0.0,6.0,0.0,0.0,0.0,0.0\n"
+		                 "other,12-06-2012T14:35:02-0500,0.0,5.0,0.0,7.0,0.0,0.0,0.0\n"
+		                 "last,12-07-2012T16:00:00-0500,4.0,5.0,0.0,0.0,24.0,25.0,26.0\n",
 		                 tt);
 	}
 
@@ -316,10 +316,10 @@ public:
 		                     ignore_features);
 
 		testIStreamTable("target2,date,d,e,f,g,x,y,z\n"
-				                 "3.0,12-04-2012,0.0,0.0,0.0,0.0,0.0,0.0,0.0\n"
-				                 "4.4,12-05-2012,4.0,0.0,6.0,0.0,0.0,0.0,0.0\n"
-				                 "5.5,12-06-2012T14:35:02-0500,0.0,5.0,0.0,7.0,0.0,0.0,0.0\n"
-				                 "6.6,12-07-2012T16:00:00-0500,4.0,5.0,0.0,0.0,24.0,25.0,26.0\n",
+		                 "3.0,12-04-2012,0.0,0.0,0.0,0.0,0.0,0.0,0.0\n"
+		                 "4.4,12-05-2012,4.0,0.0,6.0,0.0,0.0,0.0,0.0\n"
+		                 "5.5,12-06-2012T14:35:02-0500,0.0,5.0,0.0,7.0,0.0,0.0,0.0\n"
+		                 "6.6,12-07-2012T16:00:00-0500,4.0,5.0,0.0,0.0,24.0,25.0,26.0\n",
 		                 tt);
 	}
 
@@ -389,8 +389,8 @@ public:
 		ss << ct;
 
 		TS_ASSERT_EQUALS(ss.str(), string("target,f1,f2\n"
-				                                  "{1:10,0:3},1,0\n"
-				                                  "{1:4,0:5},0,1\n"));
+		                                  "{1:10,0:3},1,0\n"
+		                                  "{1:4,0:5},0,1\n"));
 	}
 
 	void test_timestamp_feature()
@@ -398,9 +398,9 @@ public:
 		string input_file = tableUTest_dir + "timestamp_table.csv";
 		Table table = loadTable(input_file, "length", "time");
 
-		std::vector<std::string> dates_str = {"2012-Jan-11",
-		                                      "2012-Jan-13",
-		                                      "2012-Feb-18"};
+		string_seq dates_str = {"2012-Jan-11",
+		                        "2012-Jan-13",
+		                        "2012-Feb-18"};
 		std::vector<TTable::value_type> dates;
 		for (const auto &ds : dates_str)
 			dates.push_back(TTable::from_string(ds));
@@ -423,8 +423,8 @@ public:
 			ostreamTable(ss, table);
 			TS_ASSERT_EQUALS(ss.str(),
 			                 "input0,time,target\n"
-					                 "0,2012-03-11,6\n"
-					                 "1,2012-03-23,7\n")
+			                 "0,2012-03-11,6\n"
+			                 "1,2012-03-23,7\n")
 		}
 		{ // timestamp feature after target
 			string input_file = tableUTest_dir + "timestamp_table3.csv";
@@ -434,8 +434,8 @@ public:
 			ostreamTable(ss, table);
 			TS_ASSERT_EQUALS(ss.str(),
 			                 "input1,target,time\n"
-					                 "1,6,2012-03-11\n"
-					                 "0,7,2012-03-23\n")
+			                 "1,6,2012-03-11\n"
+			                 "0,7,2012-03-23\n")
 		}
 	}
 

@@ -41,11 +41,11 @@ struct table_problem_params : public option_base
 {
 	void add_options(boost::program_options::options_description &);
 
-	std::vector<std::string> input_data_files;
+	string_seq input_data_files;
 	std::string target_feature;
 	std::string timestamp_feature;
 	std::string weighting_feature;
-	std::vector<std::string> ignore_features_str;
+	string_seq ignore_features_str;
 };
 
 
@@ -69,7 +69,7 @@ protected:
 	std::vector<CompressedTable> _ctables;
 	Table table;
 	CompressedTable ctable;
-	std::vector<std::string> ilabels;     // labels of the input table (table.itable)
+	string_seq ilabels;     // labels of the input table (table.itable)
 	combo::arity_t arity;
 
 	type_tree table_type_signature;

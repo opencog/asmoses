@@ -54,8 +54,8 @@ struct vertex_2_atom : boost::static_visitor<std::pair<Type, Handle>>
 {
 public:
 	vertex_2_atom(id::procedure_type *parent, AtomSpacePtr as=nullptr,
-	              const std::vector<std::string> &labels={},
-	              type_node output_type = id::boolean_type);
+	              const string_seq &labels={},
+	              type_node output_type=id::boolean_type);
 	std::pair<Type, Handle> operator()(const argument &a) const;
 
 	std::pair<Type, Handle> operator()(const builtin &b) const;
@@ -73,7 +73,7 @@ public:
 
 private:
 	AtomSpacePtr _as;
-	const std::vector<std::string> &_labels;
+	const string_seq &_labels;
 	mutable id::procedure_type *_parent;
 	type_node _out_type;
 };
@@ -91,7 +91,7 @@ public:
 	 * @param combo_tree   the combo_tree containing the combo program
 	 * @return                 the Handle containing the atomese program
 	 */
-	Handle operator()(const combo_tree &tr, const std::vector<std::string> &labels={});
+	Handle operator()(const combo_tree &tr, const string_seq &labels={});
 
 private:
 	AtomSpacePtr _as;
@@ -107,7 +107,7 @@ protected:
 	template<typename Iter>
 	opencog::Handle atomese_combo_it(Iter it,
 	                                 id::procedure_type &parent_procedure_type,
-	                                 const std::vector<std::string> &labels)
+	                                 const string_seq &labels)
 	{
 
 		id::procedure_type procedure_type = parent_procedure_type;
@@ -142,17 +142,17 @@ public:
 	 * @return pair<combo_tree, vector>      the combo_tree converted from the
 	 *                                       atomese program and labels
 	 */
-	std::pair<combo_tree, std::vector<std::string>> operator()(const Handle &h);
+	std::pair<combo_tree, string_seq> operator()(const Handle &h);
 
 protected:
 
-	void atom2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	void atom2combo(const Handle &h, string_seq &labels, combo_tree &tr,
 	                combo_tree::iterator &iter);
 
-	void link2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	void link2combo(const Handle &h, string_seq &labels, combo_tree &tr,
 	                combo_tree::iterator &iter);
 
-	void node2combo(const Handle &h, std::vector<std::string> &labels, combo_tree &tr,
+	void node2combo(const Handle &h, string_seq &labels, combo_tree &tr,
 	                combo_tree::iterator &iter);
 
 };
@@ -161,7 +161,7 @@ protected:
 
 // For pretty printing OpenCog objects while debugging, see
 // https://wiki.opencog.org/w/Development_standards#Pretty_Print_OpenCog_Objects
-std::string oc_to_string(const std::pair<combo::combo_tree, std::vector<std::string>>& ctr_labels,
+std::string oc_to_string(const std::pair<combo::combo_tree, combo::string_seq>& ctr_labels,
                          const std::string& indent=empty_string);
 }  // ~namespace opencog
 

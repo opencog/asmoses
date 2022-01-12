@@ -31,9 +31,9 @@ struct eval_candidate_params
 {
     // IO
     std::string input_file;
-    std::vector<std::string> combo_programs;
-    std::vector<std::string> combo_program_files;
-    std::vector<std::string> output_files;
+    string_seq combo_programs;
+    string_seq combo_program_files;
+    string_seq output_files;
     bool output_with_labels;
     std::string target_feature_str;
 

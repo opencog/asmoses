@@ -70,7 +70,7 @@ void feature_selector::preprocess_params(const combo::combo_tree& xmplr)
     const auto& ilabels = _ctable.get_input_labels();
 
     // Names of the exemplar features
-    std::vector<std::string> xmplr_feature_names;
+    string_seq xmplr_feature_names;
     for (arity_t i : xmplr_features)
         xmplr_feature_names.push_back(ilabels[i]);
 
@@ -454,7 +454,7 @@ double feature_selector::mi(const feature_set& fs_l,
 
 feature_set feature_selector::sample_enforced_features() const {
     // Sample the enforced features
-    std::vector<std::string> sampled_features;
+    string_seq sampled_features;
     for (auto& p : params.enforce_features) {
         if (biased_randbool(p.second)) {
             sampled_features.push_back(p.first);

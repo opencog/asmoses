@@ -60,7 +60,7 @@ struct problem_params : public option_base
     void parse_options(boost::program_options::variables_map&);
 
     // program options, see options_description below for their meaning
-    std::vector<std::string> jobs_str;
+    string_seq jobs_str;
     unsigned min_pool;
     bool enable_mpi;
 
@@ -100,10 +100,10 @@ struct problem_params : public option_base
     // reduct options
     int reduct_candidate_effort;
     int reduct_knob_building_effort;
-    std::vector<std::string> include_only_ops_str;
-    std::vector<std::string> ignore_ops_str;
+    string_seq include_only_ops_str;
+    string_seq ignore_ops_str;
     vertex_set ignore_ops;
-    std::vector<std::string> exemplars_str;
+    string_seq exemplars_str;
     combo_tree_seq exemplars;
 
     // metapop_param
@@ -141,7 +141,7 @@ struct problem_params : public option_base
 
     // contin optimization
     bool weighted_accuracy;
-    std::vector<contin_t> discretize_thresholds;
+    contin_seq discretize_thresholds;
 
     // Control temporal dispersion pressure, typically between 0 and 1
     score_t time_dispersion_pressure;
@@ -233,7 +233,7 @@ protected:
     reduct::logical_reduction lr;
 
 private:
-    std::vector<std::string> col_labels;
+    string_seq col_labels;
 };
 
 } // ~namespace moses
