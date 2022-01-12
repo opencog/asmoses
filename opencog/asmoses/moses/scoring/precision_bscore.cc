@@ -708,14 +708,15 @@ combo_tree precision_bscore::gen_canonical_best_candidate() const
 		ptc.insert(std::make_pair(precision, std::make_pair(it, total)));
 	}
 
-	// Generate conjunctive clauses till minimum activation is
-	// reached. Note that the best precision (sao / active) can never
-	// increase for each new mpv.  Despite this, we keep going until
-	// at least min_activation is reached. It's not clear this
-	// actually gives the best candidate one can get if min_activation
-	// isn't reached, but we don't want to go below min activation
-	// anyway, so it's an acceptable inacurracy.  (It would be a
-	// problem only if activation constraint is very loose.)
+	// Generate a disjunctive normal form, composed of conjunctions
+	// till minimum activation is reached. Note that the best precision
+	// (sao / active) can never increase for each new mpv.  Despite
+	// this, we keep going until at least min_activation is
+	// reached. It's not clear this actually gives the best candidate
+	// one can get if min_activation isn't reached, but we don't want
+	// to go below min activation anyway, so it's an acceptable
+	// inacurracy.  (It would be a problem only if activation
+	// constraint is very loose.)
 	//
 	count_t active = 0.0;
 	combo_tree tr;
