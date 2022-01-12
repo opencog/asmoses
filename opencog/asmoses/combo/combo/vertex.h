@@ -108,7 +108,6 @@ enum __attribute__ ((packed)) builtin
 
 }
 
-
 typedef id::builtin builtin;
 
 // This idiom allows wild_card to live in namespace combo, but all

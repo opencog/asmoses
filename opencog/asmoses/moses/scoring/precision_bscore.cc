@@ -180,7 +180,7 @@ precision_bscore::precision_bscore(const CompressedTable &ctable_,
 
 /// For boolean tables, sum the total number of 'T' values
 /// in the output.  This sum represents the best possible score
-/// i.e. we found all of the true values correcty.  The 'F's are 
+/// i.e. we found all of the true values correcty.  The 'F's are
 /// false positives.
 score_t precision_bscore::sum_outputs(const CompressedTable::counter_t &c) const
 {
