@@ -362,7 +362,30 @@ protected:
 	void recompute_weight() const;   // recompute _ctable_weight
 };
 
-// helper to log a combo_tree and its behavioral score
+/**
+ * Generate a conjunction representing a row of truth values
+ *
+ * For instance
+ *
+ * conjunction_from_truth_row({T, F, T})
+ *
+ * returns
+ *
+ * and($1 !$2 $3)
+ */
+static inline combo_tree conjunction_from_truth_row(const combo::builtin_seq& row)
+{
+	combo_tree tr;
+	auto head = tr.set_head(combo::id::logical_and);
+	arity_t idx = 1;
+	for (const combo::builtin cell : row) {
+		combo::argument arg(cell == combo::id::logical_true ? idx++ : -idx++);
+		tr.append_child(head, arg);
+	}
+	return tr;
+}
+
+// Helper to log a combo_tree and its behavioral score
 static inline void log_candidate_bscore(const combo_tree &tr,
                                         const behavioral_score &bs)
 {

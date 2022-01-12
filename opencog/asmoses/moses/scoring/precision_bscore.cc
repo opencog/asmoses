@@ -724,13 +724,10 @@ combo_tree precision_bscore::gen_canonical_best_candidate() const
 	for (const auto &v : boost::adaptors::reverse(ptc)) {
 		active += v.second.second;
 
-		// build the disjunctive clause
-		auto dch = tr.append_child(head, id::logical_and);
-		arity_t idx = 1;
-		for (const auto &input : v.second.first->first.get_seq<builtin>()) {
-			argument arg(input == id::logical_true ? idx++ : -idx++);
-			tr.append_child(dch, arg);
-		}
+		// Build and insert the corresponding conjunction
+		const builtin_seq& truth_row = v.second.first->first.get_seq<builtin>();
+		combo_tree cnj = conjunction_from_truth_row(truth_row);
+		tr.replace(tr.append_child(head), cnj.begin());
 
 		// termination conditional
 		if (_ctable_weight * min_activation <= active)
