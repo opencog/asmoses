@@ -204,4 +204,14 @@ public:
         cheap_moses_test_combo({data_file_path, max_evals, output_labels},
                                {tr_str});
     }
+
+    void test_gen_best_candidate() {
+        cout << BOOST_CURRENT_FUNCTION << endl;
+        string tr_str("and($1 $2)"),
+            data_file_path("-i" + MOSESUTest_dir + "dataset.csv"),
+            max_evals("-m0"),
+            gen_best_cand("--gen-best-candidate=1");
+        cheap_moses_test_combo({data_file_path, max_evals, gen_best_cand},
+                               {tr_str});
+    }
 };
