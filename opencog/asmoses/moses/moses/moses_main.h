@@ -143,8 +143,8 @@ void metapop_moses_results_b(const combo_tree_seq& bases,
 		exit(1);
 	}
 
-	// This seems kind of cheesy ... shouldn't the exemplars
-	// already be simplified, by now?
+	logger().info("Reduce initial exemplars in case they were provided "
+	              "(or synthesized) in unreduced form");
 	combo_tree_seq simple_bases;
 	for (const combo_tree& xmplr: bases) {
 		combo_tree siba(xmplr);

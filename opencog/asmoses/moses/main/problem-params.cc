@@ -671,7 +671,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
         (opt_desc_str(log_file_opt).c_str(),
          po::value<string>(&log_file)->default_value(default_log_file),
          str(format("File name where to write the log."
-                    " This option is overwritten by %s.\n")
+                    " This option is overwritten by --%s.\n")
              % log_file_dep_opt_opt.first).c_str())
 
         (opt_desc_str(max_candidates_per_deme_opt).c_str(),
