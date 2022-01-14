@@ -588,7 +588,7 @@ void build_knobs::add_logical_knobs(pre_it subtree,
 
     if (logger().is_debug_enabled()) {
         logger().debug("Created %d logical knob subtrees", np);
-        logger().debug("will use %d threads for probing tree of size %d",
+        logger().debug("Will use %d threads for probing tree of size %d",
             nthr, combo_tree(subtree).size());
         if (_skip_disc_probe)
             logger().debug("Will skip expensive disc_probe()");
