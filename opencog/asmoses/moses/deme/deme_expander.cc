@@ -491,7 +491,7 @@ void deme_expander::optimize_demes(int max_evals, time_t max_time)
 			if (_params.atomspace_port) {
 				ComboToAtomese to_atomese(_output_type);
 				atomese_based_scorer cpx_scorer = atomese_based_scorer(_cscorer, _reps[i], _params.reduce_all, to_atomese, _labels,
-				                                                       _params.atomspace_store ? _params.as : nullptr);
+				                                                       _params.atomspace_store ? _params.atomspace : nullptr);
 				_optimize(_demes[i][j], cpx_scorer, max_evals_per_deme, max_time);
 			}
 			else {

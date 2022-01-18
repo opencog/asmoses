@@ -34,15 +34,18 @@ namespace opencog { namespace moses {
  */
 struct deme_parameters
 {
-    deme_parameters(bool _reduce_all=true,
-                    const operator_set& _ignore_ops=empty_ignore_ops,
-                    const feature_selector* _fstor=NULL) :
+    deme_parameters(int mcpd=-1,
+                    bool _reduce_all=true,
+                    const feature_selector* _fstor=nullptr,
+                    bool as_store=true,
+                    bool as_port=false,
+                    AtomSpacePtr as=nullptr) :
+        max_candidates_per_deme(mcpd),
         reduce_all(_reduce_all),
-        ignore_ops(_ignore_ops),
         fstor(_fstor),
-        atomspace_store(true),
-        atomspace_port(false),
-        as(nullptr)
+        atomspace_store(as_store),
+        atomspace_port(as_port),
+        atomspace(as)
         {}
 
     // The max number of candidates considered to be added to the
@@ -61,7 +64,7 @@ struct deme_parameters
     bool atomspace_port;
 
     // Atomspace used for storing candidate programs and input features
-    AtomSpacePtr as;
+    AtomSpacePtr atomspace;
 };
 
 } // ~namespace moses
