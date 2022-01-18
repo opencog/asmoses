@@ -127,8 +127,8 @@ Handle AtomeseRepresentation::get_candidate(const instance inst, bool reduce)
 }
 
 void AtomeseRepresentation::clean_atomese_prog(Handle &prog,
-                                                bool reduce,
-                                                bool knob_building)
+                                               bool reduce,
+                                               bool knob_building)
 {
 	reduct::clean_reduction()(prog);
 	if (reduce) {
