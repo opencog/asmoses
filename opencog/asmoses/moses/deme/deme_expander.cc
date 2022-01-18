@@ -289,8 +289,6 @@ bool deme_expander::create_representations(const combo_tree& exemplar)
 		// NEXT: move to representation_parameters whatever is only used by it
 		_reps.push_back(new representation(xmplr_seq[i], _type_sig,
 		                                   ignore_ops_seq[i],
-		                                   _params.perceptions,
-		                                   _params.actions,
 		                                   _rep_params));
 
 		// If the representation is empty, try the next

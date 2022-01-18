@@ -106,8 +106,6 @@ combo_tree type_to_exemplar(type_node type)
 representation::representation(const combo_tree& xmplr,
                                const type_tree& tt,
                                const operator_set& ignore_ops,
-                               const combo_tree_ns_set* perceptions, // NEXT
-                               const combo_tree_ns_set* actions, // NEXT
 	                            const representation_parameters& rp)
 	: _exemplar(xmplr), _params(rp)
 {
@@ -124,7 +122,7 @@ representation::representation(const combo_tree& xmplr,
 
 	// Build the knobs.
 	build_knobs(_exemplar, tt, *this, ignore_ops,
-	            perceptions, actions, _params.linear_contin,
+	            _params.perceptions, _params.actions, _params.linear_contin,
 	            stepsize, expansion, depth, _params.perm_ratio);
 
 	logger().info() << "After knob building, rep size="

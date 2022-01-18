@@ -55,8 +55,6 @@ struct representation : public knob_mapper, boost::noncopyable, boost::equality_
 	representation(const combo_tree& exemplar,
 	               const combo::type_tree& t,
 	               const operator_set& ignore_ops = operator_set(),
-	               const combo_tree_ns_set* perceptions = NULL,
-	               const combo_tree_ns_set* actions = NULL,
 	               const representation_parameters& rp=representation_parameters());
 
 	/**

@@ -54,13 +54,17 @@ struct representation_parameters
 	representation_parameters(reduct::rule* opt_red=NULL,
 	                          reduct::rule* rep_red=NULL,
 	                          knob_probing_enum kp=knob_probing_enum::kp_auto,
-	                          bool lc=false,
-	                          float pr=0.0)
+	                          bool linc=false,
+	                          float permr=0.0,
+	                          const combo_tree_ns_set* prcts=nullptr,
+	                          const combo_tree_ns_set* acts=nullptr)
 		: opt_reduct(opt_red),
 		  rep_reduct(rep_red),
 		  knob_probing(kp),
-		  linear_contin(lc),
-		  perm_ratio(pr)
+		  linear_contin(linc),
+		  perm_ratio(permr),
+		  perceptions(prcts),
+		  actions(acts)
 		{}
 
 	// Reduction during optimization
@@ -86,6 +90,12 @@ struct representation_parameters
 	// literals and arity pairs of literals, 1 means arity positive
 	// literals and arity*(arity-1) pairs of literals
 	float perm_ratio;
+
+	// Set or perceptions and actions.  Only used for procedural
+	// learning, nullptr otherwise.
+	const combo_tree_ns_set* perceptions;
+	const combo_tree_ns_set* actions;
+
 };
 
 } // ~namespace moses

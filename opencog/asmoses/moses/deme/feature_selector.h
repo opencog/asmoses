@@ -151,7 +151,7 @@ struct feature_selector_parameters
      * negative value means all interactions.
      */
     int diversity_interaction;
-    
+
      /**
      * If enabled then expensive multiple mi over feature set
      * activations is replaced by one cheap calculation of the Jaccard

@@ -38,13 +38,9 @@ struct deme_parameters
 {
     deme_parameters(bool _reduce_all=true,
                     const operator_set& _ignore_ops=empty_ignore_ops,
-                    const combo_tree_ns_set* _perceptions=NULL,
-                    const combo_tree_ns_set* _actions=NULL,
                     const feature_selector* _fstor=NULL) :
         reduce_all(_reduce_all),
         ignore_ops(_ignore_ops),
-        perceptions(_perceptions),
-        actions(_actions),
         fstor(_fstor),
         atomspace_store(true),
         atomspace_port(false),
@@ -60,11 +56,6 @@ struct deme_parameters
 
     // the set of operators to ignore
     operator_set ignore_ops;
-
-    // the set of perceptions of an optional interactive agent
-    const combo_tree_ns_set* perceptions;
-    // the set of actions of an optional interactive agent
-    const combo_tree_ns_set* actions;
 
     const feature_selector* fstor;
 

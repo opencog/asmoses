@@ -89,10 +89,10 @@ public:
         representation_parameters rep_params;
         rep_params.opt_reduct = &action_reduction();
         rep_params.rep_reduct = &action_reduction();
+        rep_params.perceptions = &perceptions;
+        rep_params.actions = &actions;
 
         deme_parameters deme_params;
-        deme_params.perceptions = &perceptions;
-        deme_params.actions = &actions;
 
         metapop_parameters meta_params;
         meta_params.complexity_temperature = 2000;  // See diary entry
