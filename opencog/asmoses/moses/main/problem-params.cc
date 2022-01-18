@@ -453,21 +453,21 @@ problem_params::add_options(boost::program_options::options_description& desc)
          po::value<int>(&num_to_promote)->default_value(1),
          "When boosting is enabled, this sets the number of candidates "
          "that, after every deme expansion cycle, should be added to "
-         "the boosted ensemble.")
+         "the boosted ensemble.\n")
 
         ("boost-exact",
          po::value<bool>(&exact_experts)->default_value(true),
          "When boosting is enabled with the -Hpre table problem, this "
          "determines whether the expert candidates admitted into the "
          "ensemble must be perfect, exact experts, or if they can make "
-         "mistakes.")
+         "mistakes.\n")
 
         ("boost-expalpha",
          po::value<double>(&expalpha)->default_value(2.0),
          "When boosting is enabled with the -Hpre table problem, and "
          "if the experts must be exact (option above), then this "
          "determines the ad-hoc weighting that magnifies unselected "
-         "items in the dataset. ")
+         "items in the dataset.\n")
 
         ("boost-bias",
          po::value<double>(&bias_scale)->default_value(1.0),
@@ -475,13 +475,26 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "if the experts are not exact, then a bias is used to distinguish "
          "the correctly selected and non-selected results.  This scale "
          "factor multiplies that bias. Best values are probably a bias "
-         "of less than one.")
+         "of less than one.\n")
 
         (opt_desc_str(reduct_knob_building_effort_opt).c_str(),
          po::value<int>(&reduct_knob_building_effort)->default_value(2),
-         "Effort allocated for reduction during knob building, 0-3, "
-         "0 means minimum effort, 3 means maximum effort. The bigger "
-         "the effort the lower the dimension of the deme.\n")
+         "Effort allocated for reduction during knob probing (see "
+         "--knob-probing for more information), 0-3, 0 means minimum "
+         "effort, 3 means maximum effort. The bigger "
+         "the effort the smaller the deme.\n")
+
+        ("knob-probing",
+         po::value<string>(&knob_probing_str)->default_value("auto"),
+         "Control whether knob probing takes place during representation "
+         "building.  0 means no probing, 1 means systematic probing, and "
+         "auto means that the decision is left to asmoses.  What is knob "
+         "probing?  During representation building, knob settings that "
+         "are expected to generate simpler candidates than the exemplar "
+         "can be discarded.  Whether it is desirable depends on the "
+         "situation, therefore such an option.  Beside knob probing can "
+         "be very expensive so disabling it could be justified in case"
+         "representation building is a computational bottleneck.\n")
 
         (opt_desc_str(max_dist_opt).c_str(),
          po::value<size_t>(&max_dist)->default_value(4),

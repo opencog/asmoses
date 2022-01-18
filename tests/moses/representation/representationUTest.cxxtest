@@ -125,7 +125,7 @@ public:
 
         std::stringstream ss;
         rep.ostream_prototype(ss);
-        
+
         TS_ASSERT_EQUALS(ss.str(), expected_str);
     }
 

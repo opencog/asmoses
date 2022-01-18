@@ -178,7 +178,7 @@ void table_problem_base::common_setup(problem_params& pms)
  * Set up the output
  */
 void table_problem_base::common_type_setup(problem_params& pms,
-										   type_node out_type)
+                                           type_node out_type)
 {
 	// Infer the signature based on the input table.
 	table_type_signature = table.get_signature();
@@ -257,13 +257,13 @@ void ip_problem::run(option_base* ob)
 	int as = alphabet_size(tt, pms.ignore_ops);
 
 	interesting_predicate_bscore bscore(ctable,
-				  _ippp.ip_kld_weight,
-				  _ippp.ip_skewness_weight,
-				  _ippp.ip_stdU_weight,
-				  _ippp.ip_skew_U_weight,
-				  pms.min_rand_input,
-				  pms.max_rand_input,
-				  pms.hardness, pms.pre_positive);
+	                                    _ippp.ip_kld_weight,
+	                                    _ippp.ip_skewness_weight,
+	                                    _ippp.ip_stdU_weight,
+	                                    _ippp.ip_skew_U_weight,
+	                                    pms.min_rand_input,
+	                                    pms.max_rand_input,
+	                                    pms.hardness, pms.pre_positive);
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 
 	// In order to support boosting, the interesting_predicate_bscore
@@ -319,7 +319,7 @@ void ann_table_problem::run(option_base* ob)
 
 	// Boosing for contin values needs a whole bunch of new code.
 	OC_ASSERT(not pms.meta_params.do_boosting,
-		"Boosting not supported for the ann problem!");
+	          "Boosting not supported for the ann problem!");
 	behave_cscore cscore(bscore, pms.cache_size);
 	metapop_moses_results(pms.exemplars, tt,
 						  reduct::ann_reduction(), reduct::ann_reduction(),

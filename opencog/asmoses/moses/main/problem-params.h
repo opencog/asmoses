@@ -59,7 +59,7 @@ struct problem_params : public option_base
     void add_options(boost::program_options::options_description&);
     void parse_options(boost::program_options::variables_map&);
 
-    // program options, see options_description below for their meaning
+    // Program options, see options_description below for their meaning
     string_seq jobs_str;
     unsigned min_pool;
     bool enable_mpi;
@@ -67,7 +67,7 @@ struct problem_params : public option_base
     unsigned long rand_seed;
     std::string problem;
 
-    // default number of samples to describe a problem
+    // Default number of samples to describe a problem
     const unsigned int default_nsamples;
     int nsamples;
     double min_rand_input;
@@ -85,7 +85,7 @@ struct problem_params : public option_base
     std::string log_level;
     std::string log_file;
 
-    // output printing options (metapop_printer)
+    // Output printing options (metapop_printer)
     long result_count;
     bool output_score;
     bool output_cscore;
@@ -124,7 +124,7 @@ struct problem_params : public option_base
     double expalpha;
     double bias_scale;
 
-    // metapopulation diversity parameters
+    // Metapopulation diversity parameters
     score_t diversity_pressure;
     bool diversity_autoscale;
     score_t diversity_exponent;
@@ -139,7 +139,7 @@ struct problem_params : public option_base
     score_t max_score;
     size_t max_dist;
 
-    // contin optimization
+    // Contin optimization
     bool weighted_accuracy;
     contin_seq discretize_thresholds;
 
@@ -174,7 +174,7 @@ struct problem_params : public option_base
     // classifier parameters
     bool use_well_enough;
 
-    // hardness of the activation range -- scoring-related
+    // Hardness of the activation range -- scoring-related
     // constraint for problems pre, recall, prerec
     score_t hardness;
 
