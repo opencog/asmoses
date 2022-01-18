@@ -29,6 +29,7 @@
 #include <opencog/asmoses/combo/type_checker/type_tree.h>
 #include <boost/operators.hpp>
 #include "knob_mapper.h"
+#include "representation_parameters.h"
 
 namespace opencog { namespace moses {
 
@@ -50,15 +51,14 @@ struct representation : public knob_mapper, boost::noncopyable, boost::equality_
 	typedef std::set<combo::combo_tree, size_tree_order<combo::vertex>> combo_tree_ns_set;
 
 	// Optional arguments are used only for actions/Petbrain
-	representation(const reduct::rule& simplify_candidate,
-	               const reduct::rule& simplify_knob_building,
-	               const combo_tree& exemplar_,
+	// NEXT
+	representation(const combo_tree& exemplar,
 	               const combo::type_tree& t,
 	               const operator_set& ignore_ops = operator_set(),
 	               const combo_tree_ns_set* perceptions = NULL,
 	               const combo_tree_ns_set* actions = NULL,
 	               bool linear_contin = true,
-	               float perm_ratio = 0.0);
+	               const representation_parameters& rp=representation_parameters());
 
 	/**
 	 * Turn the knobs on this representation, so that they have the same
@@ -113,13 +113,13 @@ struct representation : public knob_mapper, boost::noncopyable, boost::equality_
 		return this->_exemplar == other.exemplar();
 	}
 
-	//* return _simplify_candidate
-	const reduct::rule* get_simplify_candidate() const {
-		return _simplify_candidate;
+	//* Return reduction function used during optimization
+	const reduct::rule* opt_reduct() const {
+		return _params.opt_reduct;
 	}
-	//* return _simplify_knob_building
-	const reduct::rule* get_simplify_knob_building() const {
-		return _simplify_knob_building;
+	//* Return reduction function used during representation building
+	const reduct::rule* rep_reduct() const {
+		return _params.rep_reduct;
 	}
 
 	const field_set& fields() const {
@@ -192,8 +192,10 @@ struct representation : public knob_mapper, boost::noncopyable, boost::equality_
 	}
 
 protected:
-	combo_tree _exemplar;     // contains the prototype of the
-	// exemplar used to generate the deme
+	combo_tree _exemplar;     // Contains the prototype of the
+	                          // exemplar used to generate the deme
+
+	const representation_parameters& _params;
 
 #ifdef EXEMPLAR_INST_IS_UNDEAD
 	void set_exemplar_inst();
@@ -204,8 +206,6 @@ protected:
 #endif
 
 	field_set _fields;
-	const reduct::rule* _simplify_candidate; // used to simplify candidates
-	const reduct::rule* _simplify_knob_building; // used to simplify
 	// during knob
 	// building
 	mutable boost::mutex tranform_mutex;

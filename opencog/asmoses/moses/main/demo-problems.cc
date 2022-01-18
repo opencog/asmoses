@@ -119,12 +119,10 @@ void bool_problem_base::run(option_base* ob)
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 
 	behave_cscore cscore(bscore);
-	metapop_moses_results(pms.exemplars, sig,
-	                      *pms.bool_reduct, *pms.bool_reduct_rep,
-	                      cscore,
+	metapop_moses_results(pms.exemplars, sig, cscore,
 	                      pms.opt_params, pms.hc_params, pms.ps_params,
-	                      pms.deme_params, pms.filter_params, pms.meta_params,
-	                      pms.moses_params, pms.mmr_pa);
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -288,12 +286,13 @@ void polynomial_problem::run(option_base* ob)
 
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 	behave_cscore cscore(bscore);
-	metapop_moses_results(pms.exemplars, tt,
-	                      *pms.contin_reduct, *pms.contin_reduct,
-	                      cscore,
+	pms.rep_params.opt_reduct = pms.contin_reduct;
+	pms.rep_params.rep_reduct = pms.contin_reduct;
+	metapop_moses_results(pms.exemplars, tt, cscore,
 	                      pms.opt_params, pms.hc_params, pms.ps_params,
-	                      pms.deme_params, pms.filter_params, pms.meta_params,
-	                      pms.moses_params, pms.mmr_pa, id::contin_type, it.get_labels());
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa,
+	                      id::contin_type, it.get_labels());
 }
 
 // ==================================================================
@@ -408,12 +407,10 @@ void combo_problem::run(option_base* ob)
 		// @todo: Occam's razor and nsamples is not taken into account
 		logical_bscore bscore(tr, arity);
 		behave_cscore cscore(bscore);
-		metapop_moses_results(pms.exemplars, tt,
-		                      *pms.bool_reduct, *pms.bool_reduct_rep,
-		                      cscore,
+		metapop_moses_results(pms.exemplars, tt, cscore,
 		                      pms.opt_params, pms.hc_params, pms.ps_params,
-		                      pms.deme_params, pms.filter_params, pms.meta_params,
-		                      pms.moses_params, pms.mmr_pa);
+		                      pms.rep_params, pms.deme_params, pms.filter_params,
+		                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 	}
 	else if (output_type == id::contin_type) {
 
@@ -451,12 +448,12 @@ void combo_problem::run(option_base* ob)
 		contin_bscore bscore(ot, it);
 		set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 		behave_cscore cscore(bscore);
-		metapop_moses_results(pms.exemplars, tt,
-		                      *pms.contin_reduct, *pms.contin_reduct,
-		                      cscore,
+		pms.rep_params.opt_reduct = pms.contin_reduct;
+		pms.rep_params.opt_reduct = pms.contin_reduct;
+		metapop_moses_results(pms.exemplars, tt, cscore,
 		                      pms.opt_params, pms.hc_params, pms.ps_params,
-		                      pms.deme_params, pms.filter_params, pms.meta_params,
-		                      pms.moses_params, pms.mmr_pa);
+		                      pms.rep_params, pms.deme_params, pms.filter_params,
+		                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 	} else {
 		logger().error() << "Error: combo_problem: type " << tt << " not supported.";
 		std::cerr << "Error: combo_problem: type " << tt << " not supported." << std::endl;
@@ -509,12 +506,12 @@ void ann_combo_problem::run(option_base* ob)
 
 	OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
 	behave_cscore cscore(bscore);
-	metapop_moses_results(pms.exemplars, tt,
-	                      *pms.contin_reduct, *pms.contin_reduct,
-	                      cscore,
+	pms.rep_params.opt_reduct = pms.contin_reduct;
+	pms.rep_params.rep_reduct = pms.contin_reduct;
+	metapop_moses_results(pms.exemplars, tt, cscore,
 	                      pms.opt_params, pms.hc_params, pms.ps_params,
-	                      pms.deme_params, pms.filter_params, pms.meta_params,
-	                      pms.moses_params, pms.mmr_pa);
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================

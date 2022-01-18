@@ -293,7 +293,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "automatically disables the use of div, sin, exp and log.\n")
 
         ("logical-perm-ratio",
-         po::value<double>(&perm_ratio)->default_value(0.0),
+         po::value<float>(&rep_params.perm_ratio)->default_value(0.0),
          "When decorating boolean exemplars with knobs, this option "
          "controls how many pairs of literals of the form op(L1 L2) are "
          "created.  That is, such pairs are used to decorate the exemplar "
@@ -1370,9 +1370,8 @@ void problem_params::parse_options(boost::program_options::variables_map& vm)
 
     // Set deme expansion paramters
     deme_params.reduce_all = reduce_all;
-    deme_params.ignore_ops = ignore_ops;
-    deme_params.linear_contin = linear_regression;
-    deme_params.perm_ratio = perm_ratio;
+    deme_params.ignore_ops = ignore_ops; // NEXT: move to representation_parameters
+    deme_params.linear_contin = linear_regression; // NEXT: move to representation_parameters
     if (ss_n_subsample_demes > 1 or ss_n_subsample_fitnesses > 1) {
         // If SS-MOSES is enabled then the cache is automatically
         // disabled because SS-MOSES implies to re-evaluate the same
@@ -1490,12 +1489,11 @@ void problem_params::parse_options(boost::program_options::variables_map& vm)
     moses_params.max_time = max_time;
     moses_params.max_cnd_output = result_count;
 
-    // Logical reduction rules used during search.
+    // Representation building parameters
     lr = reduct::logical_reduction(ignore_ops);
-    bool_reduct = lr(reduct_candidate_effort).clone();
-
-    // Logical reduction rules used during representation building.
-    bool_reduct_rep = lr(reduct_knob_building_effort).clone();
+    rep_params.opt_reduct = lr(reduct_candidate_effort).clone();
+    rep_params.rep_reduct = lr(reduct_knob_building_effort).clone();
+    rep_params.knob_probing = parse_knob_probing(knob_probing_str);
 
     // Continuous reduction rules used during search and representation
     // building.

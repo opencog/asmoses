@@ -39,12 +39,11 @@ namespace moses {
 struct deme_expander
 {
 	deme_expander(const type_tree& type_signature,
-	              const reduct::rule& si_ca,
-	              const reduct::rule& si_kb,
 	              behave_cscore& sc,
 	              optimizer_base& opt,
-	              const deme_parameters& pa = deme_parameters(),
-	              const subsample_deme_filter_parameters& fp = subsample_deme_filter_parameters(),
+	              const deme_parameters& pa=deme_parameters(),
+	              const representation_parameters& rp=representation_parameters(),
+	              const subsample_deme_filter_parameters& fp=subsample_deme_filter_parameters(),
 	              type_node output_t = id::boolean_type,
 	              const string_seq& labels={});
 
@@ -132,8 +131,6 @@ protected:
 	                       const feature_set& selected_features) const;
 
 	const combo::type_tree& _type_sig;          // type signature of the exemplar
-	const reduct::rule& simplify_candidate;     // rule to simplify candidates
-	const reduct::rule& simplify_knob_building; // during knob building
 
 	// Used by random_shuffle
 	std::function<ptrdiff_t(ptrdiff_t)> random_shuffle_gen;
@@ -151,6 +148,7 @@ protected:
 	std::vector<demeID_t> _demeIDs;
 
 	const deme_parameters& _params;
+	const representation_parameters& _rep_params;
 
 	const subsample_deme_filter_parameters& _filter_params;
 	type_node _output_type;

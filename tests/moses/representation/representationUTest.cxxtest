@@ -64,10 +64,10 @@ public:
         combo_tree tr = totree(tr_str);
         type_tree tt = infer_type_tree(tr);
         vertex_set ignore_ops{id::div, id::exp, id::log, id::sin};
-        representation rep(contin_reduction(reduct_effort, ignore_ops),
-                           contin_reduction(reduct_effort, ignore_ops),
-                           tr, tt, ignore_ops,
-                           NULL, NULL, false);
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &contin_reduction(reduct_effort, ignore_ops);
+        rep_params.rep_reduct = &contin_reduction(reduct_effort, ignore_ops);
+        representation rep(tr, tt, ignore_ops, NULL, NULL, false, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
 
@@ -86,10 +86,10 @@ public:
         combo_tree tr = totree(tr_str);
         type_tree tt = infer_type_tree(tr);
         vertex_set ignore_ops{id::div, id::exp, id::log, id::sin};
-        representation rep(contin_reduction(reduct_effort, ignore_ops),
-                           contin_reduction(reduct_effort, ignore_ops),
-                           tr, tt, ignore_ops,
-                           NULL, NULL, true);
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &contin_reduction(reduct_effort, ignore_ops);
+        rep_params.rep_reduct = &contin_reduction(reduct_effort, ignore_ops);
+        representation rep(tr, tt, ignore_ops, NULL, NULL, true, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
 
@@ -109,13 +109,13 @@ public:
 
         const vertex_set ignore_ops;
         logical_reduction r(ignore_ops);
-        const rule& r2 = r.operator()(2);
-        const rule& r3 = r.operator()(3);
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &r.operator()(2);
+        rep_params.rep_reduct = &r.operator()(3);
+        rep_params.perm_ratio = 1.0; // all permutation are generated,
+                                     // that way we avoid sampling
 
-        representation rep(r2, r3, tr, tt, vertex_set(),
-                           nullptr, nullptr, false,
-                           1.0 /* all permutation are generated, that
-                                  way we avoid sampling */);
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
 
@@ -137,9 +137,11 @@ public:
 
         const vertex_set ignore_ops;
         logical_reduction r(ignore_ops);
-        const rule& r2 = r.operator()(2);
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &r.operator()(2);
+        rep_params.rep_reduct = &r.operator()(2);
 
-        representation rep(r2, r2, tr, tt, vertex_set());
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }
@@ -152,9 +154,11 @@ public:
 
         const vertex_set ignore_ops;
         logical_reduction r(ignore_ops);
-        const rule& r2 = r.operator()(2);
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &r.operator()(2);
+        rep_params.rep_reduct = &r.operator()(2);
 
-        representation rep(r2, r2, tr, tt, vertex_set());
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }
@@ -167,9 +171,11 @@ public:
 
         const vertex_set ignore_ops;
         logical_reduction r(ignore_ops);
-        const rule& r2 = r.operator()(2);
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &r.operator()(2);
+        rep_params.rep_reduct = &r.operator()(2);
 
-        representation rep(r2, r2, tr, tt, vertex_set());
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }
@@ -182,10 +188,11 @@ public:
 
         const vertex_set ignore_ops;
         logical_reduction r(ignore_ops);
-        const rule& r2 = r.operator()(2);
-        const rule& r0 = r.operator()(0);
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &r.operator()(2);
+        rep_params.rep_reduct = &r.operator()(0);
 
-        representation rep(r2, r0, tr, tt, vertex_set());
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }

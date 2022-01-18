@@ -41,6 +41,7 @@ static contin_t stepsize = 1.0;
 static contin_t expansion = 2.0;
 static int depth = 5;
 
+// NEXT
 AtomeseRepresentation::AtomeseRepresentation(const reduct::rule &simplify_candidate,
                                              const reduct::rule &simplify_knob_building,
                                              const Handle &exemplar,

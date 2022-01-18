@@ -103,18 +103,14 @@ combo_tree type_to_exemplar(type_node type)
 	return combo_tree();
 }
 
-representation::representation(const reduct::rule& simplify_candidate,
-                               const reduct::rule& simplify_knob_building,
-                               const combo_tree& exemplar_,
+representation::representation(const combo_tree& xmplr,
                                const type_tree& tt,
                                const operator_set& ignore_ops,
-                               const combo_tree_ns_set* perceptions,
-                               const combo_tree_ns_set* actions,
-                               bool linear_contin,
-                               float perm_ratio)
-	: _exemplar(exemplar_),
-	  _simplify_candidate(&simplify_candidate),
-	  _simplify_knob_building(&simplify_knob_building)
+                               const combo_tree_ns_set* perceptions, // NEXT
+                               const combo_tree_ns_set* actions, // NEXT
+                               bool linear_contin, // NEXT
+	                            const representation_parameters& rp)
+	: _exemplar(xmplr), _params(rp)
 {
 	// Log before and after ... knob building can take a HUGE amount
 	// of time for some situations ... capture these in the log file.
@@ -130,7 +126,7 @@ representation::representation(const reduct::rule& simplify_candidate,
 	// Build the knobs.
 	build_knobs(_exemplar, tt, *this, ignore_ops,
 	            perceptions, actions, linear_contin,
-	            stepsize, expansion, depth, perm_ratio);
+	            stepsize, expansion, depth, _params.perm_ratio);
 
 	logger().info() << "After knob building, rep size="
 	                << _exemplar.size()
@@ -285,10 +281,11 @@ void representation::clean_combo_tree(combo_tree &tr,
 								 << " candidate: " << tr;
 		}
 #endif
+		// NEXT: Where is that used during knob building?
 		if (knob_building)
-			(*get_simplify_knob_building())(tr);
+			(*rep_reduct())(tr);
 		else
-			(*get_simplify_candidate())(tr);
+			(*opt_reduct())(tr);
 #ifdef __FINE_LOG_CND_REDUCED
 		if (logger().isFineEnabled()) {
 			logger().fine() << "Reduced candidate: " << tr;

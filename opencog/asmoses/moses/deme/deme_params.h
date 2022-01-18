@@ -69,6 +69,7 @@ struct deme_parameters
 
     const feature_selector* fstor;
 
+	// NEXT: move to representation_parameters
     // Build only linear expressions involving contin features.
     // This can greatly decrease the number of knobs created during
     // representation building, resulting in much smaller field sets,
@@ -77,6 +78,7 @@ struct deme_parameters
     // and thus may require more time overall to find...
     bool linear_contin;
 
+	// NEXT: move to representation_parameters
     // Defines how many pairs of literals constituting subtrees op(l1
     // l2) are considered while creating the prototype of an
     // exemplar. It ranges from 0 to 1, 0 means arity positive

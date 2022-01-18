@@ -33,16 +33,16 @@ namespace opencog {
 namespace moses {
 
 deme_expander::deme_expander(const type_tree& type_signature,
-                             const reduct::rule& si_ca,
-                             const reduct::rule& si_kb,
                              behave_cscore& sc,
                              optimizer_base& opt,
                              const deme_parameters& pa,
+                             const representation_parameters& rp,
                              const subsample_deme_filter_parameters& fp,
                              type_node output_t,
                              const string_seq& labels):
-	_optimize(opt), _type_sig(type_signature), simplify_candidate(si_ca),
-	simplify_knob_building(si_kb), _cscorer(sc), _params(pa), _filter_params(fp), _output_type(output_t),_labels(labels)
+	_optimize(opt), _type_sig(type_signature), _cscorer(sc),
+	_params(pa), _rep_params(rp),
+	_filter_params(fp), _output_type(output_t),_labels(labels)
 {
 	random_shuffle_gen = [&](ptrdiff_t i) { return randGen().randint(i); };
 }
@@ -286,14 +286,13 @@ bool deme_expander::create_representations(const combo_tree& exemplar)
 
 		// Build a representation by adding knobs to the exemplar,
 		// creating a field set, and a mapping from field set to knobs.
-		_reps.push_back(new representation(simplify_candidate,
-		                                   simplify_knob_building,
-		                                   xmplr_seq[i], _type_sig,
+		// NEXT: move to representation_parameters whatever is only used by it
+		_reps.push_back(new representation(xmplr_seq[i], _type_sig,
 		                                   ignore_ops_seq[i],
 		                                   _params.perceptions,
 		                                   _params.actions,
 		                                   _params.linear_contin,
-		                                   _params.perm_ratio));
+		                                   _rep_params));
 
 		// If the representation is empty, try the next
 		// best-scoring exemplar.
@@ -311,7 +310,7 @@ combo_tree deme_expander::prune_xmplr(const combo_tree& xmplr,
                                       const feature_set& selected_features) const
 {
 	combo_tree res = xmplr;
-	// remove literals of non selected features from the exemplar
+	// Remove literals of non selected features from the exemplar
 	for (auto it = res.begin(); it != res.end();) {
 		if (is_argument(*it)) {
 			arity_t feature = get_argument(*it).abs_idx_from_zero();
@@ -324,8 +323,11 @@ combo_tree deme_expander::prune_xmplr(const combo_tree& xmplr,
 		else
 			++it;
 	}
-	simplify_knob_building(res);
-	// if the exemplar is empty use a seed
+
+	// Reduce to normal form in case it is not already
+	(*_rep_params.rep_reduct)(res);
+
+	// If the exemplar is empty use a seed
 	if (res.empty()) {
 		type_node otn = get_type_node(get_signature_output(_type_sig));
 		res = type_to_exemplar(otn);
