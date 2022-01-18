@@ -28,6 +28,7 @@
 #include <opencog/asmoses/reduct/reduct/reduct.h>
 #include <boost/operators.hpp>
 #include "field_set.h"
+#include "representation_parameters.h"
 
 namespace opencog
 {
