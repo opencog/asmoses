@@ -68,6 +68,7 @@ protected:
 
 	lookup disc_lookup;
 	lookup contin_lookup;
+
 public:
 	Handle get_candidate(const instance inst, bool reduce);
 	void set_rep(Handle);

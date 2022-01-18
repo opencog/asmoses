@@ -39,10 +39,10 @@ struct BuildAtomeseKnobs : boost::noncopyable
 	                  const Handle &DSN,
 	                  bool linear_contin,
 	                  const HandleSet& ignore_ops={},
-	                  contin_t step_size = 1.0,
-	                  contin_t expansion = 1.0,
-	                  field_set::width_t depth = 4,
-	                  float perm_ratio = 0.0);
+	                  contin_t step_size=1.0,
+	                  contin_t expansion=1.0,
+	                  field_set::width_t depth=4,
+	                  float perm_ratio=0.0);
 
 protected:
 	Handle& _exemplar;
