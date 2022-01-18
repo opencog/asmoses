@@ -25,6 +25,8 @@
 
 namespace opencog { namespace moses {
 
+static const operator_set empty_ignore_ops = operator_set();
+
 enum class knob_probing_enum {
 	kp_auto,
 	kp_on,
@@ -53,6 +55,7 @@ struct representation_parameters
 {
 	representation_parameters(reduct::rule* opt_red=NULL,
 	                          reduct::rule* rep_red=NULL,
+	                          const operator_set& igops=empty_ignore_ops,
 	                          knob_probing_enum kp=knob_probing_enum::kp_auto,
 	                          bool linc=false,
 	                          float permr=0.0,
@@ -60,6 +63,7 @@ struct representation_parameters
 	                          const combo_tree_ns_set* acts=nullptr)
 		: opt_reduct(opt_red),
 		  rep_reduct(rep_red),
+		  ignore_ops(igops),
 		  knob_probing(kp),
 		  linear_contin(linc),
 		  perm_ratio(permr),
@@ -72,6 +76,9 @@ struct representation_parameters
 
 	// Reduction for representation
 	const reduct::rule* rep_reduct;
+
+	// Set of operators to ignore
+	operator_set ignore_ops;
 
 	// Whether knob probing is auto, on or off
 	knob_probing_enum knob_probing;

@@ -29,8 +29,6 @@
 
 namespace opencog { namespace moses {
 
-static const operator_set empty_ignore_ops = operator_set();
-
 /**
  * parameters for deme management
  */
@@ -53,9 +51,6 @@ struct deme_parameters
 
     // If true then all candidates are reduced before evaluation.
     bool reduce_all;
-
-    // the set of operators to ignore
-    operator_set ignore_ops;
 
     const feature_selector* fstor;
 

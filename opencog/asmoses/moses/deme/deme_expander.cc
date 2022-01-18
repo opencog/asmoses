@@ -270,7 +270,7 @@ bool deme_expander::create_representations(const combo_tree& exemplar)
 		}
 	}
 	else {                      // no dynamic feature selection
-		ignore_ops_seq.push_back(_params.ignore_ops);
+		ignore_ops_seq.push_back(_rep_params.ignore_ops);
 		xmplr_seq.push_back(exemplar);
 	}
 
