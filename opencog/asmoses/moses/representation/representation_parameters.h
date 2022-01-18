@@ -23,9 +23,11 @@
 #ifndef _OPENCOG_REPRESENTATION_PARAMETERS_H
 #define _OPENCOG_REPRESENTATION_PARAMETERS_H
 
+#include <opencog/asmoses/combo/combo/vertex.h>
+
 namespace opencog { namespace moses {
 
-static const operator_set empty_ignore_ops = operator_set();
+static const combo::operator_set empty_ignore_ops = combo::operator_set();
 
 enum class knob_probing_enum {
 	kp_auto,
@@ -55,7 +57,7 @@ struct representation_parameters
 {
 	representation_parameters(reduct::rule* opt_red=NULL,
 	                          reduct::rule* rep_red=NULL,
-	                          const operator_set& igops=empty_ignore_ops,
+	                          const combo::operator_set& igops=empty_ignore_ops,
 	                          knob_probing_enum kp=knob_probing_enum::kp_auto,
 	                          bool linc=false,
 	                          float permr=0.0,
@@ -78,7 +80,7 @@ struct representation_parameters
 	const reduct::rule* rep_reduct;
 
 	// Set of operators to ignore
-	operator_set ignore_ops;
+	combo::operator_set ignore_ops;
 
 	// Whether knob probing is auto, on or off
 	knob_probing_enum knob_probing;
