@@ -44,24 +44,21 @@ namespace moses
  */
 struct AtomeseRepresentation : public boost::noncopyable, boost::equality_comparable<AtomeseRepresentation>
 {
-	AtomeseRepresentation(const reduct::rule& simplify_candidate,
-	                       const reduct::rule& simplify_knob_building,
-	                       const Handle& exemplar_,
-	                       const Handle& t,
-	                       AtomSpacePtr as,
-	                       const HandleSet& ignore_ops={},
-	                       float perm_ratio=0.0,
-	                       bool linear_contin=true);
+	AtomeseRepresentation(const Handle& exemplar,
+	                      const Handle& tt,
+	                      AtomSpacePtr as,
+	                      const HandleSet &ignore_ops,
+	                      const representation_parameters& rp);
+
 protected:
 	Handle _exemplar;
 	field_set _fields;
-	const reduct::rule* _simplify_candidate; // used to simplify candidates
-	const reduct::rule* _simplify_knob_building;
 	AtomSpacePtr _as;
 	const Handle _DSN =
 			createNode(DEFINED_SCHEMA_NODE, randstr(std::string("REP") + "-"));
 	Handle _rep;
 	HandleSeq _variables;
+	representation_parameters _rep_params;
 
 	Handle get_candidate(const Handle &h);
 
