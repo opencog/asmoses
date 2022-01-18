@@ -51,10 +51,8 @@ struct representation : public knob_mapper, boost::noncopyable, boost::equality_
 	typedef std::set<combo::combo_tree, size_tree_order<combo::vertex>> combo_tree_ns_set;
 
 	// Optional arguments are used only for actions/Petbrain
-	// NEXT
 	representation(const combo_tree& exemplar,
-	               const combo::type_tree& t,
-	               const operator_set& ignore_ops = operator_set(),
+	               const combo::type_tree& tt,
 	               const representation_parameters& rp=representation_parameters());
 
 	/**
@@ -72,7 +70,7 @@ struct representation : public knob_mapper, boost::noncopyable, boost::equality_
 	 *                      reduce, otherwise (the default) _simplify_candidate.
 	 * @return returns a copy of _exemplar, cleaned and reduced
 	 */
-	combo_tree get_clean_exemplar(bool reduce, bool knob_building = false) const;
+	combo_tree get_clean_exemplar(bool reduce, bool knob_building=false) const;
 
 	/**
 	 * Helper of get_clean_exemplar and get_candidate.
@@ -82,7 +80,7 @@ struct representation : public knob_mapper, boost::noncopyable, boost::equality_
 	 * (the default) _simplify_candidate.
 	 */
 	void clean_combo_tree(combo_tree &tr, bool reduce,
-	                      bool knob_building = false) const;
+	                      bool knob_building=false) const;
 
 	/**
 	 * Thread safe composition of transform and
@@ -192,7 +190,7 @@ protected:
 	combo_tree _exemplar;     // Contains the prototype of the
 	                          // exemplar used to generate the deme
 
-	const representation_parameters& _params;
+	representation_parameters _params;
 
 #ifdef EXEMPLAR_INST_IS_UNDEAD
 	void set_exemplar_inst();
@@ -203,8 +201,8 @@ protected:
 #endif
 
 	field_set _fields;
-	// during knob
-	// building
+
+	// During knob building
 	mutable boost::mutex tranform_mutex;
 };
 

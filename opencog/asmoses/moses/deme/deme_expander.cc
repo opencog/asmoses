@@ -286,10 +286,9 @@ bool deme_expander::create_representations(const combo_tree& exemplar)
 
 		// Build a representation by adding knobs to the exemplar,
 		// creating a field set, and a mapping from field set to knobs.
-		// NEXT: move to representation_parameters whatever is only used by it
-		_reps.push_back(new representation(xmplr_seq[i], _type_sig,
-		                                   ignore_ops_seq[i],
-		                                   _rep_params));
+		representation_parameters local_rep_params(_rep_params);
+		local_rep_params.ignore_ops = ignore_ops_seq[i];
+		_reps.push_back(new representation(xmplr_seq[i], _type_sig, local_rep_params));
 
 		// If the representation is empty, try the next
 		// best-scoring exemplar.

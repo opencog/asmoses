@@ -217,7 +217,6 @@ struct problem_params : public option_base
     feature_selection_parameters& fs_params;
     std::string fs_enforce_features_filename;
 
-	// NEXT: move to representation_parameters
     reduct::rule* bool_reduct;
     reduct::rule* contin_reduct;
 
