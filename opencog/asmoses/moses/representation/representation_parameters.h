@@ -54,18 +54,38 @@ struct representation_parameters
 	representation_parameters(reduct::rule* opt_red=NULL,
 	                          reduct::rule* rep_red=NULL,
 	                          knob_probing_enum kp=knob_probing_enum::kp_auto,
+	                          bool lc=false,
 	                          float pr=0.0)
 		: opt_reduct(opt_red),
 		  rep_reduct(rep_red),
 		  knob_probing(kp),
+		  linear_contin(lc),
 		  perm_ratio(pr)
 		{}
 
-	// NEXT: better comment
-	const reduct::rule* opt_reduct;  // Reduction during optimization
-	const reduct::rule* rep_reduct;  // Reduction for representation
-	knob_probing_enum knob_probing;  // Whether knob probing is auto, on or off
-	float perm_ratio;                // Permutation ratio of logical knobs
+	// Reduction during optimization
+	const reduct::rule* opt_reduct;
+
+	// Reduction for representation
+	const reduct::rule* rep_reduct;
+
+	// Whether knob probing is auto, on or off
+	knob_probing_enum knob_probing;
+
+	// Build only linear expressions involving contin features.
+	// This can greatly decrease the number of knobs created during
+	// representation building, resulting in much smaller field sets,
+	// and instances that can be searched more quickly. However, in
+	// order to fit the data, linear expressions may not be as good,
+	// and thus may require more time overall to find...
+	bool linear_contin;
+
+	// Defines how many pairs of literals constituting subtrees op(l1
+	// l2) are considered while creating the prototype of an
+	// exemplar. It ranges from 0 to 1, 0 means arity positive
+	// literals and arity pairs of literals, 1 means arity positive
+	// literals and arity*(arity-1) pairs of literals
+	float perm_ratio;
 };
 
 } // ~namespace moses

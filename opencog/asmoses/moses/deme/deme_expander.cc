@@ -291,7 +291,6 @@ bool deme_expander::create_representations(const combo_tree& exemplar)
 		                                   ignore_ops_seq[i],
 		                                   _params.perceptions,
 		                                   _params.actions,
-		                                   _params.linear_contin,
 		                                   _rep_params));
 
 		// If the representation is empty, try the next

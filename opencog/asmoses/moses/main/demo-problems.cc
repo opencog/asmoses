@@ -273,7 +273,7 @@ void polynomial_problem::run(option_base* ob)
 	// sr is fundamentally a kind of non-linear regression!
 	// over-ride any flag settings regarding this.
 
-	pms.deme_params.linear_contin = false;
+	pms.rep_params.linear_contin = false;
 	int as = alphabet_size(tt, pms.ignore_ops);
 
 	contin_bscore::err_function_type eft =

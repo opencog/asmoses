@@ -36,17 +36,16 @@ static const operator_set empty_ignore_ops = operator_set();
  */
 struct deme_parameters
 {
-    deme_parameters(bool _reduce_all = true,
-                    const operator_set& _ignore_ops = empty_ignore_ops,
-                    const combo_tree_ns_set* _perceptions = NULL,
-                    const combo_tree_ns_set* _actions = NULL,
-                    const feature_selector* _fstor = NULL) :
+    deme_parameters(bool _reduce_all=true,
+                    const operator_set& _ignore_ops=empty_ignore_ops,
+                    const combo_tree_ns_set* _perceptions=NULL,
+                    const combo_tree_ns_set* _actions=NULL,
+                    const feature_selector* _fstor=NULL) :
         reduce_all(_reduce_all),
         ignore_ops(_ignore_ops),
         perceptions(_perceptions),
         actions(_actions),
         fstor(_fstor),
-        linear_contin(true),
         atomspace_store(true),
         atomspace_port(false),
         as(nullptr)
@@ -68,23 +67,6 @@ struct deme_parameters
     const combo_tree_ns_set* actions;
 
     const feature_selector* fstor;
-
-	// NEXT: move to representation_parameters
-    // Build only linear expressions involving contin features.
-    // This can greatly decrease the number of knobs created during
-    // representation building, resulting in much smaller field sets,
-    // and instances that can be searched more quickly. However, in
-    // order to fit the data, linear expressions may not be as good,
-    // and thus may require more time overall to find...
-    bool linear_contin;
-
-	// NEXT: move to representation_parameters
-    // Defines how many pairs of literals constituting subtrees op(l1
-    // l2) are considered while creating the prototype of an
-    // exemplar. It ranges from 0 to 1, 0 means arity positive
-    // literals and arity pairs of literals, 1 means arity positive
-    // literals and arity*(arity-1) pairs of literals
-    float perm_ratio;
 
     // Flag used to store atomese programs to atomspace
     bool atomspace_store;

@@ -67,7 +67,7 @@ public:
         representation_parameters rep_params;
         rep_params.opt_reduct = &contin_reduction(reduct_effort, ignore_ops);
         rep_params.rep_reduct = &contin_reduction(reduct_effort, ignore_ops);
-        representation rep(tr, tt, ignore_ops, NULL, NULL, false, rep_params);
+        representation rep(tr, tt, ignore_ops, NULL, NULL, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
 
@@ -89,7 +89,8 @@ public:
         representation_parameters rep_params;
         rep_params.opt_reduct = &contin_reduction(reduct_effort, ignore_ops);
         rep_params.rep_reduct = &contin_reduction(reduct_effort, ignore_ops);
-        representation rep(tr, tt, ignore_ops, NULL, NULL, true, rep_params);
+        rep_params.linear_contin = true;
+        representation rep(tr, tt, ignore_ops, NULL, NULL, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
 
@@ -115,7 +116,7 @@ public:
         rep_params.perm_ratio = 1.0; // all permutation are generated,
                                      // that way we avoid sampling
 
-        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
 
@@ -141,7 +142,7 @@ public:
         rep_params.opt_reduct = &r.operator()(2);
         rep_params.rep_reduct = &r.operator()(2);
 
-        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }
@@ -158,7 +159,7 @@ public:
         rep_params.opt_reduct = &r.operator()(2);
         rep_params.rep_reduct = &r.operator()(2);
 
-        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }
@@ -175,7 +176,7 @@ public:
         rep_params.opt_reduct = &r.operator()(2);
         rep_params.rep_reduct = &r.operator()(2);
 
-        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }
@@ -192,7 +193,7 @@ public:
         rep_params.opt_reduct = &r.operator()(2);
         rep_params.rep_reduct = &r.operator()(0);
 
-        representation rep(tr, tt, vertex_set(), nullptr, nullptr, false, rep_params);
+        representation rep(tr, tt, vertex_set(), nullptr, nullptr, rep_params);
 
         TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
     }
