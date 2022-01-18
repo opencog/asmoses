@@ -61,8 +61,8 @@ struct representation_parameters
 	                          knob_probing_enum kp=knob_probing_enum::kp_auto,
 	                          bool linc=false,
 	                          float permr=0.0,
-	                          const combo_tree_ns_set* prcts=nullptr,
-	                          const combo_tree_ns_set* acts=nullptr)
+	                          const combo::combo_tree_ns_set* prcts=nullptr,
+	                          const combo::combo_tree_ns_set* acts=nullptr)
 		: opt_reduct(opt_red),
 		  rep_reduct(rep_red),
 		  ignore_ops(igops),
@@ -102,8 +102,8 @@ struct representation_parameters
 
 	// Set or perceptions and actions.  Only used for procedural
 	// learning, nullptr otherwise.
-	const combo_tree_ns_set* perceptions;
-	const combo_tree_ns_set* actions;
+	const combo::combo_tree_ns_set* perceptions;
+	const combo::combo_tree_ns_set* actions;
 
 };
 
