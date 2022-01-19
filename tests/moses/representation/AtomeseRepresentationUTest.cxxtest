@@ -254,7 +254,7 @@ public:
 		TS_ASSERT_LESS_THAN(0, fields.raw_size());
 	}
 
-	void test_simple_contin_1()
+	void test_linear_contin_1()
 	{
 		Handle exemplar =
 				al(PLUS_LINK,
@@ -267,13 +267,14 @@ public:
 		representation_parameters rep_params;
 		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
 		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.linear_contin = true;
 		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
-
+ 
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(7, fields.contin().size());
 	}
 
-	void test_simple_contin_2()
+	void test_linear_contin_2()
 	{
 		Handle exemplar =
 				al(DIVIDE_LINK,
@@ -298,13 +299,14 @@ public:
 		representation_parameters rep_params;
 		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
 		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.linear_contin = true;
 		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(14, fields.contin().size());
 	}
 
-	void test_contin_SLE()
+	void test_linear_contin_SLE()
 	{
 		Handle exemplar =
 				al(PLUS_LINK,
@@ -315,6 +317,7 @@ public:
 		representation_parameters rep_params;
 		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
 		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.linear_contin = true;
 		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
@@ -367,7 +370,7 @@ public:
 		TS_ASSERT_EQUALS(99, fields.contin().size());
 	}
 
-	void test_mixed_1()
+	void test_linear_mixed_1()
 	{
 		Handle exemplar =
 				al(GREATER_THAN_LINK,
@@ -378,6 +381,7 @@ public:
 		representation_parameters rep_params;
 		rep_params.opt_reduct = &r.operator()(2);
 		rep_params.rep_reduct = &r.operator()(0);
+		rep_params.linear_contin = true;
 		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
@@ -385,7 +389,7 @@ public:
 		TS_ASSERT_EQUALS(28, fields.contin().size());
 	}
 
-	void test_mixed_2()
+	void test_linear_mixed_2()
 	{
 		Handle exemplar =
 				al(AND_LINK,
@@ -398,6 +402,7 @@ public:
 		representation_parameters rep_params;
 		rep_params.opt_reduct = &r.operator()(2);
 		rep_params.rep_reduct = &r.operator()(0);
+		rep_params.linear_contin = true;
 		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
