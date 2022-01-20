@@ -55,8 +55,8 @@ public:
 		logger().set_level(Logger::DEBUG);
 	}
 
-	// these tests are just here to check that the representation
-	// building does not crash, for now at least
+	// Most of these tests are just here to check that the
+	// representation building does not crash.
 
 	void test_contin_rep()
 	{
@@ -199,5 +199,43 @@ public:
 		representation rep(tr, tt, rep_params);
 
 		TS_ASSERT_LESS_THAN(0, rep.fields().raw_size());
+	}
+
+	void test_knob_probing_off()
+	{
+		string tr_str = "or(and(!$1 !$2) and($1 $2))";
+		combo_tree tr = totree(tr_str);
+		type_tree tt = infer_type_tree(tr);
+
+		const vertex_set ignore_ops;
+		logical_reduction r(ignore_ops);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(2);
+		rep_params.knob_probing = knob_probing_enum::kp_off;
+		rep_params.perm_ratio = 1.0; // For determinisic representation
+
+		representation rep(tr, tt, rep_params);
+
+		TS_ASSERT_EQUALS(44, rep.fields().raw_size());
+	}
+
+	void test_knob_probing_on()
+	{
+		string tr_str = "or(and(!$1 !$2) and($1 $2))";
+		combo_tree tr = totree(tr_str);
+		type_tree tt = infer_type_tree(tr);
+
+		const vertex_set ignore_ops;
+		logical_reduction r(ignore_ops);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(2);
+		rep_params.knob_probing = knob_probing_enum::kp_auto;
+		rep_params.perm_ratio = 1.0; // For determinisic representation
+
+		representation rep(tr, tt, rep_params);
+
+		TS_ASSERT_EQUALS(5, rep.fields().raw_size());
 	}
 };

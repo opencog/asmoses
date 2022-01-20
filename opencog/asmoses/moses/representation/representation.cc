@@ -121,7 +121,8 @@ representation::representation(const combo_tree& xmplr,
 
 	// Build the knobs.
 	build_knobs(_exemplar, tt, *this, _params.ignore_ops,
-	            _params.perceptions, _params.actions, _params.linear_contin,
+	            _params.perceptions, _params.actions,
+	            _params.knob_probing, _params.linear_contin,
 	            stepsize, expansion, depth, _params.perm_ratio);
 
 	logger().info() << "After knob building, rep size="
