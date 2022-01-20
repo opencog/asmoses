@@ -431,4 +431,13 @@ void representation::set_exemplar_inst()
 #endif // EXEMPLAR_INST_IS_UNDEAD
 
 } // ~namespace moses
+
+std::string
+oc_to_string(const moses::representation &rep, const std::string &indent)
+{
+	std::stringstream ss;
+	rep.ostream_prototype(ss);
+	return ss.str();
+}
+
 } // ~namespace opencog

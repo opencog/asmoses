@@ -214,6 +214,10 @@ inline std::ostream& operator<<(std::ostream& out,
 }
 
 } //~namespace moses
+
+std::string oc_to_string(const moses::representation& rep,
+                         const std::string& indent=empty_string);
+
 } //~namespace opencog
 
 #endif
