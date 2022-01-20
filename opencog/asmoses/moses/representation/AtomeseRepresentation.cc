@@ -230,4 +230,5 @@ oc_to_string(const moses::AtomeseRepresentation &rep, const std::string &indent)
 	rep.ostream_rep(ss);
 	return ss.str();
 }
+
 }
