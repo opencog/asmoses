@@ -166,9 +166,9 @@ void table_problem_base::common_setup(problem_params& pms)
 	// and populate it with the input data
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for populating features
-		pms.deme_params.as = createAtomSpace();
-		populate(pms.deme_params.as, table.itable);
-		populate(pms.deme_params.as, ctable);
+		pms.deme_params.atomspace = createAtomSpace();
+		populate(pms.deme_params.atomspace, table.itable);
+		populate(pms.deme_params.atomspace, ctable);
 	}
 
 	pms.mmr_pa.ilabels = ilabels;
@@ -178,7 +178,7 @@ void table_problem_base::common_setup(problem_params& pms)
  * Set up the output
  */
 void table_problem_base::common_type_setup(problem_params& pms,
-										   type_node out_type)
+                                           type_node out_type)
 {
 	// Infer the signature based on the input table.
 	table_type_signature = table.get_signature();
@@ -257,13 +257,13 @@ void ip_problem::run(option_base* ob)
 	int as = alphabet_size(tt, pms.ignore_ops);
 
 	interesting_predicate_bscore bscore(ctable,
-				  _ippp.ip_kld_weight,
-				  _ippp.ip_skewness_weight,
-				  _ippp.ip_stdU_weight,
-				  _ippp.ip_skew_U_weight,
-				  pms.min_rand_input,
-				  pms.max_rand_input,
-				  pms.hardness, pms.pre_positive);
+	                                    _ippp.ip_kld_weight,
+	                                    _ippp.ip_skewness_weight,
+	                                    _ippp.ip_stdU_weight,
+	                                    _ippp.ip_skew_U_weight,
+	                                    pms.min_rand_input,
+	                                    pms.max_rand_input,
+	                                    pms.hardness, pms.pre_positive);
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 
 	// In order to support boosting, the interesting_predicate_bscore
@@ -271,14 +271,12 @@ void ip_problem::run(option_base* ob)
 	// smae length, and so that the same item always refered to the
 	// same row in the ctable.
 	OC_ASSERT(not pms.meta_params.do_boosting,
-		"Boosting not supported for the ip problem!");
+	          "Boosting not supported for the ip problem!");
 	behave_cscore mbcscore(bscore, pms.cache_size);
-	metapop_moses_results(pms.exemplars, tt,
-						  *pms.bool_reduct, *pms.bool_reduct_rep,
-						  mbcscore,
-						  pms.opt_params, pms.hc_params, pms.ps_params,
-						  pms.deme_params, pms.filter_params, pms.meta_params,
-						  pms.moses_params, pms.mmr_pa);
+	metapop_moses_results(pms.exemplars, tt, mbcscore,
+	                      pms.opt_params, pms.hc_params, pms.ps_params,
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 
 }
 
@@ -319,14 +317,14 @@ void ann_table_problem::run(option_base* ob)
 
 	// Boosing for contin values needs a whole bunch of new code.
 	OC_ASSERT(not pms.meta_params.do_boosting,
-		"Boosting not supported for the ann problem!");
+	          "Boosting not supported for the ann problem!");
 	behave_cscore cscore(bscore, pms.cache_size);
-	metapop_moses_results(pms.exemplars, tt,
-						  reduct::ann_reduction(), reduct::ann_reduction(),
-						  cscore,
-						  pms.opt_params, pms.hc_params, pms.ps_params,
-						  pms.deme_params, pms.filter_params, pms.meta_params,
-						  pms.moses_params, pms.mmr_pa);
+	pms.rep_params.opt_reduct = &reduct::ann_reduction();
+	pms.rep_params.rep_reduct = &reduct::ann_reduction();
+	metapop_moses_results(pms.exemplars, tt, cscore,
+	                      pms.opt_params, pms.hc_params, pms.ps_params,
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -359,19 +357,19 @@ void ann_table_problem::run(option_base* ob)
 	/* composite scores get cached and returned.*/                   \
 	if (pms.meta_params.do_boosting) pms.cache_size = 0;             \
 	behave_cscore mbcscore(bscore, pms.cache_size);                  \
-	reduct::rule* reduct_cand = pms.bool_reduct;                     \
-	reduct::rule* reduct_rep = pms.bool_reduct_rep;             \
 	/* Use the contin reductors for everything else */               \
 	if (id::boolean_type != output_type) {                           \
-		reduct_cand = pms.contin_reduct;                             \
-		reduct_rep = pms.contin_reduct;                              \
+		pms.rep_params.opt_reduct = pms.contin_reduct;                \
+		pms.rep_params.rep_reduct = pms.contin_reduct;                \
 	}                                                                \
-	string_seq labels = TABLE.get_input_labels();                          \
-	metapop_moses_results(pms.exemplars, cand_type_signature,        \
-					  *reduct_cand, *reduct_rep, mbcscore,           \
-					  pms.opt_params, pms.hc_params, pms.ps_params,  \
-					  pms.deme_params, pms.filter_params, pms.meta_params,          \
-					  pms.moses_params, pms.mmr_pa,output_type,labels);                  \
+	string_seq labels = TABLE.get_input_labels();                    \
+	metapop_moses_results(                                           \
+		pms.exemplars, cand_type_signature, mbcscore,                 \
+		pms.opt_params, pms.hc_params, pms.ps_params,                 \
+		pms.rep_params, pms.deme_params, pms.filter_params,           \
+		pms.meta_params, pms.moses_params, pms.mmr_pa,                \
+		output_type,labels                                            \
+	);                                                               \
 }
 
 void pre_table_problem::run(option_base* ob)
@@ -417,12 +415,10 @@ void pre_table_problem::run(option_base* ob)
 	if (pms.meta_params.do_boosting) pms.cache_size = 0;
 
 	behave_cscore mbcscore(bscore, pms.cache_size);
-	metapop_moses_results(pms.exemplars, cand_type_signature,
-						  *pms.bool_reduct, *pms.bool_reduct_rep,
-						  mbcscore,
-						  pms.opt_params, pms.hc_params, pms.ps_params,
-						  pms.deme_params, pms.filter_params, pms.meta_params,
-						  pms.moses_params, pms.mmr_pa);
+	metapop_moses_results(pms.exemplars, cand_type_signature, mbcscore,
+	                      pms.opt_params, pms.hc_params, pms.ps_params,
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 }
 
 void pre_conj_table_problem::run(option_base* ob)
@@ -514,12 +510,12 @@ void it_table_problem::run(option_base* ob)
 			// The "leave well-enough alone" algorithm.
 			// Works. Kind of. Not as well as hoped.
 			// Might be good for some problem. See diary.
-			partial_solver well(ctable,
-								pms.exemplars, *pms.contin_reduct,
-								pms.opt_params, pms.hc_params,
-								pms.ps_params, pms.deme_params,
-								pms.filter_params, pms.meta_params,
-								pms.moses_params, pms.mmr_pa);
+			pms.rep_params.opt_reduct = pms.contin_reduct;
+			pms.rep_params.rep_reduct = pms.contin_reduct;
+			partial_solver well(ctable, pms.exemplars,
+			                    pms.opt_params, pms.hc_params, pms.ps_params,
+			                    pms.rep_params, pms.deme_params, pms.filter_params,
+			                    pms.meta_params, pms.moses_params, pms.mmr_pa);
 			well.solve();
 		} else {
 			// Much like the boolean-output-type above,

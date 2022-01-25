@@ -53,20 +53,54 @@ build_knobs::build_knobs(combo_tree& exemplar,
                          const operator_set& ignore_ops,
                          const combo_tree_ns_set* perceptions,
                          const combo_tree_ns_set* actions,
+                         knob_probing_enum knob_probing,
                          bool linear_regression,
                          contin_t step_size,
                          contin_t expansion,
                          field_set::width_t depth,
                          float perm_ratio)
-    : _exemplar(exemplar), _rep(rep), _skip_disc_probe(true),
-      _arity(tt.begin().number_of_children() - 1), _signature(tt),
+    : _exemplar(exemplar),
+      _signature(tt),
+      _arity(tt.begin().number_of_children() - 1),
+      _rep(rep),
+      _knob_probing(knob_probing),
+      _skip_disc_probe(true),
       _linear_contin(linear_regression),
-      _step_size(step_size), _expansion(expansion), _depth(depth),
+      _step_size(step_size),
+      _expansion(expansion),
+      _depth(depth),
       _perm_ratio(perm_ratio),
-      _ignore_ops(ignore_ops), _perceptions(perceptions), _actions(actions)
+      _ignore_ops(ignore_ops),
+      _perceptions(perceptions),
+      _actions(actions)
 {
     type_tree ot = get_signature_output(_signature);
     type_node output_type = get_type_node(ot);
+
+    // Set _skip_disc_probe depending on _knob_probing setting
+    switch(_knob_probing) {
+    case(knob_probing_enum::kp_on):
+       _skip_disc_probe = false;
+       break;
+    case(knob_probing_enum::kp_off):
+       _skip_disc_probe = true;
+       break;
+    case(knob_probing_enum::kp_auto):
+       if (output_type == id::boolean_type) {
+          // The disc_probe function is wildly expensive, but appears to
+          // provide a performance advantage when the tree consists of
+          // mostly logical operators.  Thus, if the output, and at least
+          // 1/5th of the inputs are boolean, then disc_probe-ing is
+          // probably worth it, so we turn it on.  (MixedUTest provides
+          // an example where it really is worth it).
+          if (5*boolean_arity(_signature) > type_tree_arity(_signature)) {
+             _skip_disc_probe = false;
+          }
+       }
+       break;
+    default:
+       break;
+    }
 
     // If there are perceptions/actions, then output had better be
     // an action result.
@@ -89,14 +123,6 @@ build_knobs::build_knobs(combo_tree& exemplar,
         // tree of logic ops, with anything else contin-valued wrapped
         // up in a predicate (i.e. wrapped by greater_than_zero).
 
-        // The disc_probe function is wildly expensive, but appears to
-        // provide a performance advantage when the tree consists of
-        // mostly logical operators.  Thus, if the output, and at least
-        // 1/5th of the inputs are boolean, then disc_probe-ing is
-        // probably worth it, so we turn it on.  (MixedUTest provides
-        // an example where it really is worth it).
-        if (5*boolean_arity(_signature) > type_tree_arity(_signature))
-            _skip_disc_probe = false;
 
         // Make sure top node of exemplar is a logic op.
         logical_canonize(_exemplar.begin());
@@ -127,8 +153,7 @@ build_knobs::build_knobs(combo_tree& exemplar,
     {
         std::stringstream ss;
         ss << output_type;
-        OC_ASSERT(0, "Unsupported output type, got '%s'",
-                  ss.str().c_str());
+        OC_ASSERT(0, "Unsupported output type, got '%s'", ss.str().c_str());
     }
 }
 
@@ -588,7 +613,7 @@ void build_knobs::add_logical_knobs(pre_it subtree,
 
     if (logger().is_debug_enabled()) {
         logger().debug("Created %d logical knob subtrees", np);
-        logger().debug("will use %d threads for probing tree of size %d",
+        logger().debug("Will use %d threads for probing tree of size %d",
             nthr, combo_tree(subtree).size());
         if (_skip_disc_probe)
             logger().debug("Will skip expensive disc_probe()");

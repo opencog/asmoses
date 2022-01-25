@@ -33,10 +33,10 @@ typedef combo_tree::iterator pre_it;
 
 partial_solver::partial_solver(const CompressedTable &ctable,
                                const combo_tree_seq& exemplars,
-                               const rule& reduct,
                                const optim_parameters& opt_params,
                                const hc_parameters& hc_params,
                                const ps_parameters& ps_params,
+                               const representation_parameters& rep_params,
                                const deme_parameters& deme_params,
                                const subsample_deme_filter_parameters& filter_params,
                                const metapop_parameters& meta_params,
@@ -48,7 +48,6 @@ partial_solver::partial_solver(const CompressedTable &ctable,
      _table_type_signature(ctable.get_signature()),
      _exemplars(exemplars), _leader(id::cond),
      _prefix_count(0),
-     _reduct(reduct),
      _opt_params(opt_params),
      _hc_params(hc_params),
      _ps_params(ps_params),
@@ -103,12 +102,10 @@ void partial_solver::solve()
                         << " max_evals= " << _moses_params.max_evals
                         << " num exemplars=" << _exemplars.size();
 
-        metapop_moses_results(_exemplars, _table_type_signature,
-                              _reduct, _reduct, *_cscore,
+        metapop_moses_results(_exemplars, _table_type_signature, *_cscore,
                               _opt_params, _hc_params, _ps_params,
-                              _deme_params, _filter_params,
-                              _meta_params, _moses_params,
-                              *this);
+                              _rep_params, _deme_params, _filter_params,
+                              _meta_params, _moses_params, *this);
 
         // If done, then we run one last time, but only to invoke the
         // original printer.
@@ -120,11 +117,10 @@ void partial_solver::solve()
 
             logger().info() << "well-enough DONE!";
             metapop_moses_results(_exemplars, _table_type_signature,
-                                  _reduct, _reduct, *_straight_cscore,
+                                  *_straight_cscore,
                                   _opt_params, _hc_params, _ps_params,
-                                  _deme_params, _filter_params,
-                                  _meta_params, _moses_params,
-                                  _printer);
+                                  _rep_params, _deme_params, _filter_params,
+                                  _meta_params, _moses_params, _printer);
 
             break;
         }
@@ -177,7 +173,7 @@ void partial_solver::final_cleanup(const metapopulation& cands)
             cit = cand.insert_subtree(cit, lit);
             ++cit;
         }
-        _reduct(cand);
+        (*_rep_params.opt_reduct)(cand);
         _exemplars.push_back(cand);
     }
 

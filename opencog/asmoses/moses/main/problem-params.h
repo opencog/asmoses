@@ -59,7 +59,7 @@ struct problem_params : public option_base
     void add_options(boost::program_options::options_description&);
     void parse_options(boost::program_options::variables_map&);
 
-    // program options, see options_description below for their meaning
+    // Program options, see options_description below for their meaning
     string_seq jobs_str;
     unsigned min_pool;
     bool enable_mpi;
@@ -67,7 +67,7 @@ struct problem_params : public option_base
     unsigned long rand_seed;
     std::string problem;
 
-    // default number of samples to describe a problem
+    // Default number of samples to describe a problem
     const unsigned int default_nsamples;
     int nsamples;
     double min_rand_input;
@@ -85,7 +85,7 @@ struct problem_params : public option_base
     std::string log_level;
     std::string log_file;
 
-    // output printing options (metapop_printer)
+    // Output printing options (metapop_printer)
     long result_count;
     bool output_score;
     bool output_cscore;
@@ -97,16 +97,19 @@ struct problem_params : public option_base
     std::string output_format_str;
     std::string output_file;
 
-    // reduct options
+    // Reduct options
     int reduct_candidate_effort;
-    int reduct_knob_building_effort;
     string_seq include_only_ops_str;
     string_seq ignore_ops_str;
     vertex_set ignore_ops;
     string_seq exemplars_str;
     combo_tree_seq exemplars;
 
-    // metapop_param
+    // Representation building options
+    int reduct_knob_building_effort;
+    std::string knob_probing_str;
+
+    // Metapopulation parameters
     int max_candidates_per_deme;
     int revisit;
     bool reduce_all;
@@ -117,14 +120,13 @@ struct problem_params : public option_base
     score_t complexity_ratio;
     double cap_coef;
     unsigned cache_size;
-    double perm_ratio;
     bool boosting;
     int num_to_promote;
     bool exact_experts;
     double expalpha;
     double bias_scale;
 
-    // metapopulation diversity parameters
+    // Metapopulation diversity parameters
     score_t diversity_pressure;
     bool diversity_autoscale;
     score_t diversity_exponent;
@@ -139,7 +141,7 @@ struct problem_params : public option_base
     score_t max_score;
     size_t max_dist;
 
-    // contin optimization
+    // Contin optimization
     bool weighted_accuracy;
     contin_seq discretize_thresholds;
 
@@ -174,7 +176,7 @@ struct problem_params : public option_base
     // classifier parameters
     bool use_well_enough;
 
-    // hardness of the activation range -- scoring-related
+    // Hardness of the activation range -- scoring-related
     // constraint for problems pre, recall, prerec
     score_t hardness;
 
@@ -216,13 +218,13 @@ struct problem_params : public option_base
     std::string fs_enforce_features_filename;
 
     reduct::rule* bool_reduct;
-    reduct::rule* bool_reduct_rep;
     reduct::rule* contin_reduct;
 
     optim_parameters opt_params;
     hc_parameters hc_params;
     ps_parameters ps_params;
     moses_parameters moses_params;
+    representation_parameters rep_params;
     deme_parameters deme_params;
     subsample_deme_filter_parameters filter_params;
     metapop_parameters meta_params;

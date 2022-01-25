@@ -293,7 +293,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "automatically disables the use of div, sin, exp and log.\n")
 
         ("logical-perm-ratio",
-         po::value<double>(&perm_ratio)->default_value(0.0),
+         po::value<float>(&rep_params.perm_ratio)->default_value(0.0),
          "When decorating boolean exemplars with knobs, this option "
          "controls how many pairs of literals of the form op(L1 L2) are "
          "created.  That is, such pairs are used to decorate the exemplar "
@@ -453,21 +453,21 @@ problem_params::add_options(boost::program_options::options_description& desc)
          po::value<int>(&num_to_promote)->default_value(1),
          "When boosting is enabled, this sets the number of candidates "
          "that, after every deme expansion cycle, should be added to "
-         "the boosted ensemble.")
+         "the boosted ensemble.\n")
 
         ("boost-exact",
          po::value<bool>(&exact_experts)->default_value(true),
          "When boosting is enabled with the -Hpre table problem, this "
          "determines whether the expert candidates admitted into the "
          "ensemble must be perfect, exact experts, or if they can make "
-         "mistakes.")
+         "mistakes.\n")
 
         ("boost-expalpha",
          po::value<double>(&expalpha)->default_value(2.0),
          "When boosting is enabled with the -Hpre table problem, and "
          "if the experts must be exact (option above), then this "
          "determines the ad-hoc weighting that magnifies unselected "
-         "items in the dataset. ")
+         "items in the dataset.\n")
 
         ("boost-bias",
          po::value<double>(&bias_scale)->default_value(1.0),
@@ -475,13 +475,26 @@ problem_params::add_options(boost::program_options::options_description& desc)
          "if the experts are not exact, then a bias is used to distinguish "
          "the correctly selected and non-selected results.  This scale "
          "factor multiplies that bias. Best values are probably a bias "
-         "of less than one.")
+         "of less than one.\n")
 
         (opt_desc_str(reduct_knob_building_effort_opt).c_str(),
          po::value<int>(&reduct_knob_building_effort)->default_value(2),
-         "Effort allocated for reduction during knob building, 0-3, "
-         "0 means minimum effort, 3 means maximum effort. The bigger "
-         "the effort the lower the dimension of the deme.\n")
+         "Effort allocated for reduction during knob probing (see "
+         "--knob-probing for more information), 0-3, 0 means minimum "
+         "effort, 3 means maximum effort. The bigger "
+         "the effort the smaller the deme.\n")
+
+        ("knob-probing",
+         po::value<string>(&knob_probing_str)->default_value("auto"),
+         "Control whether knob probing takes place during representation "
+         "building.  0 means no probing, 1 means systematic probing, and "
+         "auto means that the decision is left to asmoses.  What is knob "
+         "probing?  During representation building, knob settings that "
+         "are expected to generate simpler candidates than the exemplar "
+         "can be discarded.  Whether it is desirable depends on the "
+         "situation, therefore such an option.  Beside knob probing can "
+         "be very expensive so disabling it could be justified in case"
+         "representation building is a computational bottleneck.\n")
 
         (opt_desc_str(max_dist_opt).c_str(),
          po::value<size_t>(&max_dist)->default_value(4),
@@ -1357,9 +1370,6 @@ void problem_params::parse_options(boost::program_options::variables_map& vm)
 
     // Set deme expansion paramters
     deme_params.reduce_all = reduce_all;
-    deme_params.ignore_ops = ignore_ops;
-    deme_params.linear_contin = linear_regression;
-    deme_params.perm_ratio = perm_ratio;
     if (ss_n_subsample_demes > 1 or ss_n_subsample_fitnesses > 1) {
         // If SS-MOSES is enabled then the cache is automatically
         // disabled because SS-MOSES implies to re-evaluate the same
@@ -1477,12 +1487,13 @@ void problem_params::parse_options(boost::program_options::variables_map& vm)
     moses_params.max_time = max_time;
     moses_params.max_cnd_output = result_count;
 
-    // Logical reduction rules used during search.
+    // Representation building parameters
     lr = reduct::logical_reduction(ignore_ops);
-    bool_reduct = lr(reduct_candidate_effort).clone();
-
-    // Logical reduction rules used during representation building.
-    bool_reduct_rep = lr(reduct_knob_building_effort).clone();
+    rep_params.opt_reduct = lr(reduct_candidate_effort).clone();
+    rep_params.rep_reduct = lr(reduct_knob_building_effort).clone();
+    rep_params.ignore_ops = ignore_ops;
+    rep_params.knob_probing = parse_knob_probing(knob_probing_str);
+    rep_params.linear_contin = linear_regression;
 
     // Continuous reduction rules used during search and representation
     // building.

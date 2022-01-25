@@ -108,7 +108,7 @@ void bool_problem_base::run(option_base* ob)
 	// create atomspace if the code is running through port atomspace
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = createAtomSpace();
+		pms.deme_params.atomspace = createAtomSpace();
 	}
 
 	logical_bscore bscore = get_bscore(_dparms.problem_size);
@@ -119,12 +119,10 @@ void bool_problem_base::run(option_base* ob)
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 
 	behave_cscore cscore(bscore);
-	metapop_moses_results(pms.exemplars, sig,
-	                      *pms.bool_reduct, *pms.bool_reduct_rep,
-	                      cscore,
+	metapop_moses_results(pms.exemplars, sig, cscore,
 	                      pms.opt_params, pms.hc_params, pms.ps_params,
-	                      pms.deme_params, pms.filter_params, pms.meta_params,
-	                      pms.moses_params, pms.mmr_pa);
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================
@@ -264,18 +262,18 @@ void polynomial_problem::run(option_base* ob)
 	type_tree tt = gen_signature(id::contin_type, 1);
 	ITable it(tt, (pms.nsamples>0 ? pms.nsamples : pms.default_nsamples));
 
-    if (pms.deme_params.atomspace_port) {
+	if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-        pms.deme_params.as = createAtomSpace();
-        type_node_seq tt_seq = type_tree_to_tyn_seq(tt);
-        it.set_types(tt_seq);
-        populate(pms.deme_params.as, it);
+		pms.deme_params.atomspace = createAtomSpace();
+		type_node_seq tt_seq = type_tree_to_tyn_seq(tt);
+		it.set_types(tt_seq);
+		populate(pms.deme_params.atomspace, it);
 	}
 
 	// sr is fundamentally a kind of non-linear regression!
 	// over-ride any flag settings regarding this.
 
-	pms.deme_params.linear_contin = false;
+	pms.rep_params.linear_contin = false;
 	int as = alphabet_size(tt, pms.ignore_ops);
 
 	contin_bscore::err_function_type eft =
@@ -288,12 +286,13 @@ void polynomial_problem::run(option_base* ob)
 
 	set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 	behave_cscore cscore(bscore);
-	metapop_moses_results(pms.exemplars, tt,
-	                      *pms.contin_reduct, *pms.contin_reduct,
-	                      cscore,
+	pms.rep_params.opt_reduct = pms.contin_reduct;
+	pms.rep_params.rep_reduct = pms.contin_reduct;
+	metapop_moses_results(pms.exemplars, tt, cscore,
 	                      pms.opt_params, pms.hc_params, pms.ps_params,
-	                      pms.deme_params, pms.filter_params, pms.meta_params,
-	                      pms.moses_params, pms.mmr_pa, id::contin_type, it.get_labels());
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa,
+	                      id::contin_type, it.get_labels());
 }
 
 // ==================================================================
@@ -401,19 +400,17 @@ void combo_problem::run(option_base* ob)
 
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = createAtomSpace();
+		pms.deme_params.atomspace = createAtomSpace();
 	}
 
 	if (output_type == id::boolean_type) {
 		// @todo: Occam's razor and nsamples is not taken into account
 		logical_bscore bscore(tr, arity);
 		behave_cscore cscore(bscore);
-		metapop_moses_results(pms.exemplars, tt,
-		                      *pms.bool_reduct, *pms.bool_reduct_rep,
-		                      cscore,
+		metapop_moses_results(pms.exemplars, tt, cscore,
 		                      pms.opt_params, pms.hc_params, pms.ps_params,
-		                      pms.deme_params, pms.filter_params, pms.meta_params,
-		                      pms.moses_params, pms.mmr_pa);
+		                      pms.rep_params, pms.deme_params, pms.filter_params,
+		                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 	}
 	else if (output_type == id::contin_type) {
 
@@ -451,12 +448,12 @@ void combo_problem::run(option_base* ob)
 		contin_bscore bscore(ot, it);
 		set_noise_or_ratio(bscore, as, pms.noise, pms.complexity_ratio);
 		behave_cscore cscore(bscore);
-		metapop_moses_results(pms.exemplars, tt,
-		                      *pms.contin_reduct, *pms.contin_reduct,
-		                      cscore,
+		pms.rep_params.opt_reduct = pms.contin_reduct;
+		pms.rep_params.opt_reduct = pms.contin_reduct;
+		metapop_moses_results(pms.exemplars, tt, cscore,
 		                      pms.opt_params, pms.hc_params, pms.ps_params,
-		                      pms.deme_params, pms.filter_params, pms.meta_params,
-		                      pms.moses_params, pms.mmr_pa);
+		                      pms.rep_params, pms.deme_params, pms.filter_params,
+		                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 	} else {
 		logger().error() << "Error: combo_problem: type " << tt << " not supported.";
 		std::cerr << "Error: combo_problem: type " << tt << " not supported." << std::endl;
@@ -494,7 +491,7 @@ void ann_combo_problem::run(option_base* ob)
 
 	if (pms.deme_params.atomspace_port) {
 		// atomspace used for storing candidate programs
-		pms.deme_params.as = createAtomSpace();
+		pms.deme_params.atomspace = createAtomSpace();
 	}
 
 	if (pms.nsamples <= 0)
@@ -509,12 +506,12 @@ void ann_combo_problem::run(option_base* ob)
 
 	OC_ASSERT(not pms.meta_params.do_boosting, "Boosting not supported for this problem!");
 	behave_cscore cscore(bscore);
-	metapop_moses_results(pms.exemplars, tt,
-	                      *pms.contin_reduct, *pms.contin_reduct,
-	                      cscore,
+	pms.rep_params.opt_reduct = pms.contin_reduct;
+	pms.rep_params.rep_reduct = pms.contin_reduct;
+	metapop_moses_results(pms.exemplars, tt, cscore,
 	                      pms.opt_params, pms.hc_params, pms.ps_params,
-	                      pms.deme_params, pms.filter_params, pms.meta_params,
-	                      pms.moses_params, pms.mmr_pa);
+	                      pms.rep_params, pms.deme_params, pms.filter_params,
+	                      pms.meta_params, pms.moses_params, pms.mmr_pa);
 }
 
 // ==================================================================

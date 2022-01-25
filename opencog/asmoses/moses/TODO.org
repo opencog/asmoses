@@ -20,8 +20,6 @@
   check that it's really correct
 - [ ] support contin reduct effort. That is, split up contin reductions
   into "easy" and "hard/time-consuming" reductions.
-- [ ] _perm_ratio is set to 0, experiment and add it to the program option
-  if that is worthwhile.
 - [ ] add number of evals remaining in distributed moses in the log
 - [ ] neighborhood_sampling method and other methods filling the deme
   should not assume the size is right and instead should use

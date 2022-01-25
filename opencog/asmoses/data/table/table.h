@@ -598,9 +598,9 @@ struct TTable : public std::vector<boost::gregorian::date>
 public:
 	typedef boost::gregorian::date value_type;
 
-	TTable(const std::string &tl = default_timestamp_label);
+	TTable(const std::string &tl=default_timestamp_label);
 
-	TTable(const super &tt, const std::string &tl = default_timestamp_label);
+	TTable(const super &tt, const std::string &tl=default_timestamp_label);
 
 	void set_label(const std::string &);
 
@@ -618,8 +618,7 @@ struct TimedValue :
 		public boost::less_than_comparable<TimedValue>,
 		public boost::equality_comparable<TimedValue>
 {
-	TimedValue(const vertex v,
-	           const TTable::value_type t = TTable::value_type())
+	TimedValue(const vertex v, const TTable::value_type t=TTable::value_type())
 			: value(v), timestamp(t)
 	{}
 
@@ -709,9 +708,9 @@ public:
 
 	// Definition is delayed until after Table, as it uses Table.
 	template<typename Func>
-	CompressedTable(const Func &func, arity_t arity, int nsamples = -1);
+	CompressedTable(const Func &func, arity_t arity, int nsamples=-1);
 
-	CompressedTable(const std::string &_olabel = "output");
+	CompressedTable(const std::string &_olabel="output");
 
 	CompressedTable(const string_seq &labs, const type_tree &tt);
 
@@ -902,9 +901,9 @@ public:
 
 	ITable();
 
-	ITable(const type_seq &ts, const string_seq &il = string_seq());
+	ITable(const type_seq &ts, const string_seq &il=string_seq());
 
-	ITable(const super &mat, const string_seq &il = string_seq());
+	ITable(const super &mat, const string_seq &il=string_seq());
 
 	ITable(const OTable &);
 	/**
@@ -919,8 +918,8 @@ public:
 	 * It only works for contin-boolean signatures
 	 */
 	// min_contin and max_contin are used in case tt has contin inputs
-	ITable(const type_tree &tt, int nsamples = -1,
-	       contin_t min_contin = -1.0, contin_t max_contin = 1.0);
+	ITable(const type_tree &tt, int nsamples=-1,
+	       contin_t min_contin=-1.0, contin_t max_contin=1.0);
 
 	arity_t get_arity() const
 	{
@@ -953,9 +952,7 @@ public:
 	 * rows into vertex_seq (this is also a hack till it handles
 	 * multi_type_seq).
 	 */
-	void insert_col(const std::string &clab,
-	                const vertex_seq &col,
-	                int off = -1);
+	void insert_col(const std::string &clab, const vertex_seq &col, int off=-1);
 
 	/**
 	 * Delete the named feature from the input table.
@@ -1036,23 +1033,23 @@ class OTable : public vertex_seq
 public:
 	typedef vertex value_type;
 
-	OTable(const std::string &ol = default_output_label);
+	OTable(const std::string &ol=default_output_label);
 
-	OTable(const super &ot, const std::string &ol = default_output_label);
+	OTable(const super &ot, const std::string &ol=default_output_label);
 
 	/// Construct the OTable by evaluating the combo tree @tr for each
 	/// row in the input ITable.
 	OTable(const combo_tree &tr, const ITable &itable,
-	       const std::string &ol = default_output_label);
+	       const std::string &ol=default_output_label);
 
 	/// Construct the OTable by evaluating the combo tree @tr for each
 	/// row in the input CompressedTable.
 	OTable(const combo_tree &tr, const CompressedTable &ctable,
-	       const std::string &ol = default_output_label);
+	       const std::string &ol=default_output_label);
 
 	template<typename Func>
 	OTable(const Func &f, const ITable &it,
-	       const std::string &ol = default_output_label)
+	       const std::string &ol=default_output_label)
 			: label(ol)
 	{
 		for (const multi_type_seq &vs : it)
@@ -1100,14 +1097,14 @@ struct Table : public boost::equality_comparable<Table>
 	Table(const OTable &otable_, const ITable &itable_);
 
 	template<typename Func>
-	Table(const Func &func, arity_t a, int nsamples = -1) :
+	Table(const Func &func, arity_t a, int nsamples=-1) :
 			itable(gen_signature(type_node_of<bool>(),
 			                     type_node_of<bool>(), a)),
 			otable(func, itable), target_pos(0), timestamp_pos(0)
 	{}
 
-	Table(const combo_tree &tr, int nsamples = -1,
-	      contin_t min_contin = -1.0, contin_t max_contin = 1.0);
+	Table(const combo_tree &tr, int nsamples=-1,
+	      contin_t min_contin=-1.0, contin_t max_contin=1.0);
 
 	size_t size() const
 	{ return itable.size(); }

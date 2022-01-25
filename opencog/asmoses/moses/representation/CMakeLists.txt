@@ -10,11 +10,12 @@ INSTALL(FILES
         knob_mapper.h
         knobs.h
         representation.h
+        representation_parameters.h
         AtomeseRepresentation.h
         BuildAtomeseKnobs.h
         KnobLink.h
 
-	DESTINATION
+        DESTINATION
 
-	"include/opencog/${PROJECT_NAME}/moses/representation"
+        "include/opencog/${PROJECT_NAME}/moses/representation"
 )

@@ -41,21 +41,17 @@ static contin_t stepsize = 1.0;
 static contin_t expansion = 2.0;
 static int depth = 5;
 
-AtomeseRepresentation::AtomeseRepresentation(const reduct::rule &simplify_candidate,
-                                             const reduct::rule &simplify_knob_building,
-                                             const Handle &exemplar,
-                                             const Handle &t,
+AtomeseRepresentation::AtomeseRepresentation(const Handle &exemplar,
+                                             const Handle &tt,
                                              AtomSpacePtr as,
                                              const HandleSet &ignore_ops,
-                                             float perm_ratio,
-                                             bool linear_contin)
+                                             const representation_parameters& rp)
 : _exemplar(exemplar),
-  _simplify_candidate(&simplify_candidate),
-  _simplify_knob_building(&simplify_knob_building),
-  _as(as)
+  _as(as),
+  _rep_params(rp)
 {
-	BuildAtomeseKnobs(_exemplar, t, *this, _DSN, linear_contin, ignore_ops,
-	                  stepsize, expansion, depth, perm_ratio);
+	BuildAtomeseKnobs(_exemplar, tt, *this, _DSN, _rep_params.linear_contin,
+	                  ignore_ops, stepsize, expansion, depth, _rep_params.perm_ratio);
 
 	std::multiset<field_set::spec> specs;
 	for (const auto& ds : disc)
@@ -126,15 +122,15 @@ Handle AtomeseRepresentation::get_candidate(const instance inst, bool reduce)
 }
 
 void AtomeseRepresentation::clean_atomese_prog(Handle &prog,
-                                                bool reduce,
-                                                bool knob_building)
+                                               bool reduce,
+                                               bool knob_building)
 {
 	reduct::clean_reduction()(prog);
 	if (reduce) {
 		if (knob_building)
-			(*_simplify_knob_building)(prog);
+			(*_rep_params.rep_reduct)(prog);
 		else
-			(*_simplify_candidate)(prog);
+			(*_rep_params.opt_reduct)(prog);
 	}
 }
 
@@ -234,4 +230,5 @@ oc_to_string(const moses::AtomeseRepresentation &rep, const std::string &indent)
 	rep.ostream_rep(ss);
 	return ss.str();
 }
+
 }

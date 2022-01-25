@@ -41,19 +41,17 @@ using namespace std;
 using namespace boost;
 
 ComboToAtomese::ComboToAtomese()
+	: _as(nullptr)
 {
-	_as = nullptr;
 }
 
 ComboToAtomese::ComboToAtomese(AtomSpacePtr as)
-		:_as(as)
+	: _as(as)
 {}
 
 ComboToAtomese::ComboToAtomese(type_node output_type)
-		:_output_type(output_type)
+	: _as(nullptr), _output_type(output_type)
 {
-	_as = nullptr;
-
 }
 
 Handle ComboToAtomese::operator()(const combo_tree &ct,
@@ -68,7 +66,7 @@ Handle ComboToAtomese::operator()(const combo_tree &ct,
 
 vertex_2_atom::vertex_2_atom(id::procedure_type *parent, AtomSpacePtr as,
                              const string_seq &labels, type_node output_type)
-		: _as(as), _parent(parent), _labels(labels), _out_type(output_type)
+	: _as(as), _labels(labels), _parent(parent), _out_type(output_type)
 {}
 
 std::pair<Type, Handle> vertex_2_atom::operator()(const argument &a) const

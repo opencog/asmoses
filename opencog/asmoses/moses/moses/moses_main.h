@@ -105,12 +105,11 @@ private:
 template<typename Printer>
 void metapop_moses_results_b(const combo_tree_seq& bases,
                              const opencog::combo::type_tree& tt,
-                             const reduct::rule& si_ca,
-                             const reduct::rule& si_kb,
                              behave_cscore& sc,
                              const optim_parameters& opt_params,
                              const hc_parameters& hc_params,
                              const ps_parameters& ps_params,
+                             const representation_parameters& rep_params,
                              const deme_parameters& deme_params,
                              const subsample_deme_filter_parameters& filter_params,
                              const metapop_parameters& meta_params,
@@ -148,11 +147,12 @@ void metapop_moses_results_b(const combo_tree_seq& bases,
 	combo_tree_seq simple_bases;
 	for (const combo_tree& xmplr: bases) {
 		combo_tree siba(xmplr);
-		si_ca(siba);
+		(*rep_params.opt_reduct)(siba);
 		simple_bases.push_back(siba);
 	}
 
-	deme_expander dex(tt, si_ca, si_kb, sc, *optimizer, deme_params, filter_params, t_output, labels);
+	deme_expander dex(tt, sc, *optimizer, deme_params, rep_params,
+	                  filter_params, t_output, labels);
 	metapopulation metapop(simple_bases, sc, meta_params, filter_params);
 
 	run_moses(metapop, dex, moses_params, stats);
@@ -179,12 +179,11 @@ void autoscale_diversity(const behave_cscore& sc,
 template<typename Printer>
 void metapop_moses_results(const combo_tree_seq& bases,
                            const opencog::combo::type_tree& type_sig,
-                           const reduct::rule& si_ca,
-                           const reduct::rule& si_kb,
                            behave_cscore& c_scorer,
                            const optim_parameters opt_params,
                            const hc_parameters hc_params,
                            const ps_parameters ps_params,
+                           const representation_parameters& rep_params,
                            const deme_parameters& deme_params,
                            const subsample_deme_filter_parameters& filter_params,
                            const metapop_parameters& meta_params,
@@ -210,17 +209,16 @@ void metapop_moses_results(const combo_tree_seq& bases,
 		                     filter_params.low_dev_pressure,
 		                     filter_params.by_time);
 		behave_cscore ss_cscorer(ss_bscorer);
-		metapop_moses_results_b(bases, type_sig, si_ca, si_kb,
-		                        ss_cscorer,
+		metapop_moses_results_b(bases, type_sig, ss_cscorer,
 		                        twk_opt_params, hc_params, ps_params,
-		                        deme_params, filter_params, twk_meta_params,
-		                        twk_moses_params, printer);
+		                        rep_params, deme_params, filter_params,
+		                        twk_meta_params, twk_moses_params, printer);
 	} else {
-		metapop_moses_results_b(bases, type_sig, si_ca, si_kb,
-		                        c_scorer,
+		metapop_moses_results_b(bases, type_sig, c_scorer,
 		                        twk_opt_params, hc_params, ps_params,
-		                        deme_params, filter_params, twk_meta_params,
-		                        twk_moses_params, printer, t_output, labels);
+		                        rep_params, deme_params, filter_params,
+		                        twk_meta_params, twk_moses_params, printer,
+		                        t_output, labels);
 	}
 }
 

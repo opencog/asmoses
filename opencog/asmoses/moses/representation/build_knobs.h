@@ -45,19 +45,20 @@ using namespace combo;
 // build knobs on a reduced combo tree
 struct build_knobs : boost::noncopyable
 {
-    // used to be stepsize = 1.0, expansion = 2, depth = 4
+    // Used to be stepsize = 1.0, expansion = 2, depth = 4
     // Optional arguments used only for Petbrain and actions
     build_knobs(combo_tree& exemplar,
                 const type_tree& tt,
                 representation& rep,
                 const operator_set& ignore_ops = operator_set(),
-                const combo_tree_ns_set* perceptions = NULL,
-                const combo_tree_ns_set* actions = NULL,
-                bool linear_regression = true,
-                contin_t step_size = 1.0,
-                contin_t expansion = 1.0,
-                field_set::width_t depth = 4,
-                float perm_ratio = 0.0);
+                const combo_tree_ns_set* perceptions=nullptr,
+                const combo_tree_ns_set* actions=nullptr,
+                knob_probing_enum knob_probing=knob_probing_enum::kp_auto,
+                bool linear_regression=true,
+                contin_t step_size=1.0,
+                contin_t expansion=1.0,
+                field_set::width_t depth=4,
+                float perm_ratio=0.0);
 
 protected:
     void build_logical(combo_tree::iterator sub,
@@ -68,16 +69,21 @@ protected:
 
 protected:
     combo_tree& _exemplar;
-    representation& _rep;
 
-    // knob probing is expensive, skip if possible.
-    bool _skip_disc_probe;
+    // Type signature of the argument literals.
+    const type_tree _signature;
 
     // Number of arguments of the combo program.
     const combo::arity_t _arity;
 
-    // Type signature of the argument literals.
-    const type_tree _signature;
+    representation& _rep;
+
+    // Knob probing mode: auto (previous behavior), on (always used),
+    // off (never used)
+    knob_probing_enum _knob_probing;
+
+    // knob probing is expensive, skip if possible.
+    bool _skip_disc_probe;
 
     // If true, then contin knob-building only generates linear
     // expressions (i.e. so that moses performs only linear

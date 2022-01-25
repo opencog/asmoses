@@ -48,9 +48,9 @@ class AntUTest : public CxxTest::TestSuite
 public:
     AntUTest() {
         // Logger setting
-        logger().set_print_to_stdout_flag(true); 
-        // logger().set_level(Logger::DEBUG);        
-        logger().set_level(Logger::INFO);        
+        logger().set_print_to_stdout_flag(true);
+        // logger().set_level(Logger::DEBUG);
+        logger().set_level(Logger::INFO);
     }
 
     void test_ant() {
@@ -86,12 +86,16 @@ public:
 
         perceptions.insert(combo_tree(get_instance(id::is_food_ahead)));
 
-        deme_parameters demeparms;
-        demeparms.perceptions = &perceptions;
-        demeparms.actions = &actions;
+        representation_parameters rep_params;
+        rep_params.opt_reduct = &action_reduction();
+        rep_params.rep_reduct = &action_reduction();
+        rep_params.perceptions = &perceptions;
+        rep_params.actions = &actions;
 
-        metapop_parameters metaparms;
-        metaparms.complexity_temperature = 2000;  // See diary entry
+        deme_parameters deme_params;
+
+        metapop_parameters meta_params;
+        meta_params.complexity_temperature = 2000;  // See diary entry
 
         // Define optimization algo
         optim_parameters opt_params;
@@ -100,16 +104,15 @@ public:
         hc_params.crossover = true;      // Same as default
         hill_climbing hc(opt_params, hc_params);
 
-        deme_expander dex(tt, action_reduction(),
-                              action_reduction(), cscorer, hc, demeparms);
+        deme_expander dex(tt, cscorer, hc, deme_params, rep_params);
         metapopulation metapop(combo_tree(id::sequential_and),
-                               cscorer, metaparms);
-  
+                               cscorer, meta_params);
+
         boost::program_options::variables_map vm;
 
-        moses_parameters moses_param(vm, jobs, true, max_evals, -1, 0, 100);
+        moses_parameters moses_params(vm, jobs, true, max_evals, -1, 0, 100);
         moses_statistics st;
-        run_moses(metapop, dex, moses_param, st);
+        run_moses(metapop, dex, moses_params, st);
         TS_ASSERT_EQUALS(metapop.best_score(), 0.0);
     }
 };

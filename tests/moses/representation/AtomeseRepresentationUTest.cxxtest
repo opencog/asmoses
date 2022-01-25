@@ -75,10 +75,11 @@ public:
 
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r0 = r.operator()(0);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(0);
 
-		AtomeseRepresentation rep(r2, r0, exemplar, type, _as, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		// about 22 knobs are expected
@@ -95,10 +96,11 @@ public:
 
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r0 = r.operator()(0);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(0);
 
-		AtomeseRepresentation rep(r2, r0, exemplar, type, _as, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		// about 30 knobs are expected
@@ -124,10 +126,11 @@ public:
 
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r0 = r.operator()(0);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(0);
 
-		AtomeseRepresentation rep(r2, r0, exemplar, type, _as, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		// about 69 knobs are expected
@@ -143,10 +146,11 @@ public:
 
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r0 = r.operator()(0);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(0);
 
-		AtomeseRepresentation rep(r2, r0, exemplar, type, _as, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		// about 4 knobs are expected
@@ -182,10 +186,11 @@ public:
 
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r0 = r.operator()(0);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(0);
 
-		AtomeseRepresentation rep(r2, r0, exemplar, type, _as, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		// about 178 knobs are expected
@@ -205,10 +210,12 @@ public:
 
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r3 = r.operator()(3);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(3);
+		rep_params.perm_ratio = 1.0;
 
-		AtomeseRepresentation rep(r2, r3, exemplar, type, _as, ignore_ops, 1);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		// about 36 knobs are expected.
@@ -236,16 +243,18 @@ public:
 
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(2);
 
-		AtomeseRepresentation rep(r2, r2, exemplar, type, _as, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		// expect about ~27 knobs [apparently depends on reduct]
 		TS_ASSERT_LESS_THAN(0, fields.raw_size());
 	}
 
-	void test_simple_contin_1()
+	void test_linear_contin_1()
 	{
 		Handle exemplar =
 				al(PLUS_LINK,
@@ -255,16 +264,17 @@ public:
 		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
 		                              createNode(TYPE_NODE, "LogLink"),
 		                              createNode(TYPE_NODE, "ExpLink")};
-		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
-		                           contin_reduction(2, ignore_ops),
-		                           exemplar, type, _as, ignore_ops,
-		                           0.0);
-
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.linear_contin = true;
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
+ 
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(7, fields.contin().size());
 	}
 
-	void test_simple_contin_2()
+	void test_linear_contin_2()
 	{
 		Handle exemplar =
 				al(DIVIDE_LINK,
@@ -286,16 +296,17 @@ public:
 		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
 		                              createNode(TYPE_NODE, "LogLink"),
 		                              createNode(TYPE_NODE, "ExpLink")};
-		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
-		                           contin_reduction(2, ignore_ops),
-		                           exemplar, type, _as, ignore_ops,
-		                           0.0);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.linear_contin = true;
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(14, fields.contin().size());
 	}
 
-	void test_contin_SLE()
+	void test_linear_contin_SLE()
 	{
 		Handle exemplar =
 				al(PLUS_LINK,
@@ -303,10 +314,11 @@ public:
 				   an(SCHEMA_NODE, "$1"));
 		Handle type = infer_atomese_type(exemplar);
 		const HandleSet ignore_ops;
-		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
-		                           contin_reduction(2, ignore_ops),
-		                           exemplar, type, _as, ignore_ops,
-		                           0.0);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.linear_contin = true;
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(19, fields.contin().size());
@@ -320,10 +332,10 @@ public:
 				   an(SCHEMA_NODE, "$1"));
 		Handle type = infer_atomese_type(exemplar);
 		const HandleSet ignore_ops;
-		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
-		                           contin_reduction(2, ignore_ops),
-		                           exemplar, type, _as, ignore_ops,
-		                           0.0, false);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(26, fields.contin().size());
@@ -349,16 +361,16 @@ public:
 				      an(SCHEMA_NODE, "$2")));
 		Handle type = infer_atomese_type(exemplar);
 		const HandleSet ignore_ops;
-		AtomeseRepresentation rep(contin_reduction(2, ignore_ops),
-		                           contin_reduction(2, ignore_ops),
-		                           exemplar, type, _as, ignore_ops,
-		                           0.0, false);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
+		rep_params.rep_reduct = &contin_reduction(2, ignore_ops);
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		TS_ASSERT_EQUALS(99, fields.contin().size());
 	}
 
-	void test_mixed_1()
+	void test_linear_mixed_1()
 	{
 		Handle exemplar =
 				al(GREATER_THAN_LINK,
@@ -366,16 +378,18 @@ public:
 		Handle type = infer_atomese_type(exemplar);
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r0 = r.operator()(0);
-		AtomeseRepresentation rep(r2, r0, exemplar, type, _as, ignore_ops);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(0);
+		rep_params.linear_contin = true;
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		TS_ASSERT_LESS_THAN(0, fields.raw_size());
 		TS_ASSERT_EQUALS(28, fields.contin().size());
 	}
 
-	void test_mixed_2()
+	void test_linear_mixed_2()
 	{
 		Handle exemplar =
 				al(AND_LINK,
@@ -385,9 +399,11 @@ public:
 		Handle type = infer_atomese_type(exemplar);
 		const HandleSet ignore_ops;
 		logical_reduction r(ignore_ops);
-		const rule& r2 = r.operator()(2);
-		const rule& r0 = r.operator()(0);
-		AtomeseRepresentation rep(r2, r0, exemplar, type, _as, ignore_ops);
+		representation_parameters rep_params;
+		rep_params.opt_reduct = &r.operator()(2);
+		rep_params.rep_reduct = &r.operator()(0);
+		rep_params.linear_contin = true;
+		AtomeseRepresentation rep(exemplar, type, _as, ignore_ops, rep_params);
 
 		field_set fields = rep.fields();
 		TS_ASSERT_LESS_THAN(0, fields.raw_size());
