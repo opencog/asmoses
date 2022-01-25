@@ -40,9 +40,9 @@ static inline knob_probing_enum parse_knob_probing(std::string& kp_str)
 	knob_probing_enum kp = knob_probing_enum::kp_auto;
 	if (kp_str == "auto")
 		kp = knob_probing_enum::kp_auto;
-	else if (kp_str == "0")
+	else if (kp_str == "1" or kp_str == "on")
 		kp = knob_probing_enum::kp_on;
-	else if (kp_str == "1")
+	else if (kp_str == "0" or kp_str == "off")
 		kp = knob_probing_enum::kp_off;
 	else
 		OC_ASSERT(false, "Knob probing option %s not supported",
