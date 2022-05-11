@@ -9,9 +9,9 @@ opencog | singnet
 MOSES is a machine-learning tool; it is an "evolutionary program
 learner". It is capable of learning short programs that capture
 patterns in input datasets.  These programs can be output in either
-the `Atomese` programming language, or in python.  For a given data
-input, the programs will roughly recreate the dataset on which they
-were trained.
+the [`Atomese`](https://wiki.opencog.org/w/Atomese) programming
+language, or in python.  For a given data input, the programs will
+roughly recreate the dataset on which they were trained.
 
 MOSES has been used in several commercial applications, including
 the analysis of medical physician and patient clinical data, and
