@@ -36,7 +36,9 @@ http://metacog.org/main.pdf.  Moshe is also one of the primary authors
 of this code.
 
 A short example, from begining to end, can be found in
-[this Jupyter notebook](https://robert-haas.github.io/mevis-docs/code/examples/moses.html)
+[this Jupyter
+notebook](https://robert-haas.github.io/mevis-docs/code/examples/moses.html)
+(courtesy Robert Haas, for the Mevis plot package.)
 
 
 License
