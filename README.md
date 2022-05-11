@@ -36,12 +36,12 @@ http://metacog.org/main.pdf.  Moshe is also one of the primary authors
 of this code.
 
 
-LICENSE
+License
 -------
 MOSES is under double license, Apache 2.0 and GNU AGPL 3.
 
 
-DOCUMENTATION
+Documentation
 -------------
 Documentation can be found in the `/docs` directory, which includes a
 "QuickStart.pdf" that reviews the algorithms and data structures
@@ -64,9 +64,13 @@ few exceptions, most Linux distributions will provide these packages.
 > http://www.cmake.org/ | cmake
 
 ###### cxxtest
-> Test framework
+> Unit test framework
 > http://cxxtest.sourceforge.net/ |
 > https://launchpad.net/~opencog-dev/+archive/ppa | cxxtest
+
+###### guile
+> Embedded scheme REPL (version 3.0 or newer is required).
+> http://www.gnu.org/software/guile/guile.html
 
 ###### cogutil
 > Common OpenCog C++ utilities
@@ -75,14 +79,10 @@ few exceptions, most Linux distributions will provide these packages.
   to `sudo make install` at the end.
 
 ###### atomspace
-> OpenCog Atomspace database and reasoning engine
+> OpenCog Atomspace graph database
 > http://github.com/opencog/atomspace
 > It uses exactly the same build procedure as this package. Be sure
   to `sudo make install` at the end.
-
-###### guile
-> Embedded scheme REPL (version 2.2.2 or newer is required).
-> http://www.gnu.org/software/guile/guile.html
 
 Optional Prerequisites
 ----------------------
@@ -98,7 +98,7 @@ the build, will be more precise as to which parts will not be built.
 
 Building MOSES
 --------------
-Peform the following steps at the shell prompt:
+Perform the following steps at the shell prompt:
 ```
     cd to project root dir
     mkdir build
@@ -120,12 +120,12 @@ building moses as above):
     make test
 ```
 
-INSTALLATION
+Installation
 ------------
 Just say `sudo make install`  after finishing the build.
 
 
-EXAMPLES DIRECTORY
+Examples directory
 ------------------
 MOSES can be used in one of two ways: either directly from the command
 line, or by embedding its low-level API into C++ programs. For almost
