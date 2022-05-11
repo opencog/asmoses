@@ -9,15 +9,15 @@ opencog | singnet
 MOSES is a machine-learning tool; it is an "evolutionary program
 learner". It is capable of learning short programs that capture
 patterns in input datasets.  These programs can be output in either
-the `combo` programming language, or in python.  For a given data
+the `Atomese` programming language, or in python.  For a given data
 input, the programs will roughly recreate the dataset on which they
 were trained.
 
 MOSES has been used in several commercial applications, including
-the analysis of medical patient and physician clinical data, and
+the analysis of medical physician and patient clinical data, and
 in several different financial systems.  It is also used by OpenCog
 to learn automated behaviors, movements and actions in response to
-perceptual stimulus of artificial-life virtual agents (i.e. pet-dog
+perceptual stimulus of artificial-life virtual agents (*i.e.* pet-dog
 game avatars). Future plans including using it to learn behavioral
 programs that control real-world robots, via the OpenPsi implementation
 of Psi-theory and ROS nodes running on the OpenCog AtomSpace.
@@ -30,10 +30,13 @@ by selecting one exemplar tree from a collection of reasonably fit
 individuals, and then making random alterations to the program tree,
 in an attempt to find an even fitter (more accurate) program.
 
-It is derived from the ideas forumlated in Moshe Looks' thesis,
+It is derived from the ideas forumlated in Moshe Looks' PhD thesis,
 "Competent Program Evolution", 2006 (Washington University, Missouri)
 http://metacog.org/main.pdf.  Moshe is also one of the primary authors
 of this code.
+
+A short example, from begining to end, can be found in
+[this Jupyter notebook](https://robert-haas.github.io/mevis-docs/code/examples/moses.html)
 
 
 License
