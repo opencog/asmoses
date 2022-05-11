@@ -8,14 +8,16 @@ IF(Boost_MATH_C99_FOUND)
             )
 ENDIF(Boost_MATH_C99_FOUND)
 
-ADD_CXXTEST(AntUTest)
-TARGET_LINK_LIBRARIES(AntUTest
-        ant_scoring
-        asmoses_exec
-        moses
-        ascombo
-        ${COGUTIL_LIBRARY}
-        )
+# AntUTest won't compile, because there is no libant_scoring.so to link
+# against.
+# ADD_CXXTEST(AntUTest)
+# TARGET_LINK_LIBRARIES(AntUTest
+#         ant_scoring
+#         asmoses_exec
+#         moses
+#         ascombo
+#         ${COGUTIL_LIBRARY}
+#         )
 
 ADD_CXXTEST(iostream_scored_combo_treeUTest)
 TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
