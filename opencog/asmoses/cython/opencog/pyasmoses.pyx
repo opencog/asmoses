@@ -1,3 +1,6 @@
+#!python
+#cython: language_level=3
+
 __author__ = 'Cosmo Harrigan'
 
 from cpython.version cimport PY_MAJOR_VERSION
@@ -25,7 +28,7 @@ class MosesCandidate(object):
                                  'values.')
 
         namespace = {}
-        exec self.program in namespace
+        exec(self.program) in namespace
         return namespace.get('moses_eval')(arglist)
 
 cdef class moses:
