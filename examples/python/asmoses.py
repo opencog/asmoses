@@ -42,6 +42,6 @@ print("-------------------\nTesting model on data:\n")
 print("[0, 1]: {0}".format(model([0, 1])))
 print("[1, 1]: {0}".format(model([1, 1])))
 
-print("\n-------------------\nEquivalent Scheme program:\n")
+print("\n-------------------\nEquivalent Combo program:\n")
 
-print(moses.run(input=input_data, python=False)[0].program)
+print(moses.run(input=input_data, python=False)[0].program.decode('utf-8'))
