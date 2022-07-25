@@ -29,7 +29,7 @@
 #include <opencog/asmoses/moses/moses/types.h>
 #include <opencog/asmoses/moses/scoring/behave_cscore.h>
 #include <opencog/asmoses/moses/scoring/bscores.h>
-#include <examples/example-progs/scoring_iterators.h>
+#include <examples/c++-api/scoring_iterators.h>
 #include "populate_atomspace.h"
 #include "problem.h"
 #include "demo-problems.h"
