@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# coding: utf8
 #
 # asmoses.py
 #
@@ -32,7 +33,7 @@ print("\nTraining data:\n\n{0}".format(input_data))
 
 print("\nThe following program was learned:" \
       "\n-------------------\n\n{0}".\
-    format(output[0].program))
+    format(output[0].program.decode('utf-8')))
 
 model = output[0].eval
 
