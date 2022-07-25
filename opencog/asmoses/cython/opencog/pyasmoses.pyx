@@ -20,9 +20,10 @@ class MosesCandidate(object):
         self.program_type = program_type
 
     def eval(self, arglist):
-        if self.program_type != "python3":
+        if self.program_type != "python3" and self.program_type != "python":
             raise MosesException('Error: eval method is only defined for '
-                                 'candidates with program_type of python3.')
+                                 'candidates with program_type of python3.'
+                                 'Got >>' + str(self.program_type) + '<<')
         if len(arglist) == 0:
             raise MosesException('Error: eval method requires a list of input '
                                  'values.')
