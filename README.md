@@ -89,6 +89,12 @@ few exceptions, most Linux distributions will provide these packages.
 > It uses exactly the same build procedure as this package. Be sure
   to `sudo make install` at the end.
 
+###### ure
+> OpenCog Unified Rule Engine
+> http://github.com/opencog/ure
+> It uses exactly the same build procedure as this package. Be sure
+  to `sudo make install` at the end.
+
 Optional Prerequisites
 ----------------------
 The following packages are optional. If they are not installed, some
