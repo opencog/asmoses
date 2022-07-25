@@ -17,32 +17,9 @@ INCLUDE_DIRECTORIES(
 
 SET(CYTHON_FLAGS "-f")
 
-# Cythonizes one .pyx file into a .cpp file
-# Additional arguments are dependencies
-MACRO(CYTHON_ADD_MODULE_PYX name)
-	IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.pxd)
-		SET(DEPENDS ${name}.pyx ${name}.pxd)
-	ENDIF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.pxd)
-	# Allow the user to specify dependencies as optional arguments
-	SET(DEPENDS ${DEPENDS} ${ARGN})
-	ADD_CUSTOM_COMMAND(
-		OUTPUT ${name}.cpp
-		COMMAND ${CYTHON_EXECUTABLE}
-		ARGS ${CYTHON_FLAGS} -I ${PROJECT_BINARY_DIR}
-		      -I ${ATOMSPACE_INCLUDE_DIR}/opencog/cython
-		      # -I /usr/local/include/opencog/cython
-		      -o ${name}.cpp
-		      --cplus ${CMAKE_CURRENT_SOURCE_DIR}/${name}.pyx
-		DEPENDS ${DEPENDS}
-		COMMENT "Cythonizing ${name}.pyx")
-ENDMACRO(CYTHON_ADD_MODULE_PYX)
-
-
 # Use this as a guide:
-# https://github.com/OpenKinect/libfreenect/blob/master/wrappers/python/CMakeLists.txt
-CYTHON_ADD_MODULE_PYX(pyasmoses
-	# "<opencog/asmoses/moses/main/moses_exec.h>"
-)
+# https://github.com/opencog/atomspace/blob/master/opencog/cython/opencog
+CYTHON_ADD_MODULE_PYX(pyasmoses)
 
 # opencog.pyasmoses Python bindings
 ADD_LIBRARY(moses_cython SHARED
@@ -65,6 +42,7 @@ IF (HAVE_MPI)
 	)
 ENDIF (HAVE_MPI)
 
+# Python is expecting the shared object to be called `pyasmoses.so`
 SET_TARGET_PROPERTIES(moses_cython PROPERTIES
 	PREFIX ""
 	OUTPUT_NAME pyasmoses)
