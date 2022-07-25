@@ -28,9 +28,13 @@ class MosesCandidate(object):
             raise MosesException('Error: eval method requires a list of input '
                                  'values.')
 
+        # print('Program is ' + str(self.program))
         namespace = {}
-        exec(self.program) in namespace
-        return namespace.get('moses_eval')(arglist)
+        exec(self.program, namespace)
+        eval_fun = namespace.get('moses_eval')
+        # print('namespace is ' + str(namespace))
+        # print('Evalfun is ' + str(eval_fun))
+        return eval_fun(arglist)
 
 cdef class moses:
     def run(self, input = None, args = "", python = False , scheme = False):
