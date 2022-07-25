@@ -116,10 +116,7 @@ void metapop_printer::operator()(metapopulation &metapop,
 			metapop.get_ensemble().get_ensemble();
 		if (output_format::python == fmt or output_format::python3 == fmt) {
 			// Python boilerplate
-			if (output_format::python == fmt)
-				ss << "#!/usr/bin/env python\n";
-			else
-				ss << "#!/usr/bin/env python3\n";
+			ss << "#!/usr/bin/env python3\n";
 			ss << "#score: " << metapop.best_score() << std::endl
 			   << "def moses_eval(i):\n"
 			   << "    sum = 0.0 \\\n";
@@ -161,10 +158,7 @@ void metapop_printer::operator()(metapopulation &metapop,
 			if (result_count == cnt++) break;
 			if (output_format::python == fmt or output_format::python3 == fmt) {
 				// Python boilerplate
-				if (output_format::python == fmt)
-					ss << "#!/usr/bin/env python\n";
-				else
-					ss << "#!/usr/bin/env python3\n";
+				ss << "#!/usr/bin/env python3\n";
 				ss << "#score: " << sct.get_score() << std::endl
 				   << "import operator as op\n"
 				   << "from functools import reduce\n"
