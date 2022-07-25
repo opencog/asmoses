@@ -1,3 +1,6 @@
+#!python
+#cython: language_level=3
+
 __author__ = 'Cosmo Harrigan'
 
 from cpython.version cimport PY_MAJOR_VERSION
@@ -17,16 +20,21 @@ class MosesCandidate(object):
         self.program_type = program_type
 
     def eval(self, arglist):
-        if self.program_type != "python":
+        if self.program_type != "python3" and self.program_type != "python":
             raise MosesException('Error: eval method is only defined for '
-                                 'candidates with program_type of python.')
+                                 'candidates with program_type of python3.'
+                                 'Got >>' + str(self.program_type) + '<<')
         if len(arglist) == 0:
             raise MosesException('Error: eval method requires a list of input '
                                  'values.')
 
+        # print('Program is ' + str(self.program))
         namespace = {}
-        exec self.program in namespace
-        return namespace.get('moses_eval')(arglist)
+        exec(self.program, namespace)
+        eval_fun = namespace.get('moses_eval')
+        # print('namespace is ' + str(namespace))
+        # print('Evalfun is ' + str(eval_fun))
+        return eval_fun(arglist)
 
 cdef class moses:
     def run(self, input = None, args = "", python = False , scheme = False):
@@ -92,7 +100,7 @@ cdef class moses:
         candidates = []
         # Python header declared in moses/moses/moses/types.h
         # (ostream_combo_tree_composite_pbscore_python)
-        python_header = b"#!/usr/bin/env python"
+        python_header = b"#!/usr/bin/env python3"
 
         if len(output) == 0:
             raise MosesException('Error: No output file was obtained from '
