@@ -12,7 +12,6 @@ SET(CMAKE_SHARED_LINKER_FLAGS
 
 INCLUDE_DIRECTORIES(
 	${PYTHON_INCLUDE_DIRS}
-        .
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -41,40 +40,38 @@ ENDMACRO(CYTHON_ADD_MODULE_PYX)
 
 # Use this as a guide:
 # https://github.com/OpenKinect/libfreenect/blob/master/wrappers/python/CMakeLists.txt
-IF (HAVE_MOSES)
-	CYTHON_ADD_MODULE_PYX(pyasmoses
-		# "<opencog/asmoses/moses/main/moses_exec.h>"
+CYTHON_ADD_MODULE_PYX(pyasmoses
+	# "<opencog/asmoses/moses/main/moses_exec.h>"
+)
+
+# opencog.pyasmoses Python bindings
+ADD_LIBRARY(moses_cython SHARED
+	pyasmoses.cpp
+)
+
+# Don't reverse the order of moses_exec and moses, if reversed will give
+# undefined symbol: _ZNK5boost15program_options22error_with_option_name4whatEv
+# XXX Why???
+TARGET_LINK_LIBRARIES(moses_cython
+	asmoses_exec
+	moses
+)
+
+IF (HAVE_MPI)
+	TARGET_LINK_LIBRARIES (moses_cython
+		# These two work for both MPICH2 and OpenMPI, for me.
+		${MPI_LIBRARY}
+		${MPI_EXTRA_LIBRARY}
 	)
+ENDIF (HAVE_MPI)
 
-	# opencog.pyasmoses Python bindings
-	ADD_LIBRARY(moses_cython SHARED
-		pyasmoses.cpp
-	)
+SET_TARGET_PROPERTIES(moses_cython PROPERTIES
+	PREFIX ""
+	OUTPUT_NAME pyasmoses)
 
-	# Don't reverse the order of moses_exec and moses, if reversed will give
-	# undefined symbol: _ZNK5boost15program_options22error_with_option_name4whatEv
-	# XXX Why???
-	TARGET_LINK_LIBRARIES(moses_cython
-		asmoses_exec
-		moses
-	)
-
-	IF (HAVE_MPI)
-		TARGET_LINK_LIBRARIES (moses_cython
-			# These two work for both MPICH2 and OpenMPI, for me.
-			${MPI_LIBRARY}
-			${MPI_EXTRA_LIBRARY}
-		)
-	ENDIF (HAVE_MPI)
-
-	SET_TARGET_PROPERTIES(moses_cython PROPERTIES
-		PREFIX ""
-		OUTPUT_NAME pyasmoses)
-
-	INSTALL (TARGETS moses_cython
-		EXPORT ASMosesTargets
-		DESTINATION "${PYTHON_DEST}")
-ENDIF (HAVE_MOSES)
+INSTALL (TARGETS moses_cython
+	EXPORT ASMosesTargets
+	DESTINATION "${PYTHON_DEST}")
 
 INSTALL (FILES
 	__init__.py
