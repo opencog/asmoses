@@ -23,7 +23,7 @@
 #include <cxxtest/TestSuite.h>
 
 #include <opencog/asmoses/moses/moses/moses_main.h>
-#include <examples/example-ant/ant_scoring.h>
+#include <examples/ant-trail/ant_scoring.h>
 #include <opencog/asmoses/moses/metapopulation/metapopulation.h>
 #include <opencog/asmoses/moses/optimization/hill-climbing.h>
 #include <opencog/asmoses/moses/scoring/behave_cscore.h>

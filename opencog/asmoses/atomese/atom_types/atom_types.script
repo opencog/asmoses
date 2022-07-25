@@ -13,6 +13,8 @@
 EXP_LINK <- ARITHMETIC_LINK
 SIN_LINK <- ARITHMETIC_LINK
 LOG_LINK <- ARITHMETIC_LINK
+
+// See also HEAVISIDE_LINK in the main AtomSpace repo.
 IMPULSE_LINK <- FUNCTION_LINK,NUMERIC_OUTPUT_LINK,BOOLEAN_LINK
 
 // KnobLink wraps CondLink yet inherits EvaluatableLink in order to be able to

@@ -24,6 +24,11 @@ Python programming API examples
 An example of invoking MOSES from python can be found in the
 [python examples(./python) directory.
 
+Scheme and Atomese examples
+---------------------------
+Examples of uses MOSES to work with Atomese can be found in the
+[atomese examples(./atomese) directory.
+
 C++ programming API examples
 ----------------------------
 These must first be built by saying (in the build dir):
