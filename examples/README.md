@@ -13,9 +13,16 @@ the Atomese interfaces are required.
 
 Command-line examples
 ---------------------
-Some datasets:
+Toe run MOSES from the command line, it is enough to just specify a
+dataset, and the correct flags to process that dataset. Examples
+can be found here:
 
-* example-data: Simple data sets on which moses can be run.
+* [datasets](./datasets): Simple data sets on which moses can be run.
+
+Python programming API examples
+-------------------------------
+An example of invoking MOSES from python can be found in the
+[python examples(./python) directory.
 
 C++ programming API examples
 ----------------------------
@@ -24,5 +31,5 @@ These must first be built by saying (in the build dir):
     make examples
 ```
 The available examples are:
-* example-ant: Santa Fe Trail ant example
-* example-progs: Other example programs.
+* [ant-trails](./ant-trails): Santa Fe Trail ant example
+* [c++-api](./c++-api): Example C++ programs.
