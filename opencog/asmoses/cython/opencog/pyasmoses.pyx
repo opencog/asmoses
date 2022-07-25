@@ -20,9 +20,9 @@ class MosesCandidate(object):
         self.program_type = program_type
 
     def eval(self, arglist):
-        if self.program_type != "python":
+        if self.program_type != "python3":
             raise MosesException('Error: eval method is only defined for '
-                                 'candidates with program_type of python.')
+                                 'candidates with program_type of python3.')
         if len(arglist) == 0:
             raise MosesException('Error: eval method requires a list of input '
                                  'values.')
@@ -95,7 +95,7 @@ cdef class moses:
         candidates = []
         # Python header declared in moses/moses/moses/types.h
         # (ostream_combo_tree_composite_pbscore_python)
-        python_header = b"#!/usr/bin/env python"
+        python_header = b"#!/usr/bin/env python3"
 
         if len(output) == 0:
             raise MosesException('Error: No output file was obtained from '
