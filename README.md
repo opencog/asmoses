@@ -136,17 +136,6 @@ Installation
 Just say `sudo make install`  after finishing the build.
 
 
-Examples directory
-------------------
-MOSES can be used in one of two ways: either directly from the command
-line, or by embedding its low-level API into C++ programs. For almost
-all users, the command-line interface is strongly recommended.
-
-For those who absolutely must used the low-level C++ programming API,
-there is the `/examples` directory.  To build the examples, say:
-```
-    make examples
-```
-* example-ant: Santa Fe Trail ant example
-* example-data: Simple data sets on which moses can be run.
-* example-progs: Other example programs.
+Examples
+--------
+Please see the [examples directory](./examples).
