@@ -1,14 +1,15 @@
+#! /usr/bin/env python3
+
 __author__ = 'Cosmo Harrigan'
 
 import sys
 import unittest
-# The opencog.pyasmoses module won't be found without this!
-if sys.version_info >= (3, 0):
-   sys.path.append("/usr/local/lib/python3/dist-packages")
-print ("The package search path is:" '\n'.join(sys.path))
+
+for p in sys.path:
+	print ('Package search path: ' + p)
 
 from nose.tools import *
-from opencog.asmoses.pyasmoses import moses, MosesException, MosesCandidate
+from opencog.pyasmoses import moses, MosesException, MosesCandidate
 
 
 class TestMOSES(unittest.TestCase):
