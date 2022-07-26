@@ -39,7 +39,7 @@ Interpreter::Interpreter(const opencog::Handle &key, const int size)
 		: _key(key), _problem_data_size(size)
 {}
 
-opencog::ValuePtr Interpreter::operator()(const opencog::Handle &program)
+opencog::ValuePtr Interpreter::operator()(const opencog::Handle& program)
 {
 	// if this program or any sub-program of this program is previously
 	// interpreted it will contain the result values with '_key',
@@ -64,7 +64,7 @@ opencog::ValuePtr Interpreter::operator()(const opencog::Handle &program)
 
 	ValueSeq params;
 	for (const Handle &h : program->getOutgoingSet()) {
-		params.push_back((*this)(h));
+		params.push_back(this->operator()(h));
 	}
 
 	ValuePtr result = execute(program->get_type(), params);
@@ -83,12 +83,12 @@ ValuePtr Interpreter::unwrap_constant(const Handle &handle)
 	if (NUMBER_NODE == t) {
 		std::vector<double> constant_value(_problem_data_size,
 		                                   NumberNodeCast(handle)->get_value());
-		ValuePtr constant(new FloatValue(constant_value));
+		ValuePtr constant(createFloatValue(constant_value));
 		return constant;
 	}
 	if (FALSE_LINK == t || TRUE_LINK == t) {
 		ValueSeq constant_value(_problem_data_size, ValuePtr(handle));
-		ValuePtr constant(new LinkValue(constant_value));
+		ValuePtr constant(createLinkValue(constant_value));
 		return constant;
 	}
 	OC_ASSERT(false, "Unsupported Constant Type");
@@ -99,7 +99,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 {
 	if (t == PLUS_LINK) {
 		std::vector<double> _result(_problem_data_size, 0.0);
-		ValuePtr result(new FloatValue(_result));
+		ValuePtr result(createFloatValue(_result));
 
 		for (const ValuePtr & p : params) {
 			result = plus(FloatValueCast(result), FloatValueCast(p));
@@ -108,7 +108,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 	}
 	if (t == TIMES_LINK) {
 		std::vector<double> _result(FloatValueCast(params[0])->value().size(), 1.0);
-		ValuePtr result(new FloatValue(_result));
+		ValuePtr result(createFloatValue(_result));
 
 		for (const ValuePtr & p : params) {
 			result = times(FloatValueCast(result), FloatValueCast(p));
@@ -117,7 +117,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 	}
 	if (t == DIVIDE_LINK) {
 		std::vector<double> _result(FloatValueCast(params[0])->value().size(), 1.0);
-		ValuePtr result(new FloatValue(_result));
+		ValuePtr result(createFloatValue(_result));
 
 		for (const ValuePtr & p : params) {
 			result = divide(FloatValueCast(result), FloatValueCast(p));
@@ -126,7 +126,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 	}
 	if (t == AND_LINK) {
 		ValueSeq _result(_problem_data_size, Constants::true_value);
-		LinkValuePtr result(new LinkValue(_result));
+		LinkValuePtr result(createLinkValue(_result));
 
 		for (const ValuePtr &p : params) {
 			result = logical_and(result, LinkValueCast(p));
@@ -135,7 +135,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 	}
 	if (t == OR_LINK) {
 		ValueSeq _result(_problem_data_size, Constants::false_value);
-		LinkValuePtr result(new LinkValue(_result));
+		LinkValuePtr result(createLinkValue(_result));
 
 		for (const ValuePtr &p : params) {
 			result = logical_or(result, LinkValueCast(p));
@@ -151,17 +151,17 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 	if (t == EXP_LINK) {
 		std::vector<double> _result = {};
 		for (float value :FloatValueCast(params[0])->value() )_result.push_back(exp(value));
-		return  ValuePtr(new FloatValue(_result));
+		return  ValuePtr(createFloatValue(_result));
 	}
 	if(t == SIN_LINK){
 		std::vector<double> _result = {};
 		for (float value :FloatValueCast(params[0])->value() )_result.push_back(sin(value));
-		return  ValuePtr(new FloatValue(_result));
+		return  ValuePtr(createFloatValue(_result));
 	}
 	if(t == LOG_LINK){
 		std::vector<double> _result = {};
 		for (float value :FloatValueCast(params[0])->value() )_result.push_back(log(value));
-		return  ValuePtr(new FloatValue(_result));
+		return  ValuePtr(createFloatValue(_result));
 	}
 
 	if (t == COND_LINK) {
@@ -209,9 +209,9 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 			}
 		}
 		if (l_result.empty()) {
-			return ValuePtr(new FloatValue(f_result));
+			return ValuePtr(createFloatValue(f_result));
 		} else {
-			return ValuePtr(new LinkValue(l_result));
+			return ValuePtr(createLinkValue(l_result));
 		}
 	}
 	if (t == IMPULSE_LINK) {
@@ -221,7 +221,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		std::vector<double> _result = {};
 		for (it = p_value.begin(); it != p_value.end(); ++it)
 			_result.push_back(bool_value_to_bool(HandleCast(*it)) ? 1 : 0);
-		return ValuePtr(new FloatValue(_result));
+		return ValuePtr(createFloatValue(_result));
 	}
 	if (t == GREATER_THAN_LINK) {
 		OC_ASSERT(params.size() == 2)
@@ -260,9 +260,10 @@ value_size Interpreter::extract_output_size(const Handle &program, const Handle 
 
 bool Interpreter::is_constant(const Type t)
 {
-	// We need to know if an atom is a constant rather than containing a vector of
-	// values for each observation[row]. Another way to handle this is introduce a new
-	// atom type [CONSTANT_ATOM], But we don't want to introduce a new type just for
-	// this purpose. If this use case is more ubiquitous we might want to consider it.
+	// We need to know if an atom is a constant rather than containing
+	// a vector of values for each observation[row]. Another way to
+	// handle this is introduce a new atom type [CONSTANT_ATOM], But
+	// we don't want to introduce a new type just for this purpose.
+	// If this use case is more ubiquitous we might want to consider it.
 	return t == NUMBER_NODE || t == TRUE_LINK || t == FALSE_LINK;
 }
