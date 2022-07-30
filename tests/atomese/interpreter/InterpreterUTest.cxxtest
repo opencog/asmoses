@@ -219,7 +219,7 @@ public:
 	{
 		// Atomese program to be evaluated over the problem_data
 		HandleSeq seq = {p1};
-		Handle program = createLink(seq, IMPULSE_LINK);
+		Handle program = createLink(seq, MPULSE_LINK);
 
 		// expected out put vector
 		std::vector<double> exp_value = {1.0, 1.0, 0.0};
@@ -242,7 +242,7 @@ public:
 		HandleSeq seq3 = {sub_program1, sub_program2};
 		Handle sub_program3 = createLink(seq3, OR_LINK);
 		HandleSeq seq4 = {sub_program3};
-		Handle program = createLink(seq4, IMPULSE_LINK);
+		Handle program = createLink(seq4, MPULSE_LINK);
 
 		// expected out put vector
 		std::vector<double> exp_value = {1.0, 1.0, 0.0};

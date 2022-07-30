@@ -21,8 +21,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef ASMOSES_IMPULSELINK_H
-#define ASMOSES_IMPULSELINK_H
+#ifndef ASMOSES_MPULSELINK_H
+#define ASMOSES_MPULSELINK_H
 
 #include <opencog/atoms/core/FunctionLink.h>
 #include <opencog/atoms/core/ScopeLink.h>
@@ -31,10 +31,10 @@
 
 namespace opencog
 {
-class ImpulseLink : public FunctionLink
+class MpulseLink : public FunctionLink
 {
 public:
-	ImpulseLink(const HandleSeq&, Type= IMPULSE_LINK);
+	MpulseLink(const HandleSeq&, Type= MPULSE_LINK);
 
 	virtual ValuePtr execute(AtomSpace*, bool);
 
@@ -43,20 +43,20 @@ public:
 	void init(void);
 };
 
-typedef std::shared_ptr<ImpulseLink> ImpulseLinkPtr;
+typedef std::shared_ptr<MpulseLink> MpulseLinkPtr;
 
-static inline ImpulseLinkPtr ImpulseLinkCast(const Handle& h)
+static inline MpulseLinkPtr MpulseLinkCast(const Handle& h)
 {
 	AtomPtr a(h);
-	return std::dynamic_pointer_cast<ImpulseLink>(a);
+	return std::dynamic_pointer_cast<MpulseLink>(a);
 }
 
-static inline ImpulseLinkPtr ImpulseLinkCast(AtomPtr a)
-{ return std::dynamic_pointer_cast<ImpulseLink>(a); }
+static inline MpulseLinkPtr MpulseLinkCast(AtomPtr a)
+{ return std::dynamic_pointer_cast<MpulseLink>(a); }
 
-#define createImpulseLink std::make_shared<ImpulseLink>
+#define createMpulseLink std::make_shared<MpulseLink>
 
 /** @}*/
 }
 
-#endif //ASMOSES_IMPULSELINK_H
+#endif //ASMOSES_MPULSELINK_H

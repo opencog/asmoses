@@ -175,7 +175,7 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			break;
 		case id::impulse:
 			*_parent = id::predicate;
-			type = IMPULSE_LINK;
+			type = MPULSE_LINK;
 			break;
 		case id::greater_than_zero:
 			*_parent = id::schema;
@@ -274,7 +274,7 @@ void AtomeseToCombo::link2combo(const Handle &h, string_seq &labels,
 		iter = tr.empty() ? tr.set_head(id::logical_or) : tr.append_child(iter, id::logical_or);
 		return;
 	}
-	if (IMPULSE_LINK == t) {
+	if (MPULSE_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::impulse) : tr.append_child(iter, id::impulse);
 		return;
 	}

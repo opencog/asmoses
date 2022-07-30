@@ -27,22 +27,22 @@
 
 using namespace opencog;
 
-ImpulseLink::ImpulseLink(const HandleSeq& oset, Type t)
+MpulseLink::MpulseLink(const HandleSeq& oset, Type t)
 		: FunctionLink(oset, t)
 {
 	// Type must be as expected
-	if (not nameserver().isA(t, IMPULSE_LINK)) {
+	if (not nameserver().isA(t, MPULSE_LINK)) {
 		const std::string& tname = nameserver().getTypeName(t);
 		throw SyntaxException(TRACE_INFO,
-		                      "Expecting a ImpulseLink, got %s", tname.c_str());
+		                      "Expecting a MpulseLink, got %s", tname.c_str());
 	}
 
 	if (1 != oset.size())
 		throw SyntaxException(TRACE_INFO,
-		                      "ImpulseLink expects only one argument.");
+		                      "MpulseLink expects only one argument.");
 }
 
-ValuePtr ImpulseLink::execute(AtomSpace* scratch, bool silent)
+ValuePtr MpulseLink::execute(AtomSpace* scratch, bool silent)
 {
 	TruthValuePtr tvp(EvaluationLink::do_evaluate(scratch, _outgoing.at(0)));
 
@@ -52,4 +52,4 @@ ValuePtr ImpulseLink::execute(AtomSpace* scratch, bool silent)
 		return ValuePtr(createNumberNode(0));
 }
 
-DEFINE_LINK_FACTORY(ImpulseLink, IMPULSE_LINK)
+DEFINE_LINK_FACTORY(MpulseLink, MPULSE_LINK)

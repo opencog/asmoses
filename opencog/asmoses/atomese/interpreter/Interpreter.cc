@@ -214,7 +214,7 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 			return ValuePtr(createLinkValue(l_result));
 		}
 	}
-	if (t == IMPULSE_LINK) {
+	if (t == MPULSE_LINK) {
 		OC_ASSERT(params.size() == 1);
 		ValueSeq p_value = LinkValueCast(params[0])->value();
 		ValueSeq::iterator it;

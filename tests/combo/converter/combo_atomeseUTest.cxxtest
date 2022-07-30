@@ -168,7 +168,7 @@ public:
 		Handle result = to_atomese(tr);
 
 		HandleSeq out1 = {createNode(PREDICATE_NODE, "$1")};
-		Handle imp_lnk = createLink(out1, IMPULSE_LINK);
+		Handle imp_lnk = createLink(out1, MPULSE_LINK);
 
 		TS_ASSERT(content_eq(result, imp_lnk))
 
@@ -255,7 +255,7 @@ public:
 	void test_combo_atomese_impulse(void)
 	{
 		HandleSeq seq = {createNode(PREDICATE_NODE, "$1")};
-		Handle imp_lnk = createLink(seq, IMPULSE_LINK);
+		Handle imp_lnk = createLink(seq, MPULSE_LINK);
 
 		combo::AtomeseToCombo to_combo;
 		auto result = to_combo(imp_lnk);

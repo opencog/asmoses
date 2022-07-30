@@ -538,10 +538,10 @@ HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
 			seq.push_back(multi_const(arg, Handle(createNumberNode(0))));
 		}
 		else if (arg_type == BOOLEAN_NODE) {
-			Handle imp_t = createNode(TYPE_NODE, "ImpulseLink");
+			Handle imp_t = createNode(TYPE_NODE, "MpulseLink");
 			if (_ignore_ops.find(imp_t) == _ignore_ops.end()) {
 				Handle arg = Handle(createNode(PREDICATE_NODE, "$" + std::to_string(idx)));
-				Handle imp = createLink(IMPULSE_LINK, arg);
+				Handle imp = createLink(MPULSE_LINK, arg);
 				seq.push_back(multi_const(imp, Handle(createNumberNode(0))));
 			}
 		}
