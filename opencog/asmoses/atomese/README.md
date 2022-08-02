@@ -74,3 +74,10 @@ is explicitly specified, as well as the column name in that dataset.
 Note also BoolAnd and BoolOr are used instead of And, Or. This is because
 the BoolAnd and BoolOr are able to handle vectors of bools, (i.e. columns
 of bools) whereas the regular AndLink & OrLink cannot.
+
+Dead code
+---------
+The following appears to be dead code:
+
+* `data/representation/load_table.h` and .cc too ... the only user
+  is `load_tableUTest` ...

@@ -1,6 +1,7 @@
 
 # Install header files
 INSTALL(FILES
+	load_csv.h
 	load_table.h
 
 	DESTINATION
