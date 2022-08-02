@@ -80,4 +80,11 @@ Dead code
 The following appears to be dead code:
 
 * `data/representation/load_table.h` and .cc too ... the only user
-  is `load_tableUTest` ...
+  is `load_tableUTest` ... this code should probably be trashed,
+  as it provides some highly inefficient Atomese formats...
+* `data/table/*` contains the original MOSES table-loading code.
+  It can eventually be trashed, once Value loading works correctly.
+* `data/main/*` contains combo-based evaluation code. Its stand-alone
+  code and can continue to work, as long as there's a way to output
+  combo programs. If/when this ability goes away, then this code will be
+  dead, too.
