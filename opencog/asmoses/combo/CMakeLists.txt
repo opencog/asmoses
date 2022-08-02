@@ -8,34 +8,34 @@ ADD_SUBDIRECTORY(crutil)
 ADD_SUBDIRECTORY(converter)
 
 ADD_LIBRARY(ascombo SHARED
-	crutil/exception
+	crutil/exception.cc
 
-	combo/action
-	combo/action_symbol
-	combo/argument
-	combo/assumption
-	combo/builtin_action
-	combo/convert_ann_combo
-	combo/definite_object
-	combo/descriptions
-	combo/enum_type
-	combo/indefinite_object
-	combo/iostream_combo
-	combo/message
-	combo/perception
-	combo/procedure_call
-	combo/procedure_repository
-	combo/similarity
-	combo/simple_nn
-	combo/vertex
+	combo/action.cc
+	combo/action_symbol.cc
+	combo/argument.h
+	combo/assumption.cc
+	combo/builtin_action.cc
+	combo/convert_ann_combo.h
+	combo/definite_object.cc
+	combo/descriptions.cc
+	combo/enum_type.cc
+	combo/indefinite_object.cc
+	combo/iostream_combo.cc
+	combo/message.cc
+	combo/perception.cc
+	combo/procedure_call.cc
+	combo/procedure_repository.cc
+	combo/similarity.cc
+	combo/simple_nn.cc
+	combo/vertex.cc
 
-	interpreter/interpreter
-	interpreter/eval
+	interpreter/interpreter.cc
+	interpreter/eval.cc
 
-	type_checker/type_tree_def
-	type_checker/type_tree
+	type_checker/type_tree_def.cc
+	type_checker/type_tree.cc
 
-	converter/combo_atomese
+	converter/combo_atomese.cc
 )
 
 TARGET_LINK_LIBRARIES (ascombo
@@ -49,11 +49,11 @@ TARGET_LINK_LIBRARIES (ascombo
 )
 
 ADD_LIBRARY(ascomboant SHARED
-	ant_combo_vocabulary/ant_builtin_action
-	ant_combo_vocabulary/ant_perception
-	ant_combo_vocabulary/ant_action_symbol
-	ant_combo_vocabulary/ant_indefinite_object
-	ant_combo_vocabulary/ant_combo_vocabulary
+	ant_combo_vocabulary/ant_builtin_action.cc
+	ant_combo_vocabulary/ant_perception.cc
+	ant_combo_vocabulary/ant_action_symbol.cc
+	ant_combo_vocabulary/ant_indefinite_object.cc
+	ant_combo_vocabulary/ant_combo_vocabulary.cc
 )
 
 TARGET_LINK_LIBRARIES (ascomboant

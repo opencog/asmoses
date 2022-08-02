@@ -3,10 +3,10 @@ ADD_SUBDIRECTORY (table)
 ADD_SUBDIRECTORY (main)
 
 ADD_LIBRARY(data SHARED
-		representation/load_table
+		representation/load_table.cc
 
-		table/table
-		table/table_io
+		table/table.cc
+		table/table_io.cc
 		)
 
 TARGET_LINK_LIBRARIES (data

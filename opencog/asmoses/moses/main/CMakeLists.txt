@@ -1,15 +1,15 @@
 
 # We need to put this in a library, so that MOSESUTest can link to it.
 ADD_LIBRARY (asmoses_exec SHARED
-    demo-problems
-    problem
-    problem-params
-    moses_exec
-    moses_exec_def
-    table-problems
+    demo-problems.cc
+    problem.cc
+    problem-params.cc
+    moses_exec.cc
+    moses_exec_def.cc
+    table-problems.cc
 )
 
-ADD_EXECUTABLE (asmoses-exec moses-exec)
+ADD_EXECUTABLE (asmoses-exec moses-exec.cc)
 TARGET_LINK_LIBRARIES (asmoses-exec
 	asmoses_exec
 	moses
@@ -17,7 +17,7 @@ TARGET_LINK_LIBRARIES (asmoses-exec
 )
 SET_TARGET_PROPERTIES(asmoses-exec PROPERTIES OUTPUT_NAME "asmoses")
 
-ADD_EXECUTABLE (aseval-diversity eval-diversity)
+ADD_EXECUTABLE (aseval-diversity eval-diversity.cc)
 TARGET_LINK_LIBRARIES (aseval-diversity
 	moses
 	ascomboant
@@ -25,7 +25,7 @@ TARGET_LINK_LIBRARIES (aseval-diversity
 	${Boost_PROGRAM_OPTIONS_LIBRARY} 
 )
 
-ADD_EXECUTABLE (aseval-candidate eval-candidate)
+ADD_EXECUTABLE (aseval-candidate eval-candidate.cc)
 TARGET_LINK_LIBRARIES (aseval-candidate
 	moses
 	ascomboant
@@ -33,7 +33,7 @@ TARGET_LINK_LIBRARIES (aseval-candidate
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
-ADD_EXECUTABLE (aseval-candidate-likelihood eval-candidate-likelihood)
+ADD_EXECUTABLE (aseval-candidate-likelihood eval-candidate-likelihood.cc)
 TARGET_LINK_LIBRARIES (aseval-candidate-likelihood
 	moses
 	ascomboant

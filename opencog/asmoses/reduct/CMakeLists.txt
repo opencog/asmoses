@@ -4,28 +4,28 @@ ADD_SUBDIRECTORY (main)
 
 ADD_LIBRARY(asreduct SHARED
 
-	reduct/action_reduction
-	reduct/clean_reduction
-	reduct/contin_reduction
-	reduct/flat_normal_form
-	reduct/full_reduction
-	reduct/logical_reduction
-	reduct/ann_reduction
-	reduct/fold_reduction
-	reduct/mixed_reduction
-	reduct/perception_reduction
+	reduct/action_reduction.cc
+	reduct/clean_reduction.cc
+	reduct/contin_reduction.cc
+	reduct/flat_normal_form.cc
+	reduct/full_reduction.cc
+	reduct/logical_reduction.cc
+	reduct/ann_reduction.cc
+	reduct/fold_reduction.cc
+	reduct/mixed_reduction.cc
+	reduct/perception_reduction.cc
 
-	reduct/reduct
+	reduct/reduct.cc
 
-	rules/action_rules
-	rules/branch_rules
-	rules/contin_rules
-	rules/general_rules
-	rules/logical_rules
-	rules/fold_rules
-	rules/meta_rules
-	rules/mixed_rules
-	rules/perception_rules
+	rules/action_rules.cc
+	rules/branch_rules.cc
+	rules/contin_rules.cc
+	rules/general_rules.cc
+	rules/logical_rules.cc
+	rules/fold_rules.cc
+	rules/meta_rules.cc
+	rules/mixed_rules.cc
+	rules/perception_rules.cc
 )
 
 TARGET_LINK_LIBRARIES (asreduct

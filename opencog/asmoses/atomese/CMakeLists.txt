@@ -5,12 +5,13 @@ ADD_SUBDIRECTORY(scm)
 ADD_SUBDIRECTORY(type_checker)
 
 ADD_LIBRARY(atomese SHARED
-		interpreter/Interpreter
-		interpreter/logical_interpreter
-		interpreter/condlink_interpreter
-		atom_types
-		atomese_utils/constants
-		type_checker/AtomeseTypeChecker)
+		interpreter/Interpreter.cc
+		interpreter/logical_interpreter.cc
+		interpreter/condlink_interpreter.cc
+		# atom_types.h
+		atomese_utils/constants.cc
+		type_checker/AtomeseTypeChecker.cpp
+)
 
 TARGET_LINK_LIBRARIES(atomese
 	${ATOMSPACE_LIBRARIES}

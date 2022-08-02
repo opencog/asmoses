@@ -3,10 +3,10 @@ ADD_SUBDIRECTORY (main)
 
 ADD_LIBRARY (pleasure SHARED
 
-	pleasure/generation
-	pleasure/generation_table
-	pleasure/node_list
-	pleasure/population
+	pleasure/generation.cc
+	pleasure/generation_table.cc
+	pleasure/node_list.cc
+	pleasure/population.cc
 	
 )
 

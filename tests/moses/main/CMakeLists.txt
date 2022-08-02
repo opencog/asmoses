@@ -3,7 +3,7 @@
 # Later tests assume earlier tests pass.
 #
 ADD_LIBRARY (moses-framework SHARED
-        moses-framework
+        moses-framework.cc
         )
 TARGET_LINK_LIBRARIES(moses-framework
         asmoses_exec

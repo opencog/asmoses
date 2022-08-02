@@ -7,8 +7,8 @@ OPENCOG_ADD_ATOM_TYPES(atom_types.script
 		atom_types.pyx)
 ADD_CUSTOM_TARGET(asmoses_atom_types DEPENDS atom_types.h)
 ADD_LIBRARY(asmoses_types SHARED
-		atom_types
-		atom_types_init)
+		atom_types.h
+		atom_types_init.cc)
 ADD_GUILE_EXTENSION(SCM_CONFIG asmoses_types "atom_types_path")
 
 TARGET_LINK_LIBRARIES(asmoses_types

@@ -3,13 +3,13 @@ ADD_SUBDIRECTORY(main)
 ADD_SUBDIRECTORY(man)
 
 ADD_LIBRARY(asfeature_selection SHARED
-	algo/deme_optimize
-	algo/incremental
-	algo/random
-	algo/simple
-	algo/stochastic_max_dependency
-	scorers/moses_optim
-	main/feature-selection
+	algo/deme_optimize.cc
+	algo/incremental.cc
+	algo/random.cc
+	algo/simple.cc
+	algo/stochastic_max_dependency.cc
+	scorers/moses_optim.cc
+	main/feature-selection.cc
 )
 
 TARGET_LINK_LIBRARIES(asfeature_selection
