@@ -31,9 +31,8 @@ individuals, and then making random alterations to the program tree,
 in an attempt to find an even fitter (more accurate) program.
 
 It is derived from the ideas forumlated in Moshe Looks' PhD thesis,
-"Competent Program Evolution", 2006 (Washington University, Missouri)
-http://metacog.org/main.pdf.  Moshe is also one of the primary authors
-of this code.
+["Competent Program Evolution", 2006 (Washington University, Missouri)](https://openscholarship.wustl.edu/cse_research/216/).
+Moshe is also one of the primary authors of this code.
 
 A short example, from begining to end, can be found in
 [this Jupyter
