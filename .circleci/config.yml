@@ -53,6 +53,13 @@ jobs:
           paths:
             - /ws/atomspace/opencog/haskell/.stack-work
       - run:
+          name: Install uinfy
+          command: |
+            git clone --depth 1 https://github.com/$CIRCLE_PROJECT_USERNAME/unify /ws/unify
+            mkdir -p /ws/unify/build
+            cd /ws/unify/build && cmake .. && make -j2 && make -j2 install
+            ldconfig
+      - run:
           name: Install ure
           command: |
             git clone --depth 1 https://github.com/$CIRCLE_PROJECT_USERNAME/ure /ws/ure
