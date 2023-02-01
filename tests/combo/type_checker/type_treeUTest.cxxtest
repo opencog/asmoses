@@ -351,7 +351,7 @@ public:
         try {
             tt = infer_type_tree(tr);
             std::cout << tt << std::endl;
-        } catch (AssertionException ex) {
+        } catch (const AssertionException& ex) {
             assert_raised = true;
         }
         TS_ASSERT(assert_raised || !is_well_formed(tt));
