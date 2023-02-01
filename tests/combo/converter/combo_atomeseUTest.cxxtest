@@ -192,7 +192,7 @@ public:
 		// Note: AndLink is unordered_link meaning the order might require caution.
 		// The order of the labels and the child nodes in the generated combo depends
 		// on the atomese programs' order of out_going_set.
-		const std::vector<string> exp_labels = {"z", "x", "y"};
+		const std::vector<string> exp_labels = {"z", "y", "x"};
 		auto expected = std::make_pair(combo::str2combo_tree("and($1 and($2 $3))", {}), exp_labels);
 
 		TS_ASSERT_EQUALS(result, expected);
@@ -214,7 +214,15 @@ public:
 		auto result = to_combo(program);
 
 		const std::vector<string> exp_labels = {"x"};
-		auto expected = std::make_pair(combo::str2combo_tree("and(true or($1 false))", {}), exp_labels);
+		// AndLink is an UnorderedLink, and so the cacnonical order
+		// depends on how the atoms are hashed. A recent fix changed
+		// the hashing order ... with the goal of making it long-term
+		// stable.
+		// auto expected = std::make_pair(combo::str2combo_tree("and(true or($1 false))", {}), exp_labels);
+		auto expected = std::make_pair(combo::str2combo_tree("and(or($1 false) true)", {}), exp_labels);
+
+		std::cout << "Expected: " << oc_to_string(expected) << std::endl;
+		std::cout << "Result:   " << oc_to_string(result) << std::endl;
 
 		TS_ASSERT_EQUALS(result, expected);
 	}
