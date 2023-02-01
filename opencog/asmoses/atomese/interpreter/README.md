@@ -23,3 +23,25 @@ From ASMOSESUTest:
 
 This appears to be the ONLY unit test that hits the interpreter...
 
+
+It should work like this:
+https://github.com/opencog/atomspace/blob/master/examples/atomspace/flows.scm
+formulas.scm flows.scm flow-formulas.scm
+
+Demo:
+```
+(use-modules (opencog) (opencog exec))
+
+
+(define foo (Concept "foo"))
+(define bar (Concept "bar"))
+(define key (Predicate "some key"))
+(define kee (Predicate "other key"))
+
+(cog-set-value! foo key (FloatValue 0 1 0 1 0))
+(cog-set-value! bar kee (FloatValue 1 1 0 1 1))
+
+(cog-execute! (ValueOf foo key))
+
+(cog-execute! (Or (ValueOf foo key) (ValueOf bar kee)))
+```
