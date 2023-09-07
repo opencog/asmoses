@@ -647,7 +647,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
 
         (opt_desc_str(min_rand_input_opt).c_str(),
          po::value<double>(&min_rand_input)->default_value(0.0),
-         "Minimum value of a sampled coninuous input.  The cp, ip, pre, "
+         "Minimum value of a sampled continuous input.  The cp, ip, pre, "
          "recall, prerec, bep, f_one and select "
          "problems all require a range of values to be sampled in "
          "order to measure the fitness of a proposed solution. This "
@@ -658,7 +658,7 @@ problem_params::add_options(boost::program_options::options_description& desc)
 
         (opt_desc_str(max_rand_input_opt).c_str(),
          po::value<double>(&max_rand_input)->default_value(1.0),
-         "Maximum value of a sampled coninuous input.  The cp, ip, pre, "
+         "Maximum value of a sampled continuous input.  The cp, ip, pre, "
          "recall, prerec, bep, f_one and select "
          "problems all require a range of values to be sampled in "
          "order to measure the fitness of a proposed solution. This "
