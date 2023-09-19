@@ -225,4 +225,20 @@ void feature_selection(const Table& table,
 
 } // ~namespace opencog
 
+// This allows std::unordered_map to be used.
+namespace std
+{
+	template<>
+	struct hash<opencog::feature_set>
+	{
+		size_t operator()(const opencog::feature_set& fs) const
+		{
+			size_t hsh = 0;
+			for (int ii: fs)
+				hsh = (hsh << 1) ^ std::hash<opencog::arity_t>{}(ii);
+			return hsh;
+		}
+	};
+}
+
 #endif // _OPENCOG_FEATURE-SELECTION_H
