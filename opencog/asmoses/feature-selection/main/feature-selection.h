@@ -231,11 +231,12 @@ namespace std
 	template<>
 	struct hash<opencog::feature_set>
 	{
-		size_t operator()(const opencog::feature_set& fs) const
+		size_t operator()(const opencog::feature_set& fs) const noexcept
 		{
 			size_t hsh = 0;
 			for (int ii: fs)
-				hsh = (hsh << 1) ^ std::hash<opencog::arity_t>{}(ii);
+				hsh ^= std::hash<opencog::arity_t>{}(ii)
+					+ 0x9e3779b9 + (hsh << 6) + (hsh >> 2);
 			return hsh;
 		}
 	};
