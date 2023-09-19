@@ -45,4 +45,20 @@ typedef std::vector<packed_t> instance;
 } // ~namespace moses
 } // ~namespace opencog
 
+// This is to enable std::unordered_map and similar
+namespace std
+{
+	template<>
+	struct hash<opencog::moses::instance>
+	{
+		size_t operator()(const opencog::moses::instance& nstc) const
+		{
+			size_t hsh = 0;
+			for (unsigned long int bs: nstc)
+				hsh = (hsh << 1) ^ std::hash<unsigned long int>{}(bs);
+			return hsh;
+		}
+	};
+}
+
 #endif
