@@ -36,12 +36,9 @@ namespace opencog { namespace atomese {
  * this struct is expected to be used in boost::zip_iterator to perform
  * logical_and on LinkValues containing TRUE_LINK and FALSE_LINK.
  */
-struct zip_and :
-		public std::unary_function<const boost::tuple
-				<const ValuePtr&, const ValuePtr&>&, void>
+struct zip_and
 {
 	ValueSeq _result;
-
 	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t);
 };
 
@@ -50,24 +47,18 @@ struct zip_and :
  * this struct is expected to be used in boost::zip_iterator to perform
  * logical_or on LinkValues containing TRUE_LINK and FALSE_LINK.
  */
-struct zip_or :
-		public std::unary_function<const boost::tuple
-				<const ValuePtr&, const ValuePtr&>&, void>
+struct zip_or
 {
 	ValueSeq _result;
-
 	void operator()(const boost::tuple<const ValuePtr&, const ValuePtr&>& t);
 };
 
 /**
  * Performs greater_than comparison of two doubles.
  */
-struct zip_greater_than :
-		public std::unary_function<const boost::tuple
-				<const double&, const double&>&, void>
+struct zip_greater_than
 {
 	ValueSeq _result;
-
 	void operator()(const boost::tuple<const double&, const double&>& t);
 };
 

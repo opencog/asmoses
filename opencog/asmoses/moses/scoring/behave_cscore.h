@@ -122,17 +122,19 @@ private:
 
 	// Below follows some assorted infrastructure to allow composite
 	// scoress for trees to be cached.
-	struct wrapper : public std::unary_function<combo_tree, composite_score>
+	struct wrapper
 	{
+		typedef combo_tree argument_type;
+		typedef composite_score result_type;
 		composite_score operator()(const combo_tree &) const;
-
 		behave_cscore *self;
 	};
 
-	struct atomese_wrapper : public std::unary_function<Handle, composite_score>
+	struct atomese_wrapper
 	{
+		typedef Handle argument_type;
+		typedef composite_score result_type;
 		composite_score operator()(const Handle &) const;
-
 		behave_cscore *self;
 	};
 

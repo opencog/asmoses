@@ -37,14 +37,11 @@ namespace opencog { namespace atomese {
  * which are the conditions, experssions, and defaults
  *
 */
-struct zip_cond :
-    public std::unary_function<const boost::tuple
-            <const ValuePtr &, const ValuePtr &, const ValuePtr &> &, void> {
+struct zip_cond
+{
     ValueSeq _result;
-
-    void operator()(
-        const boost::tuple<const ValuePtr &,
-                           const ValuePtr &, const ValuePtr &> &t);
+    void operator()(const boost::tuple<const ValuePtr &,
+                    const ValuePtr &, const ValuePtr &> &t);
 };
 
 /**
@@ -54,14 +51,11 @@ struct zip_cond :
  * which are the conditions, experssions, and defaults
  *
 */
-struct zip_cond2 :
-    public std::unary_function<const boost::tuple
-            <const ValuePtr &, const double &, const double &> &, void>{
+struct zip_cond2
+{
     std::vector<double> _result;
-
-    void operator()(
-            const boost::tuple<const ValuePtr &,
-                               const double &, const double &> &t);
+    void operator()(const boost::tuple<const ValuePtr &,
+                    const double &, const double &> &t);
 
 };
 
@@ -73,8 +67,8 @@ struct zip_cond2 :
  * @return  vector of valuePtr
  */
 ValueSeq condlink_exec_linkvalue(const LinkValuePtr &conds,
-								 const LinkValuePtr &exps,
-								 const LinkValuePtr &default_exp);
+                                 const LinkValuePtr &exps,
+                                 const LinkValuePtr &default_exp);
 
 /**
  * this function works when input columns are floatValues
@@ -84,7 +78,7 @@ ValueSeq condlink_exec_linkvalue(const LinkValuePtr &conds,
  * @return  vector of double
  */
 std::vector<double> condlink_exec_floatvalue(const LinkValuePtr &conds,
-											 const FloatValuePtr &exps,
-											 const FloatValuePtr &default_exp);
+                                             const FloatValuePtr &exps,
+                                             const FloatValuePtr &default_exp);
 }}
 #endif //ASMOSES_CONDLINK_INTERPRETER_H
