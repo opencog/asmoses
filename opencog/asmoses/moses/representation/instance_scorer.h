@@ -39,7 +39,7 @@ namespace moses
 
 struct iscorer_base
 {
-	typedef const instance& argument_type;
+	typedef instance argument_type;
 	typedef composite_score result_type;
 	virtual composite_score operator()(const instance &) const = 0;
 	virtual ~iscorer_base() {}
