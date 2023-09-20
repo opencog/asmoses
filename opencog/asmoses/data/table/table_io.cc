@@ -1073,6 +1073,9 @@ istream& istreamTable(istream& in, Table& tab,
 
 // ==================================================================
 
+#ifdef UNUSED_STUFFS
+This code seems to not be used anywhere...
+
 /**
  * Take a line and return a pair with vector containing the input
  * elements and then output element.
@@ -1107,6 +1110,7 @@ tokenizeRowIO(
     }
     return res;
 }
+#endif // UNUSED_STUFFS
 
 // ==================================================================
 
