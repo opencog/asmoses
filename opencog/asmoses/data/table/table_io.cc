@@ -159,6 +159,10 @@ table_tokenizer get_row_tokenizer(const std::string& line)
     typedef boost::tokenizer<separator> tokenizer;
 
     // Tokenize line; currently, we allow tabs, commas, blanks.
+    // The boost::escaped_list_separator constructor takes three args:
+    // 1: the escape character; here, backslash
+    // 2: a list of separator chars; here comma, tab and space.
+    // 3: a quote character; there the double-quote.
     static const separator sep("\\", ",\t ", "\"");
     return tokenizer(line, sep);
 }
@@ -791,7 +795,15 @@ tokenizeRowIOT(const std::string& line,
     std::tuple<std::vector<string>, string, string> res;
     table_tokenizer toker = get_row_tokenizer(line);
     int i = 0;
-    for (const std::string& tok : toker) {
+    for (const std::string& tok : toker)
+    {
+        // Empty tokens result when columns are white-space padded.
+        // We're just going to ignore these. As a side-effect,
+        // the user cannot specify columns that are actually empty.
+        // Which is fine, because we don't know what to do with
+        // empty columns.
+        if (0 == tok.length()) continue;
+
         if (!boost::binary_search(ignored_indices, i)) {
             string el = boost::lexical_cast<string>(tok);
             if (target_idx == i)
@@ -1061,6 +1073,9 @@ istream& istreamTable(istream& in, Table& tab,
 
 // ==================================================================
 
+#ifdef UNUSED_STUFFS
+This code seems to not be used anywhere...
+
 /**
  * Take a line and return a pair with vector containing the input
  * elements and then output element.
@@ -1075,7 +1090,15 @@ tokenizeRowIO(
     std::pair<std::vector<T>, T> res;
     table_tokenizer toker = get_row_tokenizer(line);
     size_t i = 0;
-    for (const std::string& tok : toker) {
+    for (const std::string& tok : toker)
+    {
+        // Empty tokens result when columns are white-space padded.
+        // We're just going to ignore these. As a side-effect,
+        // the user cannot specify columns that are actually empty.
+        // Which is fine, because we don't know what to do with
+        // empty columns.
+        if (0 == tok.length()) continue;
+
         if (!boost::binary_search(ignored_indices, i)) {
             T el = boost::lexical_cast<T>(tok);
             if (target_idx == i)
@@ -1087,6 +1110,7 @@ tokenizeRowIO(
     }
     return res;
 }
+#endif // UNUSED_STUFFS
 
 // ==================================================================
 
