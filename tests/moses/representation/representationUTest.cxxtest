@@ -125,7 +125,7 @@ public:
 
 		rep.ostream_prototype(std::cout << "Prototype = ") << std::endl;
 
-		string expected_str("or(and([nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil or !or]($1 $2) [nil or !or](!$2 $3) [nil or !or](!$1 $2) [nil or !or]($2 $3) [nil or !or](!$1 $3) [nil or !or]($1 $3) or([nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil and !and](!$1 $3) [nil and !and]($2 $3) [nil and !and](!$1 $2) [nil and !and]($1 $2) [nil and !and](!$2 $3) [nil and !and]($1 $3))) [nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil and !and](!$1 $3) [nil and !and]($1 $2) [nil and !and](!$1 $2) [nil and !and](!$2 $3) [nil and !and]($1 $3) [nil and !and]($2 $3) and([nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil or !or]($1 $2) [nil or !or]($2 $3) [nil or !or]($1 $3) [nil or !or](!$1 $2) [nil or !or](!$1 $3) [nil or !or](!$2 $3)))");
+		string expected_str("or(and([nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil or !or](!$2 $3) [nil or !or](!$1 $2) [nil or !or](!$1 $3) [nil or !or]($1 $2) [nil or !or]($1 $3) [nil or !or]($2 $3) or([nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil and !and](!$1 $2) [nil and !and](!$1 $3) [nil and !and]($2 $3) [nil and !and]($1 $3) [nil and !and]($1 $2) [nil and !and](!$2 $3))) [nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil and !and]($1 $3) [nil and !and](!$1 $3) [nil and !and]($1 $2) [nil and !and](!$1 $2) [nil and !and](!$2 $3) [nil and !and]($2 $3) and([nil $1 !$1] [nil $2 !$2] [nil $3 !$3] [nil or !or](!$1 $3) [nil or !or]($1 $3) [nil or !or](!$1 $2) [nil or !or]($2 $3) [nil or !or]($1 $2) [nil or !or](!$2 $3)))");
 
 		std::stringstream ss;
 		rep.ostream_prototype(ss);
