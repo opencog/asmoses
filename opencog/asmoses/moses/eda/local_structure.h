@@ -25,7 +25,6 @@
 #define _EDA_LOCAL_STRUCTURE_H
 
 #include <vector>
-#include <boost/bind/bind.hpp>
 
 #include <opencog/util/digraph.h>
 #include <opencog/util/oc_assert.h>
@@ -282,13 +281,12 @@ void local_structure_probs_learning::operator()(const field_set& fs,
                                                 It from, It to,
                                                 local_structure_model& dst) const
 {
-    using namespace boost::placeholders;
-
     // This is a binary for_each, defined in util/algorithms.h
     for_each(dst.begin(), dst.end(), make_counting_iterator(0),
              boost::bind(&local_structure_probs_learning::rec_learn<It>,
-                  this, boost::ref(fs),
-                  from, to, _2, bind(&dtree::begin, _1)));
+                  this, std::ref(fs),
+                  from, to, boost::placeholders::_2,
+                  boost::bind(&dtree::begin, boost::placeholders::_1)));
 }
 
 // For each node in the dependency tree, accumulate statistics from
@@ -299,8 +297,6 @@ void local_structure_probs_learning::rec_learn(const field_set& fs,
                                                It from, It to,
                                                int idx, dtree::iterator dtr) const
 {
-    using namespace boost::placeholders;
-
     // Empty tree: a leaf.
     if (dtr.is_childless())
     {
@@ -318,12 +314,12 @@ void local_structure_probs_learning::rec_learn(const field_set& fs,
         pivots.front() = from;
         pivots.back() = to;
         n_way_partition(from, to,
-                        bind(&field_set::get_raw, &fs, _1, dtr->front()),
+                        std::bind(&field_set::get_raw, &fs, std::placeholders::_1, dtr->front()),
                         raw_arity, ++pivots.begin());
         for_each(pivots.begin(), --pivots.end(), ++pivots.begin(),
                  make_counting_iterator(dtr.begin()),
-                 boost::bind(&local_structure_probs_learning::rec_learn<It>, this,
-                      boost::ref(fs), _1, _2, idx, _3));
+                 std::bind(&local_structure_probs_learning::rec_learn<It>, this,
+                      std::ref(fs), std::placeholders::_1, std::placeholders::_2, idx, std::placeholders::_3));
     }
 }
 
