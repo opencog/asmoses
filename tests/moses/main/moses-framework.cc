@@ -171,6 +171,7 @@ void moses_test_good_enough_score(vector<string> arguments, score_t expected_sc)
 	// parse the result
 	auto result = parse_result(cmd_tmp.second);
 	// check that the result is the expected one
+	cout << "Expected=" << expected_sc << " Got=" << result.first << endl;
 	TS_ASSERT_LESS_THAN(expected_sc, result.first);
 	auto t2 = microsec_clock::local_time();
 	std::cout << "Wallclock time: " << (t2 - t1) << std::endl;

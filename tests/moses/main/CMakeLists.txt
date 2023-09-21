@@ -81,16 +81,15 @@ TARGET_LINK_LIBRARIES(selectionUTest
 #        ascombo
 #        ${COGUTIL_LIBRARY}
 #        )
-#
-#ADD_CXXTEST(weightedUTest)
-#TARGET_LINK_LIBRARIES(weightedUTest
-#        asmoses_exec
-#        moses
-#        moses-framework
-#        ascombo
-#        ${COGUTIL_LIBRARY}
-#        )
 
+ADD_CXXTEST(weightedUTest)
+TARGET_LINK_LIBRARIES(weightedUTest
+        asmoses_exec
+        moses
+        moses-framework
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
 
 ADD_CXXTEST(populateAtomSpaceUTest)
 TARGET_LINK_LIBRARIES(populateAtomSpaceUTest
