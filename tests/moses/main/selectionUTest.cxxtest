@@ -96,6 +96,7 @@ public:
     // The next three test boosted versions of the selection scorer.
     void test_selection()
     {
+        cout << "test_selection" << endl;
         // The expected output is this:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1650.225))))";
         // Maximum reachable score is 28, and should be reachable in
@@ -105,6 +106,7 @@ public:
 
     void test_selection_de()
     {
+        cout << "test_selection_de" << endl;
         // The expected output is this:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1663.795))))";
         // Maximum reachable score is 12, and should be reachable in
@@ -114,6 +116,7 @@ public:
 
     void test_selection_no()
     {
+        cout << "test_selection_no" << endl;
         // The expected output is this:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1663.795))))";
         // Maximum reachable score is 0, and should be reachable in
@@ -125,6 +128,7 @@ public:
     // The next three test NON-boosted versions of the selection scorer.
     void test_selection_noboo()
     {
+        cout << "test_selection_noboo" << endl;
         // The expected output is this:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1650.225))))";
         // Maximum reachable score is 28.  Without boosting, as
@@ -135,6 +139,7 @@ public:
 
     void test_selection_de_noboo()
     {
+        cout << "test_selection_de_noboo" << endl;
         // The expected output is this:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1663.795))))";
         // Maximum reachable score is 12, but, without boosting, as
@@ -145,6 +150,7 @@ public:
 
     void test_selection_no_noboo()
     {
+        cout << "test_selection_no_noboo" << endl;
         // The expected output is this:
         string expstr = "and( 0<( +($1 -1329.385)) not(0<( +($1 -1663.795))))";
         // Maximum reachable score is 0, but, without boosting, as
