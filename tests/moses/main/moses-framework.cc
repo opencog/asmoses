@@ -290,12 +290,16 @@ void moses_test_scored_combo_trees(const vector<string>& arguments,
 	// parse the result
 	vector<scored_combo_tree> scts = parse_scored_combo_trees(cmd_tmp.second);
 
-	// for (const auto sct : scts)
-	//     cout << "output sct = " << sct << endl;
-	// for (const auto expected_sct : expected_scts)
-	//     cout << "output expected_sct = " << expected_sct << endl;
-
-	// cout << "scts[0] == exptected_scts[0] = " << (scts[0] == expected_scts[0] ? "true" : "false") << endl;
+	TSM_ASSERT_EQUALS("Length miscompare", scts.size(), expected_scts.size());
+	cout << "moses_test_scored_combo_trees results:" << endl;
+	int n = expected_scts.size();
+	for (int i=0; i<n; i++)
+	{
+		cout << "output scored tree = " << scts[i] << endl;
+		cout << "output expect tree = " << expected_scts[i] << endl;
+		cout << "i=" << i << " (scts[i] == exptected_scts[i]) = "
+		     << (scts[i] == expected_scts[i] ? "true" : "false") << endl;
+	}
 
 	// Check all results match the expected ones
 	//
