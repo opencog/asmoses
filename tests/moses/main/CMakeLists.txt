@@ -18,10 +18,12 @@ TARGET_LINK_LIBRARIES(moses-framework
 #    37 - dynFeatSelUTest (Failed)
 #    38 - weightedUTest (Failed)
 #    40 - diversityUTest (Failed)
-# although they work great, and pass in Debian Stable (Bullseye)
-# and in Ubuntu 20.04.  I don't have time to figure out what is going
-# wrong with these. I assume it's due to some compiler change(??).
-# No one is maintaing this stuff, so the easiest thing to do is to just
+# although they work great, and pass in Debian Stable Bullseye and
+# in Ubuntu 20.04. The fail in Debian Stable Bookworm, which has gcc
+# 12.2. So something about gcc or similar is causingthese failures.
+#
+# I don't have time to figure out what is going wrong with these.
+# No one is maintaining this stuff, so the easiest thing to do is to just
 # disable these, until some rainy day when someone looks at this stuff.
 # You can enable these again, if/when the underlying bugs are fixed.
 #
@@ -61,16 +63,16 @@ TARGET_LINK_LIBRARIES(mixedUTest
 #        ascombo
 #        ${COGUTIL_LIBRARY}
 #        )
-#
-#ADD_CXXTEST(selectionUTest)
-#TARGET_LINK_LIBRARIES(selectionUTest
-#        asmoses_exec
-#        moses
-#        moses-framework
-#        ascombo
-#        ${COGUTIL_LIBRARY}
-#        )
-#
+
+ADD_CXXTEST(selectionUTest)
+TARGET_LINK_LIBRARIES(selectionUTest
+        asmoses_exec
+        moses
+        moses-framework
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
+
 #ADD_CXXTEST(dynFeatSelUTest)
 #TARGET_LINK_LIBRARIES(dynFeatSelUTest
 #        asmoses_exec
