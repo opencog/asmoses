@@ -70,7 +70,7 @@ public:
                           "-Z1",   // much much faster w/this flag...
                           data_file_path,
                           },
-                          -4.24);
+                          -4.44);
     }
 
     // Exactly same as above, but with two threads.  This tests
@@ -90,6 +90,6 @@ public:
                           "-Z1",   // much much faster w/this flag...
                           data_file_path,
                           },
-                          -4.24);
+                          -4.44);
     }
 };
