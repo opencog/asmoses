@@ -26,25 +26,25 @@ TARGET_LINK_LIBRARIES(moses-framework
 # No one is maintaining this stuff, so the easiest thing to do is to just
 # disable these, until some rainy day when someone looks at this stuff.
 # You can enable these again, if/when the underlying bugs are fixed.
-#
-#ADD_CXXTEST(MOSESUTest)
-#TARGET_LINK_LIBRARIES(MOSESUTest
-#        asmoses_exec
-#        moses
-#        moses-framework
-#        ascombo
-#        ${COGUTIL_LIBRARY}
-#        )
-#
-#ADD_CXXTEST(ASMOSESUTest)
-#TARGET_LINK_LIBRARIES(ASMOSESUTest
-#        asmoses_exec
-#        moses
-#        moses-framework
-#        ascombo
-#        asmoses_types
-#        ${COGUTIL_LIBRARY}
-#        )
+
+ADD_CXXTEST(MOSESUTest)
+TARGET_LINK_LIBRARIES(MOSESUTest
+        asmoses_exec
+        moses
+        moses-framework
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
+
+ADD_CXXTEST(ASMOSESUTest)
+TARGET_LINK_LIBRARIES(ASMOSESUTest
+        asmoses_exec
+        moses
+        moses-framework
+        ascombo
+        asmoses_types
+        ${COGUTIL_LIBRARY}
+        )
 
 ADD_CXXTEST(mixedUTest)
 TARGET_LINK_LIBRARIES(mixedUTest
