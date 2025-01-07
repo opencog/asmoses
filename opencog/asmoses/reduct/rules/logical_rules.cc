@@ -286,7 +286,7 @@ void reduce_or_assumptions::operator()(combo_tree& tr,combo_tree::iterator it) c
 /// Also, true||X -> true, false||X -> X
 void reduce_ors::operator()(combo_tree& tr, combo_tree::iterator it) const
 {
-    using namespace boost::placeholders;
+    using namespace std::placeholders;
 
     if (*it != id::logical_or)
         return;
@@ -298,10 +298,10 @@ void reduce_ors::operator()(combo_tree& tr, combo_tree::iterator it) const
     int sz = number_of_literals(f);
 
     // Before this method will work, need to eliminate A && !A clauses.
-    f.remove_if(bind(tautology, _1));
+    f.remove_if(std::bind(tautology, _1));
 
     // Remove clauses which are subsets of others.
-    pairwise_erase_if(f, bind(subset_eq, _1, _2));
+    pairwise_erase_if(f, std::bind(subset_eq, _1, _2));
 
     // Create implications (and remove subsets).  We could be cleverer
     // by trying implications with implications, and/or not updating
@@ -338,7 +338,7 @@ void reduce_ors::operator()(combo_tree& tr, combo_tree::iterator it) const
 /// Also, true&&X -> X, false&&X -> false
 void reduce_ands::operator()(combo_tree& tr, combo_tree::iterator it) const
 {
-    using namespace boost::placeholders;
+    using namespace std::placeholders;
 
     if (*it != id::logical_and)
         return;
@@ -358,7 +358,7 @@ void reduce_ands::operator()(combo_tree& tr, combo_tree::iterator it) const
     }
 
     // Before this method will work, need to eliminate A&&!A clauses.
-    f.remove_if(bind(tautology, _1));
+    f.remove_if(std::bind(tautology, _1));
 
     if (f.empty()) { //tautological expression
         tr.erase_children(it);
@@ -367,7 +367,7 @@ void reduce_ands::operator()(combo_tree& tr, combo_tree::iterator it) const
     }
 
     // Remove clauses which are supersets of others.
-    pairwise_erase_if(f, bind(subset_eq, _1, _2));
+    pairwise_erase_if(f, std::bind(subset_eq, _1, _2));
 
     // Create implications (and remove subsets).
     for (nf::iterator c1 = f.begin(); c1 != f.end(); ++c1) {
