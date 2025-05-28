@@ -41,6 +41,7 @@
 #include <opencog/util/dorepeat.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/KLD.h>
+#include <opencog/util/iostreamContainer.h>
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/atom_types/atom_types.h>
 #include <opencog/atoms/base/Node.h>

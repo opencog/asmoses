@@ -32,6 +32,8 @@
 
 #include "opencog/asmoses/moses/representation/field_set.h"
 
+#include <boost/bind/bind.hpp>
+
 namespace opencog {
 namespace moses {
 
