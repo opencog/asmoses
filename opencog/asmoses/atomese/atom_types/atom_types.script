@@ -10,18 +10,11 @@
 // ====================================================================
 // asmoses atoms:
 //
-// TODO: Remove these; the core atomspace provides
-// POW, SINE and LOG2 which should be used instead.
-EXP_LINK <- ARITHMETIC_LINK
-SIN_LINK <- ARITHMETIC_LINK
-LOG_LINK <- ARITHMETIC_LINK
-
 // See also HEAVISIDE_LINK in the main AtomSpace repo.
 MPULSE_LINK <- FUNCTION_LINK,NUMERIC_OUTPUT_LINK,CRISP_INPUT_LINK
 
 // KnobLink wraps CondLink yet inherits EvaluatableLink in order to be able to
 // create OrLink and AndLinks with KnobLinks in their outgoing set.
 KNOB_LINK <- FUNCTION_LINK, EVALUATABLE_LINK
-
 
 BOOLEAN_NODE <- NODE

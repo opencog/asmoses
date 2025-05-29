@@ -281,7 +281,7 @@ public:
 
 	void test_interpreter_sinlink1(void){
 		HandleSeq seq = {f4};
-		Handle program = createLink(seq, SIN_LINK);
+		Handle program = createLink(seq, SINE_LINK);
 		std::vector<double> expected = {floorf(sin(2.0)*10000)/10000, floorf(sin(5.0)*10000)/10000,floorf(sin(3.6)*10000)/10000};
 		atomese::Interpreter interpreter(atomese::Constants::value_key) ;
 		ValuePtr _result = interpreter(program);
@@ -293,7 +293,7 @@ public:
 
 	void test_interpreter_loglink1(void) {
 		HandleSeq seq = {f4};
-		Handle program = createLink(seq, LOG_LINK);
+		Handle program = createLink(seq, LOG2_LINK);
 		std::vector<double> expected = {floorf(log(2.0) * 10000) / 10000, floorf(log(5.0) * 10000) / 10000,
 		                                floorf(log(3.6) * 10000) / 10000};
 		atomese::Interpreter interpreter(atomese::Constants::value_key);

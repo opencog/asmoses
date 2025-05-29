@@ -548,7 +548,7 @@ HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
 	}
 
 	if (!in_SLE) {
-		string_seq func_strs = {"SinLink", "LogLink", "ExpLink"};
+		string_seq func_strs = {"SineLink", "Log2Link", "ExpLink"};
 		for (unsigned i=0; i < func_strs.size(); i++)
 		{
 			Handle imp_t = createNode(TYPE_NODE, func_strs[i]);
@@ -559,12 +559,12 @@ HandleSeq BuildAtomeseKnobs::linear_combination(bool in_SLE)
 			{
 				case 0:
 					seq.push_back(multi_const(
-							createLink(SIN_LINK, linear_combination(sub_child, true)),
+							createLink(SINE_LINK, linear_combination(sub_child, true)),
 							Handle(createNumberNode(0))));
 					break;
 				case 1:
 					seq.push_back(multi_const(
-							createLink(LOG_LINK, linear_combination(sub_child, true)),
+							createLink(LOG2_LINK, linear_combination(sub_child, true)),
 							Handle(createNumberNode(0))));
 					break;
 				case 2:

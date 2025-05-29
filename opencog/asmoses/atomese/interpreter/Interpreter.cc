@@ -153,12 +153,12 @@ ValuePtr Interpreter::execute(const Type t, const ValueSeq &params)
 		for (float value :FloatValueCast(params[0])->value() )_result.push_back(exp(value));
 		return  ValuePtr(createFloatValue(_result));
 	}
-	if(t == SIN_LINK){
+	if(t == SINE_LINK){
 		std::vector<double> _result = {};
 		for (float value :FloatValueCast(params[0])->value() )_result.push_back(sin(value));
 		return  ValuePtr(createFloatValue(_result));
 	}
-	if(t == LOG_LINK){
+	if(t == LOG2_LINK){
 		std::vector<double> _result = {};
 		for (float value :FloatValueCast(params[0])->value() )_result.push_back(log(value));
 		return  ValuePtr(createFloatValue(_result));

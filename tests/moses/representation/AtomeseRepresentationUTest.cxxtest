@@ -261,8 +261,8 @@ public:
 				   an(NUMBER_NODE, "3"),
 				   an(SCHEMA_NODE, "$1"));
 		Handle type = infer_atomese_type(exemplar);
-		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
-		                              createNode(TYPE_NODE, "LogLink"),
+		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SineLink"),
+		                              createNode(TYPE_NODE, "Log2Link"),
 		                              createNode(TYPE_NODE, "ExpLink")};
 		representation_parameters rep_params;
 		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);
@@ -293,8 +293,8 @@ public:
 				      an(NUMBER_NODE, "4"),
 				      an(SCHEMA_NODE, "$2")));
 		Handle type = infer_atomese_type(exemplar);
-		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SinLink"),
-		                              createNode(TYPE_NODE, "LogLink"),
+		const HandleSet ignore_ops = {createNode(TYPE_NODE, "SineLink"),
+		                              createNode(TYPE_NODE, "Log2Link"),
 		                              createNode(TYPE_NODE, "ExpLink")};
 		representation_parameters rep_params;
 		rep_params.opt_reduct = &contin_reduction(2, ignore_ops);

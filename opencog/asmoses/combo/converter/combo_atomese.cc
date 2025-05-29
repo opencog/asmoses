@@ -163,7 +163,7 @@ std::pair<Type, Handle> vertex_2_atom::operator()(const builtin &b) const
 			break;
 		case id::sin:
 			*_parent = id::schema;
-			type = SIN_LINK;
+			type = SINE_LINK;
 			break;
 		case id::logical_true:
 			*_parent = id::predicate;
@@ -244,7 +244,7 @@ void AtomeseToCombo::link2combo(const Handle &h, string_seq &labels,
 		iter = tr.empty() ? tr.set_head(id::div) : tr.append_child(iter, id::div);
 		return;
 	}
-	if (SIN_LINK == t) {
+	if (SINE_LINK == t) {
 		iter = tr.empty() ? tr.set_head(id::sin) : tr.append_child(iter, id::sin);
 		return;
 	}
