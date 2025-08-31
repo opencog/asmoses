@@ -38,10 +38,10 @@ Demo:
 (define key (Predicate "some key"))
 (define kee (Predicate "other key"))
 
-(cog-set-value! foo key (FloatValue 0 1 0 1 0))
-(cog-set-value! bar kee (FloatValue 1 1 0 1 1))
+(cog-set-value! foo key (BoolValue 0 1 0 1 0))
+(cog-set-value! bar kee (BoolValue 1 1 0 1 1))
 
 (cog-execute! (ValueOf foo key))
 
-(cog-execute! (Or (ValueOf foo key) (ValueOf bar kee)))
+(cog-execute! (Or (BoolValueOf foo key) (BoolValueOf bar kee)))
 ```
