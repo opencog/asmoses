@@ -116,7 +116,7 @@ Handle mk_boolean_cell_eval(const builtin b,
 	Handle h = createLink(EVALUATION_LINK,
 	                      createNode(PREDICATE_NODE, label),
 	                      mk_row_number_cell(row_num));
-	TruthValuePtr tv(SimpleTruthValue::createTV(builtin_to_bool(b), 1));
+	TruthValuePtr tv(createSimpleTruthValue(builtin_to_bool(b), 1));
 	h->setTruthValue(tv);
 	return h;
 }
