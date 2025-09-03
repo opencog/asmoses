@@ -28,7 +28,7 @@
 #include <boost/range/algorithm/find.hpp>
 
 #include <opencog/util/algorithm.h>
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/util/numeric.h>
 
 #include <opencog/asmoses/combo/combo/combo.h>

@@ -31,7 +31,7 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
-#include <opencog/util/functional.h>
+#include <opencog/asmoses/utils/functional.h>
 
 #include <opencog/asmoses/combo/type_checker/type_tree.h>
 #include "opencog/asmoses/reduct/reduct/reduct.h"

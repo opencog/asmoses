@@ -24,8 +24,8 @@
 #include <math.h>
 
 #include <opencog/util/oc_omp.h>
-#include <opencog/util/selection.h>
-#include <opencog/util/log_prog_name.h>
+#include <opencog/asmoses/utils/selection.h>
+#include <opencog/asmoses/utils/log_prog_name.h>
 
 #include "metapopulation.h"
 

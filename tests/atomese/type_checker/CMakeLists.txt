@@ -1,5 +1,6 @@
 ADD_CXXTEST(AtomeseTypeCheckerUTest)
 TARGET_LINK_LIBRARIES(AtomeseTypeCheckerUTest
+	asmosesutils
 	atomese
 	moses
 	ascombo

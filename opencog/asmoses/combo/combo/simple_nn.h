@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/util/RandGen.h>
 
 #include <opencog/asmoses/combo/combo/vertex.h>

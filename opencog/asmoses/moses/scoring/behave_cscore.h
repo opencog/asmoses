@@ -26,7 +26,7 @@
 #ifndef _MOSES_BEHAVE_CSCORE_H
 #define _MOSES_BEHAVE_CSCORE_H
 
-#include <opencog/util/lru_cache.h>
+#include <opencog/asmoses/utils/lru_cache.h>
 #include <opencog/atoms/base/Handle.h>
 
 #include "scoring_base.h"

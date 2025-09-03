@@ -3,6 +3,7 @@
 # so I am commenting it out.
 ADD_CXXTEST(representationUTest)
 TARGET_LINK_LIBRARIES(representationUTest
+        asmosesutils
         moses
         ascombo
         ${COGUTIL_LIBRARY}
@@ -10,6 +11,7 @@ TARGET_LINK_LIBRARIES(representationUTest
 
 ADD_CXXTEST(AtomeseRepresentationUTest)
 TARGET_LINK_LIBRARIES(AtomeseRepresentationUTest
+        asmosesutils
         moses
         ascombo
         ${COGUTIL_LIBRARY}
@@ -17,12 +19,14 @@ TARGET_LINK_LIBRARIES(AtomeseRepresentationUTest
 
 ADD_CXXTEST(KnobTurningUTest)
 TARGET_LINK_LIBRARIES(KnobTurningUTest
+        asmosesutils
         moses
         ascombo
         ${COGUTIL_LIBRARY}
         )
 ADD_CXXTEST(FieldSetUTest)
 TARGET_LINK_LIBRARIES(FieldSetUTest
+        asmosesutils
         moses
         ascombo
         ${COGUTIL_LIBRARY}

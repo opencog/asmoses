@@ -2,6 +2,7 @@
 
 ADD_EXECUTABLE (fs-main fs-main.cc)
 TARGET_LINK_LIBRARIES(fs-main
+	asmosesutils
 	asfeature_selection
 	moses
 	${COGUTIL_LIBRARY}
@@ -10,6 +11,7 @@ SET_TARGET_PROPERTIES(fs-main PROPERTIES OUTPUT_NAME "asfeature-selection")
 
 ADD_EXECUTABLE (aseval-features eval-features.cc)
 TARGET_LINK_LIBRARIES(aseval-features
+	asmosesutils
 	data
 	ascombo
 	ascomboant

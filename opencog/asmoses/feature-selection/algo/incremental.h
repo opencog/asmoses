@@ -31,8 +31,8 @@
 #include <boost/range/algorithm/max_element.hpp>
 
 #include <opencog/util/algorithm.h>
-#include <opencog/util/functional.h>
-#include <opencog/util/lru_cache.h>
+#include <opencog/asmoses/utils/functional.h>
+#include <opencog/asmoses/utils/lru_cache.h>
 #include <opencog/util/numeric.h>
 #include <opencog/util/oc_omp.h>
 

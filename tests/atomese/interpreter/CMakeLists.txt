@@ -1,6 +1,7 @@
 ADD_CXXTEST(InterpreterUTest)
 TARGET_LINK_LIBRARIES(InterpreterUTest
 	-Wl,--no-as-needed
+	asmosesutils
 	atomese
 	moses
 	ascombo

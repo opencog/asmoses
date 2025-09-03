@@ -28,7 +28,7 @@
 
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/random.h>
-#include <opencog/util/log_prog_name.h>
+#include <opencog/asmoses/utils/log_prog_name.h>
 
 #include <opencog/asmoses/combo/interpreter/eval.h>
 #include <opencog/asmoses/data/table/table.h>

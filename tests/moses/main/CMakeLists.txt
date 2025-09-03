@@ -6,6 +6,7 @@ ADD_LIBRARY (moses-framework SHARED
         moses-framework.cc
         )
 TARGET_LINK_LIBRARIES(moses-framework
+        asmosesutils
         asmoses_exec
         )
 
@@ -28,6 +29,7 @@ TARGET_LINK_LIBRARIES(moses-framework
 
 ADD_CXXTEST(MOSESUTest)
 TARGET_LINK_LIBRARIES(MOSESUTest
+        asmosesutils
         asmoses_exec
         moses
         moses-framework
@@ -37,6 +39,7 @@ TARGET_LINK_LIBRARIES(MOSESUTest
 
 ADD_CXXTEST(ASMOSESUTest)
 TARGET_LINK_LIBRARIES(ASMOSESUTest
+        asmosesutils
         asmoses_exec
         moses
         moses-framework
@@ -47,6 +50,7 @@ TARGET_LINK_LIBRARIES(ASMOSESUTest
 
 ADD_CXXTEST(mixedUTest)
 TARGET_LINK_LIBRARIES(mixedUTest
+        asmosesutils
         asmoses_exec
         moses
         moses-framework
@@ -56,6 +60,7 @@ TARGET_LINK_LIBRARIES(mixedUTest
 
 ADD_CXXTEST(irisUTest)
 TARGET_LINK_LIBRARIES(irisUTest
+        asmosesutils
         asmoses_exec
         moses
         moses-framework
@@ -65,6 +70,7 @@ TARGET_LINK_LIBRARIES(irisUTest
 
 ADD_CXXTEST(selectionUTest)
 TARGET_LINK_LIBRARIES(selectionUTest
+        asmosesutils
         asmoses_exec
         moses
         moses-framework
@@ -83,6 +89,7 @@ TARGET_LINK_LIBRARIES(selectionUTest
 
 ADD_CXXTEST(weightedUTest)
 TARGET_LINK_LIBRARIES(weightedUTest
+        asmosesutils
         asmoses_exec
         moses
         moses-framework
@@ -92,6 +99,7 @@ TARGET_LINK_LIBRARIES(weightedUTest
 
 ADD_CXXTEST(populateAtomSpaceUTest)
 TARGET_LINK_LIBRARIES(populateAtomSpaceUTest
+        asmosesutils
         data
         moses
         ascombo

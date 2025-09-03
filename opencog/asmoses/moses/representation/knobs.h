@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-#include <opencog/util/based_variant.h>
+#include <opencog/asmoses/utils/based_variant.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/numeric.h>
 #include <opencog/util/tree.h>

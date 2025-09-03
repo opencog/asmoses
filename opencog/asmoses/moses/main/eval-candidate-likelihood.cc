@@ -35,7 +35,7 @@
 
 #include <opencog/asmoses/combo/combo/iostream_combo.h>
 #include <opencog/util/oc_assert.h>
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/asmoses/data/table/table_io.h>
 #include <opencog/asmoses/moses/moses/types.h>
 #include <opencog/asmoses/moses/moses/complexity.h>

@@ -21,7 +21,7 @@
  */
 
 #include <opencog/asmoses/data/table/table_io.h>
-#include <opencog/util/comprehension.h>
+#include <opencog/asmoses/utils/comprehension.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/core/NumberNode.h>
