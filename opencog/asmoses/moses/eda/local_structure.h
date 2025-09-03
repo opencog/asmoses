@@ -26,7 +26,7 @@
 
 #include <vector>
 
-#include <opencog/util/digraph.h>
+#include <opencog/asmoses/utils/digraph.h>
 #include <opencog/util/oc_assert.h>
 #include <opencog/util/tree.h>
 

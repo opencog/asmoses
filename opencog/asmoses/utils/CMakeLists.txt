@@ -13,6 +13,7 @@ INSTALL(TARGETS asmosesutils
 INSTALL (FILES
 		based_variant.h
 		comprehension.h
+		digraph.h
 		functional.h
 		hashing.h
 		iostreamContainer.h
