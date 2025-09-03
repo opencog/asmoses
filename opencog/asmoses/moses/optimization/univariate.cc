@@ -28,7 +28,7 @@
  */
 
 #include <opencog/util/oc_assert.h>
-#include <opencog/util/selection.h>
+#include <opencog/asmoses/utils/selection.h>
 
 #include "opencog/asmoses/moses/eda/termination.h"
 #include "opencog/asmoses/moses/eda/replacement.h"

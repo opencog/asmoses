@@ -26,7 +26,7 @@
 
 #include <opencog/util/numeric.h>
 #include <opencog/util/algorithm.h>
-#include <opencog/util/selection.h>
+#include <opencog/asmoses/utils/selection.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/oc_assert.h>
 

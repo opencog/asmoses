@@ -10,6 +10,7 @@ INSTALL (FILES
 		log_prog_name.h
 		lru_cache.h
 		MannWhitneyU.h
+		selection.h
 		valueUtils.h
 	DESTINATION
 		"include/opencog/${PROJECT_NAME}/utils"
