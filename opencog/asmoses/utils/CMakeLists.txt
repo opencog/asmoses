@@ -1,5 +1,6 @@
 INSTALL (FILES
+		MannWhitneyU.h
 		valueUtils.h
-		DESTINATION
+	DESTINATION
 		"include/opencog/${PROJECT_NAME}/utils"
-		)
+)

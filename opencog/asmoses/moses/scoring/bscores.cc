@@ -43,7 +43,7 @@
 
 #include <opencog/util/numeric.h>
 #include <opencog/util/KLD.h>
-#include <opencog/util/MannWhitneyU.h>
+#include <opencog/asmoses/utils/MannWhitneyU.h>
 #include <opencog/asmoses/data/table/table_io.h>
 #include <opencog/asmoses/atomese/interpreter/Interpreter.h>
 #include <opencog/asmoses/utils/valueUtils.h>
