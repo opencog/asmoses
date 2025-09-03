@@ -4,6 +4,7 @@ ADD_LIBRARY(asmosesutil SHARED
 )
 
 INSTALL (FILES
+		based_variant.h
 		comprehension.h
 		functional.h
 		hashing.h
