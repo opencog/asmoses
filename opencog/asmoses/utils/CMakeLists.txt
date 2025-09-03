@@ -1,6 +1,12 @@
+
+ADD_LIBRARY(asmosesutil SHARED
+	log_prog_name.cc
+)
+
 INSTALL (FILES
 		jaccard_index.h
 		KLD.h
+		log_prog_name.h
 		lru_cache.h
 		MannWhitneyU.h
 		valueUtils.h
