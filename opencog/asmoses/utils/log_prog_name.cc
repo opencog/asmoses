@@ -21,7 +21,7 @@
  */
 
 #include "log_prog_name.h"
-#include "oc_assert.h"
+#include <opencog/util/oc_assert.h>
 
 namespace opencog {
 

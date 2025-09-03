@@ -11,6 +11,7 @@ ADD_LIBRARY (asmoses_exec SHARED
 
 ADD_EXECUTABLE (asmoses-exec moses-exec.cc)
 TARGET_LINK_LIBRARIES (asmoses-exec
+	asmosesutils
 	asmoses_exec
 	moses
 	ascomboant
@@ -19,6 +20,7 @@ SET_TARGET_PROPERTIES(asmoses-exec PROPERTIES OUTPUT_NAME "asmoses")
 
 ADD_EXECUTABLE (aseval-diversity eval-diversity.cc)
 TARGET_LINK_LIBRARIES (aseval-diversity
+	asmosesutils
 	moses
 	ascomboant
 	${COGUTIL_LIBRARY}
@@ -27,6 +29,7 @@ TARGET_LINK_LIBRARIES (aseval-diversity
 
 ADD_EXECUTABLE (aseval-candidate eval-candidate.cc)
 TARGET_LINK_LIBRARIES (aseval-candidate
+	asmosesutils
 	moses
 	ascomboant
 	${COGUTIL_LIBRARY}
@@ -35,6 +38,7 @@ TARGET_LINK_LIBRARIES (aseval-candidate
 
 ADD_EXECUTABLE (aseval-candidate-likelihood eval-candidate-likelihood.cc)
 TARGET_LINK_LIBRARIES (aseval-candidate-likelihood
+	asmosesutils
 	moses
 	ascomboant
 	${COGUTIL_LIBRARY}

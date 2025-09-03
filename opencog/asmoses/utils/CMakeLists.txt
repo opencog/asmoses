@@ -1,7 +1,11 @@
 
-ADD_LIBRARY(asmosesutil SHARED
+ADD_LIBRARY(asmosesutils SHARED
 	log_prog_name.cc
 )
+
+INSTALL(TARGETS asmosesutils
+	EXPORT ASMosesTargets
+	DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")
 
 INSTALL (FILES
 		based_variant.h
