@@ -22,6 +22,7 @@
 
 #include <boost/range/algorithm/sort.hpp>
 
+#define HAVE_BOOST 1
 #include <opencog/util/random.h>
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/numeric.h>
