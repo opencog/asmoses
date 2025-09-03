@@ -1,4 +1,5 @@
 INSTALL (FILES
+		KLD.h
 		MannWhitneyU.h
 		valueUtils.h
 	DESTINATION

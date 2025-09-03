@@ -40,7 +40,7 @@
 #include <opencog/util/Counter.h>
 #include <opencog/util/dorepeat.h>
 #include <opencog/util/exceptions.h>
-#include <opencog/util/KLD.h>
+#include <opencog/asmoses/utils/KLD.h>
 #include <opencog/util/iostreamContainer.h>
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/atom_types/atom_types.h>

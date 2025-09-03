@@ -42,7 +42,7 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 
 #include <opencog/util/numeric.h>
-#include <opencog/util/KLD.h>
+#include <opencog/asmoses/utils/KLD.h>
 #include <opencog/asmoses/utils/MannWhitneyU.h>
 #include <opencog/asmoses/data/table/table_io.h>
 #include <opencog/asmoses/atomese/interpreter/Interpreter.h>
