@@ -35,7 +35,7 @@
 #include <opencog/util/oc_omp.h>
 #include <opencog/util/random.h>
 #include <opencog/util/lazy_random_selector.h>
-#include <opencog/util/jaccard_index.h>
+#include <opencog/asmoses/utils/jaccard_index.h>
 
 #include "feature_selector.h"
 

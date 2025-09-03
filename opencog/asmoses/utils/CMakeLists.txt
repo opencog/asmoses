@@ -1,4 +1,5 @@
 INSTALL (FILES
+		jaccard_index.h
 		KLD.h
 		MannWhitneyU.h
 		valueUtils.h
