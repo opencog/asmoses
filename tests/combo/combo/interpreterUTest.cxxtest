@@ -1,4 +1,4 @@
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/asmoses/combo/interpreter/interpreter.h>
 #include <opencog/asmoses/combo/combo/combo.h>
 

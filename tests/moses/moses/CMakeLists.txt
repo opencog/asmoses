@@ -2,6 +2,7 @@
 IF(Boost_MATH_C99_FOUND)
     ADD_CXXTEST(NeighborSamplingUTest)
     TARGET_LINK_LIBRARIES(NeighborSamplingUTest
+            asmosesutils
             moses
             ascombo
             ${COGUTIL_LIBRARY}
@@ -21,6 +22,7 @@ ENDIF(Boost_MATH_C99_FOUND)
 
 ADD_CXXTEST(iostream_scored_combo_treeUTest)
 TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
+        asmosesutils
         moses
         ascombo
         ${COGUTIL_LIBRARY}
@@ -28,6 +30,7 @@ TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
 
 ADD_CXXTEST(atomese_complexityUTest)
 TARGET_LINK_LIBRARIES(atomese_complexityUTest
+        asmosesutils
         moses
         ascombo
         ${COGUTIL_LIBRARY}
