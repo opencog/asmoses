@@ -28,7 +28,7 @@
 
 #include <map>
 
-#include <opencog/util/hashing.h>
+#include <opencog/asmoses/utils/hashing.h>
 
 #include "field_set.h"
 #include "knobs.h"

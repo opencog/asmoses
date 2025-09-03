@@ -29,7 +29,7 @@
 #include <shared_mutex>
 
 #include <opencog/util/exceptions.h>
-#include <opencog/util/hashing.h>
+#include <opencog/asmoses/utils/hashing.h>
 #include <opencog/util/Logger.h>
 #include <opencog/util/oc_assert.h>
 #include <opencog/util/platform.h>

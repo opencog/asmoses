@@ -4,6 +4,7 @@ ADD_LIBRARY(asmosesutil SHARED
 )
 
 INSTALL (FILES
+		hashing.h
 		jaccard_index.h
 		KLD.h
 		log_prog_name.h
