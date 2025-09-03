@@ -32,7 +32,7 @@
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
 #include <opencog/asmoses/combo/converter/combo_atomese.h>
-#include <opencog/util/comprehension.h>
+#include <opencog/asmoses/utils/comprehension.h>
 
 namespace opencog
 {

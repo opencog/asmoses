@@ -39,7 +39,7 @@
 #include <opencog/util/dorepeat.h>
 #include <opencog/util/iostreamContainer.h>
 #include <opencog/util/oc_omp.h>
-#include <opencog/util/comprehension.h>
+#include <opencog/asmoses/utils/comprehension.h>
 
 #include "table.h"
 #include "table_io.h"
