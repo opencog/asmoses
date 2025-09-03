@@ -25,7 +25,7 @@
 
 #include <boost/functional/hash.hpp>
 
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 
 namespace opencog
 {

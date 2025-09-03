@@ -32,7 +32,7 @@
 
 #include <opencog/util/Logger.h>
 #include <opencog/util/numeric.h>
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 
 #include <opencog/asmoses/combo/combo/vertex.h>
 

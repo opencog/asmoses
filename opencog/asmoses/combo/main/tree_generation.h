@@ -24,7 +24,7 @@
 #ifndef TREE_GENERATION_H
 #define TREE_GENERATION_H
 
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 
 #include "opencog/asmoses/combo/combo/vertex.h"
 #include "opencog/asmoses/combo/type_checker/type_tree.h"

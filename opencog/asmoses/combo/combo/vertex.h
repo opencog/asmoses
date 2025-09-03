@@ -28,7 +28,7 @@
 #include <boost/functional/hash.hpp>
 #include <boost/variant.hpp>
 
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 #include <opencog/util/numeric.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/oc_assert.h>
@@ -165,7 +165,7 @@ typedef std::vector<builtin> builtin_seq;
 typedef std::vector<contin_t> contin_seq;
 typedef std::vector<std::string> string_seq;
 
-// Disambiguate stream operator; use the one declared in util/tree.h
+// Disambiguate stream operator; use the one declared in asmoses/utils/tree.h
 std::istream& operator>>(std::istream& in, combo::vertex& v);
 
 // -------------------------------------------------------
@@ -543,7 +543,7 @@ typedef combo_tree_ns_set::const_iterator combo_tree_ns_set_const_it;
 // default ordering between combo trees (size_tree_order<vertex>)
 bool operator<(const combo_tree& lt, const combo_tree& rt);
 
-// Disambiguate stream operator; use the one declared in util/tree.h
+// Disambiguate stream operator; use the one declared in asmoses/utils/tree.h
 //std::istream& operator>>(std::istream& in, combo::combo_tree& tr);
 
 // -------------------------------------------------------

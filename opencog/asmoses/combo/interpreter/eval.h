@@ -27,7 +27,7 @@
 
 #include <exception>
 
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 #include <opencog/util/numeric.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/mt19937ar.h>

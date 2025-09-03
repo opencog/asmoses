@@ -1,5 +1,5 @@
 #include "util/mt19937ar.h"
-#include "util/tree.h"
+#include "asmoses/utils/tree.h"
 
 #include "opencog/asmoses/combo/combo/vertex.h"
 #include "opencog/asmoses/reduct/reduct.h"

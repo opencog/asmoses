@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 #include <opencog/util/mt19937ar.h>
 
 #include <opencog/asmoses/combo/combo/vertex.h>

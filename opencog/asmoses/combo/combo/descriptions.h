@@ -29,7 +29,7 @@
 #include <opencog/asmoses/combo/combo/action.h>
 #include <opencog/asmoses/combo/type_checker/type_tree.h>
 
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 
 namespace opencog { namespace combo {
 

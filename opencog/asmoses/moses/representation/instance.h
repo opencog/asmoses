@@ -25,7 +25,7 @@
 #ifndef _REPRESENTATION_INSTANCE_H
 #define _REPRESENTATION_INSTANCE_H
 
-#include <opencog/util/tree.h>
+#include <opencog/asmoses/utils/tree.h>
 
 namespace opencog {
 namespace moses {

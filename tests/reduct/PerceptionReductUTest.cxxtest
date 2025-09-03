@@ -1,4 +1,4 @@
-#include "util/tree.h"
+#include "asmoses/utils/tree.h"
 #include "util/mt19937ar.h"
 
 #include "opencog/asmoses/combo/combo/vertex.h"
