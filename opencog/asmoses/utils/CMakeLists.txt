@@ -1,4 +1,6 @@
 
+ADD_SUBDIRECTORY(boost_ext)
+
 ADD_LIBRARY(asmosesutils SHARED
 	lazy_normal_selector.cc
 	log_prog_name.cc
