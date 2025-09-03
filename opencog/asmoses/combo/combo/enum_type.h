@@ -28,7 +28,6 @@
 #include <map>
 #include <ostream>
 #include <string>
-#include <boost/thread.hpp>
 #include <boost/operators.hpp>
 
 namespace opencog { namespace combo {

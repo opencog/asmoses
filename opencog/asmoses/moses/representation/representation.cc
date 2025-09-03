@@ -26,7 +26,6 @@
  */
 
 #include <map>
-#include <boost/thread.hpp>
 
 #include <opencog/util/lazy_random_selector.h>
 #include <opencog/util/oc_omp.h>
