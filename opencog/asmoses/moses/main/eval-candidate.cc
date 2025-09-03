@@ -33,7 +33,7 @@
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/util/oc_assert.h>
 #include <opencog/util/oc_omp.h>
 

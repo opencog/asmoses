@@ -24,7 +24,7 @@
 #define _OPENCOG_LOG_PROG_NAME_H
 
 #include <boost/program_options.hpp>
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 
 #include <sstream>
 

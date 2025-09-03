@@ -39,7 +39,7 @@
 
 #include <opencog/util/empty_string.h> // For gdb pretty print
 #include <opencog/asmoses/utils/functional.h>
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 
 #include <opencog/asmoses/combo/combo/combo.h>
 #include "complexity.h"

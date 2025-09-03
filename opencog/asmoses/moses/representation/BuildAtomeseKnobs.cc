@@ -24,7 +24,7 @@
 
 #include <boost/range/irange.hpp>
 
-#include <opencog/util/iostreamContainer.h>
+#include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/util/lazy_random_selector.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/dorepeat.h>

@@ -7,6 +7,7 @@ INSTALL (FILES
 		comprehension.h
 		functional.h
 		hashing.h
+		iostreamContainer.h
 		jaccard_index.h
 		KLD.h
 		log_prog_name.h
