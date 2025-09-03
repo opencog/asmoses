@@ -1,5 +1,6 @@
 ADD_EXECUTABLE (asgen-table gen-table.cc)
 TARGET_LINK_LIBRARIES(asgen-table
+		asmosesutils
 		data
 		ascombo
 		ascomboant
@@ -9,6 +10,7 @@ TARGET_LINK_LIBRARIES(asgen-table
 
 ADD_EXECUTABLE (aseval-table eval-table.cc)
 TARGET_LINK_LIBRARIES(aseval-table
+		asmosesutils
 		data
 		ascombo
 		ascomboant
