@@ -27,7 +27,7 @@
 #include <boost/range/adaptor/map.hpp>
 
 #include <opencog/util/Counter.h>
-#include <opencog/util/ranking.h>
+#include <opencog/asmoses/utils/ranking.h>
 
 namespace opencog {
 /** \addtogroup grp_cogutil

@@ -13,6 +13,7 @@ INSTALL (FILES
 		log_prog_name.h
 		lru_cache.h
 		MannWhitneyU.h
+		ranking.h
 		selection.h
 		valueUtils.h
 	DESTINATION
