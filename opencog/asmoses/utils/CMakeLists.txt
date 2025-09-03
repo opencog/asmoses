@@ -1,5 +1,6 @@
 
 ADD_LIBRARY(asmosesutils SHARED
+	lazy_normal_selector.cc
 	log_prog_name.cc
 )
 
@@ -15,6 +16,7 @@ INSTALL (FILES
 		iostreamContainer.h
 		jaccard_index.h
 		KLD.h
+		lazy_normal_selector.h
 		log_prog_name.h
 		lru_cache.h
 		MannWhitneyU.h

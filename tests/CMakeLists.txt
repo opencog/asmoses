@@ -18,7 +18,7 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 # these are tested first. Since most things depend on the atomspace,
 # that is tested next, etc.
 IF (CXXTEST_FOUND)
-	# ADD_SUBDIRECTORY (util)
+	ADD_SUBDIRECTORY (utils)
 
 	#ADD_SUBDIRECTORY (hillclimbing)
 
