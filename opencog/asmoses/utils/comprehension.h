@@ -31,7 +31,7 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/range/adaptor/filtered.hpp>
 
-#include <opencog/util/functional.h>
+#include <opencog/asmoses/utils/functional.h>
 
 namespace opencog {
 /** \addtogroup grp_cogutil

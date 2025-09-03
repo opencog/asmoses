@@ -23,7 +23,7 @@
 #ifndef _OPENCOG_SELECTION_H
 #define _OPENCOG_SELECTION_H
 
-#include <opencog/util/functional.h>
+#include <opencog/asmoses/utils/functional.h>
 #include <opencog/util/numeric.h>
 #include <iterator>
 #include <opencog/util/dorepeat.h>

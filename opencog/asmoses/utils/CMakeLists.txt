@@ -5,6 +5,7 @@ ADD_LIBRARY(asmosesutil SHARED
 
 INSTALL (FILES
 		comprehension.h
+		functional.h
 		hashing.h
 		jaccard_index.h
 		KLD.h
