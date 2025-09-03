@@ -6,6 +6,7 @@
 
 ADD_CXXTEST(BooleanReductUTest)
 TARGET_LINK_LIBRARIES(BooleanReductUTest
+	asmosesutils
 	asreduct
 	ascombo
 	ascomboant
@@ -15,6 +16,7 @@ TARGET_LINK_LIBRARIES(BooleanReductUTest
 
 ADD_CXXTEST(BooleanFullUTest)
 TARGET_LINK_LIBRARIES(BooleanFullUTest
+	asmosesutils
 	asreduct
 	ascombo
 	ascomboant
@@ -24,6 +26,7 @@ TARGET_LINK_LIBRARIES(BooleanFullUTest
 
 ADD_CXXTEST(ContinReductUTest)
 TARGET_LINK_LIBRARIES(ContinReductUTest
+	asmosesutils
 	asreduct
 	ascombo
 	ascomboant
@@ -33,6 +36,7 @@ TARGET_LINK_LIBRARIES(ContinReductUTest
 
 ADD_CXXTEST(FullReductUTest)
 TARGET_LINK_LIBRARIES(FullReductUTest
+	asmosesutils
 	asreduct
 	ascombo
 	ascomboant
@@ -42,6 +46,7 @@ TARGET_LINK_LIBRARIES(FullReductUTest
 
 ADD_CXXTEST(MixedReductUTest)
 TARGET_LINK_LIBRARIES(MixedReductUTest
+	asmosesutils
 	asreduct
 	ascombo
 	ascomboant
@@ -57,6 +62,7 @@ TARGET_LINK_LIBRARIES(MixedReductUTest
 
 ADD_CXXTEST(ANNReductUTest)
 TARGET_LINK_LIBRARIES(ANNReductUTest
+	asmosesutils
 	asreduct
 	ascombo
 	ascomboant
@@ -65,6 +71,7 @@ TARGET_LINK_LIBRARIES(ANNReductUTest
 
 ADD_CXXTEST(FoldReductUTest)
 TARGET_LINK_LIBRARIES(FoldReductUTest
+	asmosesutils
 	asreduct
 	ascombo
 	ascomboant

@@ -1,5 +1,6 @@
 LINK_LIBRARIES(
 	-Wl,--no-as-needed
+	asmosesutils
 	ascombo
 	asmoses_types
 	${ATOMSPACE_LIBRARIES}

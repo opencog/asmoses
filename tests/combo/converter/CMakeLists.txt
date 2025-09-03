@@ -1,5 +1,6 @@
 ADD_CXXTEST(combo_atomeseUTest)
 TARGET_LINK_LIBRARIES(combo_atomeseUTest
+    asmosesutils
     ascombo
     ascomboant
     asmoses_types
