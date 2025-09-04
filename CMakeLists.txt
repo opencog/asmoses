@@ -93,7 +93,7 @@ SET(Boost_USE_STATIC_LIBS OFF)
 SET(Boost_USE_MULTITHREADED ON)
 
 # Required boost packages
-FIND_PACKAGE(Boost 1.60 COMPONENTS date_time program_options random regex REQUIRED)
+FIND_PACKAGE(Boost 1.60 COMPONENTS date_time program_options regex REQUIRED)
 
 IF(Boost_FOUND)
 	SET(Boost_FOUND_SAVE 1)

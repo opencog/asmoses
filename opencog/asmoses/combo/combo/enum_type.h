@@ -28,6 +28,7 @@
 #include <map>
 #include <ostream>
 #include <string>
+#include <shared_mutex>
 #include <boost/operators.hpp>
 
 namespace opencog { namespace combo {
@@ -47,7 +48,7 @@ private:
     // can run efficiently (for scoring) without a string-compare.
     static unsigned enum_issued;
     static std::map<std::string, unsigned> enum_map;
-    static boost::shared_mutex id_mutex;
+    static std::shared_mutex id_mutex;
 
 protected:
     // Issue a unique id number for each unique string.

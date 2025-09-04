@@ -203,7 +203,7 @@ protected:
 	field_set _fields;
 
 	// During knob building
-	mutable boost::mutex tranform_mutex;
+	mutable std::mutex tranform_mutex;
 };
 
 // This helper seems to be needed to unconfuse the compiler.

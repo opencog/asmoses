@@ -441,7 +441,7 @@ private:
 		diversity_stats gather_stats() const;
 
 		// cache
-		boost::shared_mutex mutex;
+		std::shared_mutex mutex;
 
 		const diversity_parameters& _dparams;
 		std::atomic<unsigned> misses, hits;

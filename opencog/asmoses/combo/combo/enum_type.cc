@@ -21,6 +21,9 @@
  * Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
+#include <mutex>
+
 #include "enum_type.h"
 #include <opencog/util/mt19937ar.h>
 
@@ -31,7 +34,7 @@ using namespace std;
 // efficiently (for scoring) without having to do a string-compare.
 unsigned enum_t::enum_issued = 0;
 map<string, unsigned> enum_t::enum_map;
-boost::shared_mutex enum_t::id_mutex;
+std::shared_mutex enum_t::id_mutex;
 
 enum_t enum_t::get_random_enum()
 {
@@ -46,10 +49,7 @@ enum_t enum_t::get_random_enum()
 
 unsigned enum_t::get_id(const string& token)
 {
-    typedef boost::shared_mutex mutex;
-    typedef boost::unique_lock<mutex> unique_lock;
-
-    unique_lock lock(id_mutex);
+    std::unique_lock<std::shared_mutex> lock(id_mutex);
 
     map<string, unsigned>::iterator entry = enum_map.find(token);
     if (entry == enum_map.end()) {
