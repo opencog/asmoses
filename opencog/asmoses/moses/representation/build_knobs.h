@@ -24,6 +24,7 @@
 #ifndef _MOSES_BUILD_KNOBS_H
 #define _MOSES_BUILD_KNOBS_H
 
+#include <mutex>
 #include <vector>
 
 #include <boost/utility.hpp>
@@ -197,9 +198,9 @@ protected:
     void ann_canonize(combo_tree::iterator);
 
     // ------------------------------------------------------
-    typedef boost::shared_mutex shared_mutex;
-    typedef boost::shared_lock<shared_mutex> shared_lock;
-    typedef boost::unique_lock<shared_mutex> unique_lock;
+    typedef std::shared_mutex shared_mutex;
+    typedef std::shared_lock<shared_mutex> shared_lock;
+    typedef std::unique_lock<shared_mutex> unique_lock;
 
     mutable shared_mutex lp_mutex; // used in logical_probe_thread_safe
 

@@ -49,7 +49,7 @@ void particle_swarm::operator()(deme_t& best_parts,
                                unsigned max_evals,
                                time_t max_time)
 {
-    using namespace boost::placeholders;
+    using namespace std::placeholders;
 
     logger().debug("PSO...");
 
@@ -116,7 +116,7 @@ void particle_swarm::operator()(deme_t& best_parts,
         OMP_ALGO::transform(temp_parts.begin(), temp_parts.end(), temp_parts.begin_scores(),
                             // using bind cref so that score is passed by
                             // ref instead of by copy
-                            boost::bind(boost::cref(iscorer), _1));
+                            std::bind(std::cref(iscorer), _1));
         current_number_of_evals += swarm_size;
 
         // XXX What score do i use?

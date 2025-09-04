@@ -51,7 +51,7 @@ void hill_climbing::operator()(deme_t& deme,
                                unsigned max_evals,
                                time_t max_time)
 {
-    using namespace boost::placeholders;
+    using namespace std::placeholders;
 
     logger().debug("Local Search Optimization");
 
@@ -235,7 +235,7 @@ void hill_climbing::operator()(deme_t& deme,
         OMP_ALGO::transform(deme_from, deme.end(), deme_score_from,
                             // using bind cref so that score is passed by
                             // ref instead of by copy
-                            boost::bind(boost::cref(iscorer), _1));
+                            std::bind(std::cref(iscorer), _1));
 
         // Check if there is an instance in the deme better than
         // the best candidate

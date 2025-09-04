@@ -58,7 +58,7 @@ void simulated_annealing::operator()(deme_t& deme,
                                      unsigned max_evals,
                                      time_t max_time)
 {
-    using namespace boost::placeholders;
+    using namespace std::placeholders;
 
     const field_set& fields = deme.fields();
     max_distance = opt_params.max_distance(fields);
@@ -118,7 +118,7 @@ void simulated_annealing::operator()(deme_t& deme,
         OMP_ALGO::transform(next(deme.begin(), current_number_of_instances),
                             deme.end(),
                             next(deme.begin_scores(), current_number_of_instances),
-                            boost::bind(boost::cref(iscorer), _1));
+                            std::bind(std::cref(iscorer), _1));
 
         // get the best instance
         deme_inst_t& best_scored_instance =

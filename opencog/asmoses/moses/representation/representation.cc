@@ -26,6 +26,7 @@
  */
 
 #include <map>
+#include <mutex>
 
 #include <opencog/util/lazy_random_selector.h>
 #include <opencog/util/oc_omp.h>
@@ -306,7 +307,7 @@ combo_tree representation::get_candidate_lock(const instance& inst, bool reduce)
 	// Unfortunately, copying the exemplar is expensive, but seemingly
 	// unavoidable: the knob mapper only works for the member _exemplar.
 	// Thus we cannot have "const combo_tree &tr = exemplar();"
-	boost::mutex::scoped_lock lock(tranform_mutex);
+	std::unique_lock lock(tranform_mutex);
 	transform(inst);
 	combo_tree tr = exemplar();  // make copy before unlocking.
 	lock.unlock();
