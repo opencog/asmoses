@@ -36,7 +36,7 @@
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 
-#include <opencog/util/dorepeat.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 #include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/util/oc_omp.h>
 #include <opencog/asmoses/utils/comprehension.h>

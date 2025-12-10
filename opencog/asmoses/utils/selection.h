@@ -26,7 +26,7 @@
 #include <opencog/asmoses/utils/functional.h>
 #include <opencog/util/numeric.h>
 #include <iterator>
-#include <opencog/util/dorepeat.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 #include <opencog/util/RandGen.h>
 #include <opencog/util/mt19937ar.h>
 

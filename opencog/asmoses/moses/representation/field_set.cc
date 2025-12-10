@@ -23,9 +23,9 @@
  */
 #include "field_set.h"
 #include <sstream>
-#include <opencog/util/dorepeat.h>
 #include <opencog/util/exceptions.h>
 #include <opencog/util/oc_assert.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 #include <opencog/asmoses/utils/iostreamContainer.h>
 
 namespace opencog {

@@ -30,7 +30,7 @@
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/random.h>
 #include <opencog/util/lazy_random_selector.h>
-#include <opencog/util/dorepeat.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 
 #include "opencog/asmoses/combo/combo/iostream_combo.h"
 

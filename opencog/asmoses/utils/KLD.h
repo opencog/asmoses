@@ -27,7 +27,7 @@
 #include <boost/range/adaptor/map.hpp>
 #include <boost/range/numeric.hpp>
 
-#include <opencog/util/dorepeat.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 #include <opencog/util/Logger.h>
 #include <opencog/util/Counter.h>
 

@@ -29,7 +29,7 @@
 #include <boost/operators.hpp>  // for random_access_iterator_helper
 #include <boost/variant.hpp>
 
-#include <opencog/util/dorepeat.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 #include <opencog/util/Logger.h>
 #include <opencog/util/mt19937ar.h>
 #include <opencog/util/numeric.h>

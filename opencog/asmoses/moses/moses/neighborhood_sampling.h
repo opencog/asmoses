@@ -29,7 +29,7 @@
 #include <boost/math/special_functions/binomial.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <opencog/util/dorepeat.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 #include <opencog/util/lazy_random_selector.h>
 
 #include "opencog/asmoses/moses/eda/initialization.h"

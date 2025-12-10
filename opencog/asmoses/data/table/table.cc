@@ -34,7 +34,7 @@
 #include <boost/range/algorithm/set_algorithm.hpp>
 #include <boost/range/algorithm_ext/push_back.hpp>
 
-#include <opencog/util/dorepeat.h>
+#include <opencog/asmoses/util/dorepeat.h>
 #include <opencog/util/Logger.h>
 #include <opencog/util/lazy_random_selector.h>
 #include <opencog/atoms/base/Link.h>

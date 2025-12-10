@@ -38,8 +38,8 @@
 
 #include <opencog/util/algorithm.h>
 #include <opencog/util/Counter.h>
-#include <opencog/util/dorepeat.h>
 #include <opencog/util/exceptions.h>
+#include <opencog/asmoses/utils/dorepeat.h>
 #include <opencog/asmoses/utils/KLD.h>
 #include <opencog/asmoses/utils/iostreamContainer.h>
 #include <opencog/atoms/base/Handle.h>
